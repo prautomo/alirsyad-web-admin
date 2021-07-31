@@ -1,0 +1,254 @@
+/*start*/
+
+.rocket:before {
+    content: "";
+    clear: both;
+    width: 30px;
+    height: 30px;
+    display: block;
+    background-size: contain;
+    background-repeat: no-repeat;
+    position: relative;
+    top: -10px;
+    left: 0;
+}
+
+.rocket_base {
+	padding-top: 4em;
+}
+
+.target {
+	border-color: transparent;
+}
+
+.rocket {
+	display: block;
+}
+
+
+
+
+
+
+
+.link-artikel{
+    text-decoration: none;
+    color:#495057;
+  }
+
+.link-artikel img{
+    margin-bottom: 10px;
+    width: 100%;
+  }
+  
+  .link-artikel:hover{
+    text-decoration: none;
+    color:#fd7e14;
+  }
+
+  .img-brand{
+    margin-bottom: 10px;
+    background-color: white;
+    
+  }
+
+  .card-no-locations{
+    background-color: #EAEAEA;
+  }
+  .card-no-locations > div > p{
+    color: #999999;
+  }
+
+  
+  .category_item_container{
+    
+  }
+  
+  .category_item_container:hover{
+    border-bottom: 2px red solid;
+
+  }
+
+  .category_container{
+  }
+  
+
+.subcategoryitem > a{
+color:#8E8E8E
+}
+.product-container{
+  font-size: 11.61px;
+  border-radius: 4px;
+  border: 1px solid #ffffff;
+}
+.product-container > div > a{
+  color: #495057;
+}
+
+.product-container > div > a:hover{
+  text-decoration: none;
+}
+
+.product-container:hover{
+  border: 1px solid #8E8E8E
+}
+.product-container .prod_price{
+  font-weight: bold;
+}
+
+.product-container .striped_price{
+
+  text-decoration: ;
+}
+.product-container .prod_mitra{
+  color: #8E8E8E;
+}
+
+
+.prod-page-header{
+  
+}
+.prod-page-header > h3 > span{
+  color: #8E8E8E !important;
+}
+
+.form-control-inner{
+  border:none;
+  
+}
+.form-control-container > span{
+  font-size: 14px;
+  padding: 10px 8px 8px 20px;
+  
+}
+
+.form-control-container{
+  border:1px solid #EFEFEF;
+  display: flex;
+  
+}
+
+.form-control-label{
+
+  font-size: 14px;
+  color: #8E8E8E;
+}
+
+.radioitem{
+  margin:4px 8px;
+  border :5px solid #EFEFEF;
+  height: 30px;
+  cursor: pointer;
+  border-radius: 15px;
+  width: 30px;
+}
+.radioitem.active{
+  background-color: red;
+}
+
+.checkitem{
+  margin:4px 8px;
+  border :5px solid #EFEFEF;
+  cursor: pointer;
+  height: 30px;
+  border-radius: 4px;
+  width: 30px;
+}
+.checkitem.active{
+  background-color: red;
+}
+
+
+.border-none {
+  border:none
+}
+
+.thumb-container{
+  width: 100px; height: 100px; margin: 5px; padding: 10px;
+  cursor: pointer;
+
+  border: 1px solid none;
+  
+}
+.thumb-container.active {
+
+  border: 1px solid #8E8E8E;
+}
+
+.galery-cover{
+  height: 300px;
+  margin:10px
+}
+
+.detail_info{
+  font-size: 16px;
+  color:#8E8E8E;
+}
+
+.app-menu > a{
+  margin-bottom: 10px;
+  color: #495057;
+}
+
+.DateInput{
+  width: 100% !important;
+}
+.DateInput_input__focused {
+  outline: 0;
+  background: #fff;
+  border: 0;
+  border-top: 0;
+  border-right: 0;
+  border-bottom: none !important;
+  border-left: 0;
+}
+
+
+.SingleDatePicker {
+  background: white;
+  width: 100% !important;
+}
+
+.SingleDatePickerInput__withBorder {
+  border-radius: 2px;
+  border: none !important; 
+  width: 100%;
+}
+
+.DateInput_input {
+  font-weight: inherit !important;
+  font-size: 16px !important;
+}
+
+.swal2-popup{
+  border-radius: 2px !important;
+}
+.swal2-confirm {
+  border-radius: 0px !important;
+  background-color: red !important;
+  width: 100px;
+}
+.swal2-cancel{
+
+  border-radius: 0px !important;
+  background-color: #F26525 !important;
+  width: 100px;
+}
+
+.badge{
+    border-radius: 2px;
+    padding: 10px;
+
+}
+
+.react-date-picker {
+  width: 100% !important;
+  background: #fff;
+}
+
+.react-date-picker__wrapper {
+  /* display: flex;
+  flex-grow: 1;
+  flex-shrink: 0; */
+  border: none;
+}

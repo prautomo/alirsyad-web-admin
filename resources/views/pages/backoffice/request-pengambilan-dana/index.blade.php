@@ -1,0 +1,48 @@
+@extends('layouts.backoffice')
+
+@section('title', __("Pengambilan Dana"))
+
+@section('header')
+  @parent
+    <div class="row align-items-center py-4">
+        <div class="col-lg-6 col-7">
+            <h6 class="h2 text-white d-inline-block mb-0">@yield('title')</h6>
+        </div>
+    </div>
+@endsection
+
+@section('content')
+<div class="row">
+    <div class="col">
+        @if (session('status') === 'success')
+            <x-alert.success :message="session('message')" />
+        @elseif (session('status') === 'failed')
+            <x-alert.failed :message="session('message')" />
+        @endif
+    <div class="card">
+      <!-- Card header -->
+      <div class="card-header border-0">
+        <h3 class="mb-0">Data</h3>
+      </div>
+      <!-- tble -->
+      <div class="table-responsive">
+            <x-datatable>
+                {{--
+                    data-* is same as option columns in datatable
+                    https://datatables.net/reference/option/columns
+                --}}
+                <th data-data="code">@lang("Request Code")</th>
+                <th data-data="role">@lang("Role User")</th>
+                <th data-data="user">@lang("User")</th>
+                <th data-data="amount">@lang("Amount")</th>
+                <th data-data="status">@lang("Status")</th>
+                <th data-data="created_at">@lang("Created At")</th>
+                <th data-data="action" data-orderable="false" data-searchable="false">@lang("Action")</th>
+            </x-datatable>
+        </div>
+      <!-- endtble -->
+    </div>
+  </div>
+</div>
+
+@endsection
