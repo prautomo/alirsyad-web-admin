@@ -16,7 +16,7 @@ class CreateKelasTable extends Migration
         Schema::create('kelas', function (Blueprint $table) {
             $table->id();
             $table->string('name')->default("")->comment('kelas');
-            $table->text('description')->default("");
+            $table->text('description')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->unsignedBigInteger('tingkat_id');
             $table->softDeletes('deleted_at', 0);

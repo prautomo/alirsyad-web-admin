@@ -16,7 +16,7 @@ class CreateTingkatsTable extends Migration
         Schema::create('tingkats', function (Blueprint $table) {
             $table->id();
             $table->string('name')->default("")->comment('nama tingkat [tk,sd,smp,sma,smk]');
-            $table->text('description')->default("");
+            $table->text('description')->nullable();
             $table->text('logo')->default("");
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
