@@ -23,11 +23,11 @@
             </li>
 
             <li class="nav-item">
-              <a class="nav-link{{ request()->is('backoffice/tingkats*', 'backoffice/kelas*', 'backoffice/categories*', 'backoffice/banners*', 'backoffice/promos*') ? ' active' : ' collapsed' }}" href="#navbar-master" data-toggle="collapse" role="button" aria-expanded="{{ request()->is('backoffice/tingkats*', 'backoffice/kelas*', 'backoffice/categories*') ? 'true' : 'false' }}" aria-controls="navbar-master">
+              <a class="nav-link{{ request()->is('backoffice/tingkats*', 'backoffice/kelas*', 'backoffice/mata_pelajarans*', 'backoffice/banners*', 'backoffice/promos*') ? ' active' : ' collapsed' }}" href="#navbar-master" data-toggle="collapse" role="button" aria-expanded="{{ request()->is('backoffice/tingkats*', 'backoffice/kelas*', 'backoffice/mata_pelajarans*') ? 'true' : 'false' }}" aria-controls="navbar-master">
                 <i class="ni ni-ungroup text-red"></i>
                 <span class="nav-link-text">Master</span>
               </a>
-              <div class="collapse{{ request()->is('backoffice/tingkats*', 'backoffice/kelas*', 'backoffice/categories*', 'backoffice/banners*', 'backoffice/promos*') ? ' show' : '' }}" id="navbar-master" style="">
+              <div class="collapse{{ request()->is('backoffice/tingkats*', 'backoffice/kelas*', 'backoffice/mata_pelajarans*', 'backoffice/banners*', 'backoffice/promos*') ? ' show' : '' }}" id="navbar-master" style="">
                 <ul class="nav nav-sm flex-column">
                   @can('tingkat-list')
                   <li class="nav-item">
@@ -45,10 +45,10 @@
                   </li>
                   @endcan
 
-                  @can('categories-list')
+                  @can('mata_pelajaran-list')
                   <li class="nav-item">
-                    <a href="{{ route('backoffice::categories.index') }}" class="nav-link">
-                      <span class="sidenav-normal"> Kategori Materi </span>
+                    <a href="{{ route('backoffice::mata_pelajarans.index') }}" class="nav-link">
+                      <span class="sidenav-normal"> Mata Pelajaran </span>
                     </a>
                   </li>
                   @endcan
@@ -60,7 +60,7 @@
             <li class="nav-item">
               <a class="nav-link{{ request()->is('materis*') ? ' active' : '' }}" href="{{ route('backoffice::materis.index') }}">
                 <i class="ni ni-books text-red"></i>
-                <span class="nav-link-text">Manage Materi</span>
+                <span class="nav-link-text">Kelola Materi</span>
               </a>
             </li>
             @endcan
@@ -69,7 +69,7 @@
             <li class="nav-item">
               <a class="nav-link{{ request()->is('backoffice/users*', 'backoffice/external-users*') ? ' active' : ' collapsed' }}" href="#navbar-exus" data-toggle="collapse" role="button" aria-expanded="{{ request()->is('backoffice/users*', 'backoffice/external-users*') ? 'true' : 'false' }}" aria-controls="navbar-exus">
                 <i class="ni ni-circle-08 text-red"></i>
-                <span class="nav-link-text">Users</span>
+                <span class="nav-link-text">Pengguna</span>
               </a>
               <div class="collapse{{ request()->is('backoffice/users*', 'backoffice/external-users*') ? ' show' : '' }}" id="navbar-exus" style="">
                 <ul class="nav nav-sm flex-column">
@@ -102,7 +102,7 @@
             <li class="nav-item">
               <a class="nav-link{{ request()->is('roles*') ? ' active' : '' }}" href="{{ route('backoffice::roles.index') }}">
                 <i class="ni ni-tag text-red"></i>
-                <span class="nav-link-text">Manage Roles</span>
+                <span class="nav-link-text">Kelola Role</span>
               </a>
             </li>
             @endcan

@@ -9,12 +9,11 @@
     <div class="col-lg-6 col-7">
       <h6 class="h2 text-white d-inline-block mb-0">@yield('title')</h6>
     </div>
-    @can('role-create')
+    <!-- @can('role-create')
     <div class="col-lg-6 col-5 text-right">
       <a href="{{ route('backoffice::roles.create') }}" class="btn btn-sm btn-neutral">New</a>
-      <!-- <a href="#" class="btn btn-sm btn-neutral">Filters</a> -->
     </div>
-    @endcan
+    @endcan -->
   </div>
 @endsection
 
@@ -63,11 +62,11 @@
                     @can('role-edit')
                         <a class="btn btn-primary btn-sm" href="{{ route('backoffice::roles.edit',$role->id) }}">Edit</a>
                     @endcan
-                    @can('role-delete')
+                    <!-- @can('role-delete')
                         {!! Form::open(['method' => 'DELETE','route' => ['backoffice::roles.destroy', $role->id],'style'=>'display:inline']) !!}
                             {!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}
                         {!! Form::close() !!}
-                    @endcan
+                    @endcan -->
                 </td>
               </tr>
             @endforeach

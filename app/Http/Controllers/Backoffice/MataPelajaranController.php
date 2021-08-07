@@ -8,19 +8,21 @@ use Auth;
 use DB;
 use Illuminate\Support\Facades\Storage;
 use App\Services\UploadService;
-use App\Models\Category;
+use App\Models\MataPelajaran;
+use App\Models\Kelas;
+use App\Models\Tingkat;
 use App\Helpers\GenerateSlug;
 
-class CategoryController extends Controller{
+class MataPelajaranController extends Controller{
 
     function __construct(){
-        $this->middleware('permission:category-list|category-create|category-edit|category-delete', ['only' => ['index','show']]);
-        $this->middleware('permission:category-create', ['only' => ['create','store']]);
-        $this->middleware('permission:category-edit', ['only' => ['edit','update']]);
-        $this->middleware('permission:category-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:mata_pelajaran-list|mata_pelajaran-create|mata_pelajaran-edit|mata_pelajaran-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:mata_pelajaran-create', ['only' => ['create','store']]);
+        $this->middleware('permission:mata_pelajaran-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:mata_pelajaran-delete', ['only' => ['destroy']]);
 
-        $this->prefix = 'pages.backoffice.categories';
-        $this->routePath = 'backoffice::categories';
+        $this->prefix = 'pages.backoffice.mata_pelajarans';
+        $this->routePath = 'backoffice::mata_pelajarans';
     }
 
     /**
@@ -29,7 +31,7 @@ class CategoryController extends Controller{
      * @return void
      */
     public function datatable(){
-        $query = Category::query();
+        $query = MataPelajaran::query();
 
         return datatables()
             ->of($query)
@@ -40,6 +42,13 @@ class CategoryController extends Controller{
                     return view("components.datatable.image", [
                         "url" => asset($data->icon)
                     ]);
+                }
+            })
+            ->addColumn('kelas', function($data) {
+                if(empty($data->kelas)){
+                    return "-";
+                }else{
+                    return $data->kelas->name;
                 }
             })
             ->addColumn("action", function ($data) {
@@ -64,19 +73,38 @@ class CategoryController extends Controller{
         return view($this->prefix.'.index');
     }
 
+    /**
+     * Get tingkat
+     */
+    private function getTingkat(){
+        // get list tingkat
+        $tingkats = Tingkat::all();
+        $tingkatList = [];
+        $tingkatList[""] = "Pilih tingkat";
+
+        foreach($tingkats as $tingkat){
+            $tingkatList[$tingkat->id] = $tingkat->name;
+        }
+
+        return $tingkatList;
+    }
+
     public function create(){
-        return view($this->prefix.'.create');
+        $tingkatList = $this->getTingkat();
+
+        return view($this->prefix.'.create', ['tingkatList' => $tingkatList]);
     }
 
     public function store(Request $request){
         // validasi form
         $this->validate($request, [
-            'name' => 'required|string'
+            'name' => 'required|string',
+            'kelas_id' => 'required',
         ]);
         // default image
         $url = "images/placeholder.png";
         // temp request
-        $dataReq = $request->only(['class', 'name', 'icon', 'slug']);
+        $dataReq = $request->only(['class', 'name', 'icon', 'slug', 'kelas_id']);
 
         if ($request->hasFile('icon')) {
 
@@ -86,11 +114,11 @@ class CategoryController extends Controller{
 
             $image = $request->file('icon');
             $extension = $image->extension();
-            $url = UploadService::uploadImage($image, 'icon/categories');
+            $url = UploadService::uploadImage($image, 'icon/mata_pelajarans');
             $dataReq['icon'] = $url;
         }
 
-        $data = Category::create($dataReq);
+        $data = MataPelajaran::create($dataReq);
 
         if(empty($request->slug)){
             $data->slug = GenerateSlug::generateSlug($data->id, $data->name);
@@ -98,24 +126,26 @@ class CategoryController extends Controller{
         }
 
         return redirect()->route($this->routePath.'.index')->with(
-            $this->success(__("Success to create Category"), $data)
+            $this->success(__("Success to create MataPelajaran"), $data)
         );
     }
 
     public function edit(Request $request, $id){
-        $dt = Category::findOrFail($id);
+        $dt = MataPelajaran::with('kelas')->findOrFail($id);
+        $tingkatList = $this->getTingkat();
 
-        return view($this->prefix.'.edit', ['data'=>$dt]);
+        return view($this->prefix.'.edit', ['data' => $dt, 'tingkatList' => $tingkatList]);
     }
 
     public function update(Request $request, $id){
         // validasi form
         $this->validate($request, [
-            'slug' => 'unique:categories,slug,'.$id,
-            'name' => 'required|string'
+            'slug' => 'unique:mata_pelajarans,slug,'.$id,
+            'name' => 'required|string',
+            'kelas_id' => 'required',
         ]);
 
-        $dataReq = $request->only(['class', 'name', 'icon', 'slug']);
+        $dataReq = $request->only(['class', 'name', 'icon', 'slug', 'kelas_id']);
 
         if ($request->hasFile('icon')) {
             $validated = $request->validate([
@@ -124,7 +154,7 @@ class CategoryController extends Controller{
 
             $image = $request->file('icon');
             $extension = $image->extension();
-            $url = UploadService::uploadImage($image, 'icon/categories');
+            $url = UploadService::uploadImage($image, 'icon/mata_pelajarans');
 
             $dataReq['icon'] = $url;
         }
@@ -133,16 +163,16 @@ class CategoryController extends Controller{
             $dataReq['slug'] = GenerateSlug::generateSlug($id, $request->name);
         }
 
-        $dt = Category::findOrFail($id);
+        $dt = MataPelajaran::findOrFail($id);
         $dt->update($dataReq);
 
         return redirect()->route($this->routePath.'.index')->with(
-            $this->success(__("Success to update Category"), $dt)
+            $this->success(__("Success to update MataPelajaran"), $dt)
         );
     }
 
     public function destroy(Request $request, $id){
-        $d = Category::findOrFail($id);
+        $d = MataPelajaran::findOrFail($id);
 
         $d->delete();
     }

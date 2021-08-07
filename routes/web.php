@@ -26,14 +26,17 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
     Route::get('/', 'DashboardController@index')->name('dashboard');
     Route::get('dashboard', 'DashboardController@index')->name('dashboard');
     Route::resource('tingkats', 'TingkatController');
+    Route::get('kelas/listJson', 'KelasController@listJson')->name('kelas.listJson');
     Route::resource('kelas', 'KelasController');
+    
     Route::resource('materis', 'KelasController');
 
     Route::resource('roles', 'RoleController');
     Route::resource('users', 'UserController');
     Route::resource('units', 'UnitController');
-    Route::resource('categories', 'CategoryController');
-    Route::name('sub_categories.')->prefix('categories/{categoryId}/sub')->group(function() {
+    Route::resource('mata_pelajarans', 'MataPelajaranController');
+
+    Route::name('sub_categories.')->prefix('kelas/{categoryId}/mata_pelajarans')->group(function() {
         Route::get('/', 'SubCategoryController@index')->name('index');
         Route::get('/create', 'SubCategoryController@create')->name('create');
         Route::post('/create', 'SubCategoryController@store')->name('store');

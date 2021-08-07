@@ -23,7 +23,7 @@ class UserSeeder extends Seeder
                 'email' => 'guru@sample.id',
                 'password' => bcrypt('123456')
             ]);
-            $role = Role::create(['guard_name' => 'backoffice', 'name' => 'Guru']);
+            $role = Role::create(['guard_name' => 'backoffice', 'name' => 'Guru', 'key' => "GURU"]);
             $super->assignRole('Guru');
 
             $super = User::create([
@@ -33,7 +33,7 @@ class UserSeeder extends Seeder
                 'password' => bcrypt('123456')
             ]);
             
-            $roleAdm = Role::create(['guard_name' => 'backoffice', 'name' => 'Superadmin']);
+            $roleAdm = Role::create(['guard_name' => 'backoffice', 'name' => 'Superadmin', 'key' => "SUPERADMIN"]);
             $super->assignRole('Superadmin');
         }
     }

@@ -21,6 +21,8 @@ class Kelas extends Model
         $data = self::appendSearchQuery($data, $request, [
             "name" => "LIKE",
             "description" => "LIKE",
+            "id" => "=",
+            "tingkat_id" => "=",
             "status" => "=",
         ]);
 
@@ -30,5 +32,16 @@ class Kelas extends Model
     public function tingkat()
     {
         return $this->belongsTo("App\Models\Tingkat",  "tingkat_id", "id");
+    }
+
+    public function mataPelajaran()
+    {
+        return $this->hasMany("App\Models\MataPelajaran", "kelas_id", "id");
+    }
+
+    // Get all Mata Pelajaran
+    public static function getAllMataPelajaran()
+    {
+        return  self::with(['mataPelajaran'])->limit(10)->get();
     }
 }

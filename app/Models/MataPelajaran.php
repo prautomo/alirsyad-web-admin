@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\SearchableTrait;
 
-class Category extends Model
+class MataPelajaran extends Model
 {
     use HasFactory, SearchableTrait, SoftDeletes;
 
@@ -20,6 +20,7 @@ class Category extends Model
         'name',
         'icon',
         'slug',
+        'kelas_id',
     ];
 
     public static function search($request)
@@ -33,14 +34,8 @@ class Category extends Model
         return $data;
     }
 
-    public function sub()
+    public function kelas()
     {
-        return $this->hasMany("App\Models\SubCategory", "category_id", "id");
-    }
-
-    // Get all Cateogory
-    public static function getAllCategory()
-    {
-        return  self::with(['sub'])->limit(10)->get();
+        return $this->belongsTo("App\Models\Kelas",  "kelas_id", "id");
     }
 }

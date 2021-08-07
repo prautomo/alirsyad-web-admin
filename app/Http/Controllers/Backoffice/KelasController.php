@@ -58,6 +58,12 @@ class KelasController extends Controller{
 
         return view($this->prefix.'.index');
     }
+
+    public function listJson(Request $request){
+        $datas = Kelas::search($request)->get();
+
+        return response()->json($datas, 200);
+    }
     
     public function create(){
         // get list tingkat
