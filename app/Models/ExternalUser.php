@@ -33,6 +33,9 @@ class ExternalUser extends Authenticatable implements MustVerifyEmail
         'role',
         'address',
         'status',
+        'nis',
+        'rombongan_belajar',
+        'kelas_id',
     ];
 
     /**
@@ -60,12 +63,19 @@ class ExternalUser extends Authenticatable implements MustVerifyEmail
         $data =  self::where("id", "!=", null);
         $data = self::appendSearchQuery($data, $request, [
             "email" => "=",
+            "nis" => "=",
             "name" => "LIKE",
             "username" => "LIKE",
             "phone" => "LIKE",
-            "role" => "="
+            "role" => "=",
+            "kelas_id" => "=",
         ]);
 
         return $data;
+    }
+
+    public function kelas()
+    {
+        return $this->belongsTo("App\Models\Kelas",  "kelas_id", "id");
     }
 }

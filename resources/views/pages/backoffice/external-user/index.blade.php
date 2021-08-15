@@ -38,9 +38,11 @@
                     https://datatables.net/reference/option/columns
                 --}}
                 <th data-data="show-img">@lang("Image")</th>
+                <th data-data="nis">@lang("NIS")</th>
                 <th data-data="name">@lang("Name")</th>
                 <th data-data="email">@lang("Email")</th>
-                <th data-data="phone">@lang("Phone")</th>
+                <th data-data="kelas.tingkat.name">@lang("Tingkat")</th>
+                <th data-data="kelas.name">@lang("Kelas")</th>
                 <th data-data="show-status">@lang("Status")</th>
                 <th data-data="action" data-orderable="false" data-searchable="false">@lang("Action")</th>
             </x-datatable>

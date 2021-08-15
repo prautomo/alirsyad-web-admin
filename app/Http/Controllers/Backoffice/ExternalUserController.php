@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Backoffice;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\ExternalUser;
+use App\Models\Tingkat;
 use App\Services\UploadService;
 use DB;
 use Hash;
@@ -34,6 +35,8 @@ class ExternalUserController extends Controller{
      */
     public function datatable($role){
         $query = ExternalUser::query();
+        // relation with kelas and tingkat
+        $query = $query->with('kelas.tingkat');
 
         if(!empty($role)){
             $query = $query->where('role', $role);
@@ -84,13 +87,31 @@ class ExternalUserController extends Controller{
     }
 
     /**
+     * Get tingkat
+     */
+    private function getTingkat(){
+        // get list tingkat
+        $tingkats = Tingkat::all();
+        $tingkatList = [];
+        $tingkatList[""] = "Pilih tingkat";
+
+        foreach($tingkats as $tingkat){
+            $tingkatList[$tingkat->id] = $tingkat->name;
+        }
+
+        return $tingkatList;
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function create()
     {
-        return view($this->prefix.'.create');
+        $tingkatList = $this->getTingkat();
+
+        return view($this->prefix.'.create', ['tingkatList' => $tingkatList]);
     }
 
     /**
@@ -103,10 +124,12 @@ class ExternalUserController extends Controller{
     {
         $this->validate($request, [
             'username' => 'required|unique:external_users,username',
+            'nis' => 'required|unique:external_users,nis',
             'name' => 'required',
             'email' => 'required|email|unique:external_users,email',
-            'phone' => 'required|unique:external_users,phone',
+            // 'phone' => 'required|unique:external_users,phone',
             'password' => 'required',
+            'kelas_id' => 'required',
         ]);
 
         $input = $request->all();
@@ -129,8 +152,9 @@ class ExternalUserController extends Controller{
 
         $user = ExternalUser::create($input);
 
-        return redirect()->route($this->routePath.'.index', ['role'=>$request->role])
-                        ->with('success','External User created successfully');
+        return redirect()->route($this->routePath.'.index', ['role'=>$request->role])->with(
+            $this->success(__("External User created successfully"), $data)
+        );
     }
 
     /**
@@ -141,9 +165,10 @@ class ExternalUserController extends Controller{
      */
     public function edit($id)
     {
-        $dt = ExternalUser::findOrFail($id);
+        $dt = ExternalUser::with('kelas')->findOrFail($id);
+        $tingkatList = $this->getTingkat();
 
-        return view($this->prefix.'.edit', ['data'=>$dt]);
+        return view($this->prefix.'.edit', ['data' => $dt, 'tingkatList' => $tingkatList]);
     }
 
     /**
@@ -159,7 +184,7 @@ class ExternalUserController extends Controller{
             'username' => 'required|unique:external_users,username,'.$id,
             'name' => 'required',
             'email' => 'required|email|unique:external_users,email,'.$id,
-            'phone' => 'required|unique:external_users,phone,'.$id,
+            // 'phone' => 'required|unique:external_users,phone,'.$id,
         ]);
 
         $input = $request->all();
@@ -184,8 +209,9 @@ class ExternalUserController extends Controller{
         $user = ExternalUser::find($id);
         $user->update($input);
 
-        return redirect()->route($this->routePath.'.index', ['role'=>$request->role])
-                        ->with('success','User updated successfully');
+        return redirect()->route($this->routePath.'.index', ['role'=>$request->role])->with(
+            $this->success(__("External User updated successfully"), $user)
+        );
     }
 
     public function updateStatus(Request $request, $id)
@@ -198,8 +224,9 @@ class ExternalUserController extends Controller{
         $user = ExternalUser::find($id);
         $user->update($input);
 
-        return redirect()->route($this->routePath.'.index', ['role'=>$request->role])
-                        ->with('success','Status updated successfully');
+        return redirect()->route($this->routePath.'.index', ['role'=>$request->role])->with(
+            $this->success(__("Status updated successfully"), $data)
+        );
     }
 
     /**
@@ -212,7 +239,8 @@ class ExternalUserController extends Controller{
     {
         ExternalUser::find($id)->delete();
 
-        return redirect()->route($this->routePath.'.index')
-                        ->with('success', 'User deleted successfully');
+        return redirect()->route($this->routePath.'.index', ['role'=>$request->role])->with(
+            $this->success(__("User deleted successfully"), $data)
+        );
     }
 }

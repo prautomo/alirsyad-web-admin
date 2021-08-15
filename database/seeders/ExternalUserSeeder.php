@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\ExternalUser;
+use App\Models\Kelas;
 use DB;
 use Faker;
 
@@ -18,7 +19,10 @@ class ExternalUserSeeder extends Seeder
     {
         $fake = Faker\Factory::create();
         if (ExternalUser::get()->isEmpty()) {
+            $kelas = Kelas::first();
+
             $siswa = ExternalUser::create([
+                'nis' => '12345',
                 'username' => 'siswa1',
                 'name' => 'Siswa 1',
                 'email' => 'siswa1@sample.id',
@@ -28,10 +32,13 @@ class ExternalUserSeeder extends Seeder
                 'password' => bcrypt('123456'),
                 'photo' => "https://s.gravatar.com/avatar/8c2ef75f6fd262a0d4002961a9436e0f?s=200&r=pg",
                 'role' => 'SISWA',
-                'status' => 'AKTIF'
+                'status' => 'AKTIF',
+                'kelas_id' => $kelas->id,
             ]);
 
+            $kelas = Kelas::orderBy('created_at', 'desc')->latest()->first();
             $siswa2 = ExternalUser::create([
+                'nis' => '12344',
                 'username' => 'siswa2',
                 'name' => 'Siswa 2',
                 'email' => 'siswa2@sample.id',
@@ -41,7 +48,8 @@ class ExternalUserSeeder extends Seeder
                 'password' => bcrypt('123456'),
                 'photo' => "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmqRgyY2nea7IhhLJiAiic1NCr72JmPmPYtQ&usqp=CAU",
                 'role' => 'SISWA',
-                'status' => 'AKTIF'
+                'status' => 'AKTIF',
+                'kelas_id' => $kelas->id,
             ]);
         }
     }

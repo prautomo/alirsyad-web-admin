@@ -3,12 +3,8 @@
 namespace App\Imports;
 
 use App\Models\ExternalUser;
-use App\Models\Category;
-use App\Models\SubCategory;
-use App\Models\Product;
-use App\Models\ProductGalery;
-use App\Models\Unit;
-use App\Models\Brand;
+use App\Models\Kelas;
+use App\Models\Tingkat;
 use App\Helpers\GenerateCode;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\ToModel;

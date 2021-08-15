@@ -17,6 +17,7 @@ class CreateExternalUsersTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('username')->unique();
+            $table->string('nis')->unique();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('phone')->nullable();
@@ -24,8 +25,10 @@ class CreateExternalUsersTable extends Migration
             $table->string('password');
             $table->string('photo')->nullable();
             $table->string('address')->nullable();
+            $table->string('rombongan_belajar')->nullable();
             $table->string('role', 20)->default('SISWA');
             $table->string('status')->default('BELUM_DIKONFIRMASI');
+            $table->unsignedBigInteger('kelas_id');
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

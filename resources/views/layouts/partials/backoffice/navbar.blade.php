@@ -56,9 +56,9 @@
               </div>
             </li>
 
-            @can('materi-list')
+            @can('konten-list')
             <li class="nav-item">
-              <a class="nav-link{{ request()->is('materis*') ? ' active' : '' }}" href="{{ route('backoffice::materis.index') }}">
+              <a class="nav-link{{ request()->is('kontens*') ? ' active' : '' }}" href="{{ route('backoffice::kontens.index') }}">
                 <i class="ni ni-books text-red"></i>
                 <span class="nav-link-text">Kelola Materi</span>
               </a>
