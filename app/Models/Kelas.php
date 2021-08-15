@@ -15,6 +15,37 @@ class Kelas extends Model
         "tingkat_id", 'name', 'description', 'status', 'logo'
     ];
 
+    /**
+     * Holds the methods names of Eloquent Relations
+     * to fall on delete cascade or on restoring
+     * 
+     * @var array
+     */
+    protected static $relations_to_cascade = ['mataPelajaran', 'externalUser']; 
+
+    /**
+     * Cascade delete and restore
+     */
+    protected static function boot() {
+        parent::boot();
+
+        static::deleting(function($resource) {
+            foreach (static::$relations_to_cascade as $relation) {
+                foreach ($resource->{$relation}()->get() as $item) {
+                    $item->delete();
+                }
+            }
+        });
+
+        static::restoring(function($resource) {
+            foreach (static::$relations_to_cascade as $relation) {
+                foreach ($resource->{$relation}()->get() as $item) {
+                    $item->withTrashed()->restore();
+                }
+            }
+        });
+    }
+
     public static function search($request)
     {
         $data =  self::where("id", "!=", null);
@@ -37,6 +68,11 @@ class Kelas extends Model
     public function mataPelajaran()
     {
         return $this->hasMany("App\Models\MataPelajaran", "kelas_id", "id");
+    }
+
+    public function externalUser()
+    {
+        return $this->hasMany("App\Models\ExternalUser", "kelas_id", "id");
     }
 
     // Get all Mata Pelajaran

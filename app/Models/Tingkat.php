@@ -15,6 +15,37 @@ class Tingkat extends Model
         'name', 'description', 'status', 'logo'
     ];
 
+    /**
+     * Holds the methods names of Eloquent Relations
+     * to fall on delete cascade or on restoring
+     * 
+     * @var array
+     */
+    protected static $relations_to_cascade = ['kelas']; 
+
+    /**
+     * Cascade delete and restore
+     */
+    protected static function boot() {
+        parent::boot();
+
+        static::deleting(function($resource) {
+            foreach (static::$relations_to_cascade as $relation) {
+                foreach ($resource->{$relation}()->get() as $item) {
+                    $item->delete();
+                }
+            }
+        });
+
+        static::restoring(function($resource) {
+            foreach (static::$relations_to_cascade as $relation) {
+                foreach ($resource->{$relation}()->get() as $item) {
+                    $item->withTrashed()->restore();
+                }
+            }
+        });
+    }
+
     public static function search($request)
     {
         $data =  self::where("id", "!=", null);
