@@ -154,7 +154,7 @@ class ExternalUserController extends Controller{
         $user = ExternalUser::create($input);
 
         return redirect()->route($this->routePath.'.index', ['role'=>$request->role])->with(
-            $this->success(__("External User created successfully"), $data)
+            $this->success(__("External User created successfully"), $user)
         );
     }
 

@@ -38,7 +38,7 @@
                     https://datatables.net/reference/option/columns
                 --}}
                 <th data-data="DT_RowIndex" data-searchable="false">@lang("No")</th>
-                <th data-data="show-img">@lang("Image")</th>
+                <!-- <th data-data="show-img">@lang("Image")</th> -->
                 <th data-data="nis">@lang("NIS")</th>
                 <th data-data="name">@lang("Name")</th>
                 <th data-data="email">@lang("Email")</th>
