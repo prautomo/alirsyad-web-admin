@@ -136,8 +136,19 @@ function UploadBatchSiswa() {
       data: excelData,
       params: params
     }).then(function (response) {
-      console.log(response.data.data);
-      sweetalert2__WEBPACK_IMPORTED_MODULE_7___default.a.fire("Berhasil Mengupload", response.data.message);
+      console.log(response.data.data); // Swal.fire("Berhasil Mengupload", response.data.message)
+
+      sweetalert2__WEBPACK_IMPORTED_MODULE_7___default.a.fire({
+        title: 'Berhasil Mengupload',
+        showDenyButton: false,
+        showCancelButton: false,
+        confirmButtonText: "OK"
+      }).then(function (result) {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          window.location.href = '/backoffice/external-users?role=SISWA';
+        }
+      });
     })["catch"](function (err) {
       sweetalert2__WEBPACK_IMPORTED_MODULE_7___default.a.fire("Gagal Mengupload", err.response.data.message);
     });

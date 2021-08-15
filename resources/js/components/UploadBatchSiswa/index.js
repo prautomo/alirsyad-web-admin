@@ -54,7 +54,19 @@ function UploadBatchSiswa() {
         }
         window.axios.post("/backoffice/external-users/import", { data: excelData, params: params }).then((response) => {
             console.log(response.data.data)
-            Swal.fire("Berhasil Mengupload", response.data.message)
+            // Swal.fire("Berhasil Mengupload", response.data.message)
+
+            Swal.fire({
+                title: 'Berhasil Mengupload',
+                showDenyButton: false,
+                showCancelButton: false,
+                confirmButtonText: `OK`,
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    window.location.href = '/backoffice/external-users?role=SISWA'
+                } 
+            })
         }).catch((err) => {
             Swal.fire("Gagal Mengupload", err.response.data.message)
         })
