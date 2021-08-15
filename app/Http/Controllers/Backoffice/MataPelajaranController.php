@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Validator;
 use Auth;
 use DB;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use App\Services\UploadService;
 use App\Models\MataPelajaran;
@@ -33,8 +34,12 @@ class MataPelajaranController extends Controller{
     public function datatable(){
         $query = MataPelajaran::query();
 
+        // relation with tingkat
+        $query = $query->with('kelas.tingkat');
+
         return datatables()
             ->of($query)
+            ->addIndexColumn()
             ->addColumn('show-img', function($data) {
                 if(empty($data->icon)){
                     return "not available";
@@ -44,12 +49,10 @@ class MataPelajaranController extends Controller{
                     ]);
                 }
             })
-            ->addColumn('kelas', function($data) {
-                if(empty($data->kelas)){
-                    return "-";
-                }else{
-                    return $data->kelas->name;
-                }
+            ->addColumn("created_at", function ($data) {
+                $createdAt = new Carbon($data->created_at);
+
+                return $createdAt->format("d-m-Y h:i:s");
             })
             ->addColumn("action", function ($data) {
                 return view("components.datatable.actions", [

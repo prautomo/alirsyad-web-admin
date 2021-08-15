@@ -44,6 +44,7 @@ class ExternalUserController extends Controller{
 
         $dt = datatables()
         ->of($query)
+        ->addIndexColumn()
         ->addColumn('show-img', function($data) {
             return view("components.datatable.image", [
                 "url" => asset($data->photo)

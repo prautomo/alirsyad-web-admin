@@ -32,8 +32,12 @@ class KelasController extends Controller{
     public function datatable(){
         $query = Kelas::query();
 
+        // relation with tingkat
+        $query = $query->with('tingkat');
+
         return datatables()
             ->of($query)
+            ->addIndexColumn()
             ->addColumn("action", function ($data) {
                 return view("components.datatable.actions", [
                     "name" => $data->name,
@@ -42,8 +46,10 @@ class KelasController extends Controller{
                     "editRoute" => route($this->routePath.".edit", $data->id),
                 ]);
             })
-            ->addColumn("tingkat", function ($data) {
-                return !empty(@$data->tingkat->name) ? $data->tingkat->name : "-";
+            ->addColumn("created_at", function ($data) {
+                $createdAt = new Carbon($data->created_at);
+
+                return $createdAt->format("d-m-Y h:i:s");
             })
             ->order(function ($query) {
                 $query->orderBy('created_at', 'desc');

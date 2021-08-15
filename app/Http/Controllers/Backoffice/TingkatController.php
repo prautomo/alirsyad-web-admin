@@ -33,6 +33,7 @@ class TingkatController extends Controller{
 
         return datatables()
             ->of($query)
+            ->addIndexColumn()
             ->addColumn("action", function ($data) {
                 return view("components.datatable.actions", [
                     "name" => $data->name,
@@ -40,6 +41,11 @@ class TingkatController extends Controller{
                     "deleteRoute" => route($this->routePath.".destroy", $data->id),
                     "editRoute" => route($this->routePath.".edit", $data->id),
                 ]);
+            })
+            ->addColumn("created_at", function ($data) {
+                $createdAt = new Carbon($data->created_at);
+
+                return $createdAt->format("d-m-Y h:i:s");
             })
             ->order(function ($query) {
                 $query->orderBy('created_at', 'desc');
