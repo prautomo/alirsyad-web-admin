@@ -85,3 +85,11 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
     // Route::post("upload/base64",  "FileUploadController@uploadImageBase64");
     // Route::post("batchproductmitra/upload",  "ImportController@doUploadBatch");
 });
+
+Route::get('/clear-cache', function() {
+    $configCache = Artisan::call('config:cache');
+    $clearCache = Artisan::call('cache:clear');
+    // return what you want
+
+    return "clear cache success.";
+});

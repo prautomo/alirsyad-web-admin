@@ -34,6 +34,11 @@ class SubCategoryController extends Controller{
 
         return datatables()
             ->of($query)
+            ->addColumn("created_at", function ($data) {
+                $createdAt = new Carbon($data->created_at);
+
+                return $createdAt->format("d-m-Y H:i:s");
+            })
             ->addColumn("action", function ($data) use ($categoryId) {
                 return view("components.datatable.actions", [
                     "name" => $data->name,

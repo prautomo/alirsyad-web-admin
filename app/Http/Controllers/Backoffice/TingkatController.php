@@ -42,10 +42,13 @@ class TingkatController extends Controller{
                     "editRoute" => route($this->routePath.".edit", $data->id),
                 ]);
             })
+            ->addColumn("uploader", function ($data) {
+                return "not set";
+            })
             ->addColumn("created_at", function ($data) {
                 $createdAt = new Carbon($data->created_at);
 
-                return $createdAt->format("d-m-Y h:i:s");
+                return $createdAt->format("d-m-Y H:i:s");
             })
             ->order(function ($query) {
                 $query->orderBy('created_at', 'desc');

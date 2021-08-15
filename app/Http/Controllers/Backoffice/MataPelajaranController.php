@@ -52,7 +52,7 @@ class MataPelajaranController extends Controller{
             ->addColumn("created_at", function ($data) {
                 $createdAt = new Carbon($data->created_at);
 
-                return $createdAt->format("d-m-Y h:i:s");
+                return $createdAt->format("d-m-Y H:i:s");
             })
             ->addColumn("action", function ($data) {
                 return view("components.datatable.actions", [
