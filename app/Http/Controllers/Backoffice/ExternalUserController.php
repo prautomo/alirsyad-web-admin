@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\ExternalUser;
 use App\Models\Tingkat;
+use App\Models\Kelas;
 use App\Services\UploadService;
 use DB;
 use Hash;
@@ -243,5 +244,97 @@ class ExternalUserController extends Controller{
         return redirect()->route($this->routePath.'.index', ['role'=>$request->role])->with(
             $this->success(__("User deleted successfully"), $data)
         );
+    }
+
+    /**
+     * Bulk upload user from excel.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function batchImport(Request $request){
+        return view($this->prefix.'.batch_upload');
+    }
+
+    /**
+     * Bulk upload user from excel.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function import(Request $request){
+        try {
+            return DB::transaction(function ()  use ($request) {
+
+                // loop every row
+                foreach ($request->data as $key => $row) {
+                    // assign init data
+                    $nis = $row["A"];
+                    $name = $row["B"];
+                    $username = $row["C"];
+                    $email = $row["D"];
+                    $phone = @$row["E"];
+                    $rombonganBelajar = @$row["F"];
+                    $tingkat = $row["G"];
+                    $kelas = $row["H"];
+
+                    // skip existing nis
+                    if(ExternalUser::where('nis', $nis)->first()!==null){
+                        continue;
+                    }
+
+                    // send password to email siswa
+                    if(@$request->payload->sendEmail){
+                        
+                    }
+
+                    // cek tingkat if not exist
+                    $tingkatObject = Tingkat::firstOrCreate([
+                        'name' => $tingkat,
+                    ], [
+                        'name' => $tingkat,
+                        'description' => $tingkat.' from batch',
+                        'status' => 'active',
+                    ]);
+
+                    // cek kelas if not exist
+                    $kelasObject = Kelas::firstOrCreate([
+                        'name' => $kelas,
+                        'tingkat_id' => $tingkatObject->id,
+                    ], [
+                        'name' => $kelas,
+                        'description' => $kelas.' from batch',
+                        'status' => 'active',
+                    ]);
+
+                    // assign kelas id
+                    if($kelasObject!==null){
+                        $input['kelas_id'] = $kelasObject->id;
+                    }
+
+                    $password = "123456"; // default password
+
+                    $input['nis'] = $nis;
+                    $input['name'] = $name;
+                    $input['username'] = $name;
+                    $input['email'] = $email;
+                    if($phone){
+                        $input['phone'] = $phone;
+                        $input['phone_verified_at'] = now();
+                    }
+                    if($rombonganBelajar){
+                        $input['rombongan_belajar'] = $rombonganBelajar;
+                    }
+                    $input['password'] = Hash::make($password);
+                    $input['status'] = "AKTIF";
+                    $input['role'] = "SISWA";
+                    $input['email_verified_at'] = now();
+
+                    $user = ExternalUser::create($input);
+                }
+
+                return $this->returnData([], "Data Berhasil Di Upload");
+            });
+        } catch (\Throwable $th) {
+            return $this->returnError($th);
+        }
     }
 }

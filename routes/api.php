@@ -23,8 +23,6 @@ Route::middleware('auth:api')->group( function () {
     Route::get("/tingkats/{id}", "API\TingkatController@show");
 });
 
-Route::post("/payment/callback", "Front\TransactionController@validatePayment");
-Route::get("/payment/callback", "Front\TransactionController@validatePayment");
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
