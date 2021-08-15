@@ -112,7 +112,13 @@ function UploadBatchSiswa() {
             <div className="masonry-item col-lg-12">
                 <div className="bd bgc-white">
                     <div className="layers">
-                        <div className="layer w-100 p-20 ">
+                        <Col className="mt-2 text-left pl-0">
+                            <h3>1. Download Sample Excel</h3>
+                            <Button className="btn-info" size="sm" onClick={() => {window.location.href = '/uploads/template_batch_siswa.xlsx'}}>Download Template</Button>
+                        </Col>
+
+                        <div className="layer w-100 p-20 mt-2">
+                            <h3>2. Upload File Excel</h3>
                             <div {...getRootProps()} style={{
                                 border: "1px dashed #dddddd",
                                 borderRadius: "5px",
@@ -122,10 +128,10 @@ function UploadBatchSiswa() {
                             </div>
                         </div>
 
-                        <Col className="mt-2 text-right pr-0">
-                            <Button className="btn-info" size="sm" onClick={() => {window.location.href = '/uploads/template_batch_siswa.xlsx'}}>Download Template</Button>{" "}
-                            <Button className="btn-secondary" size="sm" onClick={() => {window.location.href = '/backoffice/external-users?role=SISWA'}}>Cancel</Button>{" "}
-                            <Button color="primary" size="sm" onClick={doUploadBatch}>Upload Data</Button>
+                        <Col className="mt-2 text-left pl-0">
+                            <h3>3. Upload Data or Cancel</h3>
+                            <Button color="primary" size="sm" onClick={doUploadBatch}>Upload Data</Button>{" "}
+                            <Button className="btn-secondary" size="sm" onClick={() => {window.location.href = '/backoffice/external-users?role=SISWA'}}>Cancel</Button>
                         </Col>
 
                         {/* <div className="layer w-100 p-20 mt-2">
