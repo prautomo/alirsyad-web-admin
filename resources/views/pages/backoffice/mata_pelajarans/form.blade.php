@@ -43,6 +43,7 @@
             url:"{{route("backoffice::kelas.listJson")}}",
             data:"q_tingkat_id=" + tingkatId,
             success: function(res){ 
+                $('#kelas').html("");
                 for(var i=0; i<res.length; i++){
                     var kelas = res[i];
                     if(kelas.id==selectedId){
