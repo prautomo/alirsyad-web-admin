@@ -43,7 +43,7 @@ class TingkatController extends Controller{
                 ]);
             })
             ->addColumn("uploader", function ($data) {
-                return "not set";
+                return @$data->uploader_id ? $data->uploader->name : "not set";
             })
             ->addColumn("created_at", function ($data) {
                 $createdAt = new Carbon($data->created_at);
@@ -63,9 +63,29 @@ class TingkatController extends Controller{
 
         return view($this->prefix.'.index');
     }
+
+    /**
+     * Get List Teacher Uploader
+     */
+    private function getGuruUploader(){
+        // get list tingkat
+        $role = "GURU";
+        $users = User::whereHas("roles", function($q) use ($role){ $q->where("key", $role); })->get();
+        $users = $users->whereNotIn('id', Tingkat::whereNotNull('uploader_id')->pluck('uploader_id'));
+        
+        $uploaderList = [];
+        $uploaderList[""] = "Pilih guru uploader";
+        foreach($users as $user){
+            $uploaderList[$user->id] = $user->name;
+        }
+
+        return $uploaderList;
+    }
     
     public function create(){
-        return view($this->prefix.'.create');
+        $uploaderList = $this->getGuruUploader();
+
+        return view($this->prefix.'.create', ['uploaderList' => $uploaderList]);
     }
 
     public function store(Request $request){
@@ -83,18 +103,20 @@ class TingkatController extends Controller{
 
     public function edit(Request $request, $id){
         $dt = Tingkat::findOrFail($id);
+        $uploaderList = $this->getGuruUploader();
 
-        return view($this->prefix.'.edit', ['data'=>$dt]);
+        return view($this->prefix.'.edit', ['data'=>$dt, 'uploaderList' => $uploaderList]);
     }
 
     public function update(Request $request, $id){
         // validasi form
         $this->validate($request, [
             'name' => 'required|string',
+            'uploader_id' => 'required',
         ]);
         
         $dt = Tingkat::findOrFail($id);
-        $dt->update($request->only(['description', 'name']));
+        $dt->update($request->only(['description', 'name', 'uploader_id']));
 
         return redirect()->route($this->routePath.'.index')->with(
             $this->success(__("Success to update Tingkat"), $dt)

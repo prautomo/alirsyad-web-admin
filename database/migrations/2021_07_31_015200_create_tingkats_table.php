@@ -19,6 +19,7 @@ class CreateTingkatsTable extends Migration
             $table->text('description')->nullable();
             $table->text('logo')->default("");
             $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->unsignedBigInteger('uploader_id')->nullable();
             $table->timestamps();
             $table->softDeletes('deleted_at', 0);
         });

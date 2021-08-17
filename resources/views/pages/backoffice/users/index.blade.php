@@ -44,6 +44,7 @@
               <th scope="col" class="sort" data-sort="name">Name</th>
               <th scope="col" class="sort" data-sort="email">Email</th>
               <th scope="col">Roles</th>
+              <th scope="col" class="text-center">Uploader</th>
               <th scope="col">Action</th>
               <th scope="col"></th>
             </tr>
@@ -59,6 +60,13 @@
                     @foreach($user->getRoleNames() as $v)
                       <label class="badge badge-success">{{ $v }}</label>
                     @endforeach
+                  @endif
+                </td>
+                <td class="text-center">
+                  @if(@$user->uploaderTingkat)
+                    <label class="badge badge-success">Tingkat: {{ $user->uploaderTingkat->name }}</label>
+                  @else
+                  <label class="badge badge-warning">Bukan</label>
                   @endif
                 </td>
                 <td>

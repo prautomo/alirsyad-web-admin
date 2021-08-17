@@ -58,4 +58,9 @@ class User extends Authenticatable
 
         return $data;
     }
+
+    public function uploaderTingkat()
+    {
+        return $this->hasOne("App\Models\Tingkat", "uploader_id", "id");
+    }
 }

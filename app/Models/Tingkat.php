@@ -12,7 +12,7 @@ class Tingkat extends Model
     use HasFactory, SoftDeletes, SearchableTrait;
 
     protected $fillable = [
-        'name', 'description', 'status', 'logo'
+        'name', 'description', 'status', 'logo', 'uploader_id'
     ];
 
     /**
@@ -53,9 +53,15 @@ class Tingkat extends Model
             "name" => "LIKE",
             "description" => "LIKE",
             "status" => "=",
+            "uploader_id" => "=",
         ]);
 
         return $data;
+    }
+
+    public function uploader()
+    {
+        return $this->belongsTo("App\Models\User",  "uploader_id", "id");
     }
 
     public function kelas()

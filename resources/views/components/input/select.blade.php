@@ -1,6 +1,6 @@
-@props(['name', 'label', 'value' => '', 'helper', 'data' => null, 'sources' => [], 'required'])
+@props(['name', 'label', 'value' => '', 'wrappingId' => '' , 'helper', 'data' => null, 'sources' => [], 'required'])
 
-<div class="col-md-12">
+<div class="col-md-12" id="{{$wrappingId}}">
     <div class="form-group">
         <label class="form-control-label" for="input-{{$name}}">{{$label}} {{@$required ? "(*)" : ""}}</label>
 
