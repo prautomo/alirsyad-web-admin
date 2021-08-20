@@ -56,7 +56,7 @@ class UserController extends Controller{
         $tingkats = Tingkat::whereNull('uploader_id')->get();
         
         $tingkatList = [];
-        $tingkatList[""] = "Pilih tingkat";
+        $tingkatList[""] = "Bukan Uploader";
         foreach($tingkats as $tingkat){
             $tingkatList[$tingkat->id] = $tingkat->name;
         }
@@ -102,13 +102,15 @@ class UserController extends Controller{
         // if guru
         if(strtolower(@$request->input('roles')[0]) === "guru"){
             // validate assign uploader
-            $this->validate($request, [
-                'uploader_tingkat_id' => 'required'
-            ]);
+            // $this->validate($request, [
+            //     'uploader_tingkat_id' => 'required'
+            // ]);
 
             // check tingkat
-            $tingkat = Tingkat::find($request->uploader_tingkat_id);
-            $tingkat->update(['uploader_id' => $user->id]);
+            if($request->uploader_tingkat_id!==""){
+                $tingkat = Tingkat::find($request->uploader_tingkat_id);
+                $tingkat->update(['uploader_id' => $user->id]);
+            }
         }
     
         return redirect()->route($this->routePath.'.index')
@@ -184,9 +186,9 @@ class UserController extends Controller{
         // if guru
         if(strtolower(@$request->input('roles')[0]) === "guru"){
             // validate assign uploader
-            $this->validate($request, [
-                'uploader_tingkat_id' => 'required'
-            ]);
+            // $this->validate($request, [
+            //     'uploader_tingkat_id' => 'required'
+            // ]);
             
             // update tingkat sebelumnya
             if(@$user->uploaderTingkat){
@@ -195,8 +197,10 @@ class UserController extends Controller{
             }
 
             // check tingkat
-            $tingkat = Tingkat::find($request->uploader_tingkat_id);
-            $tingkat->update(['uploader_id' => $user->id]);
+            if($request->uploader_tingkat_id!==""){
+                $tingkat = Tingkat::find($request->uploader_tingkat_id);
+                $tingkat->update(['uploader_id' => $user->id]);
+            }
         }
     
         return redirect()->route($this->routePath.'.index')
