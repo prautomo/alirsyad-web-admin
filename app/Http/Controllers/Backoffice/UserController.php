@@ -15,6 +15,7 @@ use App\Models\MataPelajaran;
 use Spatie\Permission\Models\Role;
 use DB;
 use Hash;
+use Carbon\Carbon;
 use Illuminate\Support\Arr;
     
 class UserController extends Controller{
@@ -30,23 +31,117 @@ class UserController extends Controller{
     }
 
     /**
+     * Display data in datatable
+     *
+     * @return void
+     */
+    public function datatable(Request $request){
+        $query = User::query();
+
+        return datatables()
+            ->of($query)
+            ->filter(function ($query) use ($request) {
+
+                // search
+                $search = $request->search['value'];
+
+                // filter by column
+                $query = $query->where('name', 'LIKE', '%'.$search.'%');
+                // $query = $query->orWhere('name', 'LIKE', '%'.$search.'%');
+
+                // filter not me
+                $query = $query->whereNotIn('id', [\Auth::user()->id]);
+
+                // filter by role
+                $role = $request->role;
+                if(!empty($role)){
+                    $query = $query->whereHas("roles", function($q) use ($role){ $q->where("key", $role); });
+                }
+
+                if($search){
+                    $query = $query->orWhereHas('uploaderTingkat', function($query2) use ( $search ){
+                        $query2->where('name', 'LIKE', '%'.$search.'%');
+                    });
+
+                    $query = $query->orWhereHas('mataPelajaran', function($query2) use ( $search ){
+                        $query2->where('name', 'LIKE', '%'.$search.'%');
+                    });
+                }
+            })
+            ->addIndexColumn()
+            ->addColumn("roles", function ($data) {
+                $roles = "";
+
+                if(!empty($data->getRoleNames())){
+                    foreach($data->getRoleNames() as $v){
+                        $roles .= "{$v} ";
+                    }
+                }
+
+                return view("components.datatable.label", [
+                    "badge" => 'success',
+                    "text" => $roles,
+                ]);
+            })
+            ->addColumn("uploader", function ($data) {
+                if($data->uploaderTingkat){
+                    return view("components.datatable.label", [
+                        "badge" => 'success',
+                        "text" => 'Tingkat : '.@$data->uploaderTingkat->name ,
+                    ]);
+                }else{
+                    return view("components.datatable.label", [
+                        "badge" => 'warning',
+                        "text" => 'Bukan',
+                    ]);
+                }
+            })
+            ->addColumn("mapel", function ($data) {
+                return @$data->mataPelajaran->name ? $data->mataPelajaran->name : 'not set';
+            })
+            ->addColumn("action", function ($data) {
+                return view("components.datatable.actions", [
+                    "name" => $data->name,
+                    "permissionName" => 'user',
+                    "deleteRoute" => route($this->routePath.".destroy", $data->id),
+                    "editRoute" => route($this->routePath.".edit", $data->id),
+                ]);
+            })
+            ->addColumn("created_at", function ($data) {
+                $createdAt = new Carbon($data->created_at);
+
+                return $createdAt->format("d-m-Y H:i:s");
+            })
+            ->order(function ($query) {
+                $query->orderBy('created_at', 'desc');
+            })
+            ->toJson();
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
-        $data = User::whereNotIn('id', [\Auth::user()->id]);
+        // $data = User::whereNotIn('id', [\Auth::user()->id]);
 
-        // get role from query params
-        $role = $request->role;
-        if(!empty($role)){
-            $data = $data->whereHas("roles", function($q) use ($role){ $q->where("key", $role); });
+        // // get role from query params
+        // $role = $request->role;
+        // if(!empty($role)){
+        //     $data = $data->whereHas("roles", function($q) use ($role){ $q->where("key", $role); });
+        // }
+
+        // $data = $data->orderBy('id','DESC')->paginate(5);
+        // return view($this->prefix.'.index',compact('data'))
+        //     ->with('i', ($request->input('page', 1) - 1) * 5);
+
+        if ($request->ajax()) {
+            return $this->datatable($request);
         }
 
-        $data = $data->orderBy('id','DESC')->paginate(5);
-        return view($this->prefix.'.index',compact('data'))
-            ->with('i', ($request->input('page', 1) - 1) * 5);
+        return view($this->prefix.'.index');
     }
 
     /**
@@ -75,7 +170,7 @@ class UserController extends Controller{
         $mapelList = [];
         // $mapelList[""] = "-";
         foreach($mapels as $mapel){
-            $mapelList[$mapel->id] = $mapel->name;
+            $mapelList[$mapel->id] = $mapel->name . " (Kelas ". @$mapel->kelas->name ." ".@$mapel->kelas->tingkat->name.")";
         }
 
         return $mapelList;
@@ -171,7 +266,7 @@ class UserController extends Controller{
         // get selected mapel
         $mapel = @$data->mataPelajaran;
         if($mapel){
-            $mapelList[$mapel->id] = $mapel->name;
+            $mapelList[$mapel->id] = $mapel->name . " (Kelas ". @$mapel->kelas->name ." ".@$mapel->kelas->tingkat->name.")";
         }
     
         return view($this->prefix.'.edit', compact('data','roles','userRole', 'tingkatList', 'mapelList'));
@@ -235,14 +330,13 @@ class UserController extends Controller{
     /**
      * Remove the specified resource from storage.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return null
      */
-    public function destroy($id)
-    {
-        User::find($id)->delete();
-        
-        return redirect()->route($this->routePath.'.index')
-                        ->with('success', 'User deleted successfully');
+    public function destroy(Request $request, $id){
+        $d = User::findOrFail($id);
+
+        $d->delete();
     }
 }
