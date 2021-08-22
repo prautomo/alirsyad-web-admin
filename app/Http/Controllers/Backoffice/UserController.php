@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Tingkat;
+use App\Models\MataPelajaran;
 use Spatie\Permission\Models\Role;
 use DB;
 use Hash;
@@ -63,6 +64,22 @@ class UserController extends Controller{
 
         return $tingkatList;
     }
+
+    /**
+     * Get Mata Pelajaran
+     */
+    private function getMataPelajaran(){
+        // get list tingkat
+        $mapels = MataPelajaran::whereNotIn('id', User::whereNotNull('mata_pelajaran_id')->pluck('mata_pelajaran_id'))->get();
+        
+        $mapelList = [];
+        // $mapelList[""] = "-";
+        foreach($mapels as $mapel){
+            $mapelList[$mapel->id] = $mapel->name;
+        }
+
+        return $mapelList;
+    }
     
     /**
      * Show the form for creating a new resource.
@@ -73,8 +90,9 @@ class UserController extends Controller{
     {
         $roles = Role::pluck('name','name')->all();
         $tingkatList = $this->getTingkat();
+        $mapelList = $this->getMataPelajaran();
 
-        return view($this->prefix.'.create',compact('roles', 'tingkatList'));
+        return view($this->prefix.'.create',compact('roles', 'tingkatList', 'mapelList'));
     }
     
     /**
@@ -141,6 +159,7 @@ class UserController extends Controller{
         $roles = Role::pluck('name','name')->all();
         $userRole = $data->roles->pluck('name','name')->all();
         $tingkatList = $this->getTingkat();
+        $mapelList = $this->getMataPelajaran();
 
         // get selected tingkat
         $uploaderTingkat = @$data->uploaderTingkat;
@@ -148,8 +167,14 @@ class UserController extends Controller{
             $tingkatList[$uploaderTingkat->id] = $uploaderTingkat->name;
             $data->uploader_tingkat_id = $uploaderTingkat->id;
         }
+
+        // get selected mapel
+        $mapel = @$data->mataPelajaran;
+        if($mapel){
+            $mapelList[$mapel->id] = $mapel->name;
+        }
     
-        return view($this->prefix.'.edit',compact('data','roles','userRole', 'tingkatList'));
+        return view($this->prefix.'.edit', compact('data','roles','userRole', 'tingkatList', 'mapelList'));
     }
     
     /**

@@ -25,7 +25,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'username'
+        'username',
+        'mata_pelajaran_id',
     ];
 
     /**
@@ -53,7 +54,8 @@ class User extends Authenticatable
         $data = self::appendSearchQuery($data, $request, [
             "email" => "=",
             "name" => "LIKE",
-            "username" => "LIKE"
+            "username" => "LIKE",
+            "mata_pelajaran_id" => "=",
         ]);
 
         return $data;
@@ -62,5 +64,10 @@ class User extends Authenticatable
     public function uploaderTingkat()
     {
         return $this->hasOne("App\Models\Tingkat", "uploader_id", "id");
+    }
+
+    public function mataPelajaran()
+    {
+        return $this->belongsTo("App\Models\MataPelajaran",  "mata_pelajaran_id", "id");
     }
 }

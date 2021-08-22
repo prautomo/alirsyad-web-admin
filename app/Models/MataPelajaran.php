@@ -38,4 +38,12 @@ class MataPelajaran extends Model
     {
         return $this->belongsTo("App\Models\Kelas",  "kelas_id", "id");
     }
+
+    /**
+     * Guru Pengajar (Mata Pelajaran)
+     */
+    public function guru()
+    {
+        return $this->hasMany("App\Models\User", "mata_pelajaran_id", "id");
+    }
 }
