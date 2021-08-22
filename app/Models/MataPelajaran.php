@@ -11,6 +11,8 @@ class MataPelajaran extends Model
 {
     use HasFactory, SearchableTrait, SoftDeletes;
 
+    protected $appends = ['disabled'];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -29,6 +31,7 @@ class MataPelajaran extends Model
         $data = self::appendSearchQuery($data, $request, [
             "name" => "LIKE",
             "slug" => "=",
+            "kelas_id" => "=",
         ]);
 
         return $data;
@@ -45,5 +48,11 @@ class MataPelajaran extends Model
     public function guru()
     {
         return $this->hasMany("App\Models\User", "mata_pelajaran_id", "id");
+    }
+
+    // 
+    public function getDisabledAttribute()
+    {
+        return $this->kelas_id !== \Auth::user()->kelas_id;
     }
 }
