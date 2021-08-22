@@ -38,9 +38,18 @@ class KelasController extends Controller{
         return datatables()
             ->of($queryData)
             ->filter(function ($query) use ($request) {
-                if($request->search['value']){
-                    $query = $query->whereHas('waliKelas', function($query2) use ( $request ){
-                        $query2->where('name', 'LIKE', '%'.$request->search['value'].'%');
+
+                $search = @$request->search['value'];
+
+                if($search){
+                    $query->where('name', 'LIKE', '%'.$search.'%');
+                    
+                    $query = $query->orWhereHas('tingkat', function($query2) use ( $search ){
+                        $query2->where('name', 'LIKE', '%'.$search.'%');
+                    });
+
+                    $query = $query->orWhereHas('waliKelas', function($query2) use ( $search ){
+                        $query2->where('name', 'LIKE', '%'.$search.'%');
                     });
                 }
             })
