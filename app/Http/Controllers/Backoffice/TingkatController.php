@@ -28,11 +28,23 @@ class TingkatController extends Controller{
      *
      * @return void
      */
-    public function datatable(){
+    public function datatable(Request $request){
         $query = Tingkat::query();
 
         return datatables()
             ->of($query)
+            ->filter(function ($query) use ($request) {
+
+                $search = @$request->search['value'];
+
+                if($search){
+                    $query->where('name', 'LIKE', '%'.$search.'%');
+                    
+                    $query = $query->orWhereHas('uploader', function($query2) use ( $search ){
+                        $query2->where('name', 'LIKE', '%'.$search.'%');
+                    });
+                }
+            })
             ->addIndexColumn()
             ->addColumn("action", function ($data) {
                 return view("components.datatable.actions", [
@@ -58,7 +70,7 @@ class TingkatController extends Controller{
 
     public function index(Request $request){
         if ($request->ajax()) {
-            return $this->datatable();
+            return $this->datatable($request);
         }
 
         return view($this->prefix.'.index');
