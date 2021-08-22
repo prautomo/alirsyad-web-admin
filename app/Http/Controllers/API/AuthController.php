@@ -18,10 +18,16 @@ class AuthController extends BaseController
      */
     public function login(Request $request)
     {
-        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
+
+        $login_type = filter_var( $request->nis, FILTER_VALIDATE_EMAIL ) ? 'email' : 'nis';
+
+        if(Auth::attempt([$login_type => $request->nis, 'password' => $request->password])){ 
             $user = Auth::user(); 
-            $success['token'] =  $user->createToken('MyAppDigiBook308')-> accessToken; 
-            $success['name'] =  $user->name;
+            $generateToken = $user->createToken('MyAppDigiBook308');
+            $success['token'] = @$generateToken->accessToken; 
+            $success['expires_at'] = @$generateToken->token->expires_at; 
+            $success['nis'] = @$user->nis; 
+            $success['name'] = @$user->name;
    
             return $this->sendResponse($success, 'User login successfully.');
         } 
