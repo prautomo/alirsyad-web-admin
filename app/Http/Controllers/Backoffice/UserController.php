@@ -107,7 +107,7 @@ class UserController extends Controller{
             // ]);
 
             // check tingkat
-            if($request->uploader_tingkat_id!==""){
+            if($request->uploader_tingkat_id){
                 $tingkat = Tingkat::find($request->uploader_tingkat_id);
                 $tingkat->update(['uploader_id' => $user->id]);
             }

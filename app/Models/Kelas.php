@@ -12,7 +12,7 @@ class Kelas extends Model
     use HasFactory, SoftDeletes, SearchableTrait;
 
     protected $fillable = [
-        "tingkat_id", 'name', 'description', 'status', 'logo'
+        "tingkat_id", 'name', 'description', 'status', 'logo', 'wali_kelas_id'
     ];
 
     /**
@@ -63,6 +63,11 @@ class Kelas extends Model
     public function tingkat()
     {
         return $this->belongsTo("App\Models\Tingkat",  "tingkat_id", "id");
+    }
+
+    public function waliKelas()
+    {
+        return $this->belongsTo("App\Models\User",  "wali_kelas_id", "id");
     }
 
     public function mataPelajaran()

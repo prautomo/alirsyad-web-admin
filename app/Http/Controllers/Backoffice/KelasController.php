@@ -29,15 +29,25 @@ class KelasController extends Controller{
      *
      * @return void
      */
-    public function datatable(){
-        $query = Kelas::query();
+    public function datatable(Request $request){
+        $queryData = Kelas::query();
 
         // relation with tingkat
-        $query = $query->with('tingkat');
-
+        $queryData = $queryData->with(['tingkat', 'waliKelas']);
+        
         return datatables()
-            ->of($query)
+            ->of($queryData)
+            ->filter(function ($query) use ($request) {
+                if($request->search['value']){
+                    $query = $query->whereHas('waliKelas', function($query2) use ( $request ){
+                        $query2->where('name', 'LIKE', '%'.$request->search['value'].'%');
+                    });
+                }
+            })
             ->addIndexColumn()
+            ->addColumn("wali_kelas", function ($data) {
+                return @$data->waliKelas ? $data->waliKelas->name : 'not set';
+            })
             ->addColumn("action", function ($data) {
                 return view("components.datatable.actions", [
                     "name" => $data->name,
@@ -59,7 +69,7 @@ class KelasController extends Controller{
 
     public function index(Request $request){
         if ($request->ajax()) {
-            return $this->datatable();
+            return $this->datatable($request);
         }
 
         return view($this->prefix.'.index');
@@ -70,17 +80,35 @@ class KelasController extends Controller{
 
         return response()->json($datas, 200);
     }
+
+    /**
+     * Get Guru List
+     */
+    private function getGuruList(){
+        // get list guru
+        $role = "GURU";
+        $guru = User::whereHas("roles", function($q) use ($role){ $q->where("key", $role); });
+        $guru = $guru->whereNotIn('id', Kelas::whereNotNull('wali_kelas_id')->pluck('wali_kelas_id'));
+        $guru = $guru->get();
+        $guruList = [];
+        foreach($guru as $guru){
+            $guruList[$guru->id] = $guru->name;
+        }
+
+        return $guruList;
+    }
     
     public function create(){
         // get list tingkat
         $tingkats = Tingkat::all();
         $tingkatList = [];
-
         foreach($tingkats as $tingkat){
             $tingkatList[$tingkat->id] = $tingkat->name;
         }
 
-        return view($this->prefix.'.create', ['tingkatList' => $tingkatList]);
+        $guruList = $this->getGuruList();
+
+        return view($this->prefix.'.create', ['tingkatList'=> $tingkatList, 'guruList'=> $guruList]);
     }
 
     public function store(Request $request){
@@ -108,7 +136,14 @@ class KelasController extends Controller{
 
         $dt = Kelas::findOrFail($id);
 
-        return view($this->prefix.'.edit', ['data'=>$dt, 'tingkatList' => $tingkatList]);
+        $guruList = $this->getGuruList();
+        // get wali kelas info
+        if($dt->wali_kelas_id){
+            $guru = $dt->waliKelas;
+            $guruList[$guru->id] = $guru->name;
+        }
+
+        return view($this->prefix.'.edit', ['data'=> $dt, 'tingkatList'=> $tingkatList, 'guruList'=> $guruList]);
     }
 
     public function update(Request $request, $id){
@@ -119,7 +154,7 @@ class KelasController extends Controller{
         ]);
         
         $dt = Kelas::findOrFail($id);
-        $dt->update($request->only(['description', 'name', 'tingkat_id']));
+        $dt->update($request->only(['description', 'name', 'tingkat_id', 'wali_kelas_id']));
 
         return redirect()->route($this->routePath.'.index')->with(
             $this->success(__("Success to update Kelas"), $dt)
