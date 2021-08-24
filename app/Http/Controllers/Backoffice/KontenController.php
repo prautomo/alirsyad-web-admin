@@ -66,20 +66,23 @@ class KontenController extends Controller{
 
     public function store(Request $request){
         // validasi form
-        // $this->validate($request, [
-        //     'name' => 'required|string',
-        // ]);
-
-        $unzipper = new ExtractArchive;
+        $this->validate($request, [
+            'name' => 'required|string',
+            'game' => 'required|file|mimes:zip',
+        ]);
 
         $fileArchive = $request->file('game');
-        $extpath = "uploads/game";
-        
-        $archive = isset($fileArchive) ? $fileArchive : null;
-        $destination = isset($extpath) ? strip_tags($extpath) : '';
-        $unzipper->extract($archive, $destination);
-
-        dd($archive, $destination);
+        $extpath = "uploads/simulasi/".strtolower(str_replace(" ", "_", $request->name));
+    
+        $zip = new \ZipArchive;
+        if ($zip->open($fileArchive) === TRUE) {
+            $zip->extractTo($extpath);
+            $zip->close();
+            echo 'ok';
+        } else {
+            echo 'failed';
+        }
+        dd($fileArchive);
 
         $data = Tingkat::create($request->only(['description', 'name']));
 
