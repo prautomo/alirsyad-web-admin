@@ -50,6 +50,14 @@ class MataPelajaran extends Model
         return $this->hasMany("App\Models\User", "mata_pelajaran_id", "id");
     }
 
+    /**
+     * Simulasi
+     */
+    public function simulasi()
+    {
+        return $this->hasMany("App\Models\Simulasi", "mata_pelajaran_id", "id");
+    }
+
     // 
     public function getDisabledAttribute()
     {
