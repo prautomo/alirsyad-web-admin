@@ -23,11 +23,11 @@
             </li>
 
             <li class="nav-item">
-              <a class="nav-link{{ request()->is('backoffice/tingkats*', 'backoffice/kelas*', 'backoffice/mata_pelajarans*', 'backoffice/banners*', 'backoffice/promos*') ? ' active' : ' collapsed' }}" href="#navbar-master" data-toggle="collapse" role="button" aria-expanded="{{ request()->is('backoffice/tingkats*', 'backoffice/kelas*', 'backoffice/mata_pelajarans*') ? 'true' : 'false' }}" aria-controls="navbar-master">
+              <a class="nav-link{{ request()->is('backoffice/tingkats*', 'backoffice/kelas*', 'backoffice/mata_pelajarans*', 'backoffice/simulasis*', 'backoffice/promos*') ? ' active' : ' collapsed' }}" href="#navbar-master" data-toggle="collapse" role="button" aria-expanded="{{ request()->is('backoffice/tingkats*', 'backoffice/kelas*', 'backoffice/mata_pelajarans*') ? 'true' : 'false' }}" aria-controls="navbar-master">
                 <i class="ni ni-ungroup text-red"></i>
                 <span class="nav-link-text">Master</span>
               </a>
-              <div class="collapse{{ request()->is('backoffice/tingkats*', 'backoffice/kelas*', 'backoffice/mata_pelajarans*', 'backoffice/banners*', 'backoffice/promos*') ? ' show' : '' }}" id="navbar-master" style="">
+              <div class="collapse{{ request()->is('backoffice/tingkats*', 'backoffice/kelas*', 'backoffice/mata_pelajarans*', 'backoffice/simulasis*', 'backoffice/promos*') ? ' show' : '' }}" id="navbar-master" style="">
                 <ul class="nav nav-sm flex-column">
                   @can('tingkat-list')
                   <li class="nav-item">
@@ -52,6 +52,14 @@
                     </a>
                   </li>
                   @endcan
+
+                  <!-- @can('game-list') -->
+                  <li class="nav-item">
+                    <a href="{{ route('backoffice::simulasis.index') }}" class="nav-link">
+                      <span class="sidenav-normal"> Game Simulasi </span>
+                    </a>
+                  </li>
+                  <!-- @endcan -->
                 </ul>
               </div>
             </li>
