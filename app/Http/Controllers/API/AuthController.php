@@ -28,6 +28,8 @@ class AuthController extends BaseController
             $success['expires_at'] = @$generateToken->token->expires_at; 
             $success['nis'] = @$user->nis; 
             $success['name'] = @$user->name;
+            $success['kelas'] = @$user->kelas->name;
+            $success['tingkat'] = @$user->kelas->tingkat->name;
    
             return $this->sendResponse($success, 'User login successfully.');
         } 
