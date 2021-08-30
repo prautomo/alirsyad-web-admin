@@ -233,7 +233,7 @@ class ExternalUserController extends Controller{
         $user->update($input);
 
         return redirect()->route($this->routePath.'.index', ['role'=>$request->role])->with(
-            $this->success(__("Status updated successfully"), $data)
+            $this->success(__("Status updated successfully"), $user)
         );
     }
 
