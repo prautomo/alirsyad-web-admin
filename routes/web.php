@@ -31,6 +31,7 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
     
     Route::resource('simulasis', 'SimulasiController');
     Route::resource('kontens', 'KontenController');
+    Route::resource('videos', 'VideoController');
 
     Route::resource('roles', 'RoleController');
     Route::resource('users', 'UserController');

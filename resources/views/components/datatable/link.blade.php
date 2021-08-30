@@ -1,0 +1,1 @@
+<a href="{{ $link ?? '' }}" target="{{ @$target ? $target : '_self' }}">{{ $text ?? ''}}</a>

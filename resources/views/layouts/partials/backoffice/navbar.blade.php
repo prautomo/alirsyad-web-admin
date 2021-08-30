@@ -73,6 +73,15 @@
             </li>
             @endcan
 
+            @can('video-list')
+            <li class="nav-item">
+              <a class="nav-link{{ request()->is('videos*') ? ' active' : '' }}" href="{{ route('backoffice::videos.index') }}">
+                <i class="ni ni-album-2 text-red"></i>
+                <span class="nav-link-text">Kelola Video</span>
+              </a>
+            </li>
+            @endcan
+
             @canany(['user-list', 'external-user-list'])
             <li class="nav-item">
               <a class="nav-link{{ request()->is('backoffice/users*', 'backoffice/external-users*') ? ' active' : ' collapsed' }}" href="#navbar-exus" data-toggle="collapse" role="button" aria-expanded="{{ request()->is('backoffice/users*', 'backoffice/external-users*') ? 'true' : 'false' }}" aria-controls="navbar-exus">
