@@ -32,3 +32,20 @@
         <a href="{{route("backoffice::simulasis.index")}}" class="btn btn-sm btn-secondary mr-2">@lang("Cancel")</a>
     </div>
 </div>
+
+
+@push('plugin_script')
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#mata_pelajaran_id').select2();
+    });
+</script>
+@endpush
+
+@push('script')
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+@endpush
+
+@push('plugin_css')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+@endpush

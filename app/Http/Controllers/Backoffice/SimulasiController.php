@@ -92,7 +92,7 @@ class SimulasiController extends Controller{
      */
     private function getMataPelajaran(){
         // get list mapel
-        $mapels = MataPelajaran::all();
+        $mapels = MataPelajaran::with('kelas.tingkat')->get();
 
         // filter kalo rolenya guru uploader (khusus mapel di tingkatnya aja)
 
@@ -100,7 +100,7 @@ class SimulasiController extends Controller{
         $mapelList[""] = "Pilih mata pelajaran";
 
         foreach($mapels as $mapel){
-            $mapelList[$mapel->id] = $mapel->name;
+            $mapelList[$mapel->id] = $mapel->name . " (Kelas ".@$mapel->kelas->name." ".@$mapel->kelas->tingkat->name.")";
         }
 
         return $mapelList;
