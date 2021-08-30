@@ -29,6 +29,9 @@ Route::middleware('auth:api')->group( function () {
 
     Route::get("/videos", "API\VideoController@index");
     Route::get("/videos/{id}", "API\VideoController@show");
+
+    Route::get("/simulasis", "API\SimulasiController@index");
+    Route::get("/simulasis/{id}", "API\SimulasiController@show");
 });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
