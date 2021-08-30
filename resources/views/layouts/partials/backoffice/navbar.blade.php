@@ -23,11 +23,11 @@
             </li>
 
             <li class="nav-item">
-              <a class="nav-link{{ request()->is('backoffice/tingkats*', 'backoffice/kelas*', 'backoffice/mata_pelajarans*', 'backoffice/simulasis*', 'backoffice/promos*') ? ' active' : ' collapsed' }}" href="#navbar-master" data-toggle="collapse" role="button" aria-expanded="{{ request()->is('backoffice/tingkats*', 'backoffice/kelas*', 'backoffice/mata_pelajarans*') ? 'true' : 'false' }}" aria-controls="navbar-master">
+              <a class="nav-link{{ request()->is('backoffice/tingkats*', 'backoffice/kelas*', 'backoffice/mata_pelajarans*', 'backoffice/promos*') ? ' active' : ' collapsed' }}" href="#navbar-master" data-toggle="collapse" role="button" aria-expanded="{{ request()->is('backoffice/tingkats*', 'backoffice/kelas*', 'backoffice/mata_pelajarans*') ? 'true' : 'false' }}" aria-controls="navbar-master">
                 <i class="ni ni-ungroup text-red"></i>
                 <span class="nav-link-text">Master</span>
               </a>
-              <div class="collapse{{ request()->is('backoffice/tingkats*', 'backoffice/kelas*', 'backoffice/mata_pelajarans*', 'backoffice/simulasis*', 'backoffice/promos*') ? ' show' : '' }}" id="navbar-master" style="">
+              <div class="collapse{{ request()->is('backoffice/tingkats*', 'backoffice/kelas*', 'backoffice/mata_pelajarans*', 'backoffice/promos*') ? ' show' : '' }}" id="navbar-master" style="">
                 <ul class="nav nav-sm flex-column">
                   @can('tingkat-list')
                   <li class="nav-item">
@@ -53,34 +53,45 @@
                   </li>
                   @endcan
 
-                  <!-- @can('game-list') -->
-                  <li class="nav-item">
-                    <a href="{{ route('backoffice::simulasis.index') }}" class="nav-link">
-                      <span class="sidenav-normal"> Game Simulasi </span>
-                    </a>
-                  </li>
-                  <!-- @endcan -->
                 </ul>
               </div>
             </li>
 
-            @can('konten-list')
             <li class="nav-item">
-              <a class="nav-link{{ request()->is('kontens*') ? ' active' : '' }}" href="{{ route('backoffice::kontens.index') }}">
-                <i class="ni ni-books text-red"></i>
-                <span class="nav-link-text">Kelola Materi</span>
+              <a class="nav-link{{ request()->is('backoffice/simulasis*', 'backoffice/videos*', 'backoffice/moduls*', 'backoffice/promos*') ? ' active' : ' collapsed' }}" href="#navbar-konten" data-toggle="collapse" role="button" aria-expanded="{{ request()->is('backoffice/simulasis*', 'backoffice/videos*', 'backoffice/moduls*') ? 'true' : 'false' }}" aria-controls="navbar-konten">
+                <i class="ni ni-atom text-red"></i>
+                <span class="nav-link-text">Kelola Konten</span>
               </a>
-            </li>
-            @endcan
+              <div class="collapse{{ request()->is('backoffice/simulasis*', 'backoffice/videos*', 'backoffice/moduls*', 'backoffice/promos*') ? ' show' : '' }}" id="navbar-konten" style="">
+                <ul class="nav nav-sm flex-column">
 
-            @can('video-list')
-            <li class="nav-item">
-              <a class="nav-link{{ request()->is('videos*') ? ' active' : '' }}" href="{{ route('backoffice::videos.index') }}">
-                <i class="ni ni-album-2 text-red"></i>
-                <span class="nav-link-text">Kelola Video</span>
-              </a>
+                  @can('modul-list')
+                  <li class="nav-item">
+                    <a href="{{ route('backoffice::moduls.index') }}" class="nav-link">
+                      <span class="sidenav-normal"> Kelola Modul </span>
+                    </a>
+                  </li>
+                  @endcan
+                  
+                  @can('video-list')
+                  <li class="nav-item">
+                    <a href="{{ route('backoffice::videos.index') }}" class="nav-link">
+                      <span class="sidenav-normal"> Kelola Video </span>
+                    </a>
+                  </li>
+                  @endcan
+
+                  @can('simulasi-list')
+                  <li class="nav-item">
+                    <a href="{{ route('backoffice::simulasis.index') }}" class="nav-link">
+                      <span class="sidenav-normal"> Kelola Simulasi </span>
+                    </a>
+                  </li>
+                  @endcan
+
+                </ul>
+              </div>
             </li>
-            @endcan
 
             @canany(['user-list', 'external-user-list'])
             <li class="nav-item">

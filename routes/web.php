@@ -29,9 +29,9 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
     Route::get('kelas/listJson', 'KelasController@listJson')->name('kelas.listJson');
     Route::resource('kelas', 'KelasController');
     
-    Route::resource('simulasis', 'SimulasiController');
-    Route::resource('kontens', 'KontenController');
+    Route::resource('moduls', 'ModulController');
     Route::resource('videos', 'VideoController');
+    Route::resource('simulasis', 'SimulasiController');
 
     Route::resource('roles', 'RoleController');
     Route::resource('users', 'UserController');

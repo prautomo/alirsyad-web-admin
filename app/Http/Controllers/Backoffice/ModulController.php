@@ -11,16 +11,16 @@ use Carbon\Carbon;
 use App\Models\Tingkat;
 use App\Helpers\ExtractArchive;
 
-class KontenController extends Controller{
+class ModulController extends Controller{
 
     function __construct(){
-        // $this->middleware('permission:konten-list|konten-create|konten-edit|konten-delete', ['only' => ['index','show']]);
-        // $this->middleware('permission:konten-create', ['only' => ['create','store']]);
-        // $this->middleware('permission:konten-edit', ['only' => ['edit','update']]);
-        // $this->middleware('permission:konten-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:modul-list|modul-create|modul-edit|modul-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:modul-create', ['only' => ['create','store']]);
+        $this->middleware('permission:modul-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:modul-delete', ['only' => ['destroy']]);
 
-        $this->prefix = 'pages.backoffice.kontens';
-        $this->routePath = 'backoffice::kontens';
+        $this->prefix = 'pages.backoffice.moduls';
+        $this->routePath = 'backoffice::moduls';
     }
 
     /**
@@ -41,7 +41,7 @@ class KontenController extends Controller{
             ->addColumn("action", function ($data) {
                 return view("components.datatable.actions", [
                     "name" => $data->name,
-                    // "permissionName" => 'konten',
+                    // "permissionName" => 'modul',
                     // "deleteRoute" => route($this->routePath.".destroy", $data->id),
                     // "editRoute" => route($this->routePath.".edit", $data->id),
                 ]);

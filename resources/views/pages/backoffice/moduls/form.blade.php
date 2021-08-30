@@ -19,6 +19,6 @@
 
     <div class="col-xs-12 col-sm-12 col-md-12 text-right">
         <button type="submit" class="btn btn-sm btn-primary">@lang("Save")</button>
-        <a href="{{route("backoffice::kontens.index")}}" class="btn btn-sm btn-secondary mr-2">@lang("Cancel")</a>
+        <a href="{{route("backoffice::moduls.index")}}" class="btn btn-sm btn-secondary mr-2">@lang("Cancel")</a>
     </div>
 </div>

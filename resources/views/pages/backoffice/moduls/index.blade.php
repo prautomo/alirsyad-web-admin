@@ -1,6 +1,6 @@
 @extends('layouts.backoffice')
 
-@section('title', __("Konten"))
+@section('title', __("Modul"))
 
 @section('header')
     @parent
@@ -8,9 +8,9 @@
         <div class="col-lg-6 col-7">
             <h6 class="h2 text-white d-inline-block mb-0">@yield('title')</h6>
         </div>
-        @can('kontens-create')
+        @can('moduls-create')
         <div class="col-lg-6 col-5 text-right">
-            <a href="{{ route('backoffice::kontens.create') }}" class="btn btn-sm btn-neutral">New</a>
+            <a href="{{ route('backoffice::moduls.create') }}" class="btn btn-sm btn-neutral">New</a>
             <!-- <a href="#" class="btn btn-sm btn-neutral">Filters</a> -->
         </div>
         @endcan
