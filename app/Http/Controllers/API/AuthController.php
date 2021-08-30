@@ -35,7 +35,7 @@ class AuthController extends BaseController
 
                 return $this->sendResponse($success, 'User login successfully.');
             }else {
-                return $this->sendError('Maaf, status user kamu : '.$user->status.'. Silahkan kontak administrator/guru.', ['error'=>'Unauthorised']);
+                return $this->sendError('Maaf, status akun kamu : '.(str_replace('_', ' ', @$user->status)).'. Silahkan kontak administrator/guru.', ['error'=>'Unauthorised']);
             }
         } 
         else{ 
