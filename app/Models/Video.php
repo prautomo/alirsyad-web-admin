@@ -6,10 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\SearchableTrait;
+use App\Models\HistoryVideo;
 
 class Video extends Model
 {
     use HasFactory, SearchableTrait, SoftDeletes;
+
+    protected $appends = ['watched'];
 
     /**
      * The attributes that are mass assignable.
@@ -38,6 +41,11 @@ class Video extends Model
         return $data;
     }
 
+    public function getWatchedAttribute()
+    {
+        return is_object(HistoryVideo::where(['siswa_id' => \Auth::user()->id, 'video_id' => $this->id])->first());
+    }
+
     public function mataPelajaran()
     {
         return $this->belongsTo("App\Models\MataPelajaran",  "mata_pelajaran_id", "id");
@@ -46,5 +54,10 @@ class Video extends Model
     public function uploader()
     {
         return $this->belongsTo("App\Models\User",  "uploader_id", "id");
+    }
+
+    public function history()
+    {
+        return $this->hasMany("App\Models\HistoryVideo", "video_id", "id");
     }
 }

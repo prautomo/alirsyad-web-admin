@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class Video extends JsonResource
+class HistoryVideo extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,8 +14,6 @@ class Video extends JsonResource
      */
     public function toArray($request)
     {
-        $result = parent::toArray($request);
-
-        return $result;
+        return parent::toArray($request);
     }
 }
