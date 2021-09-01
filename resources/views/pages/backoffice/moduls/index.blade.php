@@ -40,7 +40,7 @@
                 <th data-data="DT_RowIndex" data-searchable="false">@lang("No")</th>
                 <th data-data="show-img">@lang("Cover")</th>
                 <th data-data="name">@lang("Name")</th>
-                <th data-data="mata_pelajaran.name">@lang("Mata Pelajaran")</th>
+                <th data-data="mapel">@lang("Mata Pelajaran")</th>
                 <th data-data="created_at">@lang("Created At")</th>
                 <th data-data="action" data-orderable="false" data-searchable="false">@lang("Action")</th>
             </x-datatable>
