@@ -11,6 +11,8 @@ class Modul extends Model
 {
     use HasFactory, SearchableTrait, SoftDeletes;
 
+    protected $appends = ['read'];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -36,6 +38,11 @@ class Modul extends Model
         ]);
 
         return $data;
+    }
+
+    public function getReadAttribute()
+    {
+        return is_object(HistoryModul::where(['siswa_id' => \Auth::user()->id, 'modul_id' => $this->id])->first());
     }
 
     public function mataPelajaran()

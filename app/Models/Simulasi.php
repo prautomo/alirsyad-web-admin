@@ -11,6 +11,8 @@ class Simulasi extends Model
 {
     use HasFactory, SearchableTrait, SoftDeletes;
 
+    protected $appends = ['played'];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -36,6 +38,11 @@ class Simulasi extends Model
         ]);
 
         return $data;
+    }
+
+    public function getPlayedAttribute()
+    {
+        return is_object(HistorySimulasi::where(['siswa_id' => \Auth::user()->id, 'simulasi_id' => $this->id])->first());
     }
 
     public function mataPelajaran()
