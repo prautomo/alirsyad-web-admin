@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\MataPelajaran;
+use App\Models\Simulasi;
+use App\Models\HistorySimulasi;
 use App\Models\Video;
 use App\Models\HistoryVideo;
 use Illuminate\Support\Facades\Auth;
@@ -95,8 +97,6 @@ class MataPelajaranController extends BaseController
         // init var
         $totalModul = 0;
         $doneModul = 0;
-        $totalSimulasi = 0;
-        $doneSimulasi = 0;
 
         // counting video by mapel
         $videos = Video::where('mata_pelajaran_id', $id)->get();
@@ -109,6 +109,18 @@ class MataPelajaranController extends BaseController
         });
         $videoHistory = $videoHistory->get();
         $doneVideo = count($videoHistory);
+
+        // counting simulasi by mapel
+        $simulasis = Simulasi::where('mata_pelajaran_id', $id)->get();
+        $totalSimulasi = count($simulasis);
+        // simulasi done by siswa
+        $simulasiHistory = HistorySimulasi::where('siswa_id', Auth::user()->id);
+        // simulasi history by mapel
+        $simulasiHistory = $simulasiHistory->whereHas('simulasi', function($query) use ($id) {
+            $query->where('mata_pelajaran_id', $id);
+        });
+        $simulasiHistory = $simulasiHistory->get();
+        $doneSimulasi = count($simulasiHistory);
 
         $data = [
             'progress_modul' => [

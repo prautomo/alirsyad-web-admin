@@ -83,4 +83,9 @@ class ExternalUser extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany("App\Models\HistoryVideo", "siswa_id", "id");
     }
+
+    public function historySimulasi()
+    {
+        return $this->hasMany("App\Models\HistorySimulasi", "siswa_id", "id");
+    }
 }

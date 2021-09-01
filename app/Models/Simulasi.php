@@ -47,4 +47,9 @@ class Simulasi extends Model
     {
         return $this->belongsTo("App\Models\User",  "uploader_id", "id");
     }
+
+    public function history()
+    {
+        return $this->hasMany("App\Models\HistorySimulasi", "simulasi_id", "id");
+    }
 }
