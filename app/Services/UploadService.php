@@ -9,7 +9,6 @@ class UploadService
 {
     public static function uploadImage($image, $storagePath)
     {
-
         if (!Storage::exists($storagePath)) {
             $storagePath;
         }
@@ -19,6 +18,7 @@ class UploadService
 
         return $folder . "/" . $new_name;
     }
+
     public static function uploadBaseImage($image, $storagePath)
     {
 
@@ -33,5 +33,17 @@ class UploadService
         file_put_contents($file, $image);
 
         return $folder  . $new_name;
+    }
+
+    public static function uploadFile($file, $storagePath)
+    {
+        if (!Storage::exists($storagePath)) {
+            $storagePath;
+        }
+        $folder = "{$storagePath}";
+        $new_name = 'DIGIBOOK_FILE_' . gmdate('d_m_Y_h_i_s') . '.' . $file->getClientOriginalExtension();
+        $file->move(public_path($folder), $new_name);
+
+        return $folder . "/" . $new_name;
     }
 }
