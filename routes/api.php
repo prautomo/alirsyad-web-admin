@@ -28,6 +28,10 @@ Route::middleware('auth:api')->group( function () {
     Route::get("/mata_pelajarans/{id}", "API\MataPelajaranController@show");
     Route::get("/mata_pelajarans/{id}/summary", "API\MataPelajaranController@summary");
 
+    Route::get("/moduls", "API\ModulController@index");
+    Route::get("/moduls/{id}", "API\ModulController@show");
+    Route::post("/moduls/{id}/flag", "API\ModulController@createHistory");
+
     Route::get("/videos", "API\VideoController@index");
     Route::get("/videos/{id}", "API\VideoController@show");
     Route::post("/videos/{id}/flag", "API\VideoController@createHistory");

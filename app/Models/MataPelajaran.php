@@ -51,11 +51,27 @@ class MataPelajaran extends Model
     }
 
     /**
+     * Modul
+     */
+    public function modul()
+    {
+        return $this->hasMany("App\Models\Modul", "mata_pelajaran_id", "id");
+    }
+
+    /**
      * Simulasi
      */
     public function simulasi()
     {
         return $this->hasMany("App\Models\Simulasi", "mata_pelajaran_id", "id");
+    }
+
+    /**
+     * Video
+     */
+    public function video()
+    {
+        return $this->hasMany("App\Models\Video", "mata_pelajaran_id", "id");
     }
 
     // 

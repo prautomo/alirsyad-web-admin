@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\MataPelajaran;
+use App\Models\Modul;
+use App\Models\HistoryModul;
 use App\Models\Simulasi;
 use App\Models\HistorySimulasi;
 use App\Models\Video;
@@ -94,9 +96,17 @@ class MataPelajaranController extends BaseController
             return $this->sendError('MataPelajaran not found.');
         }
 
-        // init var
-        $totalModul = 0;
-        $doneModul = 0;
+        // counting modul by mapel
+        $moduls = Modul::where('mata_pelajaran_id', $id)->get();
+        $totalModul = count($moduls);
+        // modul done by siswa
+        $modulHistory = HistoryModul::where('siswa_id', Auth::user()->id);
+        // modul history by mapel
+        $modulHistory = $modulHistory->whereHas('modul', function($query) use ($id) {
+            $query->where('mata_pelajaran_id', $id);
+        });
+        $modulHistory = $modulHistory->get();
+        $doneModul = count($modulHistory);
 
         // counting video by mapel
         $videos = Video::where('mata_pelajaran_id', $id)->get();
