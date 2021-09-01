@@ -48,6 +48,9 @@ class SimulasiController extends Controller{
                         $query2->where('name', 'LIKE', '%'.$search.'%');
                     });
                 }
+
+                // query param mapel id
+                if(@$request->mata_pelajaran_id) $query->where('mata_pelajaran_id', @$request->mata_pelajaran_id);
             })
             ->addIndexColumn()
             ->addColumn('show-img', function($data) {
@@ -58,6 +61,16 @@ class SimulasiController extends Controller{
                         "url" => asset($data->icon)
                     ]);
                 }
+            })
+            ->addColumn("mapel", function ($data) {
+                $mapel = @$data->mataPelajaran->name ? $data->mataPelajaran->name : 'none';
+                $mapelID = @$data->mataPelajaran->id ? $data->mataPelajaran->id : '';
+
+                return view("components.datatable.link", [
+                    "link" => route($this->routePath.".index")."?mata_pelajaran_id=".$mapelID,
+                    "text" => $mapel,
+                ]);
+                return $mapel;
             })
             ->addColumn("created_at", function ($data) {
                 $createdAt = new Carbon($data->created_at);
