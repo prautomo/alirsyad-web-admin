@@ -12,11 +12,16 @@
                         @csrf
                         <div style="width:300px; margin-bottom:50px">
 
-
+                            @if (\Session::has('error'))
+                                <div class="alert alert-danger alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong>Gagal!</strong> {!! \Session::get('error') !!}
+                                </div>
+                            @endif
                             <div class="form-group ">
-                                <label for="email" class=" col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
+                                <label for="email" class=" col-form-label text-md-right">{{ __('NIS') }}</label>
 
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                                <input id="email" type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
 
                                 @error('email')
                                 <span class="invalid-feedback" role="alert">
@@ -47,8 +52,8 @@
                                 </div>
                             </div>
 
-                            <div class="form-group  mb-0">
-                                <button type="submit" class="btn btn-danger">
+                            <div class="form-group mb-0 text-center">
+                                <button type="submit" class="btn btn-main w-100">
                                     {{ __('Login') }}
                                 </button>
 
@@ -59,8 +64,7 @@
                                 @endif
                             </div>
 
-
-                            <div class="form-group  mb-0 mt-4">
+                            <div class="form-group mb-0">
                                 <a href="/register" type="submit" class="btn btn-primary w-100">
                                     <i class="fa fa-user" aria-hidden="true"></i> {{ __('Register') }}
                                 </a>
