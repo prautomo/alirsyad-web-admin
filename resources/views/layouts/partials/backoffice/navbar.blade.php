@@ -116,7 +116,7 @@
                   </li>
                   <li class="nav-item">
                     <a href="{{ route('backoffice::users.index', ['role'=>'Guru']) }}" class="nav-link">
-                      <span class="sidenav-normal"> Guru </span>
+                      <span class="sidenav-normal"> Guru Uploader </span>
                     </a>
                   </li>
                   <li class="nav-item">

@@ -8,9 +8,9 @@
         <div class="col-lg-6 col-7">
             <h6 class="h2 text-white d-inline-block mb-0">@yield('title')</h6>
         </div>
-        @can('kelas-create')
+        @can('user-create')
         <div class="col-lg-6 col-5 text-right">
-            <a href="{{ route('backoffice::kelas.create') }}" class="btn btn-sm btn-neutral">New</a>
+            <a href="{{ route('backoffice::users.create') }}" class="btn btn-sm btn-neutral">New</a>
             <!-- <a href="#" class="btn btn-sm btn-neutral">Filters</a> -->
         </div>
         @endcan
