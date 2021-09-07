@@ -24,7 +24,7 @@
     </div>
     @endif
 
-    <x-input.select :wrappingId="__('mapel')" :label="__('Guru Mata Pelajaran')" id="mata_pelajaran_id" name="mata_pelajaran_id" :sources="$mapelList" :data="$data" />
+    <!-- <x-input.select :wrappingId="__('mapel')" :label="__('Guru Mata Pelajaran')" id="mata_pelajaran_id" name="mata_pelajaran_id" :sources="$mapelList" :data="$data" /> -->
 
     <x-input.select :wrappingId="__('uploader')" :label="__('Uploader At')" id="uploader_tingkat_id" name="uploader_tingkat_id" :sources="$tingkatList" :data="$data" />
 
