@@ -22,38 +22,51 @@
 							Program Belajar Matematika
 						</div>
 						<hr/>
-						<div class="wrap-kelas form-inline mt-3">
-							<div>
+						<div class="wrap-kelas row mt-3 ml-1 mr-1">
+							<div class="col-md-4">
 								<h4 class="font-weight-300">Modul</h4>
 							</div>
-							<div class="ml-auto">
-                                <div class="progress">
-                                    <div class="progress-bar" style="width:70%"></div>
-                                  </div> 
+							<div class="col-md-8">
+                                <div class="d-block w-100">
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="80" style="width: 80%; background-color: rgb(52, 125, 241);"></div>
+                                    </div>
+                                    <div class="" style="font-size: 0.8rem;">
+                                        <span>80% selesai</span>
+                                    </div>
+                                </div>
 							</div>
 						</div>
-
 						
-						<div class="wrap-kelas form-inline mt-3">
-							<div>
+						<div class="wrap-kelas row mt-3 ml-1 mr-1">
+							<div class="col-md-4">
 								<h4 class="font-weight-300">Video</h4>
 							</div>
-							<div class="ml-auto">
-                                <div class="progress">
-                                    <div class="progress-bar" style="width:70%"></div>
-                                  </div> 
+							<div class="col-md-8">
+                                <div class="d-block w-100">
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="80" style="width: 80%; background-color: rgb(52, 125, 241);"></div>
+                                    </div>
+                                    <div class="" style="font-size: 0.8rem;">
+                                        <span>80% selesai</span>
+                                    </div>
+                                </div>
 							</div>
 						</div>
-
 						
-						<div class="wrap-kelas form-inline mt-3">
-							<div>
+						<div class="wrap-kelas row mt-3 ml-1 mr-1">
+							<div class="col-md-4">
 								<h4 class="font-weight-300">Simulasi</h4>
 							</div>
-							<div class="ml-auto">
-                                <div class="progress">
-                                    <div class="progress-bar" style="width:70%"></div>
-                                  </div> 
+							<div class="col-md-8">
+                                <div class="d-block w-100">
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="20" style="width: 20%; background-color: rgb(52, 125, 241);"></div>
+                                    </div>
+                                    <div class="" style="font-size: 0.8rem;">
+                                        <span>20% selesai</span>
+                                    </div>
+                                </div>
 							</div>
 						</div>
 					</div>
