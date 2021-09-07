@@ -1,80 +1,117 @@
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="en">
+  <head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="digital interactive book,bootstrap4">
+  
+  <meta name="author" content="Anon">
 
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+  <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+  <!-- bootstrap.min css -->
+  <link rel="stylesheet" href="{{ asset('frontoffice/plugins/bootstrap/css/bootstrap.min.css') }}">
+  <!-- Icon Font Css -->
+  <link rel="stylesheet" href="{{ asset('frontoffice/plugins/themify/css/themify-icons.css') }}">
+  <link rel="stylesheet" href="{{ asset('frontoffice/plugins/fontawesome/css/all.css') }}">
+  <link rel="stylesheet" href="{{ asset('frontoffice/plugins/magnific-popup/dist/magnific-popup.css') }}">
+  <!-- Owl Carousel CSS -->
+  <link rel="stylesheet" href="{{ asset('frontoffice/plugins/slick-carousel/slick/slick.css') }}">
+  <link rel="stylesheet" href="{{ asset('frontoffice/plugins/slick-carousel/slick/slick-theme.css') }}">
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="{{ asset('frontoffice/css/style.css') }}">
+  <link rel="stylesheet" href="{{ asset('frontoffice/css/custom.css') }}">
 
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
-
-    <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+  <!-- Page plugins -->
+  @stack('plugin_css')
 </head>
+
 <body>
-    <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
+<!-- Header Start --> 
+<header class="navigation">
+	<nav class="navbar navbar-expand-lg  py-4" id="navbar">
+		<div class="container">
+		  <a class="navbar-brand" href="{{ route('app.home') }}">
+		  	Digital <span>Interactive.</span>
+		  </a>
 
-                    </ul>
+		  <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarsExample09" aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="fa fa-bars"></span>
+		  </button>
 
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ml-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                            </li>
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
-                                </a>
+          @guest
 
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
+          @else
+		  <div class="collapse navbar-collapse text-center" id="navbarsExample09">
+			<ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ route('app.home') }}">Beranda <span class="sr-only">(current)</span></a>
+                </li>
+			  <!-- <li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">About</a>
+					<ul class="dropdown-menu" aria-labelledby="dropdown03">
+						<li><a class="dropdown-item" href="about.html">Our company</a></li>
+						<li><a class="dropdown-item" href="pricing.html">Pricing</a></li>
+					</ul>
+			  </li> -->
+			    <li class="nav-item">
+                   <a class="nav-link" href="{{ route('app.mapel.list') }}">Mata Pelajaran</a>
+                </li>
+			    <li class="nav-item">
+                    <a class="nav-link" href="nilai.html">Nilai Simulasi</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="akun.html">Akun Saya</a>
+                </li>
+			</ul>
 
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
-            </div>
-        </nav>
+			<form action="{{ route('logout') }}" class="form-lg-inline my-2 my-md-0 ml-lg-4 text-center" method="POST">
+                @csrf
+			  <button class="btn btn-solid-border btn-round-full">Keluar</button>
+			</form>
+		  </div>
 
-        <main class="py-4">
-            @yield('content')
-        </main>
-    </div>
-</body>
+          @endguest
+		</div>
+	</nav>
+</header>
+
+<!-- Header Close --> 
+
+<div class="main-wrapper">
+    @yield('content')
+
+    <!-- footer Start -->
+    @include('layouts.partials.frontoffice.footer')
+    <!-- Footer end -->
+</div>
+
+    <!-- 
+    Essential Scripts
+    =====================================-->
+
+    
+    <!-- Main jQuery -->
+    <script src="{{ asset('frontoffice/plugins/jquery/jquery.js') }}"></script>
+    <script src="{{ asset('frontoffice/js/contact.js') }}"></script>
+    <!-- Bootstrap 4.3.1 -->
+    <script src="{{ asset('frontoffice/plugins/bootstrap/js/popper.js') }}"></script>
+    <script src="{{ asset('frontoffice/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
+   <!--  Magnific Popup-->
+    <script src="{{ asset('frontoffice/plugins/magnific-popup/dist/jquery.magnific-popup.min.js') }}"></script>
+    <!-- Slick Slider -->
+    <script src="{{ asset('frontoffice/plugins/slick-carousel/slick/slick.min.js') }}"></script>
+    <!-- Counterup -->
+    <script src="{{ asset('frontoffice/plugins/counterup/jquery.waypoints.min.js') }}"></script>
+    <script src="{{ asset('frontoffice/plugins/counterup/jquery.counterup.min.js') }}"></script>   
+    
+    <script src="{{ asset('frontoffice/js/script.js') }}"></script>
+
+    @stack('plugin_script')
+
+    @stack('script')
+  </body>
 </html>

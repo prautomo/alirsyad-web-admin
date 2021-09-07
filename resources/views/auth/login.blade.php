@@ -1,7 +1,7 @@
-@extends('app.layout')
+@extends('layouts.frontoffice')
 
 @section('content')
-<div class="spacer" style="margin-top: 100px;"></div>
+<div class="spacer" style="margin-top: 50px;"></div>
 <div class="container" style="min-height: 55vh">
     <div class="row justify-content-center">
         <div class="col-md-8">

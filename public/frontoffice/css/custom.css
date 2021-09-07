@@ -1,0 +1,19 @@
+.wrap-kelas{
+    background: #f2ebeb;
+    padding: 20px;
+}
+
+.wrap-kelas-disable{
+    background: #f2ebeb;
+    padding: 20px;
+    color: #9f9d9d !important;
+}
+
+.disable {
+    color: #9f9d9d !important;
+}
+
+.kelas-title {
+    font-weight: bold;
+    font-size: 14px;
+}

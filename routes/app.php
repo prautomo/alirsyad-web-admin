@@ -17,8 +17,7 @@ use Laravolt\Indonesia\Models\District;
 |
 */
 
-
-Route::get('/', "Front\HomeController@index");
+Auth::routes();
 
 // Route::get('/product', "Front\ProductController@index");
 // Route::get('/product/detail/{id}', "Front\ProductController@detail");
@@ -44,9 +43,6 @@ Route::get('/', "Front\HomeController@index");
 
 
 
-
-
-
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
 
@@ -57,15 +53,12 @@ Route::get('/email/verify', function () {
     return view('auth.verify-email');
 })->middleware('auth')->name('verification.notice');
 
-// Routes frontoffice
-Route::name('frontoffice::')
-    ->group(function () {
-        Route::get('/pay', 'PayController@index')->name('pay.index');
-        Route::post('/pay', 'PayController@store')->name('pay.store');
-    });
-
-// route front office keur nu login (customer/mitra)
+// route front office keur nu login (siswa/guru)
 Route::middleware(['auth'])->group(function () {
+    
+    Route::get('/', "Front\HomeController@index")->name('app.home');
+    Route::get('/mata-pelajaran', "Front\MataPelajaranController@index")->name('app.mapel.list');
+    Route::get('/mata-pelajaran/{id}', "Front\MataPelajaranController@show")->name('app.mapel.detail');
 
 
     Route::get('/profile', "Front\UserController@profile")->name('home');

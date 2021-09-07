@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
-use App\Models\ExternalUser;
+use App\Models\MataPelajaran;
 use App\Services\UploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
+use Auth;
 
 class HomeController extends Controller
 {
@@ -16,29 +16,28 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('app/Screen/home');
-    }
+        // sedang di pelajari
+        $sedangDipelajari = MataPelajaran::search($request);
+        $sedangDipelajari = $sedangDipelajari->with('kelas.tingkat');
+        $sedangDipelajari = $sedangDipelajari->where('kelas_id', Auth::user()->kelas_id);
+        // sort by active mapel
+        $sedangDipelajari = $sedangDipelajari->limit(2)->get()->sortBy('name');
 
-    public function getAllCategoryWithSubCategory(Request $request)
-    {
-        $mitras = Category::getAllCategory();
-        return $mitras;
-        # code...
-    }
-    public function getAllSubCategory()
-    {
-        $mitras = SubCategory::getAllSubCategory();
-        return $mitras;
-        # code...
-    }
+        // upcoming mapel
+        $yangAkanDatang = MataPelajaran::search($request);
+        $yangAkanDatang = $yangAkanDatang->with('kelas.tingkat');
+        $yangAkanDatang = $yangAkanDatang->where('kelas_id', '!=', Auth::user()->kelas_id);
+        // sort by active mapel
+        $yangAkanDatang = $yangAkanDatang->limit(2)->get()->sortBy('kelas.tingkat_id')->sortBy('kelas_id')->sortBy('name');
 
-    public function getAllProducts(Request $request)
-    {
-        $data =  Product::getAllProducts($request);
-        return $data;
-        # code...
+        $parseData = [
+            'sedangDipelajari' => $sedangDipelajari,
+            'yangAkanDatang' => $yangAkanDatang,
+        ];
+
+        return view('pages/frontoffice/home', $parseData);
     }
 
     public function upload(Request $request)
@@ -52,6 +51,5 @@ class HomeController extends Controller
         return [
             "image_url" => $url
         ];
-        # code...
     }
 }
