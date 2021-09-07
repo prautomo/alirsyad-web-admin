@@ -125,9 +125,10 @@ class KelasController extends Controller{
         $this->validate($request, [
             'name' => 'required|string',
             'tingkat_id' => 'required',
+            'order' => 'required|integer',
         ]);
 
-        $data = Kelas::create($request->only(['description', 'name', 'tingkat_id']));
+        $data = Kelas::create($request->only(['description', 'name', 'tingkat_id', 'order']));
 
         return redirect()->route($this->routePath.'.index')->with(
             $this->success(__("Success to create Kelas"), $data)
@@ -160,10 +161,11 @@ class KelasController extends Controller{
         $this->validate($request, [
             'name' => 'required|string',
             'tingkat_id' => 'required',
+            'order' => 'required|integer',
         ]);
         
         $dt = Kelas::findOrFail($id);
-        $dt->update($request->only(['description', 'name', 'tingkat_id', 'wali_kelas_id']));
+        $dt->update($request->only(['description', 'name', 'tingkat_id', 'wali_kelas_id', 'order']));
 
         return redirect()->route($this->routePath.'.index')->with(
             $this->success(__("Success to update Kelas"), $dt)

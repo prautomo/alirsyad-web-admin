@@ -104,9 +104,10 @@ class TingkatController extends Controller{
         // validasi form
         $this->validate($request, [
             'name' => 'required|string',
+            'order' => 'required|integer',
         ]);
 
-        $data = Tingkat::create($request->only(['description', 'name']));
+        $data = Tingkat::create($request->only(['description', 'name', 'order']));
 
         return redirect()->route($this->routePath.'.index')->with(
             $this->success(__("Success to create Tingkat"), $data)
@@ -125,10 +126,11 @@ class TingkatController extends Controller{
         $this->validate($request, [
             'name' => 'required|string',
             'uploader_id' => 'required',
+            'order' => 'required|integer',
         ]);
         
         $dt = Tingkat::findOrFail($id);
-        $dt->update($request->only(['description', 'name', 'uploader_id']));
+        $dt->update($request->only(['description', 'name', 'uploader_id', 'order']));
 
         return redirect()->route($this->routePath.'.index')->with(
             $this->success(__("Success to update Tingkat"), $dt)

@@ -12,7 +12,7 @@ class Kelas extends Model
     use HasFactory, SoftDeletes, SearchableTrait;
 
     protected $fillable = [
-        "tingkat_id", 'name', 'description', 'status', 'logo', 'wali_kelas_id'
+        "tingkat_id", 'name', 'description', 'status', 'logo', 'wali_kelas_id', 'order',
     ];
 
     /**

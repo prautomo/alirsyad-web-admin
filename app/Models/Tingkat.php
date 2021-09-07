@@ -12,7 +12,7 @@ class Tingkat extends Model
     use HasFactory, SoftDeletes, SearchableTrait;
 
     protected $fillable = [
-        'name', 'description', 'status', 'logo', 'uploader_id'
+        'name', 'description', 'status', 'logo', 'uploader_id', 'use_story_path', 'order',
     ];
 
     /**
