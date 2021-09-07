@@ -42,7 +42,7 @@
                                 @enderror
                             </div>
 
-                            <div class="form-group ">
+                            <!-- <div class="form-group ">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
 
@@ -50,7 +50,7 @@
                                         {{ __('Remember Me') }}
                                     </label>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <div class="form-group mb-0 text-center">
                                 <button type="submit" class="btn btn-main w-100">
