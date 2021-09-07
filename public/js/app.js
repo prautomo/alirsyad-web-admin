@@ -37433,7 +37433,8 @@ __webpack_require__(/*! ./datatable */ "./resources/js/datatable.js");
  */
 
 
-Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1)]).then(__webpack_require__.bind(null, /*! ./components/UploadBatchSiswa */ "./resources/js/components/UploadBatchSiswa/index.js"));
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(3)]).then(__webpack_require__.bind(null, /*! ./backoffice/components/ExternalUser */ "./resources/js/backoffice/components/ExternalUser/index.js"));
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(4)]).then(__webpack_require__.bind(null, /*! ./backoffice/components/StoryPath/Form */ "./resources/js/backoffice/components/StoryPath/Form.js"));
 
 /***/ }),
 
@@ -37578,8 +37579,8 @@ window.initDatatable = function (tableSelector) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /Users/macbook/Documents/ferdhika/project/digital interactive book/web-digital-interactive-book/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /Users/macbook/Documents/ferdhika/project/digital interactive book/web-digital-interactive-book/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /home/dika/Documents/Digital Interactive/web-digital-interactive-book/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/dika/Documents/Digital Interactive/web-digital-interactive-book/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

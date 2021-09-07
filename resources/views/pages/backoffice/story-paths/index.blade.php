@@ -1,6 +1,6 @@
 @extends('layouts.backoffice')
 
-@section('title', __("Pengambilan Dana"))
+@section('title', __("Story Path"))
 
 @section('header')
   @parent
@@ -8,6 +8,12 @@
         <div class="col-lg-6 col-7">
             <h6 class="h2 text-white d-inline-block mb-0">@yield('title')</h6>
         </div>
+        @can('simulasi-create')
+        <div class="col-lg-6 col-5 text-right">
+            <a href="{{ route('backoffice::story-paths.create') }}" class="btn btn-sm btn-neutral">New</a>
+            <!-- <a href="#" class="btn btn-sm btn-neutral">Filters</a> -->
+        </div>
+        @endcan
     </div>
 @endsection
 
@@ -25,17 +31,15 @@
         <h3 class="mb-0">Data</h3>
       </div>
       <!-- tble -->
-      <div class="table-responsive">
+      <div class="">
             <x-datatable>
                 {{--
                     data-* is same as option columns in datatable
                     https://datatables.net/reference/option/columns
                 --}}
-                <th data-data="code">@lang("Request Code")</th>
-                <th data-data="role">@lang("Role User")</th>
-                <th data-data="user">@lang("User")</th>
-                <th data-data="amount">@lang("Amount")</th>
-                <th data-data="status">@lang("Status")</th>
+                <th data-data="DT_RowIndex" data-searchable="false">@lang("No")</th>
+                <th data-data="mapel">@lang("Mata Pelajaran")</th>
+                <th data-data="mapel">@lang("Modul")</th>
                 <th data-data="created_at">@lang("Created At")</th>
                 <th data-data="action" data-orderable="false" data-searchable="false">@lang("Action")</th>
             </x-datatable>

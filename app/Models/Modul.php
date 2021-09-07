@@ -54,4 +54,9 @@ class Modul extends Model
     {
         return $this->belongsTo("App\Models\User",  "uploader_id", "id");
     }
+
+    public function storyPath()
+    {
+        return $this->hasOne("App\Models\StoryPath", "modul_id", "id");
+    }
 }

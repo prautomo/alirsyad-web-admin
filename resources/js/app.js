@@ -13,4 +13,5 @@ require('./datatable');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-import('./components/UploadBatchSiswa');
+import('./backoffice/components/ExternalUser');
+import('./backoffice/components/StoryPath/Form');

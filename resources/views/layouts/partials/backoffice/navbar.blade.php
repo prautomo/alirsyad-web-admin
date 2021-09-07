@@ -58,11 +58,11 @@
             </li>
 
             <li class="nav-item">
-              <a class="nav-link{{ request()->is('backoffice/simulasis*', 'backoffice/videos*', 'backoffice/moduls*', 'backoffice/promos*') ? ' active' : ' collapsed' }}" href="#navbar-konten" data-toggle="collapse" role="button" aria-expanded="{{ request()->is('backoffice/simulasis*', 'backoffice/videos*', 'backoffice/moduls*') ? 'true' : 'false' }}" aria-controls="navbar-konten">
+              <a class="nav-link{{ request()->is('backoffice/simulasis*', 'backoffice/videos*', 'backoffice/moduls*', 'backoffice/story-paths*') ? ' active' : ' collapsed' }}" href="#navbar-konten" data-toggle="collapse" role="button" aria-expanded="{{ request()->is('backoffice/simulasis*', 'backoffice/videos*', 'backoffice/moduls*', 'backoffice/story-paths*') ? 'true' : 'false' }}" aria-controls="navbar-konten">
                 <i class="ni ni-atom text-red"></i>
                 <span class="nav-link-text">Kelola Konten</span>
               </a>
-              <div class="collapse{{ request()->is('backoffice/simulasis*', 'backoffice/videos*', 'backoffice/moduls*', 'backoffice/promos*') ? ' show' : '' }}" id="navbar-konten" style="">
+              <div class="collapse{{ request()->is('backoffice/simulasis*', 'backoffice/videos*', 'backoffice/moduls*', 'backoffice/story-paths*') ? ' show' : '' }}" id="navbar-konten" style="">
                 <ul class="nav nav-sm flex-column">
 
                   @can('modul-list')
@@ -85,6 +85,14 @@
                   <li class="nav-item">
                     <a href="{{ route('backoffice::simulasis.index') }}" class="nav-link">
                       <span class="sidenav-normal"> Kelola Simulasi </span>
+                    </a>
+                  </li>
+                  @endcan
+
+                  @can('story-path-list')
+                  <li class="nav-item">
+                    <a href="{{ route('backoffice::story-paths.index') }}" class="nav-link">
+                      <span class="sidenav-normal"> Kelola Story Path </span>
                     </a>
                   </li>
                   @endcan

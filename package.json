@@ -29,6 +29,7 @@
     },
     "dependencies": {
         "@y0c/react-datepicker": "^1.0.4",
+        "availity-reactstrap-validation": "^2.7.1",
         "classnames": "^2.2.6",
         "moment": "^2.29.1",
         "numeral": "^2.0.6",
@@ -38,6 +39,8 @@
         "react-dates": "^21.8.0",
         "react-dropzone": "^11.2.4",
         "react-google-map-picker": "^1.2.2",
+        "react-select": "^4.3.1",
+        "reactstrap": "^8.9.0",
         "sweetalert2": "^10.13.0",
         "swr": "^0.4.0",
         "underscore": "^1.12.0",
