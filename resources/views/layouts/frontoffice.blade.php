@@ -92,7 +92,7 @@
     <!-- 
     Essential Scripts
     =====================================-->
-
+    
     
     <!-- Main jQuery -->
     <script src="{{ asset('frontoffice/plugins/jquery/jquery.js') }}"></script>
@@ -109,6 +109,8 @@
     <script src="{{ asset('frontoffice/plugins/counterup/jquery.counterup.min.js') }}"></script>   
     
     <script src="{{ asset('frontoffice/js/script.js') }}"></script>
+
+    <script src="{{ asset('js/app.js') }}" charset="utf-8"></script>
 
     @stack('plugin_script')
 

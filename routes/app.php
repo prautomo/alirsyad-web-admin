@@ -59,7 +59,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/', "Front\HomeController@index")->name('app.home');
     Route::get('/mata-pelajaran', "Front\MataPelajaranController@index")->name('app.mapel.list');
     Route::get('/mata-pelajaran/{id}', "Front\MataPelajaranController@show")->name('app.mapel.detail');
+    Route::get('/mata-pelajaran/{id}/modul', "Front\VideoController@indexByMapel")->name('app.mapel.modul');
+    Route::get('/mata-pelajaran/{id}/video', "Front\VideoController@indexByMapel")->name('app.mapel.video');
+    Route::get('/mata-pelajaran/{id}/simulasi', "Front\VideoController@indexByMapel")->name('app.mapel.simulasi');
 
+    Route::get('/video/{id}', "Front\VideoController@show")->name('app.video.detail');
+    // json res
+    Route::get("/video/{id}/json", "API\VideoController@show");
 
     Route::get('/profile', "Front\UserController@profile")->name('home');
     Route::post('/app/verification/resend',  function () {
@@ -70,59 +76,4 @@ Route::middleware(['auth'])->group(function () {
 
     // Route::post("/app/image/upload" , "Front\HomeController@upload");
 
-
-    // Route::get("/customer/transaction/{status}", "Front\TransactionController@customerTransactionView");
-    // Route::get("/customer/transaction/{status}/data", "Front\TransactionController@customerTransaction");
-    // Route::get("/customer/jasa/transaction/{status}", "Front\TransactionJasaController@customerTransactionView");
-    // Route::get("/customer/jasa/transaction/{status}/data", "Front\TransactionJasaController@customerTransaction");
-
-
-
-    // Route::get('/toko', "Front\UserController@toko")->name('toko');
-    // Route::get("/toko/transaction/{status}", "Front\TransactionController@mitraTransactionView");
-    // Route::get("/toko/transaction/{status}/data", "Front\TransactionController@mitraTransaction");
-    // Route::get("/jasa/transaction/{status}", "Front\TransactionJasaController@mitraTransactionView");
-    // Route::get("/jasa/transaction/{status}/data", "Front\TransactionJasaController@mitraTransaction");
-
-
-    // Route::get("/toko/update", "Front\TokoController@edit");
-    // Route::post("/toko/update", "Front\TokoController@update");
-
-
-    // Route::resource("/toko/product", "Front\TokoProductController");
-    // Route::post("/toko/product/{id}/delete" , "Front\TokoProductController@delete");
-    // Route::resource("/toko/promo", "Front\PromoMitraController");
-    // Route::post("/toko/promo/{id}/delete" , "Front\PromoMitraController@delete");
-
-    // Route::get("/jasa/update", "Front\TokoController@jasaEdit");
-    // Route::post("/jasa/update", "Front\TokoController@jasaUpdate");
-
-    // Route::get("/profile/edit", "Front\UserController@profileEdit");
-    // Route::post("/profile/update", "Front\UserController@profileUpdate");
-
-    // Route::get("/profile/ubah_password", "Front\UserController@passwordEdit");
-    // Route::post("/profile/ubah_password", "Front\UserController@passwordUpdate");
-
-
-
-
-
-    // Route::middleware(['verified'])->group(function () {
-
-    //     Route::post("/app/saldo/requestTarikDana" , "Front\UserController@requestTarikDana");
-    //     Route::get("/app/data/getmypromos",  "Front\HomeController@getMyPromos");
-    //     Route::post("/mitra/updatepesanan", "Front\TransactionController@mitraUpdateTransaction");
-    //     Route::post("/customer/updatepesanan", "Front\TransactionController@customerUpdateTransaction");
-    //     Route::post("/app/validatevoucher", "Front\PromoController@validateVoucher");
-    //     Route::post("/app/postcheckout", "Front\TransactionController@createTransaction");
-    //     Route::post("/app/checkoutjasa", "Front\TransactionJasaController@createTransaction");
-
-
-    //     Route::post("/mitra/jasa/updatepesanan", "Front\TransactionJasaController@mitraUpdateTransaction");
-    //     Route::post("/customer/jasa/updatepesanan", "Front\TransactionJasaController@customerUpdateTransaction");
-    // });
 });
-
-
-
-// Route::get('/toko/{id}', "Front\ProductController@detailToko");

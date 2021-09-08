@@ -40,6 +40,7 @@
         "react-dropzone": "^11.2.4",
         "react-google-map-picker": "^1.2.2",
         "react-select": "^4.3.1",
+        "react-youtube": "^7.13.1",
         "reactstrap": "^8.9.0",
         "sweetalert2": "^10.13.0",
         "swr": "^0.4.0",

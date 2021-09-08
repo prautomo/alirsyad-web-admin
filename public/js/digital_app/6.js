@@ -302,590 +302,84 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 
 /***/ }),
 
-/***/ "./resources/js/components/Form/InputRenderer.js":
-/*!*******************************************************!*\
-  !*** ./resources/js/components/Form/InputRenderer.js ***!
-  \*******************************************************/
-/*! exports provided: InputWithLabel, InputSelectWithLabel, InputTextAreaWithLabel, InputChooseWithLabel, InputCheckWithLabel, InputDatePickerWithLabel, InputMapPickerWithLabel, InputModalSelectorWithLabel, ImagePickerWithLabel */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InputWithLabel", function() { return InputWithLabel; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InputSelectWithLabel", function() { return InputSelectWithLabel; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InputTextAreaWithLabel", function() { return InputTextAreaWithLabel; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InputChooseWithLabel", function() { return InputChooseWithLabel; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InputCheckWithLabel", function() { return InputCheckWithLabel; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InputDatePickerWithLabel", function() { return InputDatePickerWithLabel; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InputMapPickerWithLabel", function() { return InputMapPickerWithLabel; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InputModalSelectorWithLabel", function() { return InputModalSelectorWithLabel; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ImagePickerWithLabel", function() { return ImagePickerWithLabel; });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
-/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
-/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var react_dates_initialize__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-dates/initialize */ "./node_modules/react-dates/initialize.js");
-/* harmony import */ var react_dates_initialize__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_dates_initialize__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var react_dates__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-dates */ "./node_modules/react-dates/index.js");
-/* harmony import */ var react_dates__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react_dates__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var react_google_map_picker__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-google-map-picker */ "./node_modules/react-google-map-picker/dist/index.modern.js");
-/* harmony import */ var _store_LocationStore__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../store/LocationStore */ "./resources/js/store/LocationStore.js");
-/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
-/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var react_dropzone__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-dropzone */ "./node_modules/react-dropzone/dist/es/index.js");
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-
-
-
-
-
-
-
-
-
-
-
-
-function InputWithLabel(_ref) {
-  var label = _ref.label,
-      _onChange = _ref.onChange,
-      value = _ref.value,
-      _ref$type = _ref.type,
-      type = _ref$type === void 0 ? "text" : _ref$type,
-      appendix = _ref.appendix,
-      placeholder = _ref.placeholder,
-      _ref$required = _ref.required,
-      required = _ref$required === void 0 ? true : _ref$required;
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    "class": "mb-3"
-  }, label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-    "for": "exampleFormControlInput1 form-control-label",
-    "class": "form-label"
-  }, label) : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "form-control-container"
-  }, appendix && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, appendix), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control, {
-    required: true,
-    value: value,
-    placeholder: placeholder,
-    onChange: function onChange(e) {
-      _onChange(e.target.value);
-    },
-    className: "form-control form-control-inner form-control-lg ",
-    type: type
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control.Feedback, {
-    type: "invalid"
-  }, "Silahkan Isi ", label))));
-}
-
-function InputTextAreaWithLabel(_ref2) {
-  var label = _ref2.label,
-      _onChange2 = _ref2.onChange,
-      value = _ref2.value,
-      type = _ref2.type,
-      items = _ref2.items,
-      placeholder = _ref2.placeholder;
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    "class": "mb-3"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-    "for": "exampleFormControlInput1 form-control-label",
-    "class": "form-label"
-  }, label), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "form-control-container"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control, {
-    value: value,
-    onChange: function onChange(e) {
-      _onChange2(e.target.value);
-    },
-    className: "form-control form-control-inner form-control-lg ",
-    as: "textarea"
-  }))));
-}
-
-function InputSelectWithLabel(_ref3) {
-  var label = _ref3.label,
-      _onChange3 = _ref3.onChange,
-      value = _ref3.value,
-      type = _ref3.type,
-      items = _ref3.items,
-      appendix = _ref3.appendix,
-      placeholder = _ref3.placeholder;
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    "class": "mb-3"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-    "for": "exampleFormControlInput1 form-control-label",
-    "class": "form-label"
-  }, label), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "form-control-container"
-  }, appendix && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, appendix), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control, {
-    value: value,
-    onChange: function onChange(e) {
-      _onChange3(e.target.value);
-    },
-    className: "form-control form-control-inner form-control-lg ",
-    as: "select"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", null, "-- Pilih --"), items && items.map(function (item) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: item.id
-    }, item.name);
-  })))));
-}
-
-function InputChooseWithLabel(_ref4) {
-  var label = _ref4.label,
-      onChange = _ref4.onChange,
-      value = _ref4.value,
-      type = _ref4.type,
-      items = _ref4.items,
-      placeholder = _ref4.placeholder;
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    "class": ""
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-    "for": "exampleFormControlInput1 form-control-label",
-    "class": "form-label"
-  }, label), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "form-control-container d-flex flex-column  border-none mt-0"
-  }, Object.keys(items).map(function (item, index) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "d-flex align-items-center",
-      onClick: function onClick() {
-        onChange(item);
-      }
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: classnames__WEBPACK_IMPORTED_MODULE_2___default()("radioitem", {
-        'active': item == value
-      })
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, items[item])));
-  }))));
-}
-
-function InputCheckWithLabel(_ref5) {
-  var label = _ref5.label,
-      onChange = _ref5.onChange,
-      value = _ref5.value,
-      type = _ref5.type,
-      items = _ref5.items,
-      placeholder = _ref5.placeholder;
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    "class": ""
-  }, label && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-    "for": "exampleFormControlInput1 form-control-label",
-    "class": "form-label"
-  }, label), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "form-control-container d-flex flex-column border-none mt-0"
-  }, Object.keys(items).map(function (item, index) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "d-flex align-items-center",
-      onClick: function onClick() {
-        onChange(value == null ? item : null);
-      }
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: classnames__WEBPACK_IMPORTED_MODULE_2___default()("checkitem", {
-        'active': value != null
-      })
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, items[item])));
-  }))));
-}
-
-function InputDatePickerWithLabel(_ref6) {
-  var label = _ref6.label,
-      onChange = _ref6.onChange,
-      value = _ref6.value,
-      type = _ref6.type,
-      appendix = _ref6.appendix,
-      placeholder = _ref6.placeholder;
-
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
-      _useState2 = _slicedToArray(_useState, 2),
-      focused = _useState2[0],
-      setFocused = _useState2[1];
-
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    "class": "mb-3"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-    "for": "exampleFormControlInput1 form-control-label",
-    "class": "form-label"
-  }, label), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "form-control-container"
-  }, appendix && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, appendix), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_dates__WEBPACK_IMPORTED_MODULE_4__["SingleDatePicker"], {
-    date: value // momentPropTypes.momentObj or null
-    ,
-    onDateChange: function onDateChange(date) {
-      return onChange(date);
-    } // PropTypes.func.isRequired
-    ,
-    focused: focused // PropTypes.bool
-    ,
-    onFocusChange: function onFocusChange(_ref7) {
-      var focused = _ref7.focused;
-      return setFocused(focused);
-    } // PropTypes.func.isRequired
-    ,
-    id: Object(lodash__WEBPACK_IMPORTED_MODULE_5__["random"])() // PropTypes.string.isRequired,
-
-  }))));
-}
-
-function InputMapPickerWithLabel(_ref8) {
-  var label = _ref8.label,
-      onChange = _ref8.onChange,
-      value = _ref8.value,
-      type = _ref8.type,
-      desc = _ref8.desc,
-      appendix = _ref8.appendix,
-      placeholder = _ref8.placeholder;
-  var DefaultZoom = 10;
-
-  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(true),
-      _useState4 = _slicedToArray(_useState3, 2),
-      focused = _useState4[0],
-      setFocused = _useState4[1];
-
-  var _useLocationStore = Object(_store_LocationStore__WEBPACK_IMPORTED_MODULE_7__["default"])(),
-      latitude = _useLocationStore.latitude,
-      longitude = _useLocationStore.longitude;
-
-  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(_objectSpread({}, {
-    latitude: latitude,
-    longitude: longitude
-  })),
-      _useState6 = _slicedToArray(_useState5, 2),
-      location = _useState6[0],
-      setLocation = _useState6[1];
-
-  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(DefaultZoom),
-      _useState8 = _slicedToArray(_useState7, 2),
-      zoom = _useState8[0],
-      setZoom = _useState8[1];
-
-  function handleChangeLocation(lat, lng) {
-    setLocation({
-      lat: lat,
-      lng: lng
-    });
-  }
-
-  function handleChangeZoom(newZoom) {
-    setZoom(newZoom);
-  }
-
-  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
-      _useState10 = _slicedToArray(_useState9, 2),
-      showModal = _useState10[0],
-      setShowModal = _useState10[1];
-
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    "class": "mb-3"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-    "for": "exampleFormControlInput1 form-control-label",
-    "class": "form-label"
-  }, label), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "form-control-container"
-  }, appendix && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, appendix), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "form-control form-control-inner form-control-lg",
-    onClick: function onClick() {
-      setShowModal(true);
-    }
-  }, value), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Modal"], {
-    show: showModal,
-    onHide: function onHide() {
-      return setShowModal(false);
-    }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Modal"].Header, {
-    closeButton: true
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Modal"].Title, {
-    id: "example-modal-sizes-title-sm"
-  }, "Pilih Lokasi")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Modal"].Body, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_google_map_picker__WEBPACK_IMPORTED_MODULE_6__["default"], {
-    defaultLocation: {
-      latitude: latitude,
-      longitude: longitude
-    },
-    zoom: zoom,
-    style: {
-      height: '500px',
-      borderRadius: '4px'
-    },
-    onChangeLocation: handleChangeLocation,
-    onChangeZoom: handleChangeZoom,
-    apiKey: "AIzaSyD07E1VvpsN_0FvsmKAj4nK9GnLq-9jtj8"
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Modal"].Footer, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
-    className: "btn btn-danger",
-    onClick: function onClick() {
-      if (location.lat == null || location.lng == null) {
-        sweetalert2__WEBPACK_IMPORTED_MODULE_8___default.a.fire("Lokasi", " Silahkan Pilih Lokasi  Di Map", 'warning');
-      } else {
-        onChange(location);
-      }
-
-      setShowModal(false);
-    }
-  }, "Pilih")))), desc));
-}
-
-function InputModalSelectorWithLabel(_ref9) {
-  var label = _ref9.label,
-      onChange = _ref9.onChange,
-      value = _ref9.value,
-      type = _ref9.type,
-      desc = _ref9.desc,
-      appendix = _ref9.appendix,
-      placeholder = _ref9.placeholder,
-      items = _ref9.items,
-      itemRenderer = _ref9.itemRenderer;
-  var DefaultZoom = 10;
-
-  var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({}),
-      _useState12 = _slicedToArray(_useState11, 2),
-      tempSelected = _useState12[0],
-      setTempSelected = _useState12[1];
-
-  var _useState13 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
-      _useState14 = _slicedToArray(_useState13, 2),
-      showModal = _useState14[0],
-      setShowModal = _useState14[1];
-
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    "class": "mb-3"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-    "for": "exampleFormControlInput1 form-control-label",
-    "class": "form-label"
-  }, label), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "form-control-container"
-  }, appendix && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, appendix), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: classnames__WEBPACK_IMPORTED_MODULE_2___default()("form-control form-control-inner form-control-lg", {
-      "text-muted": value == ""
-    }),
-    onClick: function onClick() {
-      setShowModal(true);
-    }
-  }, value ? value.name : placeholder), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Modal"], {
-    show: showModal,
-    onHide: function onHide() {
-      return setShowModal(false);
-    }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Modal"].Header, {
-    closeButton: true
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Modal"].Title, {
-    id: "example-modal-sizes-title-sm"
-  }, "Pilih")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Modal"].Body, {
-    style: {
-      height: '60vh',
-      overflowY: 'scroll'
-    }
-  }, items && items.map(function (currentItem, currentIndex) {
-    return itemRenderer(currentItem, currentIndex, tempSelected, setTempSelected);
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Modal"].Footer, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
-    className: "btn btn-danger",
-    onClick: function onClick() {
-      onChange(tempSelected);
-      setShowModal(false);
-    }
-  }, "Pilih")))), desc));
-}
-
-function ImagePickerWithLabel(_ref10) {
-  var label = _ref10.label,
-      onChange = _ref10.onChange,
-      value = _ref10.value,
-      type = _ref10.type,
-      items = _ref10.items,
-      removeItem = _ref10.removeItem,
-      placeholder = _ref10.placeholder,
-      _ref10$single = _ref10.single,
-      single = _ref10$single === void 0 ? true : _ref10$single;
-
-  var _useState15 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
-      _useState16 = _slicedToArray(_useState15, 2),
-      initialSet = _useState16[0],
-      setInitialSet = _useState16[1];
-
-  var _useState17 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(""),
-      _useState18 = _slicedToArray(_useState17, 2),
-      uploadState = _useState18[0],
-      setUploadState = _useState18[1];
-
-  function actionRemoveItem(index) {
-    var tmp = _toConsumableArray(items);
-
-    tmp.splice(index, 1);
-    console.log(tmp);
-
-    if (single) {
-      removeItem(tmp.length > 0 ? tmp[0] : null);
-    } else {
-      removeItem(tmp);
-    }
-  }
-
-  function addItems(base) {}
-
-  function uploadImage(base) {
-    onChange({
-      image_url: base
-    });
-  }
-
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    "class": "mb-3"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-    "for": "exampleFormControlInput1 form-control-label",
-    "class": "form-label"
-  }, label), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "form-control-container mb-2"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: classnames__WEBPACK_IMPORTED_MODULE_2___default()("form-control form-control-inner form-control-lg", {
-      "text-muted": value == ""
-    }),
-    onClick: function onClick() {}
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "d-flex flex-column"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(MyDropzone, {
-    onItemSelected: uploadImage
-  }))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "row"
-  }, items && items.map(function (item, index) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "col-lg-3 p-3 "
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      style: {
-        position: 'absolute',
-        top: 10,
-        right: 10
-      }
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-      className: "btn btn-danger btn-sm",
-      onClick: function onClick() {
-        sweetalert2__WEBPACK_IMPORTED_MODULE_8___default.a.fire({
-          title: "Galery",
-          text: "Apa Anda Yakin Ingin Menghapus Gambar",
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonText: 'Ya'
-        }).then(function (result) {
-          if (result.isConfirmed) {
-            actionRemoveItem(index);
-          }
-        });
-      }
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-      "class": "fa fa-trash",
-      "aria-hidden": "true"
-    }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
-      src: item === null || item === void 0 ? void 0 : item.image_url,
-      className: "img-fluid",
-      alt: ""
-    }));
-  }))));
-}
-
-function MyDropzone(_ref11) {
-  var onItemSelected = _ref11.onItemSelected;
-
-  var _useState19 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null),
-      _useState20 = _slicedToArray(_useState19, 2),
-      uploadState = _useState20[0],
-      setUploadState = _useState20[1];
-
-  var onDrop = function onDrop(acceptedFiles) {
-    acceptedFiles.forEach(function (file) {
-      var reader = new FileReader();
-
-      reader.onabort = function () {
-        return console.log('file reading was aborted');
-      };
-
-      reader.onerror = function () {
-        return console.log('file reading has failed');
-      };
-
-      reader.onload = function () {
-        // Do whatever you want with the file contents
-        var binaryStr = reader.result;
-        setUploadState("Uploading.");
-        window.axios.post("/app/image/upload", {
-          base_image: binaryStr
-        }).then(function (data) {
-          onItemSelected(data.data.image_url);
-        })["catch"](function (err) {
-          console.log(err);
-          sweetalert2__WEBPACK_IMPORTED_MODULE_8___default.a.fire("Upload", err.response.data.data.message);
-        })["finally"](function () {
-          setUploadState("Finished.");
-        });
-      };
-
-      reader.readAsDataURL(file);
-    });
-  };
-
-  var _useDropzone = Object(react_dropzone__WEBPACK_IMPORTED_MODULE_9__["useDropzone"])({
-    onDrop: onDrop
-  }),
-      getRootProps = _useDropzone.getRootProps,
-      getInputProps = _useDropzone.getInputProps;
-
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", getRootProps(), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", getInputProps()), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, uploadState ? uploadState : "Drag 'n' drop some files here, or click to select files"));
-}
-
-
-
-/***/ }),
-
-/***/ "./resources/js/store/LocationStore.js":
-/*!*********************************************!*\
-  !*** ./resources/js/store/LocationStore.js ***!
-  \*********************************************/
+/***/ "./resources/js/frontoffice/components/VideoDetail.js":
+/*!************************************************************!*\
+  !*** ./resources/js/frontoffice/components/VideoDetail.js ***!
+  \************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var availity_reactstrap_validation__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! availity-reactstrap-validation */ "./node_modules/availity-reactstrap-validation/lib/index.js");
+/* harmony import */ var availity_reactstrap_validation__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(availity_reactstrap_validation__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! reactstrap */ "./node_modules/reactstrap/es/index.js");
+/* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-select */ "./node_modules/react-select/dist/react-select.esm.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var react_youtube__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-youtube */ "./node_modules/react-youtube/dist/index.esm.js");
+/* harmony import */ var _store_useFetch__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../store/useFetch */ "./resources/js/store/useFetch.js");
 
-var useLocationStore = Object(zustand__WEBPACK_IMPORTED_MODULE_0__["default"])(function (set) {
-  return {
-    hasError: true,
-    latitude: null,
-    longitude: null,
-    setCurrentPosition: function setCurrentPosition(position) {
-      set(function (state) {
-        return {
-          latitude: position.latitude,
-          longitude: position.longitude,
-          hasError: position.error
-        };
-      });
-    }
-  };
-});
-/* harmony default export */ __webpack_exports__["default"] = (useLocationStore);
+
+
+
+
+
+
+
+
+function VideoDetail(_ref) {
+  var _data$data;
+
+  var idVideo = _ref.idVideo;
+
+  var _useFetch = Object(_store_useFetch__WEBPACK_IMPORTED_MODULE_7__["default"])("/video/" + idVideo + "/json"),
+      data = _useFetch.data,
+      isLoading = _useFetch.isLoading,
+      isError = _useFetch.isError;
+
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    console.log("dika idVideo", idVideo);
+    console.log("dika data", data);
+  }, []);
+
+  function _onReady(event) {
+    // access to player in all event handlers via event.target
+    console.log("dika", event); // event.target.pauseVideo();
+  }
+
+  function _onEnd(e) {
+    console.log("dika post flag", e);
+  }
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Loading...") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_youtube__WEBPACK_IMPORTED_MODULE_6__["default"], {
+    videoId: data === null || data === void 0 ? void 0 : (_data$data = data.data) === null || _data$data === void 0 ? void 0 : _data$data.youtubeId,
+    opts: {
+      height: '390',
+      width: '640',
+      playerVars: {
+        // https://developers.google.com/youtube/player_parameters
+        autoplay: 1
+      }
+    },
+    onReady: _onReady,
+    onEnd: _onEnd
+  }));
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (VideoDetail);
+var container = document.getElementById("video-detail-fe");
+
+if (container) {
+  var idVideo = container.getAttribute("video-id");
+  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(VideoDetail, {
+    idVideo: idVideo
+  }), container);
+}
 
 /***/ }),
 
@@ -912,17 +406,6 @@ function useFetch(url) {
     isError: error
   };
 }
-
-/***/ }),
-
-/***/ 1:
-/*!********************************!*\
-  !*** ./util.inspect (ignored) ***!
-  \********************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/* (ignored) */
 
 /***/ })
 

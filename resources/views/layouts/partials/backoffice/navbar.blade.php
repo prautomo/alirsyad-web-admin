@@ -32,7 +32,7 @@
                   @can('tingkat-list')
                   <li class="nav-item">
                     <a href="{{ route('backoffice::tingkats.index') }}" class="nav-link">
-                      <span class="sidenav-normal"> Tingkat </span>
+                      <span class="sidenav-normal"> Jenjang Pendidikan </span>
                     </a>
                   </li>
                   @endcan

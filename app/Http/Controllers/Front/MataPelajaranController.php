@@ -67,6 +67,7 @@ class MataPelajaranController extends Controller
 
         $parseData = [
             'mapel' => $mapel,
+            'mapelId' => $id,
         ];
 
         return view('pages/frontoffice/mapel/detail', $parseData);

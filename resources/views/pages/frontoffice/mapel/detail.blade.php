@@ -85,9 +85,9 @@
 								<h4 class="font-weight-bold mt-auto mb-auto">Modul Pembelajaran</h4>
 							</div>
 							<div class="ml-auto">
-								<button class="btn btn-main btn-small">
+								<a href="{{ route('app.mapel.modul', @$mapelId) }}" class="btn btn-main btn-small">
 									Akses
-								</button>
+								</a>
 							</div>
 						</div>
 
@@ -96,9 +96,9 @@
 								<h4 class="font-weight-bold mt-auto mb-auto">Video Pembelajaran</h4>
 							</div>
 							<div class="ml-auto">
-								<button class="btn btn-main btn-small">
+								<a href="{{ route('app.mapel.video', @$mapelId) }}" class="btn btn-main btn-small">
 									Akses
-								</button>
+								</a>
 							</div>
 						</div>
 
@@ -107,9 +107,9 @@
 								<h4 class="font-weight-bold mt-auto mb-auto">Simulasi Pembelajaran</h4>
 							</div>
 							<div class="ml-auto">
-								<button class="btn btn-main btn-small">
+								<a href="{{ route('app.mapel.simulasi', @$mapelId) }}" class="btn btn-main btn-small">
 									Akses
-								</button>
+								</a>
 							</div>
 						</div>
 					</div>
