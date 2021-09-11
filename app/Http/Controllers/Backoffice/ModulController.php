@@ -35,7 +35,7 @@ class ModulController extends Controller{
         $query = Modul::query();
 
         // relation with tingkat
-        $query = $query->with('mataPelajaran');
+        $query = $query->with('mataPelajaran.tingkat.jenjang');
 
         return datatables()
             ->of($query)
@@ -46,6 +46,14 @@ class ModulController extends Controller{
                 if($search){
                     $query->where('name', 'LIKE', '%'.$search.'%');
                     
+                    $query = $query->orWhereHas('mataPelajaran.tingkat.jenjang', function($query2) use ( $search ){
+                        $query2->where('name', 'LIKE', '%'.$search.'%');
+                    });
+
+                    $query = $query->orWhereHas('mataPelajaran.tingkat', function($query2) use ( $search ){
+                        $query2->where('name', 'LIKE', '%'.$search.'%');
+                    });
+
                     $query = $query->orWhereHas('mataPelajaran', function($query2) use ( $search ){
                         $query2->where('name', 'LIKE', '%'.$search.'%');
                     });
@@ -63,6 +71,12 @@ class ModulController extends Controller{
                         "url" => asset($data->icon)
                     ]);
                 }
+            })
+            ->addColumn("jenjang", function ($data) {
+                return @$data->mataPelajaran->tingkat->jenjang ? $data->mataPelajaran->tingkat->jenjang->name : '-';
+            })
+            ->addColumn("tingkat", function ($data) {
+                return @$data->mataPelajaran->tingkat ? $data->mataPelajaran->tingkat->name : '-';
             })
             ->addColumn("mapel", function ($data) {
                 $mapel = @$data->mataPelajaran->name ? $data->mataPelajaran->name : 'none';
@@ -107,7 +121,7 @@ class ModulController extends Controller{
      */
     private function getMataPelajaran(){
         // get list mapel
-        $mapels = MataPelajaran::with('kelas.tingkat')->get();
+        $mapels = MataPelajaran::with('tingkat')->get();
 
         // filter kalo rolenya guru uploader (khusus mapel di tingkatnya aja)
 
@@ -115,7 +129,7 @@ class ModulController extends Controller{
         $mapelList[""] = "Pilih mata pelajaran";
 
         foreach($mapels as $mapel){
-            $mapelList[$mapel->id] = $mapel->name . " (Kelas ".@$mapel->kelas->name." ".@$mapel->kelas->tingkat->name.")";
+            $mapelList[$mapel->id] = $mapel->name . " (Tingkat ".@$mapel->tingkat->name." ".@$mapel->tingkat->jenjang->name.")";
         }
 
         return $mapelList;

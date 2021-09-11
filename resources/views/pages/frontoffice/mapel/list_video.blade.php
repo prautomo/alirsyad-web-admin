@@ -15,9 +15,9 @@
 			<div class="col-md-4">
 				<div class="card">
 					<div class="card-body">
-						<h5>Matematika</h5>
+						<h5>{{ @$mapel->name ?? '-' }}</h5>
                         <span class="kelas-title">
-                            Kelas {{ $mapel->kelas->name ?? "-" }} {{ @$mapel->kelas->tingkat->name }}
+                            Kelas {{ @$mapel->tingkat->name ?? '-' }} {{ @$mapel->tingkat->jenjang->name }}
                         </span>
 					</div>
 				</div>
@@ -55,7 +55,7 @@
                                 </div>
                             </div>
                             @empty
-                            <div></div>
+                            <div class="ml-1">Belum ada video pembelajaran</div>
                             @endforelse
                             
                         </div>

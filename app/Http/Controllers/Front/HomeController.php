@@ -20,17 +20,28 @@ class HomeController extends Controller
     {
         // sedang di pelajari
         $sedangDipelajari = MataPelajaran::search($request);
-        $sedangDipelajari = $sedangDipelajari->with('kelas.tingkat');
-        $sedangDipelajari = $sedangDipelajari->where('kelas_id', Auth::user()->kelas_id);
+        $sedangDipelajari = $sedangDipelajari->with('tingkat');
+        $sedangDipelajari = $sedangDipelajari->whereHas('tingkat.kelas', function($query) {
+            $query->where('id', Auth::user()->kelas_id);
+        });
         // sort by active mapel
         $sedangDipelajari = $sedangDipelajari->limit(2)->get()->sortBy('name');
 
         // upcoming mapel
         $yangAkanDatang = MataPelajaran::search($request);
-        $yangAkanDatang = $yangAkanDatang->with('kelas.tingkat');
-        $yangAkanDatang = $yangAkanDatang->where('kelas_id', '!=', Auth::user()->kelas_id);
-        // sort by active mapel
-        $yangAkanDatang = $yangAkanDatang->limit(2)->get()->sortBy('kelas.tingkat_id')->sortBy('kelas_id')->sortBy('name');
+        $yangAkanDatang = $yangAkanDatang->with('tingkat');
+        // filter by jenjang yg sama
+        $yangAkanDatang = $yangAkanDatang->whereHas('tingkat.jenjang', function($query) {
+            $query->where('id', Auth::user()->kelas->tingkat->jenjang_id);
+        });
+        // filter by tingkat atasnya
+        $yangAkanDatang = $yangAkanDatang->whereHas('tingkat', function($query) {
+            $query->where('name', '>', Auth::user()->kelas->tingkat->name);
+        });
+        // get
+        $yangAkanDatang = $yangAkanDatang->limit(2)->get();
+
+        // ->sortBy('kelas.tingkat_id')->sortBy('kelas_id')->sortBy('name');
 
         $parseData = [
             'sedangDipelajari' => $sedangDipelajari,

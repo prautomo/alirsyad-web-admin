@@ -15,13 +15,15 @@ class CreateTingkatsTable extends Migration
     {
         Schema::create('tingkats', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->default("")->comment('nama tingkat [tk,sd,smp,sma,smk]');
+            $table->string('name')->default("")->comment('nama tingkat [1/2/3]');
             $table->text('description')->nullable();
             $table->text('logo')->default("");
             $table->enum('status', ['active', 'inactive'])->default('active');
-            $table->unsignedBigInteger('uploader_id')->nullable();
+            $table->unsignedBigInteger('jenjang_id');
             $table->timestamps();
             $table->softDeletes('deleted_at', 0);
+
+            $table->foreign('jenjang_id')->references('id')->on('jenjangs')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

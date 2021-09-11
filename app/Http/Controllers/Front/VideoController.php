@@ -20,16 +20,22 @@ class VideoController extends Controller
     public function indexByMapel(Request $request, $idMapel)
     {
         // mapel data
-        $mapel = MataPelajaran::with('kelas.tingkat');
-        $mapel = $mapel->where('kelas_id', Auth::user()->kelas_id);
+        $mapel = MataPelajaran::with('tingkat');
+        $mapel = $mapel->whereHas('tingkat.kelas', function($query) {
+            $query->where('id', Auth::user()->kelas_id);
+        });
         $mapel = $mapel->findOrFail($idMapel);
 
         // videos
         $videos = Video::with('uploader', 'mataPelajaran');
         // handle hak akses mapel
-        $videos = $videos->whereHas('mataPelajaran', function($query){
-            $query->where('kelas_id', Auth::user()->kelas_id);
-        });
+        $user = Auth::user();
+        if($user->role !== "GURU"){
+            $videos = $videos->whereHas('mataPelajaran', function($query) use($user) {
+                $query->where('tingkat_id', $user->kelas->tingkat_id);
+            });
+        }
+        
         $videos = $videos->where('mata_pelajaran_id', $idMapel)->get();
 
         $parseData = [

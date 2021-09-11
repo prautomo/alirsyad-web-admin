@@ -22,7 +22,7 @@ class MataPelajaran extends Model
         'name',
         'icon',
         'slug',
-        'kelas_id',
+        'tingkat_id',
     ];
 
     public static function search($request)
@@ -31,15 +31,15 @@ class MataPelajaran extends Model
         $data = self::appendSearchQuery($data, $request, [
             "name" => "LIKE",
             "slug" => "=",
-            "kelas_id" => "=",
+            "tingkat_id" => "=",
         ]);
 
         return $data;
     }
 
-    public function kelas()
+    public function tingkat()
     {
-        return $this->belongsTo("App\Models\Kelas",  "kelas_id", "id");
+        return $this->belongsTo("App\Models\Tingkat",  "tingkat_id", "id");
     }
 
     /**
@@ -74,9 +74,19 @@ class MataPelajaran extends Model
         return $this->hasMany("App\Models\Video", "mata_pelajaran_id", "id");
     }
 
+    /**
+     * The gurus that belong to the mapel.
+     */
+    public function gurus()
+    {
+        return $this->belongsToMany('App\Models\ExternalUser', 'guru_mata_pelajarans', 'mata_pelajaran_id' , 'guru_id');
+    }
+
     // 
     public function getDisabledAttribute()
     {
-        return $this->kelas_id !== \Auth::user()->kelas_id;
+        // drop logic here
+        // return $this->tingkat_id !== \Auth::user()->kelas_id;
+        return false;
     }
 }

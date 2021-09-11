@@ -9,7 +9,7 @@
             <div class="col-md-12 text-center">
                 <h3>{{ @$mapel->name ?? "-" }}</h3>
                 <span class="kelas-title">
-                    Kelas {{ $mapel->kelas->name ?? "-" }} {{ @$mapel->kelas->tingkat->name }}
+					Kelas {{ @$mapel->tingkat->name ?? '-' }} {{ @$mapel->tingkat->jenjang->name }}
                 </span>
             </div>
         </div>

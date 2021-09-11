@@ -93,4 +93,12 @@ class ExternalUser extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany("App\Models\HistorySimulasi", "siswa_id", "id");
     }
+
+    /**
+     * The mapels that belong to the gurus.
+     */
+    public function mataPelajarans()
+    {
+        return $this->belongsToMany('App\Models\MataPelajaran', 'guru_mata_pelajarans', 'guru_id', 'mata_pelajaran_id');
+    }
 }

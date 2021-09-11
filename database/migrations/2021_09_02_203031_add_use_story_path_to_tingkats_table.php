@@ -14,7 +14,7 @@ class AddUseStoryPathToTingkatsTable extends Migration
     public function up()
     {
         Schema::table('tingkats', function (Blueprint $table) {
-            $table->boolean("use_story_path")->default(true);
+            $table->boolean("use_story_path")->default(false);
         });
     }
 

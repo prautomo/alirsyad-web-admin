@@ -21,7 +21,7 @@
                             <div class="wrap-kelas form-inline mt-3">
                                 <div>
                                     <span class="kelas-title">
-                                        Kelas {{ $sedangDipelajari->kelas->name ?? "-" }} {{ @$sedangDipelajari->kelas->tingkat->name }}
+                                        Kelas {{ @$sedangDipelajari->tingkat->name ?? '-' }} {{ @$sedangDipelajari->tingkat->jenjang->name }}
                                     </span>
                                     <h4 class="font-weight-bold">
                                         {{ @$sedangDipelajari->name ?? "-" }}

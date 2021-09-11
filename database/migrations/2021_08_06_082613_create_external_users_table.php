@@ -28,7 +28,7 @@ class CreateExternalUsersTable extends Migration
             $table->string('rombongan_belajar')->nullable();
             $table->string('role', 20)->default('SISWA');
             $table->string('status')->default('BELUM_DIKONFIRMASI');
-            $table->unsignedBigInteger('kelas_id');
+            $table->unsignedBigInteger('kelas_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

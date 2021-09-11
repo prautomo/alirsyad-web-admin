@@ -12,7 +12,7 @@ class Kelas extends Model
     use HasFactory, SoftDeletes, SearchableTrait;
 
     protected $fillable = [
-        "tingkat_id", 'name', 'description', 'status', 'logo', 'wali_kelas_id', 'order',
+        "tingkat_id", 'name', 'description', 'status', 'logo', 'wali_kelas_id', 'order', 'kelas',
     ];
 
     /**
@@ -55,6 +55,7 @@ class Kelas extends Model
             "id" => "=",
             "tingkat_id" => "=",
             "status" => "=",
+            "kelas" => "=",
         ]);
 
         return $data;
@@ -67,7 +68,7 @@ class Kelas extends Model
 
     public function waliKelas()
     {
-        return $this->belongsTo("App\Models\User",  "wali_kelas_id", "id");
+        return $this->belongsTo("App\Models\ExternalUser",  "wali_kelas_id", "id");
     }
 
     public function mataPelajaran()
@@ -75,7 +76,7 @@ class Kelas extends Model
         return $this->hasMany("App\Models\MataPelajaran", "kelas_id", "id");
     }
 
-    public function externalUser()
+    public function siswa()
     {
         return $this->hasMany("App\Models\ExternalUser", "kelas_id", "id");
     }

@@ -19,12 +19,12 @@ class UserSeeder extends Seeder
         if(Role::get()->isEmpty()){
             $super = User::create([
                 'username' => 'guru',
-                'name' => 'Guru', 
+                'name' => 'Guru Uploader', 
                 'email' => 'guru@sample.id',
                 'password' => bcrypt('123456')
             ]);
-            $role = Role::create(['guard_name' => 'backoffice', 'name' => 'Guru', 'key' => "GURU"]);
-            $super->assignRole('Guru');
+            $role = Role::create(['guard_name' => 'backoffice', 'name' => 'Guru Uploader', 'key' => "GURU"]);
+            $super->assignRole('Guru Uploader');
 
             $super = User::create([
                 'username' => 'superadmin',

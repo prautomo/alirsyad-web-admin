@@ -8,6 +8,7 @@ use Auth;
 use DB;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use App\Models\ExternalUser;
 use App\Models\User;
 use App\Models\Kelas;
 use App\Models\Tingkat;
@@ -33,7 +34,7 @@ class KelasController extends Controller{
         $queryData = Kelas::query();
 
         // relation with tingkat
-        $queryData = $queryData->with(['tingkat', 'waliKelas']);
+        $queryData = $queryData->with(['tingkat.jenjang', 'waliKelas']);
         
         return datatables()
             ->of($queryData)
@@ -44,6 +45,10 @@ class KelasController extends Controller{
                 if($search){
                     $query->where('name', 'LIKE', '%'.$search.'%');
                     
+                    $query = $query->orWhereHas('tingkat.jenjang', function($query2) use ( $search ){
+                        $query2->where('name', 'LIKE', '%'.$search.'%');
+                    });
+
                     $query = $query->orWhereHas('tingkat', function($query2) use ( $search ){
                         $query2->where('name', 'LIKE', '%'.$search.'%');
                     });
@@ -54,6 +59,12 @@ class KelasController extends Controller{
                 }
             })
             ->addIndexColumn()
+            ->addColumn("jenjang", function ($data) {
+                return @$data->tingkat->jenjang ? $data->tingkat->jenjang->name : '-';
+            })
+            ->addColumn("tingkat", function ($data) {
+                return @$data->tingkat ? $data->tingkat->name : '-';
+            })
             ->addColumn("wali_kelas", function ($data) {
                 return @$data->waliKelas ? $data->waliKelas->name : 'not set';
             })
@@ -96,10 +107,11 @@ class KelasController extends Controller{
     private function getGuruList(){
         // get list guru
         $role = "GURU";
-        $guru = User::whereHas("roles", function($q) use ($role){ $q->where("key", $role); });
+        $guru = ExternalUser::where("role", $role);
         $guru = $guru->whereNotIn('id', Kelas::whereNotNull('wali_kelas_id')->pluck('wali_kelas_id'));
         $guru = $guru->get();
         $guruList = [];
+        $guruList[""] = "Pilih Wali Kelas";
         foreach($guru as $guru){
             $guruList[$guru->id] = $guru->name;
         }
@@ -111,8 +123,9 @@ class KelasController extends Controller{
         // get list tingkat
         $tingkats = Tingkat::all();
         $tingkatList = [];
+        $tingkatList[""] = "Pilih Jenjang Pendidikan";
         foreach($tingkats as $tingkat){
-            $tingkatList[$tingkat->id] = $tingkat->name;
+            $tingkatList[$tingkat->id] = "Tingkat ". $tingkat->name . " " . @$tingkat->jenjang->name;
         }
 
         $guruList = $this->getGuruList();
@@ -125,10 +138,9 @@ class KelasController extends Controller{
         $this->validate($request, [
             'name' => 'required|string',
             'tingkat_id' => 'required',
-            'order' => 'required|integer',
         ]);
 
-        $data = Kelas::create($request->only(['description', 'name', 'tingkat_id', 'order']));
+        $data = Kelas::create($request->only(['description', 'name', 'tingkat_id']));
 
         return redirect()->route($this->routePath.'.index')->with(
             $this->success(__("Success to create Kelas"), $data)
@@ -161,11 +173,10 @@ class KelasController extends Controller{
         $this->validate($request, [
             'name' => 'required|string',
             'tingkat_id' => 'required',
-            'order' => 'required|integer',
         ]);
         
         $dt = Kelas::findOrFail($id);
-        $dt->update($request->only(['description', 'name', 'tingkat_id', 'wali_kelas_id', 'order']));
+        $dt->update($request->only(['description', 'name', 'tingkat_id', 'wali_kelas_id']));
 
         return redirect()->route($this->routePath.'.index')->with(
             $this->success(__("Success to update Kelas"), $dt)

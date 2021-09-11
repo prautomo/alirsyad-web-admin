@@ -10,18 +10,17 @@ use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Jenjang;
-use App\Models\Tingkat;
 
-class TingkatController extends Controller{
+class JenjangController extends Controller{
 
     function __construct(){
-        $this->middleware('permission:tingkat-list|tingkat-create|tingkat-edit|tingkat-delete', ['only' => ['index','show']]);
-        $this->middleware('permission:tingkat-create', ['only' => ['create','store']]);
-        $this->middleware('permission:tingkat-edit', ['only' => ['edit','update']]);
-        $this->middleware('permission:tingkat-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:jenjang-list|jenjang-create|jenjang-edit|jenjang-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:jenjang-create', ['only' => ['create','store']]);
+        $this->middleware('permission:jenjang-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:jenjang-delete', ['only' => ['destroy']]);
 
-        $this->prefix = 'pages.backoffice.tingkats';
-        $this->routePath = 'backoffice::tingkats';
+        $this->prefix = 'pages.backoffice.jenjangs';
+        $this->routePath = 'backoffice::jenjangs';
     }
 
     /**
@@ -30,7 +29,7 @@ class TingkatController extends Controller{
      * @return void
      */
     public function datatable(Request $request){
-        $query = Tingkat::query();
+        $query = Jenjang::query();
 
         return datatables()
             ->of($query)
@@ -41,7 +40,7 @@ class TingkatController extends Controller{
                 if($search){
                     $query->where('name', 'LIKE', '%'.$search.'%');
                     
-                    $query = $query->orWhereHas('jenjang', function($query2) use ( $search ){
+                    $query = $query->orWhereHas('uploader', function($query2) use ( $search ){
                         $query2->where('name', 'LIKE', '%'.$search.'%');
                     });
                 }
@@ -50,13 +49,13 @@ class TingkatController extends Controller{
             ->addColumn("action", function ($data) {
                 return view("components.datatable.actions", [
                     "name" => $data->name,
-                    "permissionName" => 'tingkat',
+                    "permissionName" => 'jenjang',
                     "deleteRoute" => route($this->routePath.".destroy", $data->id),
                     "editRoute" => route($this->routePath.".edit", $data->id),
                 ]);
             })
-            ->addColumn("jenjang", function ($data) {
-                return @$data->jenjang_id ? $data->jenjang->name : "not set";
+            ->addColumn("uploader", function ($data) {
+                return @$data->uploader_id ? $data->uploader->name : "not set";
             })
             ->addColumn("created_at", function ($data) {
                 $createdAt = new Carbon($data->created_at);
@@ -80,62 +79,64 @@ class TingkatController extends Controller{
     /**
      * Get List Teacher Uploader
      */
-    private function getJenjang(){
+    private function getGuruUploader(){
         // get list jenjang
-        $jenjangs = Jenjang::get();        
-        $jenjangList = [];
-        $jenjangList[""] = "Pilih jenjang pendidikan";
-        foreach($jenjangs as $jenjang){
-            $jenjangList[$jenjang->id] = $jenjang->name;
+        $role = "GURU";
+        $users = User::whereHas("roles", function($q) use ($role){ $q->where("key", $role); })->get();
+        $users = $users->whereNotIn('id', Jenjang::whereNotNull('uploader_id')->pluck('uploader_id'));
+        
+        $uploaderList = [];
+        $uploaderList[""] = "Pilih guru uploader";
+        foreach($users as $user){
+            $uploaderList[$user->id] = $user->name;
         }
 
-        return $jenjangList;
+        return $uploaderList;
     }
     
     public function create(){
-        $jenjangList = $this->getJenjang();
+        $uploaderList = $this->getGuruUploader();
 
-        return view($this->prefix.'.create', ['jenjangList' => $jenjangList]);
+        return view($this->prefix.'.create', ['uploaderList' => $uploaderList]);
     }
 
     public function store(Request $request){
         // validasi form
         $this->validate($request, [
-            'jenjang_id' => 'required',
             'name' => 'required|string',
         ]);
 
-        $data = Tingkat::create($request->only(['description', 'name', 'jenjang_id']));
+        $data = Jenjang::create($request->only(['description', 'name']));
 
         return redirect()->route($this->routePath.'.index')->with(
-            $this->success(__("Success to create Tingkat"), $data)
+            $this->success(__("Success to create Jenjang"), $data)
         );
     }
 
     public function edit(Request $request, $id){
-        $dt = Tingkat::findOrFail($id);
-        $jenjangList = $this->getJenjang();
+        $dt = Jenjang::findOrFail($id);
+        $uploaderList = $this->getGuruUploader();
 
-        return view($this->prefix.'.edit', ['data'=>$dt, 'jenjangList' => $jenjangList]);
+        return view($this->prefix.'.edit', ['data'=>$dt, 'uploaderList' => $uploaderList]);
     }
 
     public function update(Request $request, $id){
         // validasi form
         $this->validate($request, [
             'name' => 'required|string',
-            'jenjang_id' => 'required',
+            'uploader_id' => 'required',
         ]);
         
-        $dt = Tingkat::findOrFail($id);
-        $dt->update($request->only(['description', 'name', 'jenjang_id']));
+        $dt = Jenjang::findOrFail($id);
+        $dt->update($request->only(['description', 'name', 'uploader_id']));
 
         return redirect()->route($this->routePath.'.index')->with(
-            $this->success(__("Success to update Tingkat"), $dt)
+            $this->success(__("Success to update Jenjang"), $dt)
         );
     }
 
     public function destroy(Request $request, $id){
-        $d = Tingkat::findOrFail($id);
+        $d = Jenjang::findOrFail($id);
 
         $d->delete();
     }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddOrderToTingkatsTable extends Migration
+class AddKelasToKelasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddOrderToTingkatsTable extends Migration
      */
     public function up()
     {
-        Schema::table('tingkats', function (Blueprint $table) {
-            $table->integer("order")->default(0);
+        Schema::table('kelas', function (Blueprint $table) {
+            $table->integer("kelas")->default(1);
         });
     }
 
@@ -25,8 +25,8 @@ class AddOrderToTingkatsTable extends Migration
      */
     public function down()
     {
-        Schema::table('tingkats', function (Blueprint $table) {
-            $table->dropColumn('order');
+        Schema::table('kelas', function (Blueprint $table) {
+            $table->dropColumn('kelas');
         });
     }
 }

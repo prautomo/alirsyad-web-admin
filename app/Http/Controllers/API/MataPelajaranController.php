@@ -26,9 +26,10 @@ class MataPelajaranController extends BaseController
     public function index(Request $request)
     {
         $datas = MataPelajaran::search($request);
-        $datas = $datas->with('kelas.tingkat');
+        $datas = $datas->with('tingkat.jenjang');
         // sort by active mapel
-        $datas = $datas->get()->sortBy('disabled')->sortBy('kelas.tingkat_id')->sortBy('kelas_id');
+        $datas = $datas->get();
+        // ->sortBy('disabled')->sortBy('kelas.tingkat_id')->sortBy('kelas_id');
 
         return $this->sendResponse(MataPelajaranResource::collection($datas), 'Mata Pelajaran retrieved successfully.');
     }
@@ -41,11 +42,13 @@ class MataPelajaranController extends BaseController
     public function inprogress(Request $request)
     {
         $datas = MataPelajaran::search($request);
-        $datas = $datas->with('kelas.tingkat');
-        $datas = $datas->where('kelas_id', Auth::user()->kelas_id);
+        $datas = $datas->with('tingkat.jenjang');
+        $datas = $datas->whereHas('tingkat.kelas', function($query) {
+            $query->where('id', Auth::user()->kelas_id);
+        });
         // sort by active mapel
-        $datas = $datas->get()->sortBy('name');
-
+        $datas = $datas->get();
+        
         return $this->sendResponse(MataPelajaranResource::collection($datas), 'Mata Pelajaran retrieved successfully.');
     }
 
@@ -56,11 +59,19 @@ class MataPelajaranController extends BaseController
      */
     public function upcoming(Request $request)
     {
+        // upcoming mapel
         $datas = MataPelajaran::search($request);
-        $datas = $datas->with('kelas.tingkat');
-        $datas = $datas->where('kelas_id', '!=', Auth::user()->kelas_id);
-        // sort by active mapel
-        $datas = $datas->get()->sortBy('kelas.tingkat_id')->sortBy('kelas_id')->sortBy('name');
+        $datas = $datas->with('tingkat.jenjang');
+        // filter by jenjang yg sama
+        $datas = $datas->whereHas('tingkat.jenjang', function($query) {
+            $query->where('id', Auth::user()->kelas->tingkat->jenjang_id);
+        });
+        // filter by tingkat atasnya
+        $datas = $datas->whereHas('tingkat', function($query) {
+            $query->where('name', '>', Auth::user()->kelas->tingkat->name);
+        });
+        // get
+        $datas = $datas->get();
 
         return $this->sendResponse(MataPelajaranResource::collection($datas), 'Mata Pelajaran retrieved successfully.');
     }
@@ -73,7 +84,7 @@ class MataPelajaranController extends BaseController
      */
     public function show($id)
     {
-        $data = MataPelajaran::with('kelas.tingkat')->find($id);
+        $data = MataPelajaran::with('tingkat.jenjang')->find($id);
   
         if (is_null($data)) {
             return $this->sendError('MataPelajaran not found.');
@@ -90,7 +101,7 @@ class MataPelajaranController extends BaseController
      */
     public function summary($id)
     {
-        $mapel = MataPelajaran::with('kelas.tingkat')->find($id);
+        $mapel = MataPelajaran::with('tingkat.jenjang')->find($id);
   
         if (is_null($mapel)) {
             return $this->sendError('MataPelajaran not found.');

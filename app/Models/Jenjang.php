@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Traits\SearchableTrait;
 
-class Tingkat extends Model
+class Jenjang extends Model
 {
     use HasFactory, SoftDeletes, SearchableTrait;
 
     protected $fillable = [
-        'name', 'description', 'status', 'logo', 'jenjang_id', 'use_story_path', 
+        'name', 'description', 'status', 'logo', 'uploader_id', 
     ];
 
     /**
@@ -21,7 +21,7 @@ class Tingkat extends Model
      * 
      * @var array
      */
-    protected static $relations_to_cascade = ['kelas']; 
+    protected static $relations_to_cascade = ['tingkat']; 
 
     /**
      * Cascade delete and restore
@@ -53,20 +53,19 @@ class Tingkat extends Model
             "name" => "LIKE",
             "description" => "LIKE",
             "status" => "=",
-            "jenjang_id" => "=",
-            "use_story_path" => "=",
+            "uploader_id" => "=",
         ]);
 
         return $data;
     }
 
-    public function jenjang()
+    public function uploader()
     {
-        return $this->belongsTo("App\Models\Jenjang",  "jenjang_id", "id");
+        return $this->belongsTo("App\Models\User",  "uploader_id", "id");
     }
 
-    public function kelas()
+    public function tingkat()
     {
-        return $this->hasMany("App\Models\Kelas", "tingkat_id", "id");
+        return $this->hasMany("App\Models\Tingkat", "jenjang_id", "id");
     }
 }

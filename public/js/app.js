@@ -37433,9 +37433,9 @@ __webpack_require__(/*! ./datatable */ "./resources/js/datatable.js");
  */
 
 
-Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(4)]).then(__webpack_require__.bind(null, /*! ./backoffice/components/ExternalUser */ "./resources/js/backoffice/components/ExternalUser/index.js"));
-Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(5)]).then(__webpack_require__.bind(null, /*! ./backoffice/components/StoryPath/Form */ "./resources/js/backoffice/components/StoryPath/Form.js"));
-Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(3), __webpack_require__.e(6)]).then(__webpack_require__.bind(null, /*! ./frontoffice/components/VideoDetail */ "./resources/js/frontoffice/components/VideoDetail.js"));
+Promise.all(/*! import() */[__webpack_require__.e(8), __webpack_require__.e(2), __webpack_require__.e(4)]).then(__webpack_require__.bind(null, /*! ./backoffice/components/ExternalUser */ "./resources/js/backoffice/components/ExternalUser/index.js"));
+Promise.all(/*! import() */[__webpack_require__.e(8), __webpack_require__.e(7), __webpack_require__.e(5)]).then(__webpack_require__.bind(null, /*! ./backoffice/components/StoryPath/Form */ "./resources/js/backoffice/components/StoryPath/Form.js"));
+Promise.all(/*! import() */[__webpack_require__.e(8), __webpack_require__.e(7), __webpack_require__.e(3), __webpack_require__.e(6)]).then(__webpack_require__.bind(null, /*! ./frontoffice/components/VideoDetail */ "./resources/js/frontoffice/components/VideoDetail.js"));
 
 /***/ }),
 

@@ -32,8 +32,8 @@
 
                             @forelse($sedangDipelajari as $sedangDipelajari)
                             <div class="wrap-kelas form-inline mt-3">
-                                <div>
-                                    <span class="kelas-title">Kelas {{ $sedangDipelajari->kelas->name ?? "-" }} {{ @$sedangDipelajari->kelas->tingkat->name }}</span>
+                                <div style="max-width: 270px;">
+                                    <span class="kelas-title">Kelas {{ $sedangDipelajari->tingkat->name ?? "-" }} {{ @$sedangDipelajari->tingkat->jenjang->name }}</span>
                                     <h4 class="font-weight-bold">
                                         {{ @$sedangDipelajari->name ?? "-" }}
                                     </h4>
@@ -69,8 +69,8 @@
 
                             @forelse($yangAkanDatang as $yangAkanDatang)
                             <div class="wrap-kelas-disable form-inline mt-3">
-                                <div>
-                                    <span class="kelas-title">Kelas {{ @$yangAkanDatang->kelas->name ?? '-' }} {{ @$yangAkanDatang->kelas->tingkat->name }}</span>
+                                <div style="max-width: 270px;">
+                                    <span class="kelas-title">Kelas {{ @$yangAkanDatang->tingkat->name ?? '-' }} {{ @$yangAkanDatang->tingkat->jenjang->name }}</span>
                                     <h4 class="font-weight-bold disable">
                                         {{ @$yangAkanDatang->name ?? "-" }}
                                     </h4>

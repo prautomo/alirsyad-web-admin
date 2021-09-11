@@ -1,6 +1,6 @@
 @extends('layouts.backoffice')
 
-@section('title', __("Kelas"))
+@section('title', __("Jenjang Pendidikan"))
 
 @section('header')
     @parent
@@ -8,9 +8,9 @@
         <div class="col-lg-6 col-7">
             <h6 class="h2 text-white d-inline-block mb-0">@yield('title')</h6>
         </div>
-        @can('kelas-create')
+        @can('jenjang-create')
         <div class="col-lg-6 col-5 text-right">
-            <a href="{{ route('backoffice::kelas.create') }}" class="btn btn-sm btn-neutral">New</a>
+            <a href="{{ route('backoffice::jenjangs.create') }}" class="btn btn-sm btn-neutral">New</a>
             <!-- <a href="#" class="btn btn-sm btn-neutral">Filters</a> -->
         </div>
         @endcan
@@ -38,10 +38,8 @@
                         https://datatables.net/reference/option/columns
                     --}}
                     <th data-data="DT_RowIndex" data-searchable="false">@lang("No")</th>
-                    <th data-data="jenjang">@lang("Jenjang Pendidikan")</th>
-                    <th data-data="tingkat">@lang("Tingkat")</th>
-                    <th data-data="name">@lang("Kelas")</th>
-                    <th data-data="wali_kelas">@lang("Wali Kelas")</th>
+                    <th data-data="name">@lang("Name")</th>
+                    <th data-data="uploader">@lang("Uploader")</th>
                     <th data-data="created_at">@lang("Created At")</th>
                     <th data-data="action" data-orderable="false" data-searchable="false">@lang("Action")</th>
                 </x-datatable>

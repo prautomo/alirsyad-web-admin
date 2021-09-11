@@ -23,6 +23,7 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
 ->group(function() {
     Route::get('/', 'DashboardController@index')->name('dashboard');
     Route::get('dashboard', 'DashboardController@index')->name('dashboard');
+    Route::resource('jenjangs', 'JenjangController');
     Route::resource('tingkats', 'TingkatController');
     Route::get('kelas/listJson', 'KelasController@listJson')->name('kelas.listJson');
     Route::resource('kelas', 'KelasController');
@@ -44,6 +45,10 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
     Route::post('external-users/import', 'ExternalUserController@import')->name('external-users.import');
     Route::resource('external-users', 'ExternalUserController');
     Route::post('external-users/update-status/{id}', 'ExternalUserController@updateStatus')->name('external-users.update-status');
+
+    // JSON Response
+    Route::get("/json/tingkats/{id}", "\App\Http\Controllers\API\TingkatController@show")->name('json.tingkat.detail');
+
 
     // Route::name('sub_categories.')->prefix('kelas/{categoryId}/mata_pelajarans')->group(function() {
     //     Route::get('/', 'SubCategoryController@index')->name('index');

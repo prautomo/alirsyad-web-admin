@@ -12,9 +12,11 @@
         <div class="col-lg-6 col-5 text-right">
             <a href="{{ route('backoffice::external-users.create', ['role'=>\Request::get('role')]) }}" class="btn btn-sm btn-neutral">New</a>
             <!-- <a href="#" class="btn btn-sm btn-neutral">Filters</a> -->
+            @if(\Request::get('role') === 'SISWA')
             <a href="{{ route('backoffice::external-users.batch_create', ['role'=>\Request::get('role')]) }}" class="btn btn-sm btn-primary">
               Import dari Excel
             </a>
+            @endif
         </div>
         @endcan
     </div>
@@ -42,11 +44,17 @@
                 --}}
                 <th data-data="DT_RowIndex" data-searchable="false">@lang("No")</th>
                 <!-- <th data-data="show-img">@lang("Image")</th> -->
+                @if(\Request::get('role') === 'SISWA')
                 <th data-data="nis">@lang("NIS")</th>
+                @else
+                <th data-data="nis">@lang("NIP")</th>
+                @endif
                 <th data-data="name">@lang("Name")</th>
-                <th data-data="email">@lang("Email")</th>
+                @if(\Request::get('role') === 'SISWA')
+                <th data-data="kelas.tingkat.jenjang.name">@lang("Jenjang")</th>
                 <th data-data="kelas.tingkat.name">@lang("Tingkat")</th>
                 <th data-data="kelas.name">@lang("Kelas")</th>
+                @endif
                 <th data-data="show-status">@lang("Status")</th>
                 <th data-data="action" data-orderable="false" data-searchable="false">@lang("Action")</th>
             </x-datatable>

@@ -20,10 +20,12 @@ class MataPelajaranController extends Controller
     {
         // sedang di pelajari
         $sedangDipelajari = MataPelajaran::search($request);
-        $sedangDipelajari = $sedangDipelajari->with('kelas.tingkat');
-        $sedangDipelajari = $sedangDipelajari->where('kelas_id', Auth::user()->kelas_id);
+        $sedangDipelajari = $sedangDipelajari->with('tingkat');
+        $sedangDipelajari = $sedangDipelajari->whereHas('tingkat.kelas', function($query) {
+            $query->where('id', Auth::user()->kelas_id);
+        });
         // sort by active mapel
-        $sedangDipelajari = $sedangDipelajari->get()->sortBy('name');
+        $sedangDipelajari = $sedangDipelajari->get();
 
         $parseData = [
             'sedangDipelajari' => $sedangDipelajari,
@@ -41,10 +43,17 @@ class MataPelajaranController extends Controller
     {
         // upcoming mapel
         $yangAkanDatang = MataPelajaran::search($request);
-        $yangAkanDatang = $yangAkanDatang->with('kelas.tingkat');
-        $yangAkanDatang = $yangAkanDatang->where('kelas_id', '!=', Auth::user()->kelas_id);
-        // sort by active mapel
-        $yangAkanDatang = $yangAkanDatang->get()->sortBy('kelas.tingkat_id')->sortBy('kelas_id')->sortBy('name');
+        $yangAkanDatang = $yangAkanDatang->with('tingkat');
+        // filter by jenjang yg sama
+        $yangAkanDatang = $yangAkanDatang->whereHas('tingkat.jenjang', function($query) {
+            $query->where('id', Auth::user()->kelas->tingkat->jenjang_id);
+        });
+        // filter by tingkat atasnya
+        $yangAkanDatang = $yangAkanDatang->whereHas('tingkat', function($query) {
+            $query->where('name', '>', Auth::user()->kelas->tingkat->name);
+        });
+        // get
+        $yangAkanDatang = $yangAkanDatang->get();
 
         $parseData = [
             'yangAkanDatang' => $yangAkanDatang,
@@ -61,8 +70,10 @@ class MataPelajaranController extends Controller
     public function show(Request $request, $id)
     {
         // mapel
-        $mapel = MataPelajaran::with('kelas.tingkat');
-        $mapel = $mapel->where('kelas_id', Auth::user()->kelas_id);
+        $mapel = MataPelajaran::with('tingkat');
+        $mapel = $mapel->whereHas('tingkat.kelas', function($query) {
+            $query->where('id', Auth::user()->kelas_id);
+        });
         $mapel = $mapel->findOrFail($id);
 
         $parseData = [

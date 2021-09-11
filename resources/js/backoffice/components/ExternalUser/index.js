@@ -159,39 +159,40 @@ function UploadBatchSiswa() {
                         <div className="layer w-100 p-20 mt-2">
                             <h3>Preview Data</h3>
                             <table className="table table-bordered">
-                                <tr>
-                                    <th width="15%">
-                                        NIS
-                                    </th>
-                                    <th width="15%">
-                                        Name
-                                    </th>
-                                    <th width="15%">
-                                        Username
-                                    </th>
-                                    <th width="15%">
-                                        Email
-                                    </th>
-                                    <th width="20%">
-                                        Tingkat
-                                    </th>
-                                    <th width="15%">
-                                        Kelas
-                                    </th>
-                                    <th width="5%">
-                                        Aksi
-                                    </th>
-                                </tr>
+                                <thead>
+                                    <tr>
+                                        <th width="15%">
+                                            NIS
+                                        </th>
+                                        <th width="15%">
+                                            Name
+                                        </th>
+                                        <th width="15%">
+                                            Jenjang Pendidikan
+                                        </th>
+                                        <th width="15%">
+                                            Kelas
+                                        </th>
+                                        <th width="15%">
+                                            Email
+                                        </th>
+                                        <th width="5%">
+                                            Aksi
+                                        </th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
                                 {excelData.map((item, index) => {
                                     // init var
                                     let nisCol = item.A;
                                     let nameCol = item.B;
-                                    let usernameCol = item.C;
-                                    let emailCol = item.D;
-                                    let phoneCol = item.E ? item.E : '-';
-                                    let rombonganBelajarCol = item.F ? item.F : '-';
-                                    let tingkatCol = item.G;
-                                    let kelasCol = item.H;
+                                    let jenjangCol = item.C;
+                                    let tingkatCol = item.D;
+                                    let kelasCol = item.E ? item.E : '-';
+                                    let usernameCol = item.F ? item.F : '-';
+                                    let passwordCol = item.G;
+                                    let emailCol = item.H;
 
                                     return <tr key={index}>
                                         <td>
@@ -201,18 +202,12 @@ function UploadBatchSiswa() {
                                             {nameCol}
                                         </td>
                                         <td>
-                                            {usernameCol}
+                                            {jenjangCol}
                                         </td>
                                         <td>
-                                            {emailCol}
-                                            {!validator.isEmail(emailCol) && 
-                                            <>
-                                                <br/>
-                                                <small className="text-danger">Email not valid.</small>
-                                            </>
-                                            }
+                                            {tingkatCol} {kelasCol}
                                         </td>
-                                        <td>
+                                        {/* <td>
                                             <select className="form-control" onChange={(event) => {
                                                 onTingkatChange(index, event.target.value);
                                                 // load kelas list
@@ -225,19 +220,29 @@ function UploadBatchSiswa() {
                                                     // }
                                                     return <option value={tingkat.id} selected={tingkatCol==tingkat.id}>{tingkat.name}</option>
                                                 })}
-                                                {/* if tingkat not found */}
                                                 {!Boolean(tingkats.some(tingkat => tingkat.id == tingkatCol)) &&
                                                     <option value={tingkatCol} selected={true}>{tingkatCol}</option>
                                                 }
                                             </select>
-                                        </td>
-                                        <td>
+                                        </td> */}
+                                        {/* <td>
                                             <select className="form-control" onChange={(event) => {
                                                 
                                             }} disabled>
                                                 <option>{kelasCol}</option>
                                             </select>
+                                        </td> */}
+
+                                        <td>
+                                            {emailCol}
+                                            {!validator.isEmail(emailCol) && 
+                                            <>
+                                                <br/>
+                                                <small className="text-danger">Email not valid.</small>
+                                            </>
+                                            }
                                         </td>
+                                        
                                         <td>
                                             <a onClick={handleRemove(index)} style={{ cursor: "pointer" }}>
                                                 Delete
@@ -245,6 +250,7 @@ function UploadBatchSiswa() {
                                         </td>
                                     </tr>
                                 })}
+                                </tbody>
 
                                 {excelData.length === 0 && <tr><td colSpan="7">No data.</td></tr>}
                             </table>

@@ -23,16 +23,24 @@
             </li>
 
             <li class="nav-item">
-              <a class="nav-link{{ request()->is('backoffice/tingkats*', 'backoffice/kelas*', 'backoffice/mata_pelajarans*', 'backoffice/promos*') ? ' active' : ' collapsed' }}" href="#navbar-master" data-toggle="collapse" role="button" aria-expanded="{{ request()->is('backoffice/tingkats*', 'backoffice/kelas*', 'backoffice/mata_pelajarans*') ? 'true' : 'false' }}" aria-controls="navbar-master">
+              <a class="nav-link{{ request()->is('backoffice/jenjangs*', 'backoffice/tingkats*', 'backoffice/kelas*', 'backoffice/mata_pelajarans*', 'backoffice/promos*') ? ' active' : ' collapsed' }}" href="#navbar-master" data-toggle="collapse" role="button" aria-expanded="{{ request()->is('backoffice/jenjangs*', 'backoffice/tingkats*', 'backoffice/kelas*', 'backoffice/mata_pelajarans*') ? 'true' : 'false' }}" aria-controls="navbar-master">
                 <i class="ni ni-ungroup text-red"></i>
                 <span class="nav-link-text">Master</span>
               </a>
-              <div class="collapse{{ request()->is('backoffice/tingkats*', 'backoffice/kelas*', 'backoffice/mata_pelajarans*', 'backoffice/promos*') ? ' show' : '' }}" id="navbar-master" style="">
+              <div class="collapse{{ request()->is('backoffice/jenjangs*', 'backoffice/tingkats*', 'backoffice/kelas*', 'backoffice/mata_pelajarans*', 'backoffice/promos*') ? ' show' : '' }}" id="navbar-master" style="">
                 <ul class="nav nav-sm flex-column">
+                  @can('jenjang-list')
+                  <li class="nav-item">
+                    <a href="{{ route('backoffice::jenjangs.index') }}" class="nav-link">
+                      <span class="sidenav-normal"> Jenjang Pendidikan </span>
+                    </a>
+                  </li>
+                  @endcan
+
                   @can('tingkat-list')
                   <li class="nav-item">
                     <a href="{{ route('backoffice::tingkats.index') }}" class="nav-link">
-                      <span class="sidenav-normal"> Jenjang Pendidikan </span>
+                      <span class="sidenav-normal"> Tingkat </span>
                     </a>
                   </li>
                   @endcan
@@ -117,6 +125,11 @@
                   <li class="nav-item">
                     <a href="{{ route('backoffice::users.index', ['role'=>'Guru']) }}" class="nav-link">
                       <span class="sidenav-normal"> Guru Uploader </span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{{ route('backoffice::external-users.index', ['role'=>'GURU']) }}" class="nav-link">
+                      <span class="sidenav-normal"> Guru </span>
                     </a>
                   </li>
                   <li class="nav-item">
