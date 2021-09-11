@@ -19,7 +19,7 @@
 				<div class="card">
 					<div class="card-body">
 						<div class="card-title">
-							Program Belajar Matematika
+							Program Belajar {{ @$mapel->name ?? "-" }}
 						</div>
 						<hr/>
 						<div class="wrap-kelas row mt-3 ml-1 mr-1">
@@ -28,11 +28,11 @@
 							</div>
 							<div class="col-md-8">
                                 <div class="d-block w-100">
-                                    <div class="progress">
-                                        <div class="progress-bar" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="80" style="width: 80%; background-color: rgb(52, 125, 241);"></div>
+                                    <div class="progress" title="{{ @$progress['progress_modul']['done'] ?? 0 }} / {{ @$progress['progress_modul']['total'] ?? 0 }}">
+                                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ @$progress['progress_modul']['percentage'] ?? 0 }}" aria-valuemin="0" aria-valuemax="{{ @$progress['progress_modul']['percentage'] ?? 0 }}" style="width: {{ @$progress['progress_modul']['percentage'] ?? 0 }}%; background-color: rgb(52, 125, 241);"></div>
                                     </div>
                                     <div class="" style="font-size: 0.8rem;">
-                                        <span>80% selesai</span>
+                                        <span>{{ @$progress['progress_modul']['percentage'] ?? 0 }}% selesai</span>
                                     </div>
                                 </div>
 							</div>
@@ -44,11 +44,11 @@
 							</div>
 							<div class="col-md-8">
                                 <div class="d-block w-100">
-                                    <div class="progress">
-                                        <div class="progress-bar" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="80" style="width: 80%; background-color: rgb(52, 125, 241);"></div>
+                                    <div class="progress" title="{{ @$progress['progress_video']['done'] ?? 0 }} / {{ @$progress['progress_video']['total'] ?? 0 }}">
+                                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ @$progress['progress_video']['percentage'] ?? 0 }}" aria-valuemin="0" aria-valuemax="{{ @$progress['progress_video']['percentage'] ?? 0 }}" style="width: {{ @$progress['progress_video']['percentage'] ?? 0 }}%; background-color: rgb(52, 125, 241);"></div>
                                     </div>
                                     <div class="" style="font-size: 0.8rem;">
-                                        <span>80% selesai</span>
+                                        <span>{{ @$progress['progress_video']['percentage'] ?? 0 }}% selesai</span>
                                     </div>
                                 </div>
 							</div>
@@ -60,11 +60,11 @@
 							</div>
 							<div class="col-md-8">
                                 <div class="d-block w-100">
-                                    <div class="progress">
-                                        <div class="progress-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="20" style="width: 20%; background-color: rgb(52, 125, 241);"></div>
+                                    <div class="progress" title="{{ @$progress['progress_simulasi']['done'] ?? 0 }} / {{ @$progress['progress_simulasi']['total'] ?? 0 }}">
+                                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ @$progress['progress_simulasi']['percentage'] ?? 0 }}" aria-valuemin="0" aria-valuemax="{{ @$progress['progress_simulasi']['percentage'] ?? 0 }}" style="width: {{ @$progress['progress_simulasi']['percentage'] ?? 0 }}%; background-color: rgb(52, 125, 241);"></div>
                                     </div>
                                     <div class="" style="font-size: 0.8rem;">
-                                        <span>20% selesai</span>
+                                        <span>{{ @$progress['progress_simulasi']['percentage'] ?? 0 }}% selesai</span>
                                     </div>
                                 </div>
 							</div>
