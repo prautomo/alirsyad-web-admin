@@ -26,6 +26,8 @@
 
   <!-- Page plugins -->
   @stack('plugin_css')
+
+  @stack('style')
 </head>
 
 <body>

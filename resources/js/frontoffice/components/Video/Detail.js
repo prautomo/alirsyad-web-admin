@@ -5,7 +5,7 @@ import { Row, Col, FormGroup, Label, Button } from 'reactstrap';
 import Select from 'react-select';
 import axios from 'axios';
 import YouTube from 'react-youtube';
-import useFetch from '../../store/useFetch';
+import useFetch from '../../../store/useFetch';
 
 function VideoDetail({ idVideo }) {
     

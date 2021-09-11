@@ -13,6 +13,7 @@ use App\Models\Modul;
 use App\Models\MataPelajaran;
 use App\Models\Tingkat;
 use App\Helpers\ExtractArchive;
+use App\Helpers\GenerateSlug;
 
 class ModulController extends Controller{
 
@@ -152,7 +153,7 @@ class ModulController extends Controller{
         // default image
         $url = "images/placeholder.png";
         // temp request
-        $dataReq = $request->only(['name', 'icon', 'description', 'mata_pelajaran_id']);
+        $dataReq = $request->only(['name', 'icon', 'description', 'mata_pelajaran_id', 'slug']);
         $dataReq['uploader_id'] = \Auth::user()->id;
 
         if ($request->hasFile('icon')) {
@@ -174,6 +175,11 @@ class ModulController extends Controller{
 
         $data = Modul::create($dataReq);
 
+        if(empty($request->slug)){
+            $data->slug = GenerateSlug::generateSlug($data->id, $data->name);
+            $data->save();
+        }
+
         return redirect()->route($this->routePath.'.index')->with(
             $this->success(__("Success to create Modul"), $data)
         );
@@ -189,11 +195,12 @@ class ModulController extends Controller{
     public function update(Request $request, $id){
         // validasi form
         $this->validate($request, [
+            'slug' => 'unique:mata_pelajarans,slug,'.$id,
             'name' => 'required|string',
             'mata_pelajaran_id' => 'required',
         ]);
 
-        $dataReq = $request->only(['name', 'icon', 'description', 'mata_pelajaran_id']);
+        $dataReq = $request->only(['name', 'icon', 'description', 'mata_pelajaran_id', 'slug']);
 
         if ($request->hasFile('icon')) {
             $validated = $request->validate([
@@ -214,6 +221,10 @@ class ModulController extends Controller{
             $dataReq['pdf_path'] = $url;
         }
 
+        if(empty($request->slug)){
+            $dataReq['slug'] = GenerateSlug::generateSlug($id, $request->name);
+        }
+        
         $dt = Modul::findOrFail($id);
         $dt->update($dataReq);
 

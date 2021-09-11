@@ -15,4 +15,5 @@ require('./datatable');
 
 import('./backoffice/components/ExternalUser');
 import('./backoffice/components/StoryPath/Form');
-import('./frontoffice/components/VideoDetail');
+import('./frontoffice/components/Video/Detail');
+import('./frontoffice/components/Modul/Detail');
