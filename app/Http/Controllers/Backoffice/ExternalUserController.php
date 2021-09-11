@@ -70,7 +70,7 @@ class ExternalUserController extends Controller{
         ->addColumn("action", function ($data) {
             return view("components.datatable.actions", [
                 "name" => $data->name,
-                // "deleteRoute" => route($this->routePath.".destroy", $data->id),
+                "deleteRoute" => route($this->routePath.".destroy", $data->id),
                 "editRoute" => route($this->routePath.".edit", $data->id).(\Request::get('role') ? "?role=".\Request::get('role') : ""),
             ]);
         });
