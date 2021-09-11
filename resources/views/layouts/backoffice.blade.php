@@ -33,7 +33,7 @@
   <!-- Main content -->
   <div class="main-content" id="panel">
     <!-- Topnav -->
-    <nav class="navbar navbar-top navbar-expand navbar-dark bg-merah border-bottom">
+    <nav class="navbar navbar-top navbar-expand navbar-dark bg-ijo border-bottom">
       <div class="container-fluid">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <!-- Search form -->
@@ -282,7 +282,7 @@
     </nav>
     <!-- Header -->
     <!-- Header -->
-    <div class="header bg-merah pb-6">
+    <div class="header bg-ijo pb-6">
       <div class="container-fluid">
         <div class="header-body">
             @yield('header')
