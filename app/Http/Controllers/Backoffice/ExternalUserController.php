@@ -106,7 +106,7 @@ class ExternalUserController extends Controller{
         $tingkatList[""] = "Pilih tingkat";
 
         foreach($tingkats as $tingkat){
-            $tingkatList[$tingkat->id] = $tingkat->name;
+            $tingkatList[$tingkat->id] = $tingkat->name . " " . @$tingkat->jenjang->name;
         }
 
         return $tingkatList;
