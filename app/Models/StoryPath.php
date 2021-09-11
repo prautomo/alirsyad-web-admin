@@ -17,6 +17,7 @@ class StoryPath extends Model
         "template_path",
         "description",
         "uploader_id",
+        'semester',
     ];
 
     public static function search($request)
@@ -28,6 +29,7 @@ class StoryPath extends Model
             "id" => "=",
             "modul_id" => "=",
             "uploader_id" => "=",
+            "semester" => "=",
         ]);
 
         return $data;

@@ -127,7 +127,7 @@ function ModulDetail({
             }
             
             <div style={{overflowX:'auto',height:'100%'}}>
-                <object data={"http://localhost:8000/"+data?.data?.pdf_path} type="application/pdf" width="100%" height="800px"></object>
+                <object data={data?.data?.pdf_url} type="application/pdf" width="100%" height="800px"></object>
             </div>
         </>
         }

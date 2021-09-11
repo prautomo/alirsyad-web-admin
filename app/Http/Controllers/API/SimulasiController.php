@@ -39,7 +39,7 @@ class SimulasiController extends BaseController
      */
     public function show($id)
     {
-        $data = Simulasi::with('kelas.tingkat.jenjang');
+        $data = Simulasi::with('mataPelajaran.tingkat.jenjang');
   
         // handle hak akses mapel
         $data = $data->whereHas('mataPelajaran', function($query){

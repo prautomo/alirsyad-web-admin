@@ -26,6 +26,7 @@ class Simulasi extends Model
         'mata_pelajaran_id',
         'uploader_id',
         'slug',
+        'semester',
     ];
 
     public static function search($request)
@@ -37,6 +38,7 @@ class Simulasi extends Model
             "mata_pelajaran_id" => "=",
             "uploader_id" => "=",
             "slug" => "=",
+            "semester" => "=",
         ]);
 
         return $data;

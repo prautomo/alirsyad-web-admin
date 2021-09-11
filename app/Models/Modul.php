@@ -11,7 +11,7 @@ class Modul extends Model
 {
     use HasFactory, SearchableTrait, SoftDeletes;
 
-    protected $appends = ['read'];
+    protected $appends = ['read', 'pdf_url'];
 
     /**
      * The attributes that are mass assignable.
@@ -26,6 +26,7 @@ class Modul extends Model
         'mata_pelajaran_id',
         'uploader_id',
         'slug',
+        'semester',
     ];
 
     public static function search($request)
@@ -37,6 +38,7 @@ class Modul extends Model
             "mata_pelajaran_id" => "=",
             "uploader_id" => "=",
             "slug" => "=",
+            "semester" => "=",
         ]);
 
         return $data;
@@ -45,6 +47,11 @@ class Modul extends Model
     public function getReadAttribute()
     {
         return is_object(HistoryModul::where(['siswa_id' => \Auth::user()->id, 'modul_id' => $this->id])->first());
+    }
+
+    public function getPDFUrlAttribute()
+    {
+        return asset($this->pdf_path);
     }
 
     public function mataPelajaran()

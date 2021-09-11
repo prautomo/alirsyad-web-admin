@@ -18,6 +18,7 @@ class HistorySimulasi extends Model
     protected $fillable = [
         'siswa_id',
         'simulasi_id',
+        'semester',
     ];
 
     public static function search($request)
@@ -26,6 +27,7 @@ class HistorySimulasi extends Model
         $data = self::appendSearchQuery($data, $request, [
             "simulasi_id" => "=",
             "siswa_id" => "=",
+            "semester" => "=",
         ]);
 
         return $data;

@@ -18,6 +18,7 @@ class HistoryVideo extends Model
     protected $fillable = [
         'siswa_id',
         'video_id',
+        'semester',
     ];
 
     public static function search($request)
@@ -26,6 +27,7 @@ class HistoryVideo extends Model
         $data = self::appendSearchQuery($data, $request, [
             "video_id" => "=",
             "siswa_id" => "=",
+            "semester" => "=",
         ]);
 
         return $data;

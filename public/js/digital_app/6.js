@@ -169,7 +169,7 @@ function ModulDetail(_ref) {
       height: '100%'
     }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("object", {
-    data: "http://localhost:8000/" + (data === null || data === void 0 ? void 0 : (_data$data2 = data.data) === null || _data$data2 === void 0 ? void 0 : _data$data2.pdf_path),
+    data: data === null || data === void 0 ? void 0 : (_data$data2 = data.data) === null || _data$data2 === void 0 ? void 0 : _data$data2.pdf_url,
     type: "application/pdf",
     width: "100%",
     height: "800px"
