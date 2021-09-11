@@ -61,9 +61,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/mata-pelajaran/{id}', "Front\MataPelajaranController@show")->name('app.mapel.detail');
     Route::get('/mata-pelajaran/{id}/modul', "Front\VideoController@indexByMapel")->name('app.mapel.modul');
     Route::get('/mata-pelajaran/{id}/video', "Front\VideoController@indexByMapel")->name('app.mapel.video');
-    Route::get('/mata-pelajaran/{id}/simulasi', "Front\VideoController@indexByMapel")->name('app.mapel.simulasi');
+    Route::get('/mata-pelajaran/{id}/simulasi', "Front\SimulasiController@indexByMapel")->name('app.mapel.simulasi');
 
     Route::get('/video/{id}', "Front\VideoController@show")->name('app.video.detail');
+    Route::get('/simulasi/{id}', "Front\SimulasiController@show")->name('app.simulasi.detail');
     // json res
     Route::get("/video/{id}/json", "API\VideoController@show");
 

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddKelasToKelasTable extends Migration
+class AddSlugToSimulasisTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddKelasToKelasTable extends Migration
      */
     public function up()
     {
-        Schema::table('kelas', function (Blueprint $table) {
-            $table->integer("kelas")->default(1);
+        Schema::table('simulasis', function (Blueprint $table) {
+            $table->string('slug')->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class AddKelasToKelasTable extends Migration
      */
     public function down()
     {
-        Schema::table('kelas', function (Blueprint $table) {
-            $table->dropColumn('kelas');
+        Schema::table('simulasis', function (Blueprint $table) {
+            $table->dropColumn('slug');
         });
     }
 }

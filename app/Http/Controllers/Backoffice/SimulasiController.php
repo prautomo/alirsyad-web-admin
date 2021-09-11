@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Services\UploadService;
 use App\Models\MataPelajaran;
 use App\Models\Simulasi;
+use App\Helpers\GenerateSlug;
 
 class SimulasiController extends Controller{
 
@@ -183,6 +184,11 @@ class SimulasiController extends Controller{
 
         $data = Simulasi::create($dataReq);
 
+        if(empty($request->slug)){
+            $data->slug = GenerateSlug::generateSlug($data->id, $data->name);
+            $data->save();
+        }
+
         return redirect()->route($this->routePath.'.index')->with(
             $this->success(__("Success to create Simulasi"), $data)
         );
@@ -198,11 +204,12 @@ class SimulasiController extends Controller{
     public function update(Request $request, $id){
         // validasi form
         $this->validate($request, [
+            'slug' => 'unique:mata_pelajarans,slug,'.$id,
             'name' => 'required|string',
             'mata_pelajaran_id' => 'required',
         ]);
 
-        $dataReq = $request->only(['name', 'icon', 'description', 'mata_pelajaran_id']);
+        $dataReq = $request->only(['name', 'icon', 'description', 'mata_pelajaran_id', 'slug']);
 
         if ($request->hasFile('icon')) {
             $validated = $request->validate([
@@ -235,6 +242,10 @@ class SimulasiController extends Controller{
                     $this->failed(__("Failed to upload simulasi"), $request->all())
                 );
             }
+        }
+
+        if(empty($request->slug)){
+            $dataReq['slug'] = GenerateSlug::generateSlug($id, $request->name);
         }
 
         $dt = Simulasi::findOrFail($id);

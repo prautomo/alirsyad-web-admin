@@ -25,6 +25,7 @@ class Simulasi extends Model
         'icon',
         'mata_pelajaran_id',
         'uploader_id',
+        'slug',
     ];
 
     public static function search($request)
@@ -35,6 +36,7 @@ class Simulasi extends Model
             "description" => "LIKE",
             "mata_pelajaran_id" => "=",
             "uploader_id" => "=",
+            "slug" => "=",
         ]);
 
         return $data;
