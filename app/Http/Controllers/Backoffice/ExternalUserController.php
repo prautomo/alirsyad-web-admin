@@ -14,6 +14,7 @@ use App\Models\MataPelajaran;
 use App\Models\Jenjang;
 use App\Models\Tingkat;
 use App\Models\Kelas;
+use App\Models\GuruMataPelajaran;
 use App\Services\UploadService;
 use DB;
 use Hash;
@@ -117,9 +118,13 @@ class ExternalUserController extends Controller{
      */
     private function getMataPelajaran(){
         // get list mapel
-        $mapels = MataPelajaran::with('tingkat')->get();
+        $mapels = MataPelajaran::with('tingkat');
 
-        // filter kalo rolenya guru uploader (khusus mapel di tingkatnya aja)
+        // filter kalo mapel nya udah ada yg ngajar
+        $guruMengajar = GuruMataPelajaran::get()->pluck('mata_pelajaran_id');
+        $mapels = $mapels->whereNotIn('id', $guruMengajar);
+
+        $mapels = $mapels->get();
 
         $mapelList = [];
 
