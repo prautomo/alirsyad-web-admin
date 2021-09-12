@@ -11,7 +11,7 @@ class Simulasi extends Model
 {
     use HasFactory, SearchableTrait, SoftDeletes;
 
-    protected $appends = ['played', 'rata_rata_score', 'bintang_score'];
+    protected $appends = ['played', 'rata_rata_score', 'bintang_score', 'simulasi_url', 'slug_url', 'cover_url', 'last_score' ];
 
     /**
      * The attributes that are mass assignable.
@@ -49,6 +49,21 @@ class Simulasi extends Model
         return is_object(HistorySimulasi::where(['siswa_id' => \Auth::user()->id, 'simulasi_id' => $this->id])->first());
     }
 
+    public function getSimulasiUrlAttribute()
+    {
+        return asset($this->path_simulasi)."/index.html";
+    }
+
+    public function getSlugUrlAttribute()
+    {
+        return route('app.simulasi.detail', $this->slug).".html";
+    }
+
+    public function getCoverUrlAttribute()
+    {
+        return asset($this->icon);
+    }
+
     private function avgScore()
     {
         $scores = $this->scores->where('siswa_id', \Auth::user()->id);
@@ -58,12 +73,18 @@ class Simulasi extends Model
         foreach($scores as $score){
             $totalScore += @$score->score;
         }
-        return $totalScore/count($scores);
+
+        return ($totalScore === 0 || $scores === 0) ? 0 : $totalScore/count($scores);
     }
 
     public function getRataRataScoreAttribute()
     {
         return $this->avgScore();
+    }
+
+    public function getLastScoreAttribute()
+    {
+        return $this->scores->sortByDesc('created_at')->first();
     }
 
     public function getBintangScoreAttribute()

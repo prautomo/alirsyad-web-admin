@@ -72,6 +72,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get("/nilai-simulasi", "Front\ScoreController@index")->name('app.nilai-simulasi');
     Route::get("/nilai-simulasi/mapels/json", "API\ScoreController@mapels");
+    Route::get("/nilai-simulasi/mapels/{idMapel}/json", "API\ScoreController@progress");
 
     Route::get('/profile', "Front\UserController@profile")->name('app.akun-saya');
     Route::get('/profile/password-edit', "Front\UserController@passwordEdit")->name('app.akun-saya.password-edit');
