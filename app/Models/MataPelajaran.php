@@ -79,7 +79,7 @@ class MataPelajaran extends Model
      */
     public function gurus()
     {
-        return $this->belongsToMany('App\Models\ExternalUser', 'guru_mata_pelajarans', 'mata_pelajaran_id' , 'guru_id')->withTrashed();
+        return $this->belongsToMany('App\Models\ExternalUser', 'guru_mata_pelajarans', 'mata_pelajaran_id' , 'guru_id');
     }
 
     // 

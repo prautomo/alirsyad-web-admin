@@ -99,6 +99,6 @@ class ExternalUser extends Authenticatable implements MustVerifyEmail
      */
     public function mataPelajarans()
     {
-        return $this->belongsToMany('App\Models\MataPelajaran', 'guru_mata_pelajarans', 'guru_id', 'mata_pelajaran_id')->withTrashed();
+        return $this->belongsToMany('App\Models\MataPelajaran', 'guru_mata_pelajarans', 'guru_id', 'mata_pelajaran_id');
     }
 }

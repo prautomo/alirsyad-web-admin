@@ -39,6 +39,7 @@ Route::middleware('auth:api')->group( function () {
     Route::get("/simulasis", "API\SimulasiController@index");
     Route::get("/simulasis/{id}", "API\SimulasiController@show");
     Route::post("/simulasis/{id}/flag", "API\SimulasiController@createHistory");
+    Route::post("/simulasis/{id}/score", "API\SimulasiController@createScore");
 });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
