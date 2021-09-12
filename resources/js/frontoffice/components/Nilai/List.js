@@ -75,13 +75,13 @@ function NilaiSimulasi() {
                     <CardBody>
                         <h4>Progres Simulasi {dataProgress?.mata_pelajaran ?? "-"}</h4>
                         <div className="d-block w-100">
-                            <div className="progress" style={{ height: "1.5rem" }} title="Progress">
+                            <div className="progress" style={{ height: "1.5rem" }} title={(dataProgress?.progress?.percentage ?? 0)+"% selesai"}>
                                 <div 
                                     className="progress-bar" 
                                     role="progressbar" aria-valuenow={dataProgress?.progress?.percentage ?? 0} 
-                                    aria-valuemin="0" aria-valuemax="100" 
+                                    aria-valuemin="0" aria-valuemax={dataProgress?.progress?.percentage ?? 0}
                                     style={{ 
-                                        width: dataProgress?.progress?.percentage ?? 0+"%",
+                                        width: (dataProgress?.progress?.percentage ?? 0)+"%",
                                         backgroundColor: "rgb(52, 125, 241)"
                                     }}
                                 ></div>

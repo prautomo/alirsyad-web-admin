@@ -407,7 +407,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 function NilaiSimulasi() {
-  var _dataProgress$mata_pe, _dataProgress$progres, _dataProgress$progres2, _dataProgress$progres3, _dataProgress$progres4, _dataProgress$progres5, _dataProgress$progres6, _dataProgress$progres7, _dataProgress$progres8, _dataProgress$simulas;
+  var _dataProgress$mata_pe, _dataProgress$progres, _dataProgress$progres2, _dataProgress$progres3, _dataProgress$progres4, _dataProgress$progres5, _dataProgress$progres6, _dataProgress$progres7, _dataProgress$progres8, _dataProgress$progres9, _dataProgress$progres10, _dataProgress$progres11, _dataProgress$progres12, _dataProgress$simulas;
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(false),
       _useState2 = _slicedToArray(_useState, 2),
@@ -509,15 +509,15 @@ function NilaiSimulasi() {
     style: {
       height: "1.5rem"
     },
-    title: "Progress"
+    title: ((_dataProgress$progres = dataProgress === null || dataProgress === void 0 ? void 0 : (_dataProgress$progres2 = dataProgress.progress) === null || _dataProgress$progres2 === void 0 ? void 0 : _dataProgress$progres2.percentage) !== null && _dataProgress$progres !== void 0 ? _dataProgress$progres : 0) + "% selesai"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
     className: "progress-bar",
     role: "progressbar",
-    "aria-valuenow": (_dataProgress$progres = dataProgress === null || dataProgress === void 0 ? void 0 : (_dataProgress$progres2 = dataProgress.progress) === null || _dataProgress$progres2 === void 0 ? void 0 : _dataProgress$progres2.percentage) !== null && _dataProgress$progres !== void 0 ? _dataProgress$progres : 0,
+    "aria-valuenow": (_dataProgress$progres3 = dataProgress === null || dataProgress === void 0 ? void 0 : (_dataProgress$progres4 = dataProgress.progress) === null || _dataProgress$progres4 === void 0 ? void 0 : _dataProgress$progres4.percentage) !== null && _dataProgress$progres3 !== void 0 ? _dataProgress$progres3 : 0,
     "aria-valuemin": "0",
-    "aria-valuemax": "100",
+    "aria-valuemax": (_dataProgress$progres5 = dataProgress === null || dataProgress === void 0 ? void 0 : (_dataProgress$progres6 = dataProgress.progress) === null || _dataProgress$progres6 === void 0 ? void 0 : _dataProgress$progres6.percentage) !== null && _dataProgress$progres5 !== void 0 ? _dataProgress$progres5 : 0,
     style: {
-      width: (_dataProgress$progres3 = dataProgress === null || dataProgress === void 0 ? void 0 : (_dataProgress$progres4 = dataProgress.progress) === null || _dataProgress$progres4 === void 0 ? void 0 : _dataProgress$progres4.percentage) !== null && _dataProgress$progres3 !== void 0 ? _dataProgress$progres3 : 0 + "%",
+      width: ((_dataProgress$progres7 = dataProgress === null || dataProgress === void 0 ? void 0 : (_dataProgress$progres8 = dataProgress.progress) === null || _dataProgress$progres8 === void 0 ? void 0 : _dataProgress$progres8.percentage) !== null && _dataProgress$progres7 !== void 0 ? _dataProgress$progres7 : 0) + "%",
       backgroundColor: "rgb(52, 125, 241)"
     }
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
@@ -525,7 +525,7 @@ function NilaiSimulasi() {
     style: {
       fontSize: "1rem"
     }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("span", null, (_dataProgress$progres5 = dataProgress === null || dataProgress === void 0 ? void 0 : (_dataProgress$progres6 = dataProgress.progress) === null || _dataProgress$progres6 === void 0 ? void 0 : _dataProgress$progres6.done) !== null && _dataProgress$progres5 !== void 0 ? _dataProgress$progres5 : 0, " dari ", (_dataProgress$progres7 = dataProgress === null || dataProgress === void 0 ? void 0 : (_dataProgress$progres8 = dataProgress.progress) === null || _dataProgress$progres8 === void 0 ? void 0 : _dataProgress$progres8.total) !== null && _dataProgress$progres7 !== void 0 ? _dataProgress$progres7 : 0, " simulasi selesai"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("span", null, (_dataProgress$progres9 = dataProgress === null || dataProgress === void 0 ? void 0 : (_dataProgress$progres10 = dataProgress.progress) === null || _dataProgress$progres10 === void 0 ? void 0 : _dataProgress$progres10.done) !== null && _dataProgress$progres9 !== void 0 ? _dataProgress$progres9 : 0, " dari ", (_dataProgress$progres11 = dataProgress === null || dataProgress === void 0 ? void 0 : (_dataProgress$progres12 = dataProgress.progress) === null || _dataProgress$progres12 === void 0 ? void 0 : _dataProgress$progres12.total) !== null && _dataProgress$progres11 !== void 0 ? _dataProgress$progres11 : 0, " simulasi selesai"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
     style: {
       height: "500px",
       overflow: "auto"
