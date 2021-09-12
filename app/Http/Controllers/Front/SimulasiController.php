@@ -27,7 +27,7 @@ class SimulasiController extends Controller
         $mapel = $mapel->findOrFail($idMapel);
 
         // simulasis
-        $simulasis = Simulasi::with('uploader', 'mataPelajaran');
+        $simulasis = Simulasi::with('uploader', 'mataPelajaran', 'scores');
         // handle hak akses mapel
         $user = Auth::user();
         if($user->role !== "GURU"){
@@ -37,6 +37,8 @@ class SimulasiController extends Controller
         }
         
         $simulasis = $simulasis->where('mata_pelajaran_id', $idMapel)->get();
+
+        // dd($simulasis);
 
         $parseData = [
             'idMapel' => $idMapel,

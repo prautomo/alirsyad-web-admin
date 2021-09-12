@@ -11,7 +11,7 @@ class Simulasi extends Model
 {
     use HasFactory, SearchableTrait, SoftDeletes;
 
-    protected $appends = ['played'];
+    protected $appends = ['played', 'rata_rata_score', 'bintang_score'];
 
     /**
      * The attributes that are mass assignable.
@@ -49,6 +49,38 @@ class Simulasi extends Model
         return is_object(HistorySimulasi::where(['siswa_id' => \Auth::user()->id, 'simulasi_id' => $this->id])->first());
     }
 
+    private function avgScore()
+    {
+        $scores = $this->scores->where('siswa_id', \Auth::user()->id);
+        $bintang = 0;
+        $totalScore = 0;
+        // calculate average score
+        foreach($scores as $score){
+            $totalScore += @$score->score;
+        }
+        return $totalScore/count($scores);
+    }
+
+    public function getRataRataScoreAttribute()
+    {
+        return $this->avgScore();
+    }
+
+    public function getBintangScoreAttribute()
+    {
+        $avgScore = $this->avgScore();
+        $bintang = 0;
+        if($avgScore>=99){
+            $bintang = 3;
+        }else if($avgScore>=66){
+            $bintang = 2;
+        }else if($avgScore>=33){
+            $bintang = 1;
+        }
+
+        return $bintang;
+    }
+
     public function mataPelajaran()
     {
         return $this->belongsTo("App\Models\MataPelajaran",  "mata_pelajaran_id", "id")->withTrashed();
@@ -62,5 +94,10 @@ class Simulasi extends Model
     public function history()
     {
         return $this->hasMany("App\Models\HistorySimulasi", "simulasi_id", "id")->withTrashed();
+    }
+
+    public function scores()
+    {
+        return $this->hasMany("App\Models\Score", "simulasi_id", "id")->withTrashed();
     }
 }

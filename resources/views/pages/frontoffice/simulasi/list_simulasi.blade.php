@@ -44,7 +44,17 @@
                             @forelse($simulasis as $simulasi)
                             <div class="col-md-4 mb-4">
                                 <div class="card" style="width: 100%;">
-                                    <img class="card-img-top" style="max-height: 140px;" src="{{ @$simulasi->icon ? asset($simulasi->icon) : "https://ideas.or.id/wp-content/themes/consultix/images/no-image-found-360x250.png" }}" alt="{{ @$simulasi->name ?? "-" }}">
+                                    <div>
+                                        <img class="card-img-top" style="max-height: 140px;" src="{{ @$simulasi->icon ? asset($simulasi->icon) : "https://ideas.or.id/wp-content/themes/consultix/images/no-image-found-360x250.png" }}" alt="{{ @$simulasi->name ?? "-" }}">
+                                        <div class="rating">
+                                            @php
+                                            $rataRataScore = @$simulasi->rata_rata_score ?? 0;
+                                            @endphp
+                                            <span class="fa fa-star{{ ($rataRataScore>=33) ? ' checked' : '' }}"></span>
+                                            <span class="fa fa-star{{ ($rataRataScore>=66) ? ' checked' : '' }}"></span>
+                                            <span class="fa fa-star{{ ($rataRataScore>=99) ? ' checked' : '' }}"></span>
+                                        </div>
+                                    </div>
                                     <div class="card-body text-center">
                                         <h6 class="card-title">
                                             <a href="{{ route('app.simulasi.detail', @$simulasi->slug) }}.html" style="text-decoration: none;">
