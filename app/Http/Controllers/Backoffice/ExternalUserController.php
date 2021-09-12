@@ -268,8 +268,10 @@ class ExternalUserController extends Controller{
         $user->update($input);
 
         if(@$request->role === "GURU"){
-            if(count(@$request->mapel) > 0){
-                $user->mataPelajarans()->sync($request->mapel);
+            if(@$request->mapel){
+                if(count(@$request->mapel) > 0){
+                    $user->mataPelajarans()->sync($request->mapel);
+                }
             }
         }
 
