@@ -56,7 +56,7 @@ class Simulasi extends Model
 
     public function uploader()
     {
-        return $this->belongsTo("App\Models\User",  "uploader_id", "id")->withTrashed();
+        return $this->belongsTo("App\Models\User",  "uploader_id", "id");
     }
 
     public function history()

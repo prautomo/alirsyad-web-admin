@@ -47,7 +47,7 @@ class MataPelajaran extends Model
      */
     public function guru()
     {
-        return $this->hasMany("App\Models\User", "mata_pelajaran_id", "id")->withTrashed();
+        return $this->hasMany("App\Models\User", "mata_pelajaran_id", "id");
     }
 
     /**
