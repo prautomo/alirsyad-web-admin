@@ -70,9 +70,9 @@ class Simulasi extends Model
         $bintang = 0;
         $totalScore = 0;
         // calculate average score
+        $jumlahPercobaan = 0;
         foreach($scores as $score){
-            $jumlahPercobaan = count($scores);
-
+            $jumlahPercobaan += 1;
             // handle max percobaan sampe 10, yg ke 11 mh ga di itung
             if($jumlahPercobaan <= 10){
                 $totalScore += @$score->score;
