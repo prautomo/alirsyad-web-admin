@@ -13,6 +13,7 @@
   <!-- bootstrap.min css -->
   <link rel="stylesheet" href="{{ asset('frontoffice/plugins/bootstrap/css/bootstrap.min.css') }}">
   <!-- Icon Font Css -->
+  <link rel="stylesheet" href="{{ asset('backoffice/assets/vendor/nucleo/css/nucleo.css') }}" type="text/css">
   <link rel="stylesheet" href="{{ asset('frontoffice/plugins/themify/css/themify-icons.css') }}">
   <link rel="stylesheet" href="{{ asset('frontoffice/plugins/fontawesome/css/all.css') }}">
   <link rel="stylesheet" href="{{ asset('frontoffice/plugins/magnific-popup/dist/magnific-popup.css') }}">

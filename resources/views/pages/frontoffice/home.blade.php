@@ -25,8 +25,9 @@
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-body">
-                            <div class="card-title">
-                                Mata Pelajaran yang Sedang Dipelajari
+                            <div class="card-title mb-0 form-inline">
+                                <i class="ni ni-books icon-title"></i>
+                                <div>Mata Pelajaran yang Sedang Dipelajari</div>
                             </div>
                             <hr/>
 
@@ -62,8 +63,9 @@
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-body">
-                            <div class="card-title">
-                                Mata Pelajaran yang Akan Datang
+                            <div class="card-title mb-0 form-inline">
+                                <i class="ni ni-books icon-title"></i>
+                                <div>Mata Pelajaran yang Akan Datang</div>
                             </div>
                             <hr/>
 

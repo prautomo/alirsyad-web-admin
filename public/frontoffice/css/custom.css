@@ -25,3 +25,9 @@
 .dropdown-item a:hover {
     color: #00594D;
 }
+
+.icon-title {
+    color: #FFC727;
+    margin-right: 10px;
+    font-size: 20px;
+}
