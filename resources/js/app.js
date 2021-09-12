@@ -17,3 +17,4 @@ import('./backoffice/components/ExternalUser');
 import('./backoffice/components/StoryPath/Form');
 import('./frontoffice/components/Video/Detail');
 import('./frontoffice/components/Modul/Detail');
+import('./frontoffice/components/Nilai/List');

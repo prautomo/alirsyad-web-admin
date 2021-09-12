@@ -70,13 +70,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get("/modul/{id}/json", "API\ModulController@show");
     Route::get("/video/{id}/json", "API\VideoController@show");
 
-    Route::get('/profile', "Front\UserController@profile")->name('home');
+    Route::get("/nilai-simulasi", "Front\ScoreController@index")->name('app.nilai-simulasi');
+    Route::get('/profile', "Front\UserController@profile")->name('app.akun-saya');
+    Route::get('/profile/password-edit', "Front\UserController@passwordEdit")->name('app.akun-saya.password-edit');
+    Route::post('/profile/password-edit', "Front\UserController@passwordUpdate")->name('app.akun-saya.password-update');
     Route::post('/app/verification/resend',  function () {
         Auth::user()->sendEmailVerificationNotification();
         return redirect(url()->previous());
     });
 
-
     // Route::post("/app/image/upload" , "Front\HomeController@upload");
-
 });

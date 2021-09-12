@@ -64,10 +64,10 @@
                    <a class="nav-link" href="{{ route('app.mapel.list') }}">Mata Pelajaran</a>
                 </li>
 			    <li class="nav-item">
-                    <a class="nav-link" href="nilai.html">Nilai Simulasi</a>
+                    <a class="nav-link" href="{{ route('app.nilai-simulasi') }}">Nilai Simulasi</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="akun.html">Akun Saya</a>
+                    <a class="nav-link" href="{{ route('app.akun-saya') }}">Akun Saya</a>
                 </li>
 			</ul>
 

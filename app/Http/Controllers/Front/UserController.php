@@ -23,21 +23,10 @@ class UserController extends Controller
 
     public function profile()
     {
-        return view("app.Screen.customer.profile", [
+        return view("pages.frontoffice.user.profile", [
             "user_data" => Auth::user()
         ]);
     }
-    public function toko()
-    {
-        // dd(Auth::user());
-        return view("app.Screen.mitra.toko", [
-
-            "user_data" => Auth::user()
-        ]);
-        # code...
-    }
-
-
 
     public function profileEdit()
     {
@@ -46,84 +35,47 @@ class UserController extends Controller
         return view("app.Screen.user.update", [
             "mitra_detail" =>  $mitraDetail
         ]);
-        # code...
     }
+
     public function profileUpdate(Request $request)
     {
         $mitraDetail = ExternalUser::where("id", Auth::user()->id)->first();
 
         $mitraDetail->update($request->only([
             "name",
-
-
         ]));
-
 
         return $this->returnStatus("200", "Info Toko Sudah Di Update");
     }
 
-
-
     public function passwordEdit()
     {
-        $mitraDetail = ExternalUser::where("id", Auth::user()->id)->first();
+        $userDetail = ExternalUser::where("id", Auth::user()->id)->first();
         // dd(Auth::user());
-        return view("app.Screen.user.ubahPassword", [
-            "mitra_detail" =>  $mitraDetail
+        return view("pages.frontoffice.user.edit_password", [
+            "user_detail" =>  $userDetail
         ]);
-        # code...
     }
+
     public function passwordUpdate(Request $request)
     {
-
         $validatedData = $request->validate([
             'oldpassword' => [
                 'required',
                 function ($attribute, $value, $fail) {
-
                     $validate_admin = Auth::user();
 
-                    if ($validate_admin && Hash::check($value, $validate_admin->password)) {
+                    if ($validate_admin && !Hash::check($value, $validate_admin->password)) {
                         // here you know data is valid
-
-                        return $fail($attribute . ' is invalid.');
+                        return $fail(($attribute) . ' is invalid.');
                     }
                 },
             ],
             'password' => 'required|confirmed',
             'password_confirmation' => 'required',
         ]);
-        Auth::user()->update(["password" => $validatedData['password']]);
+        Auth::user()->update(["password" => Hash::make($validatedData['password'])]);
 
         return redirect("/profile")->with('success', "Password Berhasil Di Ubah");;
-    }
-
-
-    public function requestTarikDana(Request $request)
-    {
-        $user = AUth::user();
-        $saldo   = $user->saldo;
-
-        if ($saldo <= 0) {
-            return  $this->returnStatus("400", "Saldo Tidak Mencukupi");
-        }
-
-        return DB::transaction(function () use ($request,  $user,  $saldo) {
-
-
-            $kodePengambilan =  "REQ/PENGAMBILAN" . date("ymdhis");
-            $desc =   "Penarikan dana sebesar $saldo tanggal " . date("d-m-Y");
-
-            RequestPengambilanDana::create([
-                "user_id" => $user->id,
-                "code" => $kodePengambilan,
-                "description" => $desc,
-                "amount" => $saldo,
-                "status" => "NEW",
-            ]);
-            // reduceSaldo($amount, $code, $description = "", $status = "NEW")
-            $user->reduceSaldo($saldo,  $kodePengambilan,  $desc, "NEW");
-        });
-        # code...
     }
 }

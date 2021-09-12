@@ -37433,10 +37433,11 @@ __webpack_require__(/*! ./datatable */ "./resources/js/datatable.js");
  */
 
 
-Promise.all(/*! import() */[__webpack_require__.e(8), __webpack_require__.e(2), __webpack_require__.e(4)]).then(__webpack_require__.bind(null, /*! ./backoffice/components/ExternalUser */ "./resources/js/backoffice/components/ExternalUser/index.js"));
-Promise.all(/*! import() */[__webpack_require__.e(8), __webpack_require__.e(7), __webpack_require__.e(5), __webpack_require__.e(3)]).then(__webpack_require__.bind(null, /*! ./backoffice/components/StoryPath/Form */ "./resources/js/backoffice/components/StoryPath/Form.js"));
-Promise.all(/*! import() */[__webpack_require__.e(8), __webpack_require__.e(7), __webpack_require__.e(5), __webpack_require__.e(9), __webpack_require__.e(10)]).then(__webpack_require__.bind(null, /*! ./frontoffice/components/Video/Detail */ "./resources/js/frontoffice/components/Video/Detail.js"));
-Promise.all(/*! import() */[__webpack_require__.e(8), __webpack_require__.e(7), __webpack_require__.e(0), __webpack_require__.e(6)]).then(__webpack_require__.bind(null, /*! ./frontoffice/components/Modul/Detail */ "./resources/js/frontoffice/components/Modul/Detail.js"));
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(3), __webpack_require__.e(7)]).then(__webpack_require__.bind(null, /*! ./backoffice/components/ExternalUser */ "./resources/js/backoffice/components/ExternalUser/index.js"));
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(8)]).then(__webpack_require__.bind(null, /*! ./backoffice/components/StoryPath/Form */ "./resources/js/backoffice/components/StoryPath/Form.js"));
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(4), __webpack_require__.e(9)]).then(__webpack_require__.bind(null, /*! ./frontoffice/components/Video/Detail */ "./resources/js/frontoffice/components/Video/Detail.js"));
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(5), __webpack_require__.e(6)]).then(__webpack_require__.bind(null, /*! ./frontoffice/components/Modul/Detail */ "./resources/js/frontoffice/components/Modul/Detail.js"));
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(5), __webpack_require__.e(11)]).then(__webpack_require__.bind(null, /*! ./frontoffice/components/Nilai/List */ "./resources/js/frontoffice/components/Nilai/List.js"));
 
 /***/ }),
 
