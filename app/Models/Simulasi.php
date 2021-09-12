@@ -11,7 +11,7 @@ class Simulasi extends Model
 {
     use HasFactory, SearchableTrait, SoftDeletes;
 
-    protected $appends = ['played', 'rata_rata_score', 'bintang_score', 'simulasi_url', 'slug_url', 'cover_url', 'last_score' ];
+    protected $appends = ['played', 'rata_rata_score', 'bintang_score', 'simulasi_url', 'slug_url', 'cover_url', 'last_score', 'first_score' ];
 
     /**
      * The attributes that are mass assignable.
@@ -85,6 +85,11 @@ class Simulasi extends Model
     public function getLastScoreAttribute()
     {
         return $this->scores->sortByDesc('created_at')->first();
+    }
+
+    public function getFirstScoreAttribute()
+    {
+        return $this->scores->sortBy('created_at')->first();
     }
 
     public function getBintangScoreAttribute()
