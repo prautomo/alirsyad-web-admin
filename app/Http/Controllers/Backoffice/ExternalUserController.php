@@ -299,13 +299,22 @@ class ExternalUserController extends Controller{
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $id)
-    {
-        ExternalUser::find($id)->delete();
+    // public function destroy(Request $request, $id)
+    // {
+    //     ExternalUser::find($id)->delete();
 
-        return redirect()->route($this->routePath.'.index', ['role'=>$request->role])->with(
-            $this->success(__("User deleted successfully"), $data)
-        );
+    //     return redirect()->route($this->routePath.'.index', ['role'=>$request->role])->with(
+    //         $this->success(__("User deleted successfully"), $data)
+    //     );
+    // }
+    public function destroy(Request $request, $id){
+        $d = ExternalUser::findOrFail($id);
+        $d->nis = "DEL_".date('Ymdhis');
+        $d->username = "DEL_".date('Ymdhis')."_".$d->username;
+        $d->email = "DEL_".date('Ymdhis')."@sample.id";
+        $d->save();
+
+        $d->delete();
     }
 
     /**
