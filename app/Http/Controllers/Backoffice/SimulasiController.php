@@ -97,6 +97,7 @@ class SimulasiController extends Controller{
                     "name" => $data->name,
                     "permissionName" => 'simulasi',
                     "class" => $data->class,
+                    "copySlug" => asset('simulasi/'.$data->slug.".html"),
                     "deleteRoute" => route($this->routePath.".destroy", $data->id),
                     "editRoute" => route($this->routePath.".edit", $data->id),
                 ]);
