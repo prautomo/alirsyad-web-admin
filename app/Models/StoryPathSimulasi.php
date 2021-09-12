@@ -29,11 +29,11 @@ class StoryPathSimulasi extends Model
 
     public function simulasi()
     {
-        return $this->belongsTo("App\Models\Simulasi",  "simulasi_id", "id");
+        return $this->belongsTo("App\Models\Simulasi",  "simulasi_id", "id")->withTrashed();
     }
 
     public function storyPath()
     {
-        return $this->belongsTo("App\Models\StoryPath",  "story_path_id", "id");
+        return $this->belongsTo("App\Models\StoryPath",  "story_path_id", "id")->withTrashed();
     }
 }

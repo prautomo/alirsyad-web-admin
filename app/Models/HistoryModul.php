@@ -35,11 +35,11 @@ class HistoryModul extends Model
 
     public function modul()
     {
-        return $this->belongsTo("App\Models\Modul",  "modul_id", "id");
+        return $this->belongsTo("App\Models\Modul",  "modul_id", "id")->withTrashed();
     }
 
     public function siswa()
     {
-        return $this->belongsTo("App\Models\ExternalUser",  "siswa_id", "id");
+        return $this->belongsTo("App\Models\ExternalUser",  "siswa_id", "id")->withTrashed();
     }
 }

@@ -33,11 +33,11 @@ class GuruMataPelajaran extends Model
 
     public function guru()
     {
-        return $this->belongsTo("App\Models\ExternalUser",  "guru_id", "id");
+        return $this->belongsTo("App\Models\ExternalUser",  "guru_id", "id")->withTrashed();
     }
 
     public function mataPelajaran()
     {
-        return $this->belongsTo("App\Models\MataPelajaran",  "mata_pelajaran_id", "id");
+        return $this->belongsTo("App\Models\MataPelajaran",  "mata_pelajaran_id", "id")->withTrashed();
     }
 }

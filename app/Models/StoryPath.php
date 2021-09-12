@@ -37,16 +37,16 @@ class StoryPath extends Model
 
     public function modul()
     {
-        return $this->belongsTo("App\Models\Modul",  "modul_id", "id");
+        return $this->belongsTo("App\Models\Modul",  "modul_id", "id")->withTrashed();
     }
 
     public function uploader()
     {
-        return $this->belongsTo("App\Models\User",  "uploader_id", "id");
+        return $this->belongsTo("App\Models\User",  "uploader_id", "id")->withTrashed();
     }
 
     public function storyPathSimulasi()
     {
-        return $this->hasMany("App\Models\StoryPathSimulasi", "story_path_id", "id");
+        return $this->hasMany("App\Models\StoryPathSimulasi", "story_path_id", "id")->withTrashed();
     }
 }

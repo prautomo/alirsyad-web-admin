@@ -56,16 +56,16 @@ class Modul extends Model
 
     public function mataPelajaran()
     {
-        return $this->belongsTo("App\Models\MataPelajaran",  "mata_pelajaran_id", "id");
+        return $this->belongsTo("App\Models\MataPelajaran",  "mata_pelajaran_id", "id")->withTrashed();
     }
 
     public function uploader()
     {
-        return $this->belongsTo("App\Models\User",  "uploader_id", "id");
+        return $this->belongsTo("App\Models\User",  "uploader_id", "id")->withTrashed();
     }
 
     public function storyPath()
     {
-        return $this->hasOne("App\Models\StoryPath", "modul_id", "id");
+        return $this->hasOne("App\Models\StoryPath", "modul_id", "id")->withTrashed();
     }
 }

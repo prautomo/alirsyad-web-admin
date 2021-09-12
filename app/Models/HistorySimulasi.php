@@ -35,11 +35,11 @@ class HistorySimulasi extends Model
 
     public function simulasi()
     {
-        return $this->belongsTo("App\Models\Simulasi",  "simulasi_id", "id");
+        return $this->belongsTo("App\Models\Simulasi",  "simulasi_id", "id")->withTrashed();
     }
 
     public function siswa()
     {
-        return $this->belongsTo("App\Models\ExternalUser",  "siswa_id", "id");
+        return $this->belongsTo("App\Models\ExternalUser",  "siswa_id", "id")->withTrashed();
     }
 }

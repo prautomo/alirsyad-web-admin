@@ -35,11 +35,11 @@ class HistoryVideo extends Model
 
     public function video()
     {
-        return $this->belongsTo("App\Models\Video",  "video_id", "id");
+        return $this->belongsTo("App\Models\Video",  "video_id", "id")->withTrashed();
     }
 
     public function siswa()
     {
-        return $this->belongsTo("App\Models\ExternalUser",  "siswa_id", "id");
+        return $this->belongsTo("App\Models\ExternalUser",  "siswa_id", "id")->withTrashed();
     }
 }

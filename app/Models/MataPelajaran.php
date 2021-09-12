@@ -39,7 +39,7 @@ class MataPelajaran extends Model
 
     public function tingkat()
     {
-        return $this->belongsTo("App\Models\Tingkat",  "tingkat_id", "id");
+        return $this->belongsTo("App\Models\Tingkat",  "tingkat_id", "id")->withTrashed();
     }
 
     /**
@@ -47,7 +47,7 @@ class MataPelajaran extends Model
      */
     public function guru()
     {
-        return $this->hasMany("App\Models\User", "mata_pelajaran_id", "id");
+        return $this->hasMany("App\Models\User", "mata_pelajaran_id", "id")->withTrashed();
     }
 
     /**
@@ -55,7 +55,7 @@ class MataPelajaran extends Model
      */
     public function modul()
     {
-        return $this->hasMany("App\Models\Modul", "mata_pelajaran_id", "id");
+        return $this->hasMany("App\Models\Modul", "mata_pelajaran_id", "id")->withTrashed();
     }
 
     /**
@@ -63,7 +63,7 @@ class MataPelajaran extends Model
      */
     public function simulasi()
     {
-        return $this->hasMany("App\Models\Simulasi", "mata_pelajaran_id", "id");
+        return $this->hasMany("App\Models\Simulasi", "mata_pelajaran_id", "id")->withTrashed();
     }
 
     /**
@@ -71,7 +71,7 @@ class MataPelajaran extends Model
      */
     public function video()
     {
-        return $this->hasMany("App\Models\Video", "mata_pelajaran_id", "id");
+        return $this->hasMany("App\Models\Video", "mata_pelajaran_id", "id")->withTrashed();
     }
 
     /**
@@ -79,7 +79,7 @@ class MataPelajaran extends Model
      */
     public function gurus()
     {
-        return $this->belongsToMany('App\Models\ExternalUser', 'guru_mata_pelajarans', 'mata_pelajaran_id' , 'guru_id');
+        return $this->belongsToMany('App\Models\ExternalUser', 'guru_mata_pelajarans', 'mata_pelajaran_id' , 'guru_id')->withTrashed();
     }
 
     // 

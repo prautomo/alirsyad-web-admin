@@ -62,11 +62,11 @@ class Tingkat extends Model
 
     public function jenjang()
     {
-        return $this->belongsTo("App\Models\Jenjang",  "jenjang_id", "id");
+        return $this->belongsTo("App\Models\Jenjang",  "jenjang_id", "id")->withTrashed();
     }
 
     public function kelas()
     {
-        return $this->hasMany("App\Models\Kelas", "tingkat_id", "id");
+        return $this->hasMany("App\Models\Kelas", "tingkat_id", "id")->withTrashed();
     }
 }

@@ -21,7 +21,8 @@ class Jenjang extends Model
      * 
      * @var array
      */
-    protected static $relations_to_cascade = ['tingkat']; 
+    // protected static $relations_to_cascade = ['tingkat']; 
+    protected static $relations_to_cascade = []; 
 
     /**
      * Cascade delete and restore
@@ -61,11 +62,11 @@ class Jenjang extends Model
 
     public function uploader()
     {
-        return $this->belongsTo("App\Models\User",  "uploader_id", "id");
+        return $this->belongsTo("App\Models\User",  "uploader_id", "id")->withTrashed();
     }
 
     public function tingkat()
     {
-        return $this->hasMany("App\Models\Tingkat", "jenjang_id", "id");
+        return $this->hasMany("App\Models\Tingkat", "jenjang_id", "id")->withTrashed();
     }
 }

@@ -76,22 +76,22 @@ class ExternalUser extends Authenticatable implements MustVerifyEmail
 
     public function kelas()
     {
-        return $this->belongsTo("App\Models\Kelas",  "kelas_id", "id");
+        return $this->belongsTo("App\Models\Kelas",  "kelas_id", "id")->withTrashed();
     }
 
     public function historyModul()
     {
-        return $this->hasMany("App\Models\HistoryModul", "siswa_id", "id");
+        return $this->hasMany("App\Models\HistoryModul", "siswa_id", "id")->withTrashed();
     }
 
     public function historyVideo()
     {
-        return $this->hasMany("App\Models\HistoryVideo", "siswa_id", "id");
+        return $this->hasMany("App\Models\HistoryVideo", "siswa_id", "id")->withTrashed();
     }
 
     public function historySimulasi()
     {
-        return $this->hasMany("App\Models\HistorySimulasi", "siswa_id", "id");
+        return $this->hasMany("App\Models\HistorySimulasi", "siswa_id", "id")->withTrashed();
     }
 
     /**
@@ -99,6 +99,6 @@ class ExternalUser extends Authenticatable implements MustVerifyEmail
      */
     public function mataPelajarans()
     {
-        return $this->belongsToMany('App\Models\MataPelajaran', 'guru_mata_pelajarans', 'guru_id', 'mata_pelajaran_id');
+        return $this->belongsToMany('App\Models\MataPelajaran', 'guru_mata_pelajarans', 'guru_id', 'mata_pelajaran_id')->withTrashed();
     }
 }

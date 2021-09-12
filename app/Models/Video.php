@@ -58,16 +58,16 @@ class Video extends Model
 
     public function mataPelajaran()
     {
-        return $this->belongsTo("App\Models\MataPelajaran",  "mata_pelajaran_id", "id");
+        return $this->belongsTo("App\Models\MataPelajaran",  "mata_pelajaran_id", "id")->withTrashed();
     }
 
     public function uploader()
     {
-        return $this->belongsTo("App\Models\User",  "uploader_id", "id");
+        return $this->belongsTo("App\Models\User",  "uploader_id", "id")->withTrashed();
     }
 
     public function history()
     {
-        return $this->hasMany("App\Models\HistoryVideo", "video_id", "id");
+        return $this->hasMany("App\Models\HistoryVideo", "video_id", "id")->withTrashed();
     }
 }
