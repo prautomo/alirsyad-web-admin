@@ -43,7 +43,7 @@
     @if(\Request::get('role') === 'GURU' || @$mapelIDS)
     <div class="col-md-12">
         <div class="form-group">
-            <label class="form-control-label" for="input-mapel">Mata Pelajaran (*)</label>
+            <label class="form-control-label" for="input-mapel">Mata Pelajaran</label>
 
             <select id="mapel" multiple name="mapel[]" class="form-control {{($errors->has('mapel') ? ' is-invalid' : '')}}">
                 @foreach(@$mapelList as $idx => $mapel)
