@@ -63,7 +63,7 @@ class LoginController extends Controller
 
         $fieldType = filter_var($request->email, FILTER_VALIDATE_EMAIL) ? 'email' : 'nis';
 
-        if(auth()->attempt(array($fieldType => $input['email'], 'password' => $input['password']))){
+        if(auth()->attempt(array($fieldType => $input['email'], 'password' => $input['password'], 'role' => "SISWA"))){
             return redirect()->route('app.home');
         }else{
             return redirect()->route('login')
