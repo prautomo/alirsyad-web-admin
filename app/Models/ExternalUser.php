@@ -11,10 +11,11 @@ use Spatie\Permission\Traits\HasRoles;
 use App\Traits\SearchableTrait;
 use Illuminate\Support\Facades\DB;
 use Laravel\Passport\HasApiTokens;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ExternalUser extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, SearchableTrait, HasRoles;
+    use SoftDeletes, HasApiTokens, HasFactory, Notifiable, SearchableTrait, HasRoles;
 
     /**
      * The attributes that are mass assignable.
