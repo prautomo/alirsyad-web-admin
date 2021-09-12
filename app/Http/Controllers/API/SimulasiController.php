@@ -144,6 +144,7 @@ class SimulasiController extends BaseController
         $saveData['jenjang'] = @$user->kelas->tingkat->jenjang->name ?? "";
         $saveData['tingkat'] = @$user->kelas->tingkat->name ?? "";
         $saveData['kelas'] = @$user->kelas->name ?? "";
+        $saveData['kelas_id'] = @$user->kelas_id ?? "";
         $saveData['pengajar_id'] = @$pengajar[0]->id ?? null;
         $saveData['nama_pengajar'] = @$pengajar[0]->name ?? "";
 
@@ -156,6 +157,11 @@ class SimulasiController extends BaseController
 
         $sendResponse = $request->only(['score', 'semester']);
         $sendResponse['percobaan_ke'] = @$saveData['percobaan_ke'] ?? 1;
+        
+        // create history simulasi
+        $historySimulasi = HistorySimulasi::firstOrCreate(
+            ['simulasi_id' => $id, 'siswa_id' => $user->id]
+        );
 
         return $this->sendResponse(new ScoreResource($sendResponse), 'Score saved successfully.');
     }

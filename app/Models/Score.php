@@ -27,6 +27,7 @@ class Score extends Model
         "pengajar_id",
         "nama_pengajar",
         "percobaan_ke",
+        "kelas_id",
     ];
 
     public static function search($request)
@@ -41,6 +42,7 @@ class Score extends Model
             "simulasi_id" => "=",
             "score" => "=",
             "pengajar_id" => "=",
+            "kelas_id" => "=",
         ]);
 
         return $data;
@@ -58,6 +60,11 @@ class Score extends Model
 
     public function pengajar()
     {
-        return $this->hasOne("App\Models\ExternalUser", "pengajar_id", "id")->withTrashed();
+        return $this->belongsTo("App\Models\ExternalUser", "pengajar_id", "id")->withTrashed();
+    }
+
+    public function kelas()
+    {
+        return $this->belongsTo("App\Models\Kelas",  "kelas_id", "id")->withTrashed();
     }
 }
