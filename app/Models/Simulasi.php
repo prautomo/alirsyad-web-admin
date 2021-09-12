@@ -71,7 +71,12 @@ class Simulasi extends Model
         $totalScore = 0;
         // calculate average score
         foreach($scores as $score){
-            $totalScore += @$score->score;
+            $jumlahPercobaan = count($scores);
+
+            // handle max percobaan sampe 10, yg ke 11 mh ga di itung
+            if($jumlahPercobaan <= 10){
+                $totalScore += @$score->score;
+            }
         }
 
         return ($totalScore === 0 || $scores === 0) ? 0 : $totalScore/count($scores);
