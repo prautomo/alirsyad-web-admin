@@ -18,8 +18,10 @@ class Authenticate extends Middleware
         if (! $request->expectsJson()) {
             if(Route::is('backoffice::*')){
                 return route('backoffice-login');
+            }else if(Route::is('guru::*')){
+                return route('guru-login');
             }
-
+            
             return route('login');
         }
     }

@@ -21,6 +21,8 @@ class RouteServiceProvider extends ServiceProvider
 
     public const DASHBOARD = '/backoffice/dashboard';
 
+    public const DASHBOARD_GURU = '/guru/dashboard';
+
     /**
      * The controller namespace for the application.
      *
@@ -40,14 +42,23 @@ class RouteServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
 
         $this->routes(function () {
+            // api
             Route::prefix('api')
                 ->middleware('api')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/api.php'));
 
+            // web admin
             Route::middleware('web')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
+            
+            // web guru
+            Route::middleware('web')
+                ->namespace($this->namespace)
+                ->group(base_path('routes/guru.php'));
+
+            // web user
             Route::middleware('web')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/app.php'));

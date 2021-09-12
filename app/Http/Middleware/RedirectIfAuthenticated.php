@@ -26,6 +26,8 @@ class RedirectIfAuthenticated
             if (Auth::guard($guard)->check()) {
                 if($guard=='backoffice'){
                     return redirect(RouteServiceProvider::DASHBOARD);
+                }else if($guard=='guru'){
+                    return redirect(RouteServiceProvider::DASHBOARD_GURU);
                 }
                 return redirect(RouteServiceProvider::HOME);
             }

@@ -7,7 +7,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 
-class LoginController extends Controller
+class GuruLoginController extends Controller
 {
     /*
     |--------------------------------------------------------------------------
@@ -22,12 +22,15 @@ class LoginController extends Controller
 
     use AuthenticatesUsers;
 
+    protected $maxAttempts = 3;
+    protected $decayMinutes = 2;
+
     /**
      * Where to redirect users after login.
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    protected $redirectTo = RouteServiceProvider::DASHBOARD_GURU;
 
     /**
      * Create a new controller instance.
@@ -36,38 +39,44 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest')->except('logout');
-        $this->middleware('guest:backoffice')->except('logout');
         $this->middleware('guest:guru')->except('logout');
     }
 
-    /**
-
-     * Create a new controller instance.
-
-     *
-
-     * @return void
-
-     */
+    public function showLoginForm()
+    {
+        return view('auth.guru.login');
+    }
 
     public function login(Request $request)
-
-    {   
+    {
         $input = $request->all();
-
+        
         $this->validate($request, [
             'email' => 'required',
-            'password' => 'required',
+            'password' => 'required|min:5'
         ]);
 
         $fieldType = filter_var($request->email, FILTER_VALIDATE_EMAIL) ? 'email' : 'nis';
 
-        if(auth()->attempt(array($fieldType => $input['email'], 'password' => $input['password']))){
-            return redirect()->route('app.home');
-        }else{
-            return redirect()->route('login')
-                ->with('error','Login gagal, NIS atau Password tidak sesuai.');
+        if (auth()->guard('guru')->attempt(array($fieldType => $input['email'], 'password' => $input['password']))) {
+            $request->session()->regenerate();
+            $this->clearLoginAttempts($request);
+            return redirect()->intended(route('guru::dashboard'));
+        } else {
+            $this->incrementLoginAttempts($request);
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->withErrors(["Incorrect user login details!"]);
         }
+    }
+
+    public function logout()
+    {
+        auth()->guard('guru')->logout();
+        session()->flush();
+
+        return redirect()->route('guru-login');
     }
 }
