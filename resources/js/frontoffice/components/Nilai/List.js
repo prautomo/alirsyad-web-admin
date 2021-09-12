@@ -110,7 +110,11 @@ function NilaiSimulasi() {
                                             {simulasi?.name ?? "-"}
                                         </a>
                                     </h6>
-                                    <small>Selesai dikerjakan pada {moment(simulasi?.last_score?.created_at).format("DD MMMM YYYY")}</small>
+                                    {simulasi?.first_score ? 
+                                    <small>Selesai dikerjakan pada {moment(simulasi?.first_score?.created_at).format("DD MMMM YYYY")}</small>
+                                    :
+                                    <small>Belum pernah dikerjakan.</small>
+                                    }
                                 </Col>
                             </Row>;
                             })}    

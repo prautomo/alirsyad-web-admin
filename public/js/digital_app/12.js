@@ -531,7 +531,7 @@ function NilaiSimulasi() {
       overflow: "auto"
     }
   }, ((_dataProgress$simulas = dataProgress === null || dataProgress === void 0 ? void 0 : dataProgress.simulasis) !== null && _dataProgress$simulas !== void 0 ? _dataProgress$simulas : []).map(function (simulasi) {
-    var _simulasi$cover_url, _simulasi$rata_rata_s, _simulasi$slug_url, _simulasi$name, _simulasi$last_score;
+    var _simulasi$cover_url, _simulasi$rata_rata_s, _simulasi$slug_url, _simulasi$name, _simulasi$first_score;
 
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Row"], {
       className: "mt-3 mr-0 ml-0",
@@ -558,7 +558,7 @@ function NilaiSimulasi() {
       className: "title-nilai-simulasi"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("a", {
       href: (_simulasi$slug_url = simulasi === null || simulasi === void 0 ? void 0 : simulasi.slug_url) !== null && _simulasi$slug_url !== void 0 ? _simulasi$slug_url : "#"
-    }, (_simulasi$name = simulasi === null || simulasi === void 0 ? void 0 : simulasi.name) !== null && _simulasi$name !== void 0 ? _simulasi$name : "-")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("small", null, "Selesai dikerjakan pada ", moment__WEBPACK_IMPORTED_MODULE_10___default()(simulasi === null || simulasi === void 0 ? void 0 : (_simulasi$last_score = simulasi.last_score) === null || _simulasi$last_score === void 0 ? void 0 : _simulasi$last_score.created_at).format("DD MMMM YYYY"))));
+    }, (_simulasi$name = simulasi === null || simulasi === void 0 ? void 0 : simulasi.name) !== null && _simulasi$name !== void 0 ? _simulasi$name : "-")), (simulasi === null || simulasi === void 0 ? void 0 : simulasi.first_score) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("small", null, "Selesai dikerjakan pada ", moment__WEBPACK_IMPORTED_MODULE_10___default()(simulasi === null || simulasi === void 0 ? void 0 : (_simulasi$first_score = simulasi.first_score) === null || _simulasi$first_score === void 0 ? void 0 : _simulasi$first_score.created_at).format("DD MMMM YYYY")) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("small", null, "Belum pernah dikerjakan.")));
   }))))))));
 }
 
