@@ -10,41 +10,63 @@ import "./List.css";
 
 function NilaiSimulasi() {
 
-    var { data, isLoading, isError } = useFetch("/modul/1/json")
+    const [isLoadingLeft, setIsLoadingLeft] = useState(false);
+    const [isLoadingRight, setIsLoadingRight] = useState(false);
 
+    var { data, isLoading, isError } = useFetch("/nilai-simulasi/mapels/json")
 
     useEffect(() => {
-        console.log("dika data", data)
+        
     }, [])
+
+    async function changeMapel(id){
+        setIsLoadingRight(true);
+
+        await axios.get(`/modul/${id}/json`, { headers: { "Content-Type": "application/json" } }).then(function (response) {
+			var data = response.data;
+
+            console.log("dika data", data)
+			
+			if(data.status){
+				
+			}
+
+        }).catch((e) => {
+            console.error("dika error", e.response.data?.message)
+        })
+
+        setIsLoadingRight(false);
+    }
 
     return (<>
         <Row className="mb-1 text-left">
-            {/* {!isLoading &&
-                <>
-                </>
-            } */}
             <Col md="4">
                 <Card>
                     <CardBody>
-                        <h4>Kelas-1</h4>
-                        <ul>
-                            <li>
-                                <a href="">Matematika</a>
-                            </li>
-                            <li>
-                                <a href="">Matematika</a>
-                            </li>
-                            <li>
-                                <a href="">Matematika</a>
-                            </li>
-                            <li>
-                                <a href="">Matematika</a>
-                            </li>
-                        </ul>
+                        {/* active tingkat kelas */}
+                        {!isLoading &&
+                            data?.data.map((val) => {
+                                let tingkat = val?.tingkat;
+                                let mapels = val?.mata_pelajarans ?? [];
+                                return <div key={tingkat}>
+                                <h4>Kelas-{tingkat}</h4>
+                                <ul>
+                                    {mapels.map((mataPelajaran) => {
+                                        return <li key={mataPelajaran?.id}>
+                                            <a className="cursor-pointer" onClick={() => changeMapel(mataPelajaran?.id)}>{ mataPelajaran?.name ?? '-' }</a>
+                                        </li>
+                                    })}
+                                </ul>
+                                </div>
+                            })
+                        }
+                        
                     </CardBody>
                 </Card>
             </Col>
             <Col md="8">
+                {isLoadingRight ? 
+                <p>Loading....</p> : 
                 <Card>
                     <CardBody>
                         <h4>Progres Simulasi Matematika</h4>
@@ -91,6 +113,7 @@ function NilaiSimulasi() {
                         </div>
                     </CardBody>
                 </Card>
+                }
             </Col>
         </Row>
         
