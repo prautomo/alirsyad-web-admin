@@ -38,7 +38,7 @@ Route::middleware('auth:api')->group( function () {
     Route::post("/videos/{id}/flag", "API\VideoController@createHistory");
 
     Route::get("/simulasis", "API\SimulasiController@index");
-    Route::get("/simulasis/{id}", "API\SimulasiController@show");
+    Route::get("/simulasis/{id}", "API\SimulasiController@show")->name('api.simulasi.detail');
     Route::post("/simulasis/{id}/flag", "API\SimulasiController@createHistory");
     Route::post("/simulasis/{id}/score", "API\SimulasiController@createScore");
 });

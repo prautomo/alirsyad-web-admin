@@ -76,7 +76,7 @@ class Video extends Model
                 'id' => @$previousVideo->id,
                 'name' => @$previousVideo->name,
                 'url' => route('app.video.detail', @$previousVideo->id),
-                'endpoint' => route('api.video.detail', @$nextVideo->id),
+                'endpoint' => route('api.video.detail', @$previousVideo->id),
             ];
         }
         
