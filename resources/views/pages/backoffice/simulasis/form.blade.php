@@ -22,6 +22,8 @@
             @endif
         </div>
     </div>
+    
+    <x-input.select :label="__('Semester')" id="semester" name="semester" :sources="$semesterList" :data="$data" required />
 
     <x-input.text :label="__('Name')" name="name" :data="$data" required />
     <x-input.textarea :label="__('Description')" name="description" :data="$data" />
