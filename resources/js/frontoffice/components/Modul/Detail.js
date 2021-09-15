@@ -25,6 +25,7 @@ function ModulDetail({
     
     const [showCanvas, setShowCanvas] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [warna, setWarna] = useState("black");
 
     var { data, isLoading, isError } = useFetch("/modul/"+idModul+"/json")
 
@@ -115,13 +116,29 @@ function ModulDetail({
                 >
                     Redo
                 </Button>
+                <Button
+                    onClick={() => {
+                        setWarna("red");
+                    }}
+                    className="btn-main mr-2 btn-small"
+                >
+                    Red
+                </Button>
+                <Button
+                    onClick={() => {
+                        setWarna("black");
+                    }}
+                    className="btn-main mr-2 btn-small"
+                >
+                    Black
+                </Button>
                 <ReactSketchCanvas
                     ref={canvas}
                     style={styles}
                     width="100%"
                     height="800px"
                     strokeWidth={3}
-                    strokeColor="black"
+                    strokeColor={warna}
                 />
             </div>
             }
