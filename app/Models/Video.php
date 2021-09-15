@@ -47,7 +47,7 @@ class Video extends Model
         // get next video
         $nextVideo = $this->where('id', '>', $this->id)
             ->where('mata_pelajaran_id', $this->mata_pelajaran_id)
-            ->orderBy('id','asc')->first();
+            ->orderBy('created_at','asc')->first();
 
         $returnNext = null;
 
@@ -66,7 +66,7 @@ class Video extends Model
         // get previous video
         $previousVideo =  $this->where('id', '<', $this->id)
             ->where('mata_pelajaran_id', $this->mata_pelajaran_id)
-            ->orderBy('id','desc')->first();
+            ->orderBy('created_at','desc')->first();
         
         $returnPrevious = null;
 
