@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Validator;
 use Auth;
 use DB;
+use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use App\Services\UploadService;
@@ -123,8 +124,12 @@ class MataPelajaranController extends Controller{
     public function store(Request $request){
         // validasi form
         $this->validate($request, [
-            'name' => 'required|string',
+            // 'name' => 'required|string',
             'tingkat_id' => 'required',
+            'name' => Rule::unique('mata_pelajarans')->where(function ($query) use ($request) {
+                return $query->where('name', $request->name)
+                   ->where('tingkat_id', $request->tingkat_id);
+            }),
         ]);
         // default image
         $url = "images/placeholder.png";
@@ -166,8 +171,12 @@ class MataPelajaranController extends Controller{
         // validasi form
         $this->validate($request, [
             'slug' => 'unique:mata_pelajarans,slug,'.$id,
-            'name' => 'required|string',
+            // 'name' => 'required|string',
             'tingkat_id' => 'required',
+            'name' => Rule::unique('mata_pelajarans')->ignore($id)->where(function ($query) use ($request) {
+                return $query->where('name', $request->name)
+                   ->where('tingkat_id', $request->tingkat_id);
+            }),
         ]);
 
         $dataReq = $request->only(['class', 'name', 'icon', 'slug', 'tingkat_id']);
