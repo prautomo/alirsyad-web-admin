@@ -50,9 +50,7 @@ class LoginController extends Controller
      * @return void
 
      */
-
     public function login(Request $request)
-
     {   
         $input = $request->all();
 

@@ -102,4 +102,8 @@ class ExternalUser extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany('App\Models\MataPelajaran', 'guru_mata_pelajarans', 'guru_id', 'mata_pelajaran_id');
     }
+
+    public function AauthAcessToken(){
+        return $this->hasMany('App\Models\OauthAccessToken', "user_id", "id");
+    }
 }

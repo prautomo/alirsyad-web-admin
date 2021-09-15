@@ -44,4 +44,19 @@ class AuthController extends BaseController
             return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
         } 
     }
+
+    /**
+     * Logout api
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function logout(Request $request) 
+    {
+        if (Auth::check()) {
+            Auth::user()->AauthAcessToken()->delete();
+            return $this->sendResponse([], 'User logout successfully.');
+        }else{
+            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+        }
+    }
 }
