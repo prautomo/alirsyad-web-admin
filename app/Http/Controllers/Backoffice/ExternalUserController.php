@@ -120,14 +120,14 @@ class ExternalUserController extends Controller{
         // get list mapel
         $mapels = MataPelajaran::with('tingkat');
 
-        // filter kalo mapel nya udah ada yg ngajar
-        $guruMengajar = GuruMataPelajaran::get();
-        // for edit
-        if(@$guruId){
-            $guruMengajar = GuruMataPelajaran::where('guru_id', '!=', $guruId)->get();
-        }
-        $guruMengajar = $guruMengajar->pluck('mata_pelajaran_id');
-        $mapels = $mapels->whereNotIn('id', $guruMengajar);
+        // // filter kalo mapel nya udah ada yg ngajar
+        // $guruMengajar = GuruMataPelajaran::get();
+        // // for edit
+        // if(@$guruId){
+        //     $guruMengajar = GuruMataPelajaran::where('guru_id', '!=', $guruId)->get();
+        // }
+        // $guruMengajar = $guruMengajar->pluck('mata_pelajaran_id');
+        // $mapels = $mapels->whereNotIn('id', $guruMengajar);
 
         $mapels = $mapels->get();
 
