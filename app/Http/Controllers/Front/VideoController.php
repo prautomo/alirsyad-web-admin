@@ -59,6 +59,8 @@ class VideoController extends Controller
         // $video = $video->where('kelas_id', Auth::user()->kelas_id);
         $video = $video->findOrFail($id);
 
+        dd($video);
+
         $parseData = [
             'video' => $video,
             'videoId' => $id,

@@ -12,7 +12,7 @@ class Video extends Model
 {
     use HasFactory, SearchableTrait, SoftDeletes;
 
-    protected $appends = ['watched', 'youtubeId'];
+    protected $appends = ['watched', 'youtubeId', 'next', 'previous'];
 
     /**
      * The attributes that are mass assignable.
@@ -41,6 +41,44 @@ class Video extends Model
         ]);
 
         return $data;
+    }
+
+    public function getNextAttribute(){
+        // get next video
+        $nextVideo = $this->where('id', '>', $this->id)
+            ->where('mata_pelajaran_id', $this->mata_pelajaran_id)
+            ->orderBy('id','asc')->first();
+
+        $returnNext = null;
+
+        if($nextVideo){
+            $returnNext = [
+                'id' => @$nextVideo->id,
+                'name' => @$nextVideo->name,
+                'url' => route('app.video.detail', @$nextVideo->id)
+            ];
+        }
+        
+        return $returnNext;
+    }
+
+    public function getPreviousAttribute(){
+        // get previous video
+        $previousVideo =  $this->where('id', '<', $this->id)
+            ->where('mata_pelajaran_id', $this->mata_pelajaran_id)
+            ->orderBy('id','desc')->first();
+        
+        $returnPrevious = null;
+
+        if($previousVideo){
+            $returnPrevious = [
+                'id' => @$previousVideo->id,
+                'name' => @$previousVideo->name,
+                'url' => route('app.video.detail', @$previousVideo->id)
+            ];
+        }
+        
+        return $returnPrevious;
     }
 
     public function getWatchedAttribute()

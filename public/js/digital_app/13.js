@@ -302,27 +302,35 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 
 /***/ }),
 
-/***/ "./resources/js/backoffice/components/StoryPath/Form.js":
-/*!**************************************************************!*\
-  !*** ./resources/js/backoffice/components/StoryPath/Form.js ***!
-  \**************************************************************/
+/***/ "./resources/js/frontoffice/components/Video/Detail.js":
+/*!*************************************************************!*\
+  !*** ./resources/js/frontoffice/components/Video/Detail.js ***!
+  \*************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var availity_reactstrap_validation__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! availity-reactstrap-validation */ "./node_modules/availity-reactstrap-validation/lib/index.js");
-/* harmony import */ var availity_reactstrap_validation__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(availity_reactstrap_validation__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! reactstrap */ "./node_modules/reactstrap/es/index.js");
-/* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-select */ "./node_modules/react-select/dist/react-select.esm.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _store_useFetch__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../store/useFetch */ "./resources/js/store/useFetch.js");
-/* harmony import */ var _ModulPicker__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./ModulPicker */ "./resources/js/backoffice/components/StoryPath/ModulPicker/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var availity_reactstrap_validation__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! availity-reactstrap-validation */ "./node_modules/availity-reactstrap-validation/lib/index.js");
+/* harmony import */ var availity_reactstrap_validation__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(availity_reactstrap_validation__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! reactstrap */ "./node_modules/reactstrap/es/index.js");
+/* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-select */ "./node_modules/react-select/dist/react-select.esm.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var react_youtube__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-youtube */ "./node_modules/react-youtube/dist/index.esm.js");
+/* harmony import */ var _store_useFetch__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../store/useFetch */ "./resources/js/store/useFetch.js");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -344,222 +352,89 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
-function StoryPathForm(_ref) {
-  var idStoryPath = _ref.idStoryPath,
-      cancelLink = _ref.cancelLink;
+function VideoDetail(_ref) {
+  var _data$data;
 
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+  var idVideo = _ref.idVideo;
+
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(idVideo),
       _useState2 = _slicedToArray(_useState, 2),
-      simulasis = _useState2[0],
-      setSimulasis = _useState2[1];
+      videoId = _useState2[0],
+      setVideoId = _useState2[1];
 
-  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
-      _useState4 = _slicedToArray(_useState3, 2),
-      isRequest = _useState4[0],
-      setIsRequest = _useState4[1];
-
-  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({}),
-      _useState6 = _slicedToArray(_useState5, 2),
-      selectedModul = _useState6[0],
-      setSelectedModul = _useState6[1];
-
-  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({}),
-      _useState8 = _slicedToArray(_useState7, 2),
-      selectedSimulasi = _useState8[0],
-      setSelectedSimulasi = _useState8[1];
-
-  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([{
-    simulasi: {
-      value: 1,
-      label: 'ada'
-    }
-  }]),
-      _useState10 = _slicedToArray(_useState9, 2),
-      selectedSimulasis = _useState10[0],
-      setSelectedSimulasis = _useState10[1];
-
-  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    console.log("dika idStoryPath", idStoryPath);
-  }, [selectedSimulasis]);
-
-  function getSimulasis(mapelId) {
-    setIsRequest(true);
-    axios__WEBPACK_IMPORTED_MODULE_5___default.a.get('/backoffice/story-paths/simulasis/' + mapelId, {
-      headers: {
-        "Content-Type": "application/json"
-      }
-    }).then(function (response) {
-      var data = response.data;
-
-      if (data) {
-        setSimulasis(data);
-      }
-
-      setIsRequest(false);
-    });
-  }
-  /**
-   * onchange modul
-   * @param {*} modulValue 
-   */
-
-
-  function onChangeModul(modulValue) {
-    // set modul
-    setSelectedModul(modulValue); // init empty simulasis
-
-    setSimulasis([]); // get simulasis by mapel id
-
-    getSimulasis(modulValue === null || modulValue === void 0 ? void 0 : modulValue.mata_pelajaran_id);
-  }
-
-  function save() {
-    console.log("selected Modul", selectedModul);
-  }
-
-  function handleOnChangeSimulasi(selected, idx) {
-    var nextData = selectedSimulasis.slice();
-    nextData[idx].item = selected;
-    setSelectedSimulasis(nextData);
-  }
-
-  function handleAddSimulasi() {
-    console.log("dika", selectedSimulasis);
-    var array = selectedSimulasis;
-    array.push({
-      simulasi: ""
-    });
-    setSelectedSimulasis(array);
-  }
-
-  ;
-
-  function handleRemoveSimulasi(idx) {
-    var array = selectedSimulasis;
-    array.splice(idx, 1);
-    setSelectedSimulasis(array);
-  }
-
-  ;
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(availity_reactstrap_validation__WEBPACK_IMPORTED_MODULE_2__["AvForm"], {
-    onValidSubmit: save
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Row"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Col"], {
-    md: "12"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(availity_reactstrap_validation__WEBPACK_IMPORTED_MODULE_2__["AvGroup"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Label"], {
-    className: "form-control-label",
-    "for": "name"
-  }, "Name"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(availity_reactstrap_validation__WEBPACK_IMPORTED_MODULE_2__["AvInput"], {
-    name: "name",
-    id: "name",
-    required: true
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(availity_reactstrap_validation__WEBPACK_IMPORTED_MODULE_2__["AvFeedback"], null, "The name field is required."))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Col"], {
-    md: "12"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(availity_reactstrap_validation__WEBPACK_IMPORTED_MODULE_2__["AvGroup"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Label"], {
-    className: "form-control-label",
-    "for": "modul"
-  }, "Modul"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ModulPicker__WEBPACK_IMPORTED_MODULE_7__["default"], {
-    selectedItem: selectedModul,
-    setSelectedItem: onChangeModul
-  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Col"], {
-    md: "12"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Label"], {
-    className: "form-control-label",
-    "for": "simulasi"
-  }, "Simulasi"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
-    className: "table"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
-    width: "90%"
-  }, "Simulasi"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
-    width: "10%"
-  }, "Action"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, selectedSimulasis.map(function (simulasi, idx) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      placeholder: "Pilih Simulasi",
-      value: simulasi.simulasi,
-      options: simulasis,
-      required: true,
-      onChange: function onChange(selected) {
-        return handleOnChangeSimulasi(selected, idx);
-      }
-    })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-      onClick: function onClick() {
-        return handleRemoveSimulasi(idx);
-      }
-    }, "Delete")));
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
-    colSpan: "2",
-    className: "text-right"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
-    color: "primary",
-    size: "sm",
-    onClick: handleAddSimulasi
-  }, "Add")))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Col"], {
-    md: "12",
-    className: "text-right mt-3"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
-    color: "primary",
-    size: "sm"
-  }, "Save"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
-    color: "secondary",
-    size: "sm",
-    onClick: function onClick() {
-      return window.location.href = cancelLink;
-    }
-  }, "Cancel"))));
-}
-
-/* harmony default export */ __webpack_exports__["default"] = (StoryPathForm);
-
-if (document.getElementById('form-story-path')) {
-  var container = document.getElementById("form-story-path");
-  var idStoryPath = container.getAttribute("idStoryPath");
-  var cancelLink = container.getAttribute("cancel-link");
-  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(StoryPathForm, {
-    idStoryPath: idStoryPath,
-    cancelLink: cancelLink
-  }), container);
-}
-
-/***/ }),
-
-/***/ "./resources/js/backoffice/components/StoryPath/ModulPicker/index.js":
-/*!***************************************************************************!*\
-  !*** ./resources/js/backoffice/components/StoryPath/ModulPicker/index.js ***!
-  \***************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-select */ "./node_modules/react-select/dist/react-select.esm.js");
-/* harmony import */ var _store_useFetch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../store/useFetch */ "./resources/js/store/useFetch.js");
-
-
-
-
-function ModulPicker(_ref) {
-  var selectedItem = _ref.selectedItem,
-      setSelectedItem = _ref.setSelectedItem;
-
-  var _useFetch = Object(_store_useFetch__WEBPACK_IMPORTED_MODULE_2__["default"])("/backoffice/story-paths/moduls"),
+  var _useFetch = Object(_store_useFetch__WEBPACK_IMPORTED_MODULE_8__["default"])("/video/" + idVideo + "/json"),
       data = _useFetch.data,
       isLoading = _useFetch.isLoading,
       isError = _useFetch.isError;
 
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select__WEBPACK_IMPORTED_MODULE_1__["default"], {
-    isDisabled: true
-  }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select__WEBPACK_IMPORTED_MODULE_1__["default"], {
-    placeholder: "Pilih Modul",
-    value: selectedItem,
-    options: data,
-    onChange: function onChange(value) {
-      return setSelectedItem(value);
-    }
+  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
+    console.log("dika idVideo", idVideo);
+  }, []);
+
+  function _onReady(event) {// access to player in all event handlers via event.target
+    // console.log("dika", event);
+    // event.target.pauseVideo();
+  }
+
+  function _onEnd(e) {
+    console.log("dika post flag", e);
+    postFlag(videoId);
+  }
+
+  function postFlag(_x) {
+    return _postFlag.apply(this, arguments);
+  }
+
+  function _postFlag() {
+    _postFlag = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(idVideo) {
+      var payload;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              payload = {};
+              _context.next = 3;
+              return axios__WEBPACK_IMPORTED_MODULE_6___default.a.post("/videos/".concat(idVideo, "/flag/json"), {
+                payload: payload
+              }).then(function (res) {
+                console.log("dika res 1", res);
+                console.log("dika res data", res.data);
+              });
+
+            case 3:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }));
+    return _postFlag.apply(this, arguments);
+  }
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("p", null, "Loading...") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_youtube__WEBPACK_IMPORTED_MODULE_7__["default"], {
+    videoId: data === null || data === void 0 ? void 0 : (_data$data = data.data) === null || _data$data === void 0 ? void 0 : _data$data.youtubeId,
+    opts: {
+      height: '390',
+      width: '640',
+      playerVars: {
+        // https://developers.google.com/youtube/player_parameters
+        autoplay: 1
+      }
+    },
+    onReady: _onReady,
+    onEnd: _onEnd
   })));
 }
 
-/* harmony default export */ __webpack_exports__["default"] = (ModulPicker);
+/* harmony default export */ __webpack_exports__["default"] = (VideoDetail);
+var container = document.getElementById("video-detail-fe");
+
+if (container) {
+  var idVideo = container.getAttribute("video-id");
+  react_dom__WEBPACK_IMPORTED_MODULE_2___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(VideoDetail, {
+    idVideo: idVideo
+  }), container);
+}
 
 /***/ }),
 

@@ -9,27 +9,40 @@ import useFetch from '../../../store/useFetch';
 
 function VideoDetail({ idVideo }) {
     
+    const [videoId, setVideoId] = useState(idVideo);
+
     var { data, isLoading, isError } = useFetch("/video/"+idVideo+"/json")
 
     useEffect(() => {
         console.log("dika idVideo", idVideo)
-        console.log("dika data", data)
     }, [])
 
     function _onReady(event) {
         // access to player in all event handlers via event.target
-        console.log("dika", event);
+        // console.log("dika", event);
         // event.target.pauseVideo();
     }
 
     function _onEnd(e){
         console.log("dika post flag", e);
+        postFlag(videoId);
+    }
+
+    async function postFlag(idVideo){
+        const payload = {};
+
+        await axios.post(`/videos/${idVideo}/flag/json`, { payload })
+        .then(res => {
+            console.log("dika res 1", res);
+            console.log("dika res data", res.data);
+        })
     }
 
     return (<>
         {isLoading ? 
             <p>Loading...</p>
         :
+        <>
             <YouTube videoId={data?.data?.youtubeId} opts={{
                 height: '390',
                 width: '640',
@@ -40,6 +53,7 @@ function VideoDetail({ idVideo }) {
             }} 
             onReady={_onReady} 
             onEnd={_onEnd}/>
+        </>
         }
     </>);
 }
