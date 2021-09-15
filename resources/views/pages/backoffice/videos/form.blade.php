@@ -1,6 +1,8 @@
 @csrf
 <div class="row">
     <x-input.select :label="__('Mata Pelajaran')" id="mata_pelajaran_id" name="mata_pelajaran_id" :sources="$mapelList" :data="$data" required />
+    
+    <x-input.select :label="__('Semester')" id="semester" name="semester" :sources="$semesterList" :data="$data" required />
 
     <x-input.text :label="__('Name')" name="name" :data="$data" required />
     <x-input.text :label="__('URL Video')" name="video_url" :data="$data" required />
