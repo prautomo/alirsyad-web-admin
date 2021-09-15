@@ -135,11 +135,22 @@ class ModulController extends Controller{
 
         return $mapelList;
     }
+
+    private function getSemester(){
+        $semesterList = [];
+        $semesterList[""] = "Pilih semester";
+
+        $semesterList[1] = "1";
+        $semesterList[2] = "2";
+
+        return $semesterList;
+    }
     
     public function create(){
         $mapelList = $this->getMataPelajaran();
+        $semesterList = $this->getSemester();
 
-        return view($this->prefix.'.create', ['mapelList' => $mapelList]);
+        return view($this->prefix.'.create', ['mapelList' => $mapelList, 'semesterList' => $semesterList]);
     }
 
     public function store(Request $request){
@@ -153,7 +164,7 @@ class ModulController extends Controller{
         // default image
         $url = "images/placeholder.png";
         // temp request
-        $dataReq = $request->only(['name', 'icon', 'description', 'mata_pelajaran_id', 'slug']);
+        $dataReq = $request->only(['name', 'icon', 'description', 'mata_pelajaran_id', 'slug', 'semester']);
         $dataReq['uploader_id'] = \Auth::user()->id;
 
         if ($request->hasFile('icon')) {
@@ -188,8 +199,9 @@ class ModulController extends Controller{
     public function edit(Request $request, $id){
         $dt = Modul::with('mataPelajaran')->findOrFail($id);
         $mapelList = $this->getMataPelajaran();
+        $semesterList = $this->getSemester();
 
-        return view($this->prefix.'.edit', ['data' => $dt, 'mapelList' => $mapelList]);
+        return view($this->prefix.'.edit', ['data' => $dt, 'mapelList' => $mapelList, 'semesterList' => $semesterList]);
     }
 
     public function update(Request $request, $id){
@@ -200,7 +212,7 @@ class ModulController extends Controller{
             'mata_pelajaran_id' => 'required',
         ]);
 
-        $dataReq = $request->only(['name', 'icon', 'description', 'mata_pelajaran_id', 'slug']);
+        $dataReq = $request->only(['name', 'icon', 'description', 'mata_pelajaran_id', 'slug', 'semester']);
 
         if ($request->hasFile('icon')) {
             $validated = $request->validate([
