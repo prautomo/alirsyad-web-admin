@@ -30,7 +30,7 @@ Route::middleware('auth:api')->group( function () {
     Route::get("/mata_pelajarans/{id}/summary", "API\MataPelajaranController@summary");
 
     Route::get("/moduls", "API\ModulController@index");
-    Route::get("/moduls/{id}", "API\ModulController@show");
+    Route::get("/moduls/{id}", "API\ModulController@show")->name('api.modul.detail');
     Route::post("/moduls/{id}/flag", "API\ModulController@createHistory");
 
     Route::get("/videos", "API\VideoController@index");

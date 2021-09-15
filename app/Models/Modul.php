@@ -11,7 +11,7 @@ class Modul extends Model
 {
     use HasFactory, SearchableTrait, SoftDeletes;
 
-    protected $appends = ['read', 'pdf_url'];
+    protected $appends = ['read', 'pdf_url', 'next', 'previous'];
 
     /**
      * The attributes that are mass assignable.
@@ -52,6 +52,46 @@ class Modul extends Model
     public function getPDFUrlAttribute()
     {
         return asset($this->pdf_path);
+    }
+
+    public function getNextAttribute(){
+        // get next modul
+        $nextModul = $this->where('id', '>', $this->id)
+            ->where('mata_pelajaran_id', $this->mata_pelajaran_id)
+            ->orderBy('created_at','asc')->first();
+
+        $returnNext = null;
+
+        if($nextModul){
+            $returnNext = [
+                'id' => @$nextModul->id,
+                'name' => @$nextModul->name,
+                'url' => route('app.modul.detail', @$nextModul->id),
+                'endpoint' => route('api.modul.detail', @$nextModul->id),
+            ];
+        }
+        
+        return $returnNext;
+    }
+
+    public function getPreviousAttribute(){
+        // get previous modul
+        $previousModul =  $this->where('id', '<', $this->id)
+            ->where('mata_pelajaran_id', $this->mata_pelajaran_id)
+            ->orderBy('created_at','desc')->first();
+        
+        $returnPrevious = null;
+
+        if($previousModul){
+            $returnPrevious = [
+                'id' => @$previousModul->id,
+                'name' => @$previousModul->name,
+                'url' => route('app.modul.detail', @$previousModul->id),
+                'endpoint' => route('api.modul.detail', @$previousModul->id),
+            ];
+        }
+        
+        return $returnPrevious;
     }
 
     public function mataPelajaran()
