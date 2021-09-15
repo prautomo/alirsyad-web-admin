@@ -55,7 +55,8 @@ class Video extends Model
             $returnNext = [
                 'id' => @$nextVideo->id,
                 'name' => @$nextVideo->name,
-                'url' => route('app.video.detail', @$nextVideo->id)
+                'url' => route('app.video.detail', @$nextVideo->id),
+                'endpoint' => route('api.video.detail', @$nextVideo->id),
             ];
         }
         
@@ -74,7 +75,8 @@ class Video extends Model
             $returnPrevious = [
                 'id' => @$previousVideo->id,
                 'name' => @$previousVideo->name,
-                'url' => route('app.video.detail', @$previousVideo->id)
+                'url' => route('app.video.detail', @$previousVideo->id),
+                'endpoint' => route('api.video.detail', @$nextVideo->id),
             ];
         }
         
