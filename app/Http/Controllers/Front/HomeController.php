@@ -41,7 +41,8 @@ class HomeController extends Controller
         // get
         $yangAkanDatang = $yangAkanDatang->limit(2)->get();
 
-        // ->sortBy('kelas.tingkat_id')->sortBy('kelas_id')->sortBy('name');
+        // sorting by tingkat
+        $yangAkanDatang = $yangAkanDatang->sortBy('tingkat.name');
 
         $parseData = [
             'sedangDipelajari' => $sedangDipelajari,

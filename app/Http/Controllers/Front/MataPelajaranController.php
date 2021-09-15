@@ -61,6 +61,9 @@ class MataPelajaranController extends Controller
         // get
         $yangAkanDatang = $yangAkanDatang->get();
 
+        // sorting by tingkat
+        $yangAkanDatang = $yangAkanDatang->sortBy('tingkat.name');
+
         $parseData = [
             'yangAkanDatang' => $yangAkanDatang,
         ];

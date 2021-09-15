@@ -58,6 +58,7 @@ Route::middleware(['auth'])->group(function () {
     
     Route::get('/', "Front\HomeController@index")->name('app.home');
     Route::get('/mata-pelajaran', "Front\MataPelajaranController@index")->name('app.mapel.list');
+    Route::get('/mata-pelajaran/upcoming', 'Front\MataPelajaranController@indexUpcoming')->name('app.mapel.upcoming');
     Route::get('/mata-pelajaran/{id}', "Front\MataPelajaranController@show")->name('app.mapel.detail');
     Route::get('/mata-pelajaran/{id}/modul', "Front\ModulController@indexByMapel")->name('app.mapel.modul');
     Route::get('/mata-pelajaran/{id}/video', "Front\VideoController@indexByMapel")->name('app.mapel.video');

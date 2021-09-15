@@ -90,7 +90,7 @@
 
                             @if(!empty($yangAkanDatang))
                             <div class="mt-2 text-right">
-                                <a href="">Selengkapnya</a>
+                                <a href="{{ route('app.mapel.upcoming') }}">Selengkapnya</a>
                             </div>
                             @endif
                         </div>
