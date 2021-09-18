@@ -1,26 +1,494 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[9],{
 
-/***/ "./node_modules/react-table-scrollbar/build/index.js":
-/*!***********************************************************!*\
-  !*** ./node_modules/react-table-scrollbar/build/index.js ***!
-  \***********************************************************/
+/***/ "./node_modules/css-loader/index.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./resources/js/frontoffice/components/ToggleSwitch/ToggleSwitch.scss":
+/*!***************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/dist/cjs.js??ref--7-3!./resources/js/frontoffice/components/ToggleSwitch/ToggleSwitch.scss ***!
+  \***************************************************************************************************************************************************************************************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports=function(e){var t={};function n(r){if(t[r])return t[r].exports;var o=t[r]={i:r,l:!1,exports:{}};return e[r].call(o.exports,o,o.exports,n),o.l=!0,o.exports}return n.m=e,n.c=t,n.d=function(e,t,r){n.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:r})},n.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},n.t=function(e,t){if(1&t&&(e=n(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var r=Object.create(null);if(n.r(r),Object.defineProperty(r,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var o in e)n.d(r,o,function(t){return e[t]}.bind(null,o));return r},n.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return n.d(t,"a",t),t},n.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},n.p="",n(n.s=2)}([function(e,t,n){"use strict";e.exports=n(3)},function(e,t,n){e.exports=n(5)()},function(e,t,n){"use strict";n.r(t),n.d(t,"default",(function(){return d}));var r=n(0),o=n.n(r),i=n(1),u=n.n(i);function l(e){return(l="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e})(e)}function c(e,t){for(var n=0;n<t.length;n++){var r=t[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}function a(e,t){return(a=Object.setPrototypeOf||function(e,t){return e.__proto__=t,e})(e,t)}function s(e){var t=function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],(function(){}))),!0}catch(e){return!1}}();return function(){var n,r=h(e);if(t){var o=h(this).constructor;n=Reflect.construct(r,arguments,o)}else n=r.apply(this,arguments);return f(this,n)}}function f(e,t){return!t||"object"!==l(t)&&"function"!=typeof t?p(e):t}function p(e){if(void 0===e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return e}function h(e){return(h=Object.setPrototypeOf?Object.getPrototypeOf:function(e){return e.__proto__||Object.getPrototypeOf(e)})(e)}var y={height:u.a.string.isRequired,rows:u.a.number},d=function(e){!function(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function");e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,writable:!0,configurable:!0}}),t&&a(e,t)}(u,e);var t,n,r,i=s(u);function u(e){var t;return function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}(this,u),(t=i.call(this,e)).observer=null,t.container=null,t.table=null,t.tableclone=null,t.headHeight=0,t.rowHeight=0,t.handleResize=t.handleResize.bind(p(t)),t.handleScroll=t.handleScroll.bind(p(t)),t.renderFixedHeader=t.renderFixedHeader.bind(p(t)),t}return t=u,(n=[{key:"componentDidMount",value:function(){this.observer=new MutationObserver(this.handleResize),this.renderFixedHeader(),window.addEventListener("resize",this.handleResize),this.forceUpdate()}},{key:"componentWillUnmount",value:function(){this.observer.disconnect(),window.removeEventListener("resize",this.handleResize)}},{key:"componentDidUpdate",value:function(){this.renderFixedHeader()}},{key:"handleScroll",value:function(){this.tableclone.style.top=this.container.scrollTop+"px"}},{key:"handleResize",value:function(){for(var e=this.table.getElementsByTagName("th"),t=this.tableclone.getElementsByTagName("th"),n=0;n<e.length;n++){var r=e[n].clientWidth+"px";t[n].style.minWidth=r,t[n].style.width=r,t[n].style.boxSizing="border-box"}}},{key:"renderFixedHeader",value:function(){if(null!==this.tableclone&&(null!==this.tableclone.parentNode&&this.tableclone.parentNode.removeChild(this.tableclone),this.tableclone=null,this.table=null,this.observer.disconnect()),this.table=this.container.getElementsByTagName("table")[0],this.tableclone=this.table.cloneNode(!0),this.tableclone.removeChild(this.tableclone.getElementsByTagName("tbody")[0]),this.handleResize(),this.handleScroll(),this.observer.observe(this.table,{subtree:!0,childList:!0,attributes:!0,characterData:!0}),this.tableclone.setAttribute("class",this.table.getAttribute("class")+" table-fixed-head"),this.tableclone.style.position="absolute",this.container.appendChild(this.tableclone),0===this.headHeight){var e=this.table.getElementsByTagName("thead")[0];e&&(this.headHeight=e.clientHeight)}if(0===this.rowHeight){var t=document.createElement("tbody"),n=document.createElement("tr"),r=document.createElement("td"),o=document.createTextNode("&nbsp;");r.appendChild(o),n.appendChild(r),t.appendChild(n),this.tableclone.appendChild(t),this.rowHeight=t.clientHeight,this.tableclone.removeChild(t)}}},{key:"render",value:function(){var e=this,t={height:this.props.rows?this.headHeight+this.props.rows*this.rowHeight+"px":this.props.height,overflow:"auto",position:"relative"};return o.a.createElement("div",{className:"TableScrollbar",style:t,onScroll:this.handleScroll,ref:function(t){e.container=t}},this.props.children)}}])&&c(t.prototype,n),r&&c(t,r),u}(o.a.Component);d.propTypes=y,d.defaultProps={height:"100%"}},function(e,t,n){"use strict";
-/** @license React v16.13.1
- * react.production.min.js
- *
- * Copyright (c) Facebook, Inc. and its affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */var r=n(4),o="function"==typeof Symbol&&Symbol.for,i=o?Symbol.for("react.element"):60103,u=o?Symbol.for("react.portal"):60106,l=o?Symbol.for("react.fragment"):60107,c=o?Symbol.for("react.strict_mode"):60108,a=o?Symbol.for("react.profiler"):60114,s=o?Symbol.for("react.provider"):60109,f=o?Symbol.for("react.context"):60110,p=o?Symbol.for("react.forward_ref"):60112,h=o?Symbol.for("react.suspense"):60113,y=o?Symbol.for("react.memo"):60115,d=o?Symbol.for("react.lazy"):60116,b="function"==typeof Symbol&&Symbol.iterator;function m(e){for(var t="https://reactjs.org/docs/error-decoder.html?invariant="+e,n=1;n<arguments.length;n++)t+="&args[]="+encodeURIComponent(arguments[n]);return"Minified React error #"+e+"; visit "+t+" for the full message or use the non-minified dev environment for full errors and additional helpful warnings."}var v={isMounted:function(){return!1},enqueueForceUpdate:function(){},enqueueReplaceState:function(){},enqueueSetState:function(){}},g={};function S(e,t,n){this.props=e,this.context=t,this.refs=g,this.updater=n||v}function w(){}function O(e,t,n){this.props=e,this.context=t,this.refs=g,this.updater=n||v}S.prototype.isReactComponent={},S.prototype.setState=function(e,t){if("object"!=typeof e&&"function"!=typeof e&&null!=e)throw Error(m(85));this.updater.enqueueSetState(this,e,t,"setState")},S.prototype.forceUpdate=function(e){this.updater.enqueueForceUpdate(this,e,"forceUpdate")},w.prototype=S.prototype;var _=O.prototype=new w;_.constructor=O,r(_,S.prototype),_.isPureReactComponent=!0;var j={current:null},x=Object.prototype.hasOwnProperty,E={key:!0,ref:!0,__self:!0,__source:!0};function k(e,t,n){var r,o={},u=null,l=null;if(null!=t)for(r in void 0!==t.ref&&(l=t.ref),void 0!==t.key&&(u=""+t.key),t)x.call(t,r)&&!E.hasOwnProperty(r)&&(o[r]=t[r]);var c=arguments.length-2;if(1===c)o.children=n;else if(1<c){for(var a=Array(c),s=0;s<c;s++)a[s]=arguments[s+2];o.children=a}if(e&&e.defaultProps)for(r in c=e.defaultProps)void 0===o[r]&&(o[r]=c[r]);return{$$typeof:i,type:e,key:u,ref:l,props:o,_owner:j.current}}function P(e){return"object"==typeof e&&null!==e&&e.$$typeof===i}var R=/\/+/g,C=[];function T(e,t,n,r){if(C.length){var o=C.pop();return o.result=e,o.keyPrefix=t,o.func=n,o.context=r,o.count=0,o}return{result:e,keyPrefix:t,func:n,context:r,count:0}}function $(e){e.result=null,e.keyPrefix=null,e.func=null,e.context=null,e.count=0,10>C.length&&C.push(e)}function H(e,t,n){return null==e?0:function e(t,n,r,o){var l=typeof t;"undefined"!==l&&"boolean"!==l||(t=null);var c=!1;if(null===t)c=!0;else switch(l){case"string":case"number":c=!0;break;case"object":switch(t.$$typeof){case i:case u:c=!0}}if(c)return r(o,t,""===n?"."+N(t,0):n),1;if(c=0,n=""===n?".":n+":",Array.isArray(t))for(var a=0;a<t.length;a++){var s=n+N(l=t[a],a);c+=e(l,s,r,o)}else if(null===t||"object"!=typeof t?s=null:s="function"==typeof(s=b&&t[b]||t["@@iterator"])?s:null,"function"==typeof s)for(t=s.call(t),a=0;!(l=t.next()).done;)c+=e(l=l.value,s=n+N(l,a++),r,o);else if("object"===l)throw r=""+t,Error(m(31,"[object Object]"===r?"object with keys {"+Object.keys(t).join(", ")+"}":r,""));return c}(e,"",t,n)}function N(e,t){return"object"==typeof e&&null!==e&&null!=e.key?function(e){var t={"=":"=0",":":"=2"};return"$"+(""+e).replace(/[=:]/g,(function(e){return t[e]}))}(e.key):t.toString(36)}function z(e,t){e.func.call(e.context,t,e.count++)}function A(e,t,n){var r=e.result,o=e.keyPrefix;e=e.func.call(e.context,t,e.count++),Array.isArray(e)?I(e,r,n,(function(e){return e})):null!=e&&(P(e)&&(e=function(e,t){return{$$typeof:i,type:e.type,key:t,ref:e.ref,props:e.props,_owner:e._owner}}(e,o+(!e.key||t&&t.key===e.key?"":(""+e.key).replace(R,"$&/")+"/")+n)),r.push(e))}function I(e,t,n,r,o){var i="";null!=n&&(i=(""+n).replace(R,"$&/")+"/"),H(e,A,t=T(t,i,r,o)),$(t)}var U={current:null};function D(){var e=U.current;if(null===e)throw Error(m(321));return e}var F={ReactCurrentDispatcher:U,ReactCurrentBatchConfig:{suspense:null},ReactCurrentOwner:j,IsSomeRendererActing:{current:!1},assign:r};t.Children={map:function(e,t,n){if(null==e)return e;var r=[];return I(e,r,null,t,n),r},forEach:function(e,t,n){if(null==e)return e;H(e,z,t=T(null,null,t,n)),$(t)},count:function(e){return H(e,(function(){return null}),null)},toArray:function(e){var t=[];return I(e,t,null,(function(e){return e})),t},only:function(e){if(!P(e))throw Error(m(143));return e}},t.Component=S,t.Fragment=l,t.Profiler=a,t.PureComponent=O,t.StrictMode=c,t.Suspense=h,t.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED=F,t.cloneElement=function(e,t,n){if(null==e)throw Error(m(267,e));var o=r({},e.props),u=e.key,l=e.ref,c=e._owner;if(null!=t){if(void 0!==t.ref&&(l=t.ref,c=j.current),void 0!==t.key&&(u=""+t.key),e.type&&e.type.defaultProps)var a=e.type.defaultProps;for(s in t)x.call(t,s)&&!E.hasOwnProperty(s)&&(o[s]=void 0===t[s]&&void 0!==a?a[s]:t[s])}var s=arguments.length-2;if(1===s)o.children=n;else if(1<s){a=Array(s);for(var f=0;f<s;f++)a[f]=arguments[f+2];o.children=a}return{$$typeof:i,type:e.type,key:u,ref:l,props:o,_owner:c}},t.createContext=function(e,t){return void 0===t&&(t=null),(e={$$typeof:f,_calculateChangedBits:t,_currentValue:e,_currentValue2:e,_threadCount:0,Provider:null,Consumer:null}).Provider={$$typeof:s,_context:e},e.Consumer=e},t.createElement=k,t.createFactory=function(e){var t=k.bind(null,e);return t.type=e,t},t.createRef=function(){return{current:null}},t.forwardRef=function(e){return{$$typeof:p,render:e}},t.isValidElement=P,t.lazy=function(e){return{$$typeof:d,_ctor:e,_status:-1,_result:null}},t.memo=function(e,t){return{$$typeof:y,type:e,compare:void 0===t?null:t}},t.useCallback=function(e,t){return D().useCallback(e,t)},t.useContext=function(e,t){return D().useContext(e,t)},t.useDebugValue=function(){},t.useEffect=function(e,t){return D().useEffect(e,t)},t.useImperativeHandle=function(e,t,n){return D().useImperativeHandle(e,t,n)},t.useLayoutEffect=function(e,t){return D().useLayoutEffect(e,t)},t.useMemo=function(e,t){return D().useMemo(e,t)},t.useReducer=function(e,t,n){return D().useReducer(e,t,n)},t.useRef=function(e){return D().useRef(e)},t.useState=function(e){return D().useState(e)},t.version="16.13.1"},function(e,t,n){"use strict";
+exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, ".toggle-switch {\n  position: relative;\n  margin-right: 10px;\n  width: 75px;\n  display: inline-block;\n  vertical-align: middle;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  text-align: left;\n}\n.toggle-switch-checkbox {\n  display: none;\n}\n.toggle-switch-label {\n  display: block;\n  overflow: hidden;\n  cursor: pointer;\n  border: 0 solid #bbb;\n  border-radius: 20px;\n  margin: 0;\n}\n.toggle-switch-label:focus {\n  outline: none;\n}\n.toggle-switch-label:focus > span {\n  box-shadow: 0 0 2px 5px red;\n}\n.toggle-switch-label > span:focus {\n  outline: none;\n}\n.toggle-switch-inner {\n  display: block;\n  width: 200%;\n  margin-left: -100%;\n  transition: margin 0.3s ease-in 0s;\n}\n.toggle-switch-inner:before, .toggle-switch-inner:after {\n  display: block;\n  float: left;\n  width: 50%;\n  height: 34px;\n  padding: 0;\n  line-height: 34px;\n  font-size: 14px;\n  color: white;\n  font-weight: bold;\n  box-sizing: border-box;\n}\n.toggle-switch-inner:before {\n  content: attr(data-yes);\n  text-transform: uppercase;\n  padding-left: 10px;\n  background-color: #2F855A;\n  color: #fff;\n}\n.toggle-switch-disabled {\n  background-color: #ddd;\n  cursor: not-allowed;\n}\n.toggle-switch-disabled:before {\n  background-color: #ddd;\n  cursor: not-allowed;\n}\n.toggle-switch-inner:after {\n  content: attr(data-no);\n  text-transform: uppercase;\n  padding-right: 10px;\n  background-color: #bbb;\n  color: #fff;\n  text-align: right;\n}\n.toggle-switch-switch {\n  display: block;\n  width: 24px;\n  margin: 5px;\n  background: #fff;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  right: 40px;\n  border: 0 solid #bbb;\n  border-radius: 20px;\n  transition: all 0.3s ease-in 0s;\n}\n.toggle-switch-checkbox:checked + .toggle-switch-label .toggle-switch-inner {\n  margin-left: 0;\n}\n.toggle-switch-checkbox:checked + .toggle-switch-label .toggle-switch-switch {\n  right: 0px;\n}\n.toggle-switch.small-switch {\n  width: 40px;\n}\n.toggle-switch.small-switch .toggle-switch-inner:after, .toggle-switch.small-switch .toggle-switch-inner:before {\n  content: \"\";\n  height: 20px;\n  line-height: 20px;\n}\n.toggle-switch.small-switch .toggle-switch-switch {\n  width: 16px;\n  right: 20px;\n  margin: 2px;\n}\n@media screen and (max-width: 991px) {\n  .toggle-switch {\n    transform: scale(0.9);\n  }\n}\n@media screen and (max-width: 767px) {\n  .toggle-switch {\n    transform: scale(0.825);\n  }\n}\n@media screen and (max-width: 575px) {\n  .toggle-switch {\n    transform: scale(0.75);\n  }\n}", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./resources/js/frontoffice/components/Modul/Detail.js":
+/*!*************************************************************!*\
+  !*** ./resources/js/frontoffice/components/Modul/Detail.js ***!
+  \*************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! reactstrap */ "./node_modules/reactstrap/es/index.js");
+/* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-select */ "./node_modules/react-select/dist/react-select.esm.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var react_icons_fi__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-icons/fi */ "./node_modules/react-icons/fi/index.esm.js");
+/* harmony import */ var react_sketch_canvas__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-sketch-canvas */ "./node_modules/react-sketch-canvas/react-sketch-canvas.esm.js");
+/* harmony import */ var _store_useFetch__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../store/useFetch */ "./resources/js/store/useFetch.js");
+/* harmony import */ var _ToggleSwitch_ToggleSwitch__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../ToggleSwitch/ToggleSwitch */ "./resources/js/frontoffice/components/ToggleSwitch/ToggleSwitch.js");
+/* harmony import */ var react_alert__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-alert */ "./node_modules/react-alert/dist/esm/react-alert.js");
+/* harmony import */ var react_alert_template_basic__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! react-alert-template-basic */ "./node_modules/react-alert-template-basic/dist/esm/react-alert-template-basic.js");
+
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+var styles = {
+  border: "0.0625rem solid #9c9c9c",
+  borderRadius: "0.25rem",
+  opacity: "40%"
+};
+
+function ModulDetail(_ref) {
+  var _data$data$name, _data$data, _data$data2, _data$data3, _data$data3$next, _data$data5;
+
+  var idModul = _ref.idModul,
+      linkModul = _ref.linkModul,
+      linkVideo = _ref.linkVideo,
+      linkSimulasi = _ref.linkSimulasi;
+  var canvas = Object(react__WEBPACK_IMPORTED_MODULE_1__["useRef"])();
+
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(false),
+      _useState2 = _slicedToArray(_useState, 2),
+      showCanvas = _useState2[0],
+      setShowCanvas = _useState2[1];
+
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(false),
+      _useState4 = _slicedToArray(_useState3, 2),
+      dropdownOpen = _useState4[0],
+      setDropdownOpen = _useState4[1];
+
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])("black"),
+      _useState6 = _slicedToArray(_useState5, 2),
+      warna = _useState6[0],
+      setWarna = _useState6[1];
+
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(false),
+      _useState8 = _slicedToArray(_useState7, 2),
+      disabledBtnDone = _useState8[0],
+      setDisabledBtnDone = _useState8[1];
+
+  var _useFetch = Object(_store_useFetch__WEBPACK_IMPORTED_MODULE_8__["default"])("/modul/" + idModul + "/json"),
+      data = _useFetch.data,
+      isLoading = _useFetch.isLoading,
+      isError = _useFetch.isError;
+
+  var alert = Object(react_alert__WEBPACK_IMPORTED_MODULE_10__["useAlert"])();
+
+  var toggle = function toggle() {
+    return setDropdownOpen(function (prevState) {
+      return !prevState;
+    });
+  };
+
+  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
+    console.log("dika idModul", idModul);
+  }, []);
+
+  function finishModul(_x) {
+    return _finishModul.apply(this, arguments);
+  }
+
+  function _finishModul() {
+    _finishModul = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(nextUrl) {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              console.log("dika nextUrl", nextUrl); // update history
+
+              _context.next = 3;
+              return postFlag(idModul);
+
+            case 3:
+              // direct to next url
+              if (nextUrl) {
+                setTimeout(function () {
+                  window.location.href = nextUrl;
+                }, 3000);
+              }
+
+            case 4:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }));
+    return _finishModul.apply(this, arguments);
+  }
+
+  function postFlag(_x2) {
+    return _postFlag.apply(this, arguments);
+  }
+
+  function _postFlag() {
+    _postFlag = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(idModul) {
+      var payload;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              payload = {};
+              _context2.next = 3;
+              return axios__WEBPACK_IMPORTED_MODULE_5___default.a.post("/moduls/".concat(idModul, "/flag/json"), {
+                payload: payload
+              }).then(function (res) {
+                setDisabledBtnDone(true); // console.log("dika res post flag", res.data);
+
+                alert.show('Modul berhasil dibaca!', {
+                  timeout: 3000,
+                  // custom timeout just for this one alert
+                  type: 'success',
+                  onOpen: function onOpen() {},
+                  // callback that will be executed after this alert open
+                  onClose: function onClose() {} // callback that will be executed after this alert is removed
+
+                });
+              })["catch"](function (e) {
+                var _e$response$data;
+
+                setDisabledBtnDone(false);
+                console.error("dika res post flag failed", e === null || e === void 0 ? void 0 : e.response);
+                alert.show(e === null || e === void 0 ? void 0 : (_e$response$data = e.response.data) === null || _e$response$data === void 0 ? void 0 : _e$response$data.message, {
+                  timeout: 3000,
+                  // custom timeout just for this one alert
+                  type: 'error',
+                  onOpen: function onOpen() {},
+                  // callback that will be executed after this alert open
+                  onClose: function onClose() {} // callback that will be executed after this alert is removed
+
+                });
+              });
+
+            case 3:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2);
+    }));
+    return _postFlag.apply(this, arguments);
+  }
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Row"], {
+    className: "mb-1"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Col"], {
+    md: "12"
+  }, !isLoading && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+    className: "text-left form-inline"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("h3", null, (_data$data$name = data === null || data === void 0 ? void 0 : (_data$data = data.data) === null || _data$data === void 0 ? void 0 : _data$data.name) !== null && _data$data$name !== void 0 ? _data$data$name : '-'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+    id: "toggle",
+    className: "ml-auto form-inline"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_ToggleSwitch_ToggleSwitch__WEBPACK_IMPORTED_MODULE_9__["default"], {
+    id: "showCanvas",
+    small: true,
+    checked: showCanvas,
+    onChange: setShowCanvas
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Dropdown"], {
+    isOpen: dropdownOpen,
+    toggle: toggle,
+    size: "sm",
+    className: "btn-outline",
+    direction: "left"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["DropdownToggle"], {
+    style: {
+      background: "none",
+      color: "#000000",
+      borderColor: "#ffffff"
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_icons_fi__WEBPACK_IMPORTED_MODULE_6__["FiMoreVertical"], {
+    size: "15"
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["DropdownMenu"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["DropdownItem"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("a", {
+    href: linkModul
+  }, "Modul Pembelajaran")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["DropdownItem"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("a", {
+    href: linkVideo
+  }, "Video Pembelajaran")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["DropdownItem"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("a", {
+    href: linkSimulasi
+  }, "Simulasi Pembelajaran")))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("hr", null)))), isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("p", null, "Loading...") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, showCanvas && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+    id: "layer-coret",
+    style: {
+      position: "absolute",
+      paddingRight: "12px"
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
+    onClick: function onClick() {
+      canvas.current.clearCanvas();
+    },
+    className: "btn-main mr-2 btn-small"
+  }, "Clear"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
+    onClick: function onClick() {
+      canvas.current.undo();
+    },
+    className: "btn-main mr-2 btn-small"
+  }, "Undo"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
+    onClick: function onClick() {
+      canvas.current.redo();
+    },
+    className: "btn-main mr-2 btn-small"
+  }, "Redo"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
+    onClick: function onClick() {
+      setWarna("red");
+    },
+    className: "btn-main mr-2 btn-small"
+  }, "Red"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
+    onClick: function onClick() {
+      setWarna("black");
+    },
+    className: "btn-main mr-2 btn-small"
+  }, "Black"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_sketch_canvas__WEBPACK_IMPORTED_MODULE_7__["ReactSketchCanvas"], {
+    ref: canvas,
+    style: styles,
+    width: "100%",
+    height: "800px",
+    strokeWidth: 3,
+    strokeColor: warna
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+    style: {
+      overflowX: 'auto',
+      height: '100%'
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("object", {
+    data: data === null || data === void 0 ? void 0 : (_data$data2 = data.data) === null || _data$data2 === void 0 ? void 0 : _data$data2.pdf_url,
+    type: "application/pdf",
+    width: "100%",
+    height: "800px"
+  })), (data === null || data === void 0 ? void 0 : (_data$data3 = data.data) === null || _data$data3 === void 0 ? void 0 : (_data$data3$next = _data$data3.next) === null || _data$data3$next === void 0 ? void 0 : _data$data3$next.url) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
+    className: "mt-4 btn-main",
+    onClick: function onClick() {
+      var _data$data4, _data$data4$next;
+
+      return finishModul(data === null || data === void 0 ? void 0 : (_data$data4 = data.data) === null || _data$data4 === void 0 ? void 0 : (_data$data4$next = _data$data4.next) === null || _data$data4$next === void 0 ? void 0 : _data$data4$next.slug_url);
+    }
+  }, "Modul Berikutnya") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
+    className: "mt-4 btn-main",
+    disabled: (data === null || data === void 0 ? void 0 : (_data$data5 = data.data) === null || _data$data5 === void 0 ? void 0 : _data$data5.read) || disabledBtnDone,
+    onClick: function onClick() {
+      return finishModul();
+    }
+  }, "Selesai Membaca")));
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (ModulDetail);
+var options = {
+  position: 'bottom right',
+  timeout: 3000,
+  offset: '30px',
+  transition: 'scale'
+};
+
+var RootVideoDetail = function RootVideoDetail(props) {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_alert__WEBPACK_IMPORTED_MODULE_10__["Provider"], _extends({
+    template: react_alert_template_basic__WEBPACK_IMPORTED_MODULE_11__["default"]
+  }, options), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(ModulDetail, {
+    idModul: props === null || props === void 0 ? void 0 : props.idModul,
+    linkModul: props === null || props === void 0 ? void 0 : props.linkModul,
+    linkVideo: props === null || props === void 0 ? void 0 : props.linkVideo,
+    linkSimulasi: props === null || props === void 0 ? void 0 : props.linkSimulasi
+  }));
+};
+
+var container = document.getElementById("modul-detail-fe");
+
+if (container) {
+  var idModul = container.getAttribute("modul-id");
+  var linkModul = container.getAttribute("link-modul");
+  var linkVideo = container.getAttribute("link-video");
+  var linkSimulasi = container.getAttribute("link-simulasi");
+  react_dom__WEBPACK_IMPORTED_MODULE_2___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(RootVideoDetail, {
+    idModul: idModul,
+    linkModul: linkModul,
+    linkVideo: linkVideo,
+    linkSimulasi: linkSimulasi
+  }), container);
+}
+
+/***/ }),
+
+/***/ "./resources/js/frontoffice/components/ToggleSwitch/ToggleSwitch.js":
+/*!**************************************************************************!*\
+  !*** ./resources/js/frontoffice/components/ToggleSwitch/ToggleSwitch.js ***!
+  \**************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _ToggleSwitch_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ToggleSwitch.scss */ "./resources/js/frontoffice/components/ToggleSwitch/ToggleSwitch.scss");
+/* harmony import */ var _ToggleSwitch_scss__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_ToggleSwitch_scss__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
 /*
-object-assign
-(c) Sindre Sorhus
-@license MIT
-*/var r=Object.getOwnPropertySymbols,o=Object.prototype.hasOwnProperty,i=Object.prototype.propertyIsEnumerable;function u(e){if(null==e)throw new TypeError("Object.assign cannot be called with null or undefined");return Object(e)}e.exports=function(){try{if(!Object.assign)return!1;var e=new String("abc");if(e[5]="de","5"===Object.getOwnPropertyNames(e)[0])return!1;for(var t={},n=0;n<10;n++)t["_"+String.fromCharCode(n)]=n;if("0123456789"!==Object.getOwnPropertyNames(t).map((function(e){return t[e]})).join(""))return!1;var r={};return"abcdefghijklmnopqrst".split("").forEach((function(e){r[e]=e})),"abcdefghijklmnopqrst"===Object.keys(Object.assign({},r)).join("")}catch(e){return!1}}()?Object.assign:function(e,t){for(var n,l,c=u(e),a=1;a<arguments.length;a++){for(var s in n=Object(arguments[a]))o.call(n,s)&&(c[s]=n[s]);if(r){l=r(n);for(var f=0;f<l.length;f++)i.call(n,l[f])&&(c[l[f]]=n[l[f]])}}return c}},function(e,t,n){"use strict";var r=n(6);function o(){}function i(){}i.resetWarningCache=o,e.exports=function(){function e(e,t,n,o,i,u){if(u!==r){var l=new Error("Calling PropTypes validators directly is not supported by the `prop-types` package. Use PropTypes.checkPropTypes() to call them. Read more at http://fb.me/use-check-prop-types");throw l.name="Invariant Violation",l}}function t(){return e}e.isRequired=e;var n={array:e,bool:e,func:e,number:e,object:e,string:e,symbol:e,any:e,arrayOf:t,element:e,elementType:e,instanceOf:t,node:e,objectOf:t,oneOf:t,oneOfType:t,shape:t,exact:t,checkPropTypes:i,resetWarningCache:o};return n.PropTypes=n,n}},function(e,t,n){"use strict";e.exports="SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED"}]);
+Toggle Switch Component
+Note: id, checked and onChange are required for ToggleSwitch component to function. The props name, small, disabled
+and optionLabels are optional.
+Usage: <ToggleSwitch id="id" checked={value} onChange={checked => setValue(checked)}} />
+*/
+
+var ToggleSwitch = function ToggleSwitch(_ref) {
+  var id = _ref.id,
+      name = _ref.name,
+      checked = _ref.checked,
+      _onChange = _ref.onChange,
+      optionLabels = _ref.optionLabels,
+      small = _ref.small,
+      disabled = _ref.disabled;
+
+  function handleKeyPress(e) {
+    if (e.keyCode !== 32) return;
+    e.preventDefault();
+
+    _onChange(!checked);
+  }
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "toggle-switch" + (small ? " small-switch" : "")
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    type: "checkbox",
+    name: name,
+    className: "toggle-switch-checkbox",
+    id: id,
+    checked: checked,
+    onChange: function onChange(e) {
+      return _onChange(e.target.checked);
+    },
+    disabled: disabled
+  }), id ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+    className: "toggle-switch-label",
+    tabIndex: disabled ? -1 : 1,
+    onKeyDown: function onKeyDown(e) {
+      return handleKeyPress(e);
+    },
+    htmlFor: id
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: disabled ? "toggle-switch-inner toggle-switch-disabled" : "toggle-switch-inner",
+    "data-yes": optionLabels[0],
+    "data-no": optionLabels[1],
+    tabIndex: -1
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: disabled ? "toggle-switch-switch toggle-switch-disabled" : "toggle-switch-switch",
+    tabIndex: -1
+  })) : null);
+}; // Set optionLabels for rendering.
+
+
+ToggleSwitch.defaultProps = {
+  optionLabels: ["Yes", "No"]
+};
+ToggleSwitch.propTypes = {
+  id: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string.isRequired,
+  checked: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.bool.isRequired,
+  onChange: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func.isRequired,
+  name: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string,
+  optionLabels: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.array,
+  small: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.bool,
+  disabled: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.bool
+};
+/* harmony default export */ __webpack_exports__["default"] = (ToggleSwitch);
+
+/***/ }),
+
+/***/ "./resources/js/frontoffice/components/ToggleSwitch/ToggleSwitch.scss":
+/*!****************************************************************************!*\
+  !*** ./resources/js/frontoffice/components/ToggleSwitch/ToggleSwitch.scss ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../../node_modules/css-loader!../../../../../node_modules/postcss-loader/src??ref--7-2!../../../../../node_modules/sass-loader/dist/cjs.js??ref--7-3!./ToggleSwitch.scss */ "./node_modules/css-loader/index.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./resources/js/frontoffice/components/ToggleSwitch/ToggleSwitch.scss");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./resources/js/store/useFetch.js":
+/*!****************************************!*\
+  !*** ./resources/js/store/useFetch.js ***!
+  \****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return useFetch; });
+/* harmony import */ var swr__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! swr */ "./node_modules/swr/esm/index.js");
+
+function useFetch(url) {
+  var _useSWR = Object(swr__WEBPACK_IMPORTED_MODULE_0__["default"])(url, window.getAxios),
+      data = _useSWR.data,
+      error = _useSWR.error;
+
+  return {
+    data: data,
+    isLoading: !error && !data,
+    isError: error
+  };
+}
 
 /***/ })
 

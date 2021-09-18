@@ -5,6 +5,7 @@ import TableScrollbar from 'react-table-scrollbar';
 import useFetch from '../../../store/useFetch';
 import { TabContent, TabPane, Nav, NavItem, NavLink, Card, Button, CardTitle, CardText, Row, Col, CardBody } from 'reactstrap';
 import classnames from 'classnames';
+import './DetailProgressBelajar.css';
 
 function DetailProgressBelajar({ }) {
 
@@ -50,7 +51,7 @@ function DetailProgressBelajar({ }) {
         <p>Loading...</p>
         :
         <>
-        <Nav tabs>
+        <Nav tabs className="detail-progress-siswa-tab">
             {data?.data?.map((mapel, idx) => {
                 return (
                     <NavItem key={idx}>
@@ -113,7 +114,15 @@ function DetailProgressBelajar({ }) {
                                                 </tr>
                                             })}
 
-                                            {(dataSiswa.length < 1) &&
+                                            {(isLoadingSiswa) &&
+                                            <tr>
+                                                <td colSpan="5" className="text-center">
+                                                    Loading...
+                                                </td>
+                                            </tr>
+                                            }
+
+                                            {(!isLoadingSiswa && dataSiswa.length < 1) &&
                                             <tr>
                                                 <td colSpan="5" className="text-left">
                                                     Belum ada data.

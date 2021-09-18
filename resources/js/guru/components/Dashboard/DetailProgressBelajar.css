@@ -1,0 +1,12 @@
+#progress-detail-guru .nav-tabs {
+    overflow-x: hidden;
+    overflow-y: hidden;
+    flex-wrap: nowrap;
+}
+#progress-detail-guru .nav-tabs .nav-link {
+    white-space: nowrap;
+}
+
+#progress-detail-guru .nav-tabs:hover {
+    overflow-x: auto;
+}
