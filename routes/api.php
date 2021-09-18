@@ -44,6 +44,7 @@ Route::middleware('auth:api')->group( function () {
 
     Route::prefix('guru')->group(function() {
         Route::get("/dashboard", "API\DashboardController@index");
+        Route::get("/dashboard/detail", "API\DashboardController@detail");
         Route::get("/ngajar", "API\DashboardController@guruNgajar");
     });
     

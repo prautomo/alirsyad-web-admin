@@ -79,6 +79,72 @@ class DashboardController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
+    public function detail(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'mata_pelajaran_id' => 'required|numeric',
+            'kelas_id' => 'required|numeric',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->returnStatus(400, $validator->errors());     
+        }
+
+        $kelasId = $request->kelas_id;
+        $mapelId = $request->mata_pelajaran_id;
+
+        $details = [];
+
+        // get siswa
+        $siswaLists = ExternalUser::with(['historyModul.modul' => function($qHM) use ($mapelId){
+            $qHM->where('mata_pelajaran_id', $mapelId);
+        }]);
+        // history video
+        $siswaLists = $siswaLists->with(['historyVideo.video' => function($qHM) use ($mapelId){
+            $qHM->where('mata_pelajaran_id', $mapelId);
+        }]);
+        // history simulasi
+        $siswaLists = $siswaLists->with(['historySimulasi.simulasi' => function($qHM) use ($mapelId){
+            $qHM->where('mata_pelajaran_id', $mapelId);
+        }]);
+        // role and class
+        $siswaLists = $siswaLists->where(['role' => 'SISWA', 'kelas_id'=> $kelasId])->get();
+
+        // get total modul by mapel id
+        $totalModul = Modul::where('mata_pelajaran_id', $mapelId)->count();
+        // get total video by mapel id
+        $totalVideo = Video::where('mata_pelajaran_id', $mapelId)->count();
+        // get total simulasi by mapel id
+        $totalSimulasi = Simulasi::where('mata_pelajaran_id', $mapelId)->count();
+
+        // manipulate field
+        foreach($siswaLists as $siswa){
+            $details[] = [
+                'id' => @$siswa->id,
+                'name' => @$siswa->name,
+                'progress_modul' => [
+                    'total' => @$totalModul ?? 0,
+                    'done' => @$siswa->historyModul ? count($siswa->historyModul) : 0,
+                ],
+                'progress_video' => [
+                    'total' => @$totalVideo ?? 0,
+                    'done' => @$siswa->historyVideo ? count($siswa->historyVideo) : 0,
+                ],
+                'progress_simulasi' => [
+                    'total' => @$totalSimulasi ?? 0,
+                    'done' => @$siswa->historySimulasi ? count($siswa->historySimulasi) : 0,
+                ],
+            ];
+        }
+
+        return $this->sendResponse(new DashboardResource($details), 'Detail Progress retrieved successfully.');
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function guruNgajar(Request $request)
     {
         // init var
