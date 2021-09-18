@@ -113,7 +113,10 @@ class DashboardController extends BaseController
             $qHM->where('mata_pelajaran_id', $mapelId);
         }]);
         // role and class
-        $siswaLists = $siswaLists->where(['role' => 'SISWA', 'kelas_id'=> $kelasId])->get();
+        $siswaLists = $siswaLists->where(['role' => 'SISWA', 'kelas_id'=> $kelasId]);
+        
+        //order by name
+        $siswaLists = $siswaLists->orderBy('name', 'asc')->get();
 
         // get total modul by mapel id
         $totalModul = Modul::where('mata_pelajaran_id', $mapelId)->count();
