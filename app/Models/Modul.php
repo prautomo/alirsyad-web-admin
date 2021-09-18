@@ -66,6 +66,7 @@ class Modul extends Model
             $returnNext = [
                 'id' => @$nextModul->id,
                 'name' => @$nextModul->name,
+                'slug_url' => route('app.modul.detail', @$nextModul->slug).".html",
                 'url' => route('app.modul.detail', @$nextModul->id),
                 'endpoint' => route('api.modul.detail', @$nextModul->id),
             ];

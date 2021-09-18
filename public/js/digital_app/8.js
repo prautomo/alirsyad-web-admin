@@ -116,6 +116,8 @@ function ModulDetail(_ref) {
       isLoading = _useFetch.isLoading,
       isError = _useFetch.isError;
 
+  var alert = Object(react_alert__WEBPACK_IMPORTED_MODULE_10__["useAlert"])();
+
   var toggle = function toggle() {
     return setDropdownOpen(function (prevState) {
       return !prevState;
@@ -124,7 +126,6 @@ function ModulDetail(_ref) {
 
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
     console.log("dika idModul", idModul);
-    console.log("dika data", data);
   }, []);
 
   function finishModul(_x) {
@@ -137,16 +138,20 @@ function ModulDetail(_ref) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              _context.next = 2;
+              console.log("dika nextUrl", nextUrl); // update history
+
+              _context.next = 3;
               return postFlag(idModul);
 
-            case 2:
+            case 3:
               // direct to next url
               if (nextUrl) {
-                window.location.href = nextUrl;
+                setTimeout(function () {
+                  window.location.href = nextUrl;
+                }, 3000);
               }
 
-            case 3:
+            case 4:
             case "end":
               return _context.stop();
           }
@@ -187,8 +192,8 @@ function ModulDetail(_ref) {
                 var _e$response$data;
 
                 setDisabledBtnDone(false);
-                console.error("dika res post flag failed", e.response.data);
-                alert.show((_e$response$data = e.response.data) === null || _e$response$data === void 0 ? void 0 : _e$response$data.message, {
+                console.error("dika res post flag failed", e === null || e === void 0 ? void 0 : e.response);
+                alert.show(e === null || e === void 0 ? void 0 : (_e$response$data = e.response.data) === null || _e$response$data === void 0 ? void 0 : _e$response$data.message, {
                   timeout: 3000,
                   // custom timeout just for this one alert
                   type: 'error',
@@ -296,7 +301,7 @@ function ModulDetail(_ref) {
     onClick: function onClick() {
       var _data$data4, _data$data4$next;
 
-      return finishModul(data === null || data === void 0 ? void 0 : (_data$data4 = data.data) === null || _data$data4 === void 0 ? void 0 : (_data$data4$next = _data$data4.next) === null || _data$data4$next === void 0 ? void 0 : _data$data4$next.url);
+      return finishModul(data === null || data === void 0 ? void 0 : (_data$data4 = data.data) === null || _data$data4 === void 0 ? void 0 : (_data$data4$next = _data$data4.next) === null || _data$data4$next === void 0 ? void 0 : _data$data4$next.slug_url);
     }
   }, "Modul Berikutnya") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
     className: "mt-4 btn-main",

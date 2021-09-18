@@ -31,22 +31,23 @@ function ModulDetail({
     const [warna, setWarna] = useState("black");
     const [disabledBtnDone, setDisabledBtnDone] = useState(false);
 
-    var { data, isLoading, isError } = useFetch("/modul/"+idModul+"/json")
+    const { data, isLoading, isError } = useFetch("/modul/"+idModul+"/json")
+    const alert = useAlert()
 
     const toggle = () => setDropdownOpen(prevState => !prevState);
 
     useEffect(() => {
         console.log("dika idModul", idModul)
-        console.log("dika data", data)
     }, [])
 
     async function finishModul(nextUrl){
+        console.log("dika nextUrl", nextUrl)
         // update history
         await postFlag(idModul)
 
         // direct to next url
         if(nextUrl){
-            window.location.href = nextUrl;
+            setTimeout(function(){ window.location.href = nextUrl; }, 3000);
         }
     }
 
@@ -69,8 +70,8 @@ function ModulDetail({
             })
         }).catch((e) => {
             setDisabledBtnDone(false);
-            console.error("dika res post flag failed", e.response.data)
-            alert.show(e.response.data?.message, {
+            console.error("dika res post flag failed", e?.response)
+            alert.show(e?.response.data?.message, {
                 timeout: 3000, // custom timeout just for this one alert
                 type: 'error',
                 onOpen: () => {
@@ -195,7 +196,7 @@ function ModulDetail({
             </div>
 
             {data?.data?.next?.url ?
-            <Button className="mt-4 btn-main" onClick={() => finishModul(data?.data?.next?.url)}>Modul Berikutnya</Button>
+            <Button className="mt-4 btn-main" onClick={() => finishModul(data?.data?.next?.slug_url)}>Modul Berikutnya</Button>
             :
             <Button className="mt-4 btn-main" 
                 disabled={data?.data?.read || disabledBtnDone}
