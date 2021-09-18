@@ -90,6 +90,11 @@ class DashboardController extends BaseController
             return $this->returnStatus(400, $validator->errors());     
         }
 
+        // check guru
+        if (Auth::user()->role !== 'GURU') {
+            return $this->returnStatus(400, 'Sorry, you\'re not teacher.');     
+        }
+
         $kelasId = $request->kelas_id;
         $mapelId = $request->mata_pelajaran_id;
 
