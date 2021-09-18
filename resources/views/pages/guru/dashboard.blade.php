@@ -15,7 +15,7 @@
 <div class="row">
     <div class="col">
         <div class="card">
-            <div class="card-header border-0">
+            <div class="card-header border-0 pb-0">
                 <h3 class="mb-0">
                     Progress Belajar
                 </h3>
@@ -76,13 +76,13 @@
 <div class="row">
     <div class="col">
         <div class="card">
-            <div class="card-header border-0">
+            <div class="card-header border-0 pb-0">
                 <h3 class="mb-0">
                     Detail Progress Belajar
                 </h3>
             </div>
             <div class="card-body">
-                
+                <div id="progress-detail-guru">Loading...</div>
             </div>
         </div>
     </div>

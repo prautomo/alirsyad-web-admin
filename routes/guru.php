@@ -27,4 +27,11 @@ Route::name('guru::')->prefix('guru')->middleware(['auth:guru'])->namespace('Gur
     Route::get('/profile', "UserController@profile")->name('akun-saya');
     Route::get('/profile/password-edit', "UserController@passwordEdit")->name('akun-saya.password-edit');
     Route::post('/profile/password-edit', "UserController@passwordUpdate")->name('akun-saya.password-update');
+
+    // JSON Response
+    Route::get("/json/ngajar", "\App\Http\Controllers\API\DashboardController@guruNgajar")->name('json.guru.ngajar');
+    Route::get("/json/getSiswa", "\App\Http\Controllers\API\DashboardController@detail")->name('json.guru.detail_progress');
+
+    
+
 });

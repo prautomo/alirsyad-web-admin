@@ -1,190 +1,9 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[18],{
 
-/***/ "./node_modules/@babel/runtime/helpers/extends.js":
-/*!********************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/extends.js ***!
-  \********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-function _extends() {
-  module.exports = _extends = Object.assign || function (target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i];
-
-      for (var key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-          target[key] = source[key];
-        }
-      }
-    }
-
-    return target;
-  };
-
-  return _extends.apply(this, arguments);
-}
-
-module.exports = _extends;
-
-/***/ }),
-
-/***/ "./node_modules/zustand/index.js":
-/*!***************************************!*\
-  !*** ./node_modules/zustand/index.js ***!
-  \***************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-
-
-function create(createState) {
-  let state;
-  const listeners = new Set();
-
-  const setState = (partial, replace) => {
-    const nextState = typeof partial === 'function' ? partial(state) : partial;
-
-    if (nextState !== state) {
-      const previousState = state;
-      state = replace ? nextState : Object.assign({}, state, nextState);
-      listeners.forEach(listener => listener(state, previousState));
-    }
-  };
-
-  const getState = () => state;
-
-  const subscribeWithSelector = (listener, selector = getState, equalityFn = Object.is) => {
-    let currentSlice = selector(state);
-
-    function listenerToAdd() {
-      const nextSlice = selector(state);
-
-      if (!equalityFn(currentSlice, nextSlice)) {
-        const previousSlice = currentSlice;
-        listener(currentSlice = nextSlice, previousSlice);
-      }
-    }
-
-    listeners.add(listenerToAdd); // Unsubscribe
-
-    return () => listeners.delete(listenerToAdd);
-  };
-
-  const subscribe = (listener, selector, equalityFn) => {
-    if (selector || equalityFn) {
-      return subscribeWithSelector(listener, selector, equalityFn);
-    }
-
-    listeners.add(listener); // Unsubscribe
-
-    return () => listeners.delete(listener);
-  };
-
-  const destroy = () => listeners.clear();
-
-  const api = {
-    setState,
-    getState,
-    subscribe,
-    destroy
-  };
-  state = createState(setState, getState, api);
-  return api;
-}
-
-const useIsoLayoutEffect = typeof window === 'undefined' ? react__WEBPACK_IMPORTED_MODULE_0__["useEffect"] : react__WEBPACK_IMPORTED_MODULE_0__["useLayoutEffect"];
-function create$1(createState) {
-  const api = typeof createState === 'function' ? create(createState) : createState;
-
-  const useStore = (selector = api.getState, equalityFn = Object.is) => {
-    const [, forceUpdate] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useReducer"])(c => c + 1, 0);
-    const state = api.getState();
-    const stateRef = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(state);
-    const selectorRef = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(selector);
-    const equalityFnRef = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(equalityFn);
-    const erroredRef = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(false);
-    const currentSliceRef = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])();
-
-    if (currentSliceRef.current === undefined) {
-      currentSliceRef.current = selector(state);
-    }
-
-    let newStateSlice;
-    let hasNewStateSlice = false; // The selector or equalityFn need to be called during the render phase if
-    // they change. We also want legitimate errors to be visible so we re-run
-    // them if they errored in the subscriber.
-
-    if (stateRef.current !== state || selectorRef.current !== selector || equalityFnRef.current !== equalityFn || erroredRef.current) {
-      // Using local variables to avoid mutations in the render phase.
-      newStateSlice = selector(state);
-      hasNewStateSlice = !equalityFn(currentSliceRef.current, newStateSlice);
-    } // Syncing changes in useEffect.
-
-
-    useIsoLayoutEffect(() => {
-      if (hasNewStateSlice) {
-        currentSliceRef.current = newStateSlice;
-      }
-
-      stateRef.current = state;
-      selectorRef.current = selector;
-      equalityFnRef.current = equalityFn;
-      erroredRef.current = false;
-    });
-    const stateBeforeSubscriptionRef = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(state);
-    Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
-      const listener = () => {
-        try {
-          const nextState = api.getState();
-          const nextStateSlice = selectorRef.current(nextState);
-
-          if (!equalityFnRef.current(currentSliceRef.current, nextStateSlice)) {
-            stateRef.current = nextState;
-            currentSliceRef.current = nextStateSlice;
-            forceUpdate();
-          }
-        } catch (error) {
-          erroredRef.current = true;
-          forceUpdate();
-        }
-      };
-
-      const unsubscribe = api.subscribe(listener);
-
-      if (api.getState() !== stateBeforeSubscriptionRef.current) {
-        listener(); // state has changed before subscription
-      }
-
-      return unsubscribe;
-    }, []);
-    return hasNewStateSlice ? newStateSlice : currentSliceRef.current;
-  };
-
-  Object.assign(useStore, api); // For backward compatibility (No TS types for this)
-
-  useStore[Symbol.iterator] = function* () {
-    console.warn('[useStore, api] = create() is deprecated and will be removed in v4');
-    yield useStore;
-    yield api;
-  };
-
-  return useStore;
-}
-
-/* harmony default export */ __webpack_exports__["default"] = (create$1);
-
-
-/***/ }),
-
-/***/ "./resources/js/components/Header.js":
-/*!*******************************************!*\
-  !*** ./resources/js/components/Header.js ***!
-  \*******************************************/
+/***/ "./resources/js/backoffice/components/ExternalUser/index.js":
+/*!******************************************************************!*\
+  !*** ./resources/js/backoffice/components/ExternalUser/index.js ***!
+  \******************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -194,109 +13,311 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _store_useCart__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../store/useCart */ "./resources/js/store/useCart.js");
+/* harmony import */ var query_string__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! query-string */ "./node_modules/query-string/index.js");
+/* harmony import */ var query_string__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(query_string__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_dropzone__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-dropzone */ "./node_modules/react-dropzone/dist/es/index.js");
+/* harmony import */ var xlsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! xlsx */ "./node_modules/xlsx/xlsx.js");
+/* harmony import */ var xlsx__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(xlsx__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
+/* harmony import */ var validator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! validator */ "./node_modules/validator/index.js");
+/* harmony import */ var validator__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(validator__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_7__);
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
 
-function Header() {
-  var _useCart = Object(_store_useCart__WEBPACK_IMPORTED_MODULE_2__["default"])(),
-      cart = _useCart.cart;
 
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-    "class": "nav-link text-center",
-    href: "/cart"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-    "class": "fa fa-shopping-cart"
-  }), "\xA0 Cart(", Object.keys(cart).length, ")"));
+
+
+
+
+
+function UploadBatchSiswa() {
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({}),
+      _useState2 = _slicedToArray(_useState, 2),
+      queryParams = _useState2[0],
+      setQueryParams = _useState2[1];
+
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({}),
+      _useState4 = _slicedToArray(_useState3, 2),
+      params = _useState4[0],
+      setParams = _useState4[1];
+
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+      _useState6 = _slicedToArray(_useState5, 2),
+      excelData = _useState6[0],
+      setExcelData = _useState6[1];
+
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+      _useState8 = _slicedToArray(_useState7, 2),
+      tingkats = _useState8[0],
+      setTingkats = _useState8[1];
+
+  var onDrop = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (acceptedFiles) {
+    acceptedFiles.forEach(function (file) {
+      var reader = new FileReader();
+
+      reader.onabort = function () {
+        return console.log('file reading was aborted');
+      };
+
+      reader.onerror = function () {
+        return console.log('file reading has failed');
+      };
+
+      reader.onload = function () {
+        // Do whatever you want with the file contents
+        // const binaryStr = reader.result
+        // console.log(binaryStr)
+
+        /* Parse data */
+        var bstr = reader.result;
+        var wb = xlsx__WEBPACK_IMPORTED_MODULE_4__["read"](bstr, {
+          type: 'binary'
+        });
+        /* Get first worksheet */
+
+        var wsname = wb.SheetNames[0];
+        var ws = wb.Sheets[wsname];
+        /* Convert array of arrays */
+
+        var data = xlsx__WEBPACK_IMPORTED_MODULE_4__["utils"].sheet_to_json(ws, {
+          header: "A"
+        });
+        /* Update state */
+
+        data.splice(0, 1);
+        console.log("Data>>>", data); // load tingkat
+
+        getTingkats(); // set excel data
+
+        setExcelData(data);
+      };
+
+      reader.readAsBinaryString(file);
+    });
+  }, []);
+
+  var _useDropzone = Object(react_dropzone__WEBPACK_IMPORTED_MODULE_3__["useDropzone"])({
+    onDrop: onDrop
+  }),
+      getRootProps = _useDropzone.getRootProps,
+      getInputProps = _useDropzone.getInputProps;
+
+  var doUploadBatch = function doUploadBatch() {
+    if (excelData.length < 1) {
+      sweetalert2__WEBPACK_IMPORTED_MODULE_7___default.a.fire("Gagal Mengupload", "Data masih kosong!");
+      return;
+    }
+
+    window.axios.post("/backoffice/external-users/import", {
+      data: excelData,
+      params: params
+    }).then(function (response) {
+      console.log(response.data.data); // Swal.fire("Berhasil Mengupload", response.data.message)
+
+      sweetalert2__WEBPACK_IMPORTED_MODULE_7___default.a.fire({
+        title: 'Berhasil Mengupload',
+        showDenyButton: false,
+        showCancelButton: false,
+        confirmButtonText: "OK"
+      }).then(function (result) {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          window.location.href = '/backoffice/external-users?role=SISWA';
+        }
+      });
+    })["catch"](function (err) {
+      sweetalert2__WEBPACK_IMPORTED_MODULE_7___default.a.fire("Gagal Mengupload", err.response.data.message);
+    });
+  }; // const onUploadSuccess = (index, url) => {
+  //     const currentItem = Object.assign({}, excelData[index]);
+  //     currentItem.default_image = url
+  //     excelData[index] = currentItem
+  //     console.log(excelData)
+  //     setExcelData(excelData)
+  // }
+
+
+  var onTingkatChange = function onTingkatChange(index, val) {
+    var currentItem = Object.assign({}, excelData[index]);
+    currentItem.G = val;
+    excelData[index] = currentItem;
+    setExcelData(excelData);
+  };
+
+  var onKelasChange = function onKelasChange(index, val) {
+    var currentItem = Object.assign({}, excelData[index]);
+    currentItem.H = val;
+    excelData[index] = currentItem;
+    setExcelData(excelData);
+  };
+
+  var handleRemove = function handleRemove(index) {
+    return function () {
+      var rows = _toConsumableArray(excelData);
+
+      rows.splice(index, 1);
+      setExcelData(rows); // use nis
+      // let items = excelData.filter(row => row.A != item.A);
+      // setExcelData(items);
+    };
+  };
+
+  var getTingkats = function getTingkats() {
+    window.axios.get("/backoffice/tingkats").then(function (response) {
+      console.log("dika", response.data);
+      setTingkats(response.data.data);
+    });
+  };
+
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    var params = query_string__WEBPACK_IMPORTED_MODULE_2___default.a.parse(location.search);
+    setQueryParams(params);
+  }, [excelData]);
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "row gap-20 masonry pos-r"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "masonry-sizer col-lg-12"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "masonry-item col-lg-12"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "bd bgc-white"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "layers"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["Col"], {
+    className: "mt-2 text-left pl-0"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "1. Download Sample Excel"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["Button"], {
+    className: "btn-info",
+    size: "sm",
+    onClick: function onClick() {
+      window.location.href = '/uploads/template_batch_siswa.xlsx';
+    }
+  }, "Download Template")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "layer w-100 p-20 mt-2"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "2. Upload File Excel"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({}, getRootProps(), {
+    style: {
+      border: "1px dashed #dddddd",
+      borderRadius: "5px"
+    }
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", getInputProps()), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+    style: {
+      textAlign: "center",
+      marginTop: 10
+    }
+  }, "Geser File Excel Ke sini"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["Col"], {
+    className: "mt-2 text-left pl-0"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "3. Upload Data or Cancel"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["Button"], {
+    color: "primary",
+    size: "sm",
+    onClick: doUploadBatch
+  }, "Upload Data"), " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["Button"], {
+    className: "btn-secondary",
+    size: "sm",
+    onClick: function onClick() {
+      window.location.href = '/backoffice/external-users?role=SISWA';
+    }
+  }, "Cancel")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "layer w-100 p-20 mt-2"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Preview Data"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
+    className: "table table-bordered"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+    width: "15%"
+  }, "NIS"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+    width: "15%"
+  }, "Name"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+    width: "15%"
+  }, "Jenjang Pendidikan"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+    width: "15%"
+  }, "Kelas"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+    width: "15%"
+  }, "Email"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+    width: "5%"
+  }, "Aksi"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, excelData.map(function (item, index) {
+    // init var
+    var nisCol = item.A;
+    var nameCol = item.B;
+    var jenjangCol = item.C;
+    var tingkatCol = item.D;
+    var kelasCol = item.E ? item.E : '-';
+    var usernameCol = item.F ? item.F : '-';
+    var passwordCol = item.G;
+    var emailCol = item.H;
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
+      key: index
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, nisCol), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, nameCol), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, jenjangCol), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, tingkatCol, " ", kelasCol), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, emailCol, !validator__WEBPACK_IMPORTED_MODULE_6___default.a.isEmail(emailCol) && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("small", {
+      className: "text-danger"
+    }, "Email not valid."))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+      onClick: handleRemove(index),
+      style: {
+        cursor: "pointer"
+      }
+    }, "Delete")));
+  })), excelData.length === 0 && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
+    colSpan: "7"
+  }, "No data."))))))));
 }
 
-/* harmony default export */ __webpack_exports__["default"] = (Header);
+/* harmony default export */ __webpack_exports__["default"] = (UploadBatchSiswa);
 
-if (document.getElementById('cartcontainer')) {
-  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Header, null), document.getElementById('cartcontainer'));
+if (document.getElementById('uploadsiswa-list')) {
+  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(UploadBatchSiswa, null), document.getElementById('uploadsiswa-list'));
 }
 
 /***/ }),
 
-/***/ "./resources/js/store/useCart.js":
-/*!***************************************!*\
-  !*** ./resources/js/store/useCart.js ***!
-  \***************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ 1:
+/*!********************!*\
+  !*** fs (ignored) ***!
+  \********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
 
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/index.js");
-/* harmony import */ var zustand_middleware__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! zustand/middleware */ "./node_modules/zustand/middleware.js");
-/* harmony import */ var zustand_middleware__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(zustand_middleware__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var underscore__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! underscore */ "./node_modules/underscore/modules/index-all.js");
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+/* (ignored) */
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+/***/ }),
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+/***/ 2:
+/*!************************!*\
+  !*** crypto (ignored) ***!
+  \************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
 
+/* (ignored) */
 
+/***/ }),
 
+/***/ 3:
+/*!************************!*\
+  !*** stream (ignored) ***!
+  \************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
 
-var useCart = Object(zustand__WEBPACK_IMPORTED_MODULE_0__["default"])(Object(zustand_middleware__WEBPACK_IMPORTED_MODULE_1__["persist"])(function (set, get) {
-  return {
-    cart: {},
-    addItem: function addItem(reqItem) {
-      var cartState = localStorage.getItem("cart-storage") ? JSON.parse(localStorage.getItem("cart-storage")).state : {};
-      console.log(cartState);
-      set(function (state) {
-        return {
-          cart: _objectSpread(_objectSpread({}, cartState.cart), reqItem)
-        };
-      });
-    },
-    removeItem: function removeItem(key) {
-      var tempState = _objectSpread({}, get().cart);
-
-      delete tempState[key];
-      set(function (state) {
-        return {
-          cart: tempState
-        };
-      });
-    },
-    removeAllItem: function removeAllItem() {
-      return set({
-        cart: {}
-      });
-    },
-    getTotalTransaksi: function getTotalTransaksi() {
-      var currentCart = _objectSpread({}, get().cart);
-
-      return underscore__WEBPACK_IMPORTED_MODULE_2__["default"].reduce(Object.keys(currentCart), function (memo, iten) {
-        var item = currentCart[iten];
-        var realPrice = item.selling_price - (item.discount > 0 ? item.discount : 0);
-        return Number(item.jumlah * realPrice) + Number(memo);
-      }, 0);
-    },
-    mapCartByMitra: function mapCartByMitra() {
-      var currentCart = _objectSpread({}, get().cart);
-
-      var grouped = underscore__WEBPACK_IMPORTED_MODULE_2__["default"].groupBy(currentCart, function (item) {
-        return item.mitra_id;
-      });
-
-      console.log(grouped);
-      return grouped;
-    }
-  };
-}, {
-  name: "cart-storage",
-  // unique name
-  getStorage: function getStorage() {
-    return localStorage;
-  } // (optional) by default the 'localStorage' is used
-
-}));
-/* harmony default export */ __webpack_exports__["default"] = (useCart);
+/* (ignored) */
 
 /***/ })
 
