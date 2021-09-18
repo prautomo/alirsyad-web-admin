@@ -35,7 +35,7 @@
             </li>
 
             <li class="nav-item">
-              <a class="nav-link{{ request()->is('home') ? ' active' : '' }}" href="{{ route('guru::dashboard') }}">
+              <a class="nav-link{{ request()->is('home') ? ' active' : '' }}" href="{{ route('guru::akun-saya') }}">
                 <i class="ni ni-single-02 text-dark-green"></i>
                 <span class="nav-link-text">Akun Saya</span>
               </a>

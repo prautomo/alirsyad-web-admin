@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Front;
+namespace App\Http\Controllers\Guru;
 
 use App\Http\Controllers\Controller;
 use App\Models\ExternalUser;
@@ -16,36 +16,16 @@ class UserController extends Controller
 
     public function profile()
     {
-        return view("pages.frontoffice.user.profile", [
+        return view("pages.guru.user.profile", [
             "user_data" => Auth::user()
         ]);
-    }
-
-    public function profileEdit()
-    {
-        $mitraDetail = ExternalUser::where("id", Auth::user()->id)->first();
-        // dd(Auth::user());
-        return view("app.Screen.user.update", [
-            "mitra_detail" =>  $mitraDetail
-        ]);
-    }
-
-    public function profileUpdate(Request $request)
-    {
-        $mitraDetail = ExternalUser::where("id", Auth::user()->id)->first();
-
-        $mitraDetail->update($request->only([
-            "name",
-        ]));
-
-        return $this->returnStatus("200", "Info Toko Sudah Di Update");
     }
 
     public function passwordEdit()
     {
         $userDetail = ExternalUser::where("id", Auth::user()->id)->first();
         // dd(Auth::user());
-        return view("pages.frontoffice.user.edit_password", [
+        return view("pages.guru.user.edit_password", [
             "user_detail" =>  $userDetail
         ]);
     }
@@ -69,6 +49,8 @@ class UserController extends Controller
         ]);
         Auth::user()->update(["password" => Hash::make($validatedData['password'])]);
 
-        return redirect("/profile")->with('success', "Password Berhasil Di Ubah");;
+        return redirect()->route('guru::akun-saya')->with(
+            $this->success(__("Password Berhasil Di Ubah"), $data)
+        );
     }
 }

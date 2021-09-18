@@ -23,4 +23,8 @@ Route::name('guru::')->prefix('guru')->middleware(['auth:guru'])->namespace('Gur
 ->group(function() {
     Route::get('/', 'DashboardController@index')->name('dashboard');
     Route::get('dashboard', 'DashboardController@index')->name('dashboard.detail');
+
+    Route::get('/profile', "UserController@profile")->name('akun-saya');
+    Route::get('/profile/password-edit', "UserController@passwordEdit")->name('akun-saya.password-edit');
+    Route::post('/profile/password-edit', "UserController@passwordUpdate")->name('akun-saya.password-update');
 });
