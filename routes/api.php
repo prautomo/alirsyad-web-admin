@@ -41,6 +41,12 @@ Route::middleware('auth:api')->group( function () {
     Route::get("/simulasis/{id}", "API\SimulasiController@show")->name('api.simulasi.detail');
     Route::post("/simulasis/{id}/flag", "API\SimulasiController@createHistory");
     Route::post("/simulasis/{id}/score", "API\SimulasiController@createScore");
+
+    Route::prefix('guru')->group(function() {
+        Route::get("/dashboard", "API\DashboardController@index");
+        Route::get("/ngajar", "API\DashboardController@guruNgajar");
+    });
+    
 });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {

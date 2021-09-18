@@ -42,13 +42,13 @@ class MataPelajaran extends Model
         return $this->belongsTo("App\Models\Tingkat",  "tingkat_id", "id")->withTrashed();
     }
 
-    /**
-     * Guru Pengajar (Mata Pelajaran)
-     */
-    public function guru()
-    {
-        return $this->hasMany("App\Models\User", "mata_pelajaran_id", "id");
-    }
+    // /**
+    //  * Guru Pengajar (Mata Pelajaran)
+    //  */
+    // public function guru()
+    // {
+    //     return $this->hasMany("App\Models\User", "mata_pelajaran_id", "id");
+    // }
 
     /**
      * Modul

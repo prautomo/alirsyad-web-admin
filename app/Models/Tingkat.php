@@ -69,4 +69,9 @@ class Tingkat extends Model
     {
         return $this->hasMany("App\Models\Kelas", "tingkat_id", "id")->withTrashed();
     }
+
+    public function mataPelajaran()
+    {
+        return $this->hasMany("App\Models\MataPelajaran", "tingkat_id", "id")->withTrashed();
+    }
 }

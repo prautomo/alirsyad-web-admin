@@ -140,7 +140,7 @@ class KelasController extends Controller{
             'tingkat_id' => 'required',
         ]);
 
-        $data = Kelas::create($request->only(['description', 'name', 'tingkat_id']));
+        $data = Kelas::create($request->only(['description', 'name', 'tingkat_id', 'wali_kelas_id']));
 
         return redirect()->route($this->routePath.'.index')->with(
             $this->success(__("Success to create Kelas"), $data)

@@ -24,7 +24,9 @@ class ModulController extends BaseController
         $datas = $datas->with('mataPelajaran');
         // handle hak akses mapel
         $datas = $datas->whereHas('mataPelajaran', function($query){
-            $query->where('tingkat_id', @Auth::user()->kelas->tingkat_id ?? 0);
+            if(@Auth::user()->role==="SISWA"){
+                $query->where('tingkat_id', @Auth::user()->kelas->tingkat_id ?? 0);
+            }
         });
         $datas = $datas->get();
 
@@ -43,7 +45,15 @@ class ModulController extends BaseController
   
         // handle hak akses mapel
         $data = $data->whereHas('mataPelajaran', function($query){
-            $query->where('tingkat_id', @Auth::user()->kelas->tingkat_id ?? 0);
+            if(@Auth::user()->role==="SISWA"){
+                $query->where('tingkat_id', @Auth::user()->kelas->tingkat_id ?? 0);
+            }
+            // if(@Auth::user()->role==="GURU"){
+            //     // filter by guru
+            //     $query = $query->whereHas('gurus', function($queryGuru){
+            //         $queryGuru->where('guru_id', @Auth::user()->id);
+            //     });
+            // }
         });
 
         $data = $data->find($id);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
    
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
+use App\Models\GuruMataPelajaran;
 use App\Models\MataPelajaran;
 use App\Models\Modul;
 use App\Models\HistoryModul;
