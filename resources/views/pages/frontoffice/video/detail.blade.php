@@ -7,7 +7,10 @@
 	<div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h3>{{ @$video->name }}</h3>
+                <h3>
+                    <a href="{{ route('app.mapel.video', @$video->mataPelajaran->id) }}">
+                        {{ @$video->mataPelajaran->name }}
+                    </a> - {{ @$video->name }}</h3>
                 <hr/>
             </div>
         </div>

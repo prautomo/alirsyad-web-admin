@@ -7,6 +7,9 @@ import { FiMoreVertical } from "react-icons/fi";
 import { ReactSketchCanvas } from "react-sketch-canvas";
 import useFetch from '../../../store/useFetch';
 import ToggleSwitch from '../ToggleSwitch/ToggleSwitch';
+import { Provider as AlertProvider } from 'react-alert'
+import AlertTemplate from 'react-alert-template-basic'
+import { useAlert } from 'react-alert'
 
 const styles = {
     border: "0.0625rem solid #9c9c9c",
@@ -26,6 +29,7 @@ function ModulDetail({
     const [showCanvas, setShowCanvas] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [warna, setWarna] = useState("black");
+    const [disabledBtnDone, setDisabledBtnDone] = useState(false);
 
     var { data, isLoading, isError } = useFetch("/modul/"+idModul+"/json")
 
@@ -35,6 +39,49 @@ function ModulDetail({
         console.log("dika idModul", idModul)
         console.log("dika data", data)
     }, [])
+
+    async function finishModul(nextUrl){
+        // update history
+        await postFlag(idModul)
+
+        // direct to next url
+        if(nextUrl){
+            window.location.href = nextUrl;
+        }
+    }
+
+    async function postFlag(idModul){
+        const payload = {};
+
+        await axios.post(`/moduls/${idModul}/flag/json`, { payload })
+        .then(res => {
+            setDisabledBtnDone(true);
+            // console.log("dika res post flag", res.data);
+            alert.show('Modul berhasil dibaca!', {
+                timeout: 3000, // custom timeout just for this one alert
+                type: 'success',
+                onOpen: () => {
+                    
+                }, // callback that will be executed after this alert open
+                onClose: () => {
+                   
+                } // callback that will be executed after this alert is removed
+            })
+        }).catch((e) => {
+            setDisabledBtnDone(false);
+            console.error("dika res post flag failed", e.response.data)
+            alert.show(e.response.data?.message, {
+                timeout: 3000, // custom timeout just for this one alert
+                type: 'error',
+                onOpen: () => {
+                    
+                }, // callback that will be executed after this alert open
+                onClose: () => {
+                   
+                } // callback that will be executed after this alert is removed
+            })
+        })
+    }
 
     return (<>
         <Row className="mb-1">
@@ -146,12 +193,40 @@ function ModulDetail({
             <div style={{overflowX:'auto',height:'100%'}}>
                 <object data={data?.data?.pdf_url} type="application/pdf" width="100%" height="800px"></object>
             </div>
+
+            {data?.data?.next?.url ?
+            <Button className="mt-4 btn-main" onClick={() => finishModul(data?.data?.next?.url)}>Modul Berikutnya</Button>
+            :
+            <Button className="mt-4 btn-main" 
+                disabled={data?.data?.read || disabledBtnDone}
+                onClick={() => finishModul()}>Selesai Membaca</Button>
+            }
         </>
         }
     </>);
 }
 
 export default ModulDetail;
+
+const options = {
+    position: 'bottom right',
+    timeout: 3000,
+    offset: '30px',
+    transition: 'scale'
+}
+
+const RootVideoDetail = (props) => {
+    return (
+    <AlertProvider template={AlertTemplate} {...options}>
+        <ModulDetail 
+            idModul={props?.idModul}
+            linkModul={props?.linkModul}
+            linkVideo={props?.linkVideo}
+            linkSimulasi={props?.linkSimulasi}
+        />
+    </AlertProvider>
+    )
+}
 
 var container = document.getElementById("modul-detail-fe");
 
@@ -161,7 +236,7 @@ if (container) {
     var linkVideo = container.getAttribute("link-video");
     var linkSimulasi = container.getAttribute("link-simulasi");
 
-    ReactDOM.render(<ModulDetail 
+    ReactDOM.render(<RootVideoDetail 
         idModul={idModul} 
         linkModul={linkModul} 
         linkVideo={linkVideo} 

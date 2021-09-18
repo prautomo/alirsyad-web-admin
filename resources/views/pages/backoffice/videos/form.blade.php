@@ -5,7 +5,7 @@
     <x-input.select :label="__('Semester')" id="semester" name="semester" :sources="$semesterList" :data="$data" required />
 
     <x-input.text :label="__('Name')" name="name" :data="$data" required />
-    <x-input.text :label="__('URL Video')" name="video_url" :data="$data" required />
+    <x-input.text :label="__('URL Youtube Video')" name="video_url" :data="$data" required />
     <x-input.textarea :label="__('Description')" name="description" :data="$data" />
     <x-input.images :label="__('Cover Video')" name="icon" :data="$data" />
 

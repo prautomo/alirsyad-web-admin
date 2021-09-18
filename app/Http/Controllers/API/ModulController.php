@@ -78,8 +78,9 @@ class ModulController extends BaseController
             return $this->sendError('Modul not found.');
         }
 
-        $historyModul = HistoryModul::firstOrCreate(
-            ['modul_id' => $id, 'siswa_id' => $user->id]
+        $historyModul = HistoryModul::updateOrCreate(
+            ['modul_id' => $id, 'siswa_id' => $user->id],
+            ['semester' => @$data->semester ?? 1]
         );
 
         return $this->sendResponse(new HistoryModulResource($historyModul), 'History Modul created successfully.');

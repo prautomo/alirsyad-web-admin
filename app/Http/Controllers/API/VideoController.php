@@ -78,8 +78,9 @@ class VideoController extends BaseController
             return $this->sendError('Video not found.');
         }
 
-        $historyVideo = HistoryVideo::firstOrCreate(
-            ['video_id' => $id, 'siswa_id' => $user->id]
+        $historyVideo = HistoryVideo::updateOrCreate(
+            ['video_id' => $id, 'siswa_id' => $user->id],
+            ['semester' => @$data->semester ?? 1]
         );
 
         return $this->sendResponse(new HistoryVideoResource($historyVideo), 'History Video created successfully.');

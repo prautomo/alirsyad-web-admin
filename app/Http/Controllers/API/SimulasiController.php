@@ -159,8 +159,9 @@ class SimulasiController extends BaseController
         $sendResponse['percobaan_ke'] = @$saveData['percobaan_ke'] ?? 1;
         
         // create history simulasi
-        $historySimulasi = HistorySimulasi::firstOrCreate(
-            ['simulasi_id' => $id, 'siswa_id' => $user->id]
+        $historySimulasi = HistorySimulasi::updateOrCreate(
+            ['simulasi_id' => $id, 'siswa_id' => $user->id],
+            ['semester' => @$data->semester ?? 1]
         );
 
         return $this->sendResponse(new ScoreResource($sendResponse), 'Score saved successfully.');

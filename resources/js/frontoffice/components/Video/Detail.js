@@ -1,30 +1,34 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import ReactDOM from 'react-dom';
-import { AvForm, AvField, AvGroup, AvInput, AvFeedback, AvRadioGroup, AvRadio, AvCheckboxGroup, AvCheckbox } from 'availity-reactstrap-validation';
 import { Row, Col, FormGroup, Label, Button } from 'reactstrap';
-import Select from 'react-select';
 import axios from 'axios';
 import YouTube from 'react-youtube';
 import useFetch from '../../../store/useFetch';
+import { Provider as AlertProvider } from 'react-alert'
+import AlertTemplate from 'react-alert-template-basic'
+import { useAlert } from 'react-alert'
 
 function VideoDetail({ idVideo }) {
     
     const [videoId, setVideoId] = useState(idVideo);
+    const [showNext, setShowNext] = useState(false);
 
-    var { data, isLoading, isError } = useFetch("/video/"+idVideo+"/json")
+    const { data, isLoading, isError } = useFetch("/video/"+idVideo+"/json")
+    const alert = useAlert()
 
     useEffect(() => {
-        console.log("dika idVideo", idVideo)
+        // console.log("dika idVideo", idVideo)
     }, [])
 
     function _onReady(event) {
         // access to player in all event handlers via event.target
         // console.log("dika", event);
         // event.target.pauseVideo();
+        setShowNext(data?.data?.watched ?? false);
     }
 
     function _onEnd(e){
-        console.log("dika post flag", e);
+        // console.log("dika post flag", e);
         postFlag(videoId);
     }
 
@@ -33,8 +37,30 @@ function VideoDetail({ idVideo }) {
 
         await axios.post(`/videos/${idVideo}/flag/json`, { payload })
         .then(res => {
-            console.log("dika res 1", res);
-            console.log("dika res data", res.data);
+            setShowNext(true);
+            // console.log("dika res post flag", res.data);
+            alert.show('Berhasil menonton video!', {
+                timeout: 3000, // custom timeout just for this one alert
+                type: 'success',
+                onOpen: () => {
+                    
+                }, // callback that will be executed after this alert open
+                onClose: () => {
+                   
+                } // callback that will be executed after this alert is removed
+            })
+        }).catch((e) => {
+            console.error("dika res post flag failed", e.response.data)
+            alert.show(e.response.data?.message, {
+                timeout: 3000, // custom timeout just for this one alert
+                type: 'error',
+                onOpen: () => {
+                    
+                }, // callback that will be executed after this alert open
+                onClose: () => {
+                   
+                } // callback that will be executed after this alert is removed
+            })
         })
     }
 
@@ -44,15 +70,22 @@ function VideoDetail({ idVideo }) {
         :
         <>
             <YouTube videoId={data?.data?.youtubeId} opts={{
-                height: '390',
-                width: '640',
+                height: '490',
+                width: '740',
                 playerVars: {
                     // https://developers.google.com/youtube/player_parameters
-                    autoplay: 1,
+                    fs: 1,
+                    autoplay: 0,
+                    controls: 0,
+                    disablekb: 1,
                 },
             }} 
             onReady={_onReady} 
             onEnd={_onEnd}/>
+
+            {(showNext && data?.data?.next?.url) &&
+            <Button className="mt-4 btn-main" href={data?.data?.next?.url}>Video Berikutnya</Button>
+            }
         </>
         }
     </>);
@@ -60,10 +93,25 @@ function VideoDetail({ idVideo }) {
 
 export default VideoDetail;
 
+const options = {
+    position: 'bottom right',
+    timeout: 3000,
+    offset: '30px',
+    transition: 'scale'
+}
+
+const RootVideoDetail = (props) => {
+    return (
+    <AlertProvider template={AlertTemplate} {...options}>
+        <VideoDetail idVideo={props?.idVideo}  />
+    </AlertProvider>
+    )
+}
+
 var container = document.getElementById("video-detail-fe");
 
 if (container) {
     var idVideo = container.getAttribute("video-id");
 
-    ReactDOM.render(<VideoDetail idVideo={idVideo} />, container);
+    ReactDOM.render(<RootVideoDetail idVideo={idVideo} />, container);
 }
