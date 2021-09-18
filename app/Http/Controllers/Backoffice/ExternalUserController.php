@@ -38,10 +38,11 @@ class ExternalUserController extends Controller{
      *
      * @return void
      */
-    public function datatable($role){
+    public function datatable($request){
+        $role = $request->role;
         $query = ExternalUser::query();
         // relation with kelas and tingkat
-        $query = $query->with('kelas.tingkat.jenjang');
+        $query = $query->with('kelas.tingkat.jenjang', 'mataPelajarans');
 
         if(!empty($role)){
             $query = $query->where('role', $role);
@@ -49,6 +50,19 @@ class ExternalUserController extends Controller{
 
         $dt = datatables()
         ->of($query)
+        ->filter(function ($query) use ($request) {
+
+            $search = @$request->search['value'];
+
+            if($search){
+                $query->where('name', 'LIKE', '%'.$search.'%');
+                $query->orWhere('nis', 'LIKE', '%'.$search.'%');
+                
+                $query = $query->orWhereHas('mataPelajarans', function($query2) use ( $search ){
+                    $query2->where('name', 'LIKE', '%'.$search.'%');
+                });
+            }
+        })
         ->addIndexColumn()
         ->addColumn('show-img', function($data) {
             return view("components.datatable.image", [
@@ -61,6 +75,18 @@ class ExternalUserController extends Controller{
                 "text" => $data->status,
                 "id" => $data->id,
                 "role" => $data->role
+            ]);
+        })
+        ->addColumn('mengajar', function($data) {
+            $mapels = $data->mataPelajarans->pluck('name');
+
+            $m = [];
+            foreach($mapels as $idx){
+                $m[] = $idx;
+            }
+
+            return view("components.datatable.wrapText", [
+                "text" => (implode(', ', $m)),
             ]);
         })
         ->addColumn("created_at", function ($data) {
@@ -91,7 +117,7 @@ class ExternalUserController extends Controller{
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            return $this->datatable($request->role);
+            return $this->datatable($request);
         }
 
         return view($this->prefix.'.index');

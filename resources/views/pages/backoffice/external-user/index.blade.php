@@ -54,6 +54,8 @@
                 <th data-data="kelas.tingkat.jenjang.name">@lang("Jenjang")</th>
                 <th data-data="kelas.tingkat.name">@lang("Tingkat")</th>
                 <th data-data="kelas.name">@lang("Kelas")</th>
+                @else
+                <th data-data="mengajar">@lang("Mengajar")</th>
                 @endif
                 <th data-data="show-status">@lang("Status")</th>
                 <th data-data="action" data-orderable="false" data-searchable="false">@lang("Action")</th>
