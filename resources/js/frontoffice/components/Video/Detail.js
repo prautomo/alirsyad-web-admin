@@ -84,11 +84,11 @@ function VideoDetail({ idVideo }) {
             onEnd={_onEnd}/>
 
             {(data?.data?.previous?.url) &&
-            <Button className="mt-4 btn-main mr-4" href={data?.data?.previous?.url}>Video Sebelumnya</Button>
+            <Button className="mt-4 btn-main mr-4 btn-small" href={data?.data?.previous?.url}>Video Sebelumnya</Button>
             }
 
             {(showNext && data?.data?.next?.url) &&
-            <Button className="mt-4 btn-main" href={data?.data?.next?.url}>Video Berikutnya</Button>
+            <Button className="mt-4 btn-main btn-small" href={data?.data?.next?.url}>Video Berikutnya</Button>
             }
         </>
         }

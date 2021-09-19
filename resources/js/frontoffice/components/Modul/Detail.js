@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { Row, Col, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Button } from 'reactstrap';
 import Select from 'react-select';
+import { PDFReader, MobilePDFReader } from 'reactjs-pdf-reader';
 import axios from 'axios';
 import { FiMoreVertical } from "react-icons/fi";
 import { ReactSketchCanvas } from "react-sketch-canvas";
@@ -191,14 +192,22 @@ function ModulDetail({
             </div>
             }
             
-            <div style={{overflowX:'auto',height:'100%'}}>
-                <object data={data?.data?.pdf_url} type="application/pdf" width="100%" height="800px"></object>
+            <div style={{overflowX:'auto', height:'100%'}}>
+                <object data={data?.data?.pdf_url} type="text/html" width="100%" height="800px"></object>
             </div>
 
+            {/* <div style={{overflowX:'auto', height:'100%', maxHeight:'800px'}}>
+                <PDFReader url={data?.data?.pdf_url} width={770} showAllPage={true} isShowHeader={true} isShowFooter={true} hideNavbar={false} />
+            </div> */}
+
+            {(data?.data?.previous?.url) &&
+            <Button className="mt-4 btn-main btn-small mr-4" href={data?.data?.previous?.url}>Modul Sebelumnya</Button>
+            }
+
             {data?.data?.next?.url ?
-            <Button className="mt-4 btn-main" onClick={() => finishModul(data?.data?.next?.slug_url)}>Modul Berikutnya</Button>
+            <Button className="mt-4 btn-main btn-small" onClick={() => finishModul(data?.data?.next?.slug_url)}>Modul Berikutnya</Button>
             :
-            <Button className="mt-4 btn-main" 
+            <Button className="mt-4 btn-main btn-small" 
                 disabled={data?.data?.read || disabledBtnDone}
                 onClick={() => finishModul()}>Selesai Membaca</Button>
             }

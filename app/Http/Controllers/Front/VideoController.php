@@ -36,7 +36,11 @@ class VideoController extends Controller
             });
         }
         
-        $videos = $videos->where('mata_pelajaran_id', $idMapel)->get();
+        $videos = $videos->where('mata_pelajaran_id', $idMapel);
+        // sorting by name
+        $videos = $videos->orderBy('name', 'asc');
+        // get list
+        $videos = $videos->get();
 
         $parseData = [
             'idMapel' => $idMapel,

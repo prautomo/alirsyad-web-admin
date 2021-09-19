@@ -36,14 +36,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! reactstrap */ "./node_modules/reactstrap/es/index.js");
 /* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-select */ "./node_modules/react-select/dist/react-select.esm.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var react_icons_fi__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-icons/fi */ "./node_modules/react-icons/fi/index.esm.js");
-/* harmony import */ var react_sketch_canvas__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-sketch-canvas */ "./node_modules/react-sketch-canvas/react-sketch-canvas.esm.js");
-/* harmony import */ var _store_useFetch__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../store/useFetch */ "./resources/js/store/useFetch.js");
-/* harmony import */ var _ToggleSwitch_ToggleSwitch__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../ToggleSwitch/ToggleSwitch */ "./resources/js/frontoffice/components/ToggleSwitch/ToggleSwitch.js");
-/* harmony import */ var react_alert__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-alert */ "./node_modules/react-alert/dist/esm/react-alert.js");
-/* harmony import */ var react_alert_template_basic__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! react-alert-template-basic */ "./node_modules/react-alert-template-basic/dist/esm/react-alert-template-basic.js");
+/* harmony import */ var reactjs_pdf_reader__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! reactjs-pdf-reader */ "./node_modules/reactjs-pdf-reader/lib/app.js");
+/* harmony import */ var reactjs_pdf_reader__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(reactjs_pdf_reader__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var react_icons_fi__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-icons/fi */ "./node_modules/react-icons/fi/index.esm.js");
+/* harmony import */ var react_sketch_canvas__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-sketch-canvas */ "./node_modules/react-sketch-canvas/react-sketch-canvas.esm.js");
+/* harmony import */ var _store_useFetch__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../store/useFetch */ "./resources/js/store/useFetch.js");
+/* harmony import */ var _ToggleSwitch_ToggleSwitch__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../ToggleSwitch/ToggleSwitch */ "./resources/js/frontoffice/components/ToggleSwitch/ToggleSwitch.js");
+/* harmony import */ var react_alert__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! react-alert */ "./node_modules/react-alert/dist/esm/react-alert.js");
+/* harmony import */ var react_alert_template_basic__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! react-alert-template-basic */ "./node_modules/react-alert-template-basic/dist/esm/react-alert-template-basic.js");
 
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
@@ -76,6 +78,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 var styles = {
   border: "0.0625rem solid #9c9c9c",
   borderRadius: "0.25rem",
@@ -83,7 +86,7 @@ var styles = {
 };
 
 function ModulDetail(_ref) {
-  var _data$data$name, _data$data, _data$data2, _data$data3, _data$data3$next, _data$data5;
+  var _data$data$name, _data$data, _data$data2, _data$data3, _data$data3$previous, _data$data4, _data$data4$previous, _data$data5, _data$data5$next, _data$data7;
 
   var idModul = _ref.idModul,
       linkModul = _ref.linkModul,
@@ -111,12 +114,12 @@ function ModulDetail(_ref) {
       disabledBtnDone = _useState8[0],
       setDisabledBtnDone = _useState8[1];
 
-  var _useFetch = Object(_store_useFetch__WEBPACK_IMPORTED_MODULE_8__["default"])("/modul/" + idModul + "/json"),
+  var _useFetch = Object(_store_useFetch__WEBPACK_IMPORTED_MODULE_9__["default"])("/modul/" + idModul + "/json"),
       data = _useFetch.data,
       isLoading = _useFetch.isLoading,
       isError = _useFetch.isError;
 
-  var alert = Object(react_alert__WEBPACK_IMPORTED_MODULE_10__["useAlert"])();
+  var alert = Object(react_alert__WEBPACK_IMPORTED_MODULE_11__["useAlert"])();
 
   var toggle = function toggle() {
     return setDropdownOpen(function (prevState) {
@@ -174,7 +177,7 @@ function ModulDetail(_ref) {
             case 0:
               payload = {};
               _context2.next = 3;
-              return axios__WEBPACK_IMPORTED_MODULE_5___default.a.post("/moduls/".concat(idModul, "/flag/json"), {
+              return axios__WEBPACK_IMPORTED_MODULE_6___default.a.post("/moduls/".concat(idModul, "/flag/json"), {
                 payload: payload
               }).then(function (res) {
                 setDisabledBtnDone(true); // console.log("dika res post flag", res.data);
@@ -223,7 +226,7 @@ function ModulDetail(_ref) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("h3", null, (_data$data$name = data === null || data === void 0 ? void 0 : (_data$data = data.data) === null || _data$data === void 0 ? void 0 : _data$data.name) !== null && _data$data$name !== void 0 ? _data$data$name : '-'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
     id: "toggle",
     className: "ml-auto form-inline"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_ToggleSwitch_ToggleSwitch__WEBPACK_IMPORTED_MODULE_9__["default"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_ToggleSwitch_ToggleSwitch__WEBPACK_IMPORTED_MODULE_10__["default"], {
     id: "showCanvas",
     small: true,
     checked: showCanvas,
@@ -240,7 +243,7 @@ function ModulDetail(_ref) {
       color: "#000000",
       borderColor: "#ffffff"
     }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_icons_fi__WEBPACK_IMPORTED_MODULE_6__["FiMoreVertical"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_icons_fi__WEBPACK_IMPORTED_MODULE_7__["FiMoreVertical"], {
     size: "15"
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["DropdownMenu"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["DropdownItem"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("a", {
     href: linkModul
@@ -279,7 +282,7 @@ function ModulDetail(_ref) {
       setWarna("black");
     },
     className: "btn-main mr-2 btn-small"
-  }, "Black"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_sketch_canvas__WEBPACK_IMPORTED_MODULE_7__["ReactSketchCanvas"], {
+  }, "Black"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_sketch_canvas__WEBPACK_IMPORTED_MODULE_8__["ReactSketchCanvas"], {
     ref: canvas,
     style: styles,
     width: "100%",
@@ -293,19 +296,22 @@ function ModulDetail(_ref) {
     }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("object", {
     data: data === null || data === void 0 ? void 0 : (_data$data2 = data.data) === null || _data$data2 === void 0 ? void 0 : _data$data2.pdf_url,
-    type: "application/pdf",
+    type: "text/html",
     width: "100%",
     height: "800px"
-  })), (data === null || data === void 0 ? void 0 : (_data$data3 = data.data) === null || _data$data3 === void 0 ? void 0 : (_data$data3$next = _data$data3.next) === null || _data$data3$next === void 0 ? void 0 : _data$data3$next.url) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
-    className: "mt-4 btn-main",
+  })), (data === null || data === void 0 ? void 0 : (_data$data3 = data.data) === null || _data$data3 === void 0 ? void 0 : (_data$data3$previous = _data$data3.previous) === null || _data$data3$previous === void 0 ? void 0 : _data$data3$previous.url) && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
+    className: "mt-4 btn-main btn-small mr-4",
+    href: data === null || data === void 0 ? void 0 : (_data$data4 = data.data) === null || _data$data4 === void 0 ? void 0 : (_data$data4$previous = _data$data4.previous) === null || _data$data4$previous === void 0 ? void 0 : _data$data4$previous.url
+  }, "Modul Sebelumnya"), (data === null || data === void 0 ? void 0 : (_data$data5 = data.data) === null || _data$data5 === void 0 ? void 0 : (_data$data5$next = _data$data5.next) === null || _data$data5$next === void 0 ? void 0 : _data$data5$next.url) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
+    className: "mt-4 btn-main btn-small",
     onClick: function onClick() {
-      var _data$data4, _data$data4$next;
+      var _data$data6, _data$data6$next;
 
-      return finishModul(data === null || data === void 0 ? void 0 : (_data$data4 = data.data) === null || _data$data4 === void 0 ? void 0 : (_data$data4$next = _data$data4.next) === null || _data$data4$next === void 0 ? void 0 : _data$data4$next.slug_url);
+      return finishModul(data === null || data === void 0 ? void 0 : (_data$data6 = data.data) === null || _data$data6 === void 0 ? void 0 : (_data$data6$next = _data$data6.next) === null || _data$data6$next === void 0 ? void 0 : _data$data6$next.slug_url);
     }
   }, "Modul Berikutnya") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
-    className: "mt-4 btn-main",
-    disabled: (data === null || data === void 0 ? void 0 : (_data$data5 = data.data) === null || _data$data5 === void 0 ? void 0 : _data$data5.read) || disabledBtnDone,
+    className: "mt-4 btn-main btn-small",
+    disabled: (data === null || data === void 0 ? void 0 : (_data$data7 = data.data) === null || _data$data7 === void 0 ? void 0 : _data$data7.read) || disabledBtnDone,
     onClick: function onClick() {
       return finishModul();
     }
@@ -321,8 +327,8 @@ var options = {
 };
 
 var RootVideoDetail = function RootVideoDetail(props) {
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_alert__WEBPACK_IMPORTED_MODULE_10__["Provider"], _extends({
-    template: react_alert_template_basic__WEBPACK_IMPORTED_MODULE_11__["default"]
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_alert__WEBPACK_IMPORTED_MODULE_11__["Provider"], _extends({
+    template: react_alert_template_basic__WEBPACK_IMPORTED_MODULE_12__["default"]
   }, options), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(ModulDetail, {
     idModul: props === null || props === void 0 ? void 0 : props.idModul,
     linkModul: props === null || props === void 0 ? void 0 : props.linkModul,

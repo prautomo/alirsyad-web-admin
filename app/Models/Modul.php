@@ -56,7 +56,8 @@ class Modul extends Model
 
     public function getNextAttribute(){
         // get next modul
-        $nextModul = $this->where('id', '>', $this->id)
+        $nextModul = $this
+            ->where('name', '>', $this->name)
             ->where('mata_pelajaran_id', $this->mata_pelajaran_id)
             ->orderBy('name','asc')->first();
 
@@ -77,7 +78,8 @@ class Modul extends Model
 
     public function getPreviousAttribute(){
         // get previous modul
-        $previousModul =  $this->where('id', '<', $this->id)
+        $previousModul =  $this
+            ->where('name', '<', $this->name)
             ->where('mata_pelajaran_id', $this->mata_pelajaran_id)
             ->orderBy('name','desc')->first();
         
