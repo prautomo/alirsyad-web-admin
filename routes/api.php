@@ -19,7 +19,7 @@ Route::post('login', [AuthController::class, 'login']);
 
 Route::middleware('auth:api')->group( function () {
     Route::post('logout', [AuthController::class, 'logout']);
-    
+
     Route::get("/tingkats", "API\TingkatController@index");
     Route::get("/tingkats/{id}", "API\TingkatController@show");
 
@@ -41,6 +41,8 @@ Route::middleware('auth:api')->group( function () {
     Route::get("/simulasis/{id}", "API\SimulasiController@show")->name('api.simulasi.detail');
     Route::post("/simulasis/{id}/flag", "API\SimulasiController@createHistory");
     Route::post("/simulasis/{id}/score", "API\SimulasiController@createScore");
+
+    Route::get("/nilai-simulasi", "API\ScoreController@index");
 
     Route::prefix('guru')->group(function() {
         Route::get("/dashboard", "API\DashboardController@index");

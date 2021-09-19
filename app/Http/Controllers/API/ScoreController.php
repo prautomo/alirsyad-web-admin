@@ -21,6 +21,33 @@ class ScoreController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
+    public function index(Request $request)
+    {
+        $user = Auth::user();
+        $datas = [];
+
+        // load mapel active kelas/tingkat
+        $mapels = MataPelajaran::where('tingkat_id', @$user->kelas->tingkat_id)->get();
+        $mapelsWithDetail = [];
+        foreach($mapels as $mapel){
+            $mapel['detail'] = $this->getProgress($mapel->id);
+            $mapelsWithDetail[] = $mapel;
+        }
+        $datas[] = [
+            'jenjang' => @$user->kelas->tingkat->jenjang->name ?? "-",
+            'tingkat' => @$user->kelas->tingkat->name ?? "-",
+            'kelas' => @$user->kelas->name  ?? "-",
+            'mata_pelajarans' => @$mapelsWithDetail,
+        ];
+
+        return $this->sendResponse(ScoreResource::collection($datas), 'Scores retrieved.');
+    }
+
+    /**
+     * Display a mata pelajaran listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function mapels(Request $request)
     {
         $user = Auth::user();
@@ -48,6 +75,12 @@ class ScoreController extends BaseController
      */
     public function progress($id)
     {
+        $datas = $this->getProgress($id);
+   
+        return $this->sendResponse(new ScoreResource($datas), 'Score retrieved successfully.');
+    }
+
+    private function getProgress($id){
         $user = Auth::user();
         $datas = [];
 
@@ -89,8 +122,8 @@ class ScoreController extends BaseController
         
         $simulasis = $simulasis->where('mata_pelajaran_id', $id)->get();
         $datas['simulasis'] = $simulasis;
-   
-        return $this->sendResponse(new ScoreResource($datas), 'Score retrieved successfully.');
+
+        return $datas;
     }
 
     private function calculatePercentage($total, $done){
