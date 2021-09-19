@@ -68,7 +68,7 @@ class Simulasi extends Model
         // get next simulasi
         $nextSimulasi = $this->where('id', '>', $this->id)
             ->where('mata_pelajaran_id', $this->mata_pelajaran_id)
-            ->orderBy('created_at','asc')->first();
+            ->orderBy('name','asc')->first();
 
         $returnNext = null;
 
@@ -88,7 +88,7 @@ class Simulasi extends Model
         // get previous simulasi
         $previousSimulasi =  $this->where('id', '<', $this->id)
             ->where('mata_pelajaran_id', $this->mata_pelajaran_id)
-            ->orderBy('created_at','desc')->first();
+            ->orderBy('name','desc')->first();
         
         $returnPrevious = null;
 
