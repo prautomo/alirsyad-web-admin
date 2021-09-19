@@ -70,8 +70,8 @@ function VideoDetail({ idVideo }) {
         :
         <>
             <YouTube videoId={data?.data?.youtubeId} opts={{
-                height: '490',
-                width: '740',
+                height: '600',
+                width: '100%',
                 playerVars: {
                     // https://developers.google.com/youtube/player_parameters
                     fs: 1,
@@ -82,6 +82,10 @@ function VideoDetail({ idVideo }) {
             }} 
             onReady={_onReady} 
             onEnd={_onEnd}/>
+
+            {(data?.data?.previous?.url) &&
+            <Button className="mt-4 btn-main mr-4" href={data?.data?.previous?.url}>Video Sebelumnya</Button>
+            }
 
             {(showNext && data?.data?.next?.url) &&
             <Button className="mt-4 btn-main" href={data?.data?.next?.url}>Video Berikutnya</Button>

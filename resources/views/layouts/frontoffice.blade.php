@@ -4,7 +4,7 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="digital interactive book,bootstrap4">
+  <meta name="description" content="{{ config('app.name', 'Laravel') }}">
   
   <meta name="author" content="Anon">
 
@@ -41,13 +41,13 @@
 		  	Digital <span>Interactive.</span>
 		  </a>
 
-		  <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarsExample09" aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="fa fa-bars"></span>
-		  </button>
-
           @guest
 
           @else
+          <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarsExample09" aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="fa fa-bars"></span>
+          </button>
+          
 		  <div class="collapse navbar-collapse text-center" id="navbarsExample09">
 			<ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
@@ -95,14 +95,15 @@
     <!-- 
     Essential Scripts
     =====================================-->
-    
-    
+
     <!-- Main jQuery -->
     <script src="{{ asset('frontoffice/plugins/jquery/jquery.js') }}"></script>
-    <script src="{{ asset('frontoffice/js/contact.js') }}"></script>
+    <!-- App.js -->
+    <script src="{{ asset('js/app.js') }}" charset="utf-8"></script>
     <!-- Bootstrap 4.3.1 -->
     <script src="{{ asset('frontoffice/plugins/bootstrap/js/popper.js') }}"></script>
     <script src="{{ asset('frontoffice/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
+
    <!--  Magnific Popup-->
     <script src="{{ asset('frontoffice/plugins/magnific-popup/dist/jquery.magnific-popup.min.js') }}"></script>
     <!-- Slick Slider -->
@@ -112,8 +113,6 @@
     <script src="{{ asset('frontoffice/plugins/counterup/jquery.counterup.min.js') }}"></script>   
     
     <script src="{{ asset('frontoffice/js/script.js') }}"></script>
-
-    <script src="{{ asset('js/app.js') }}" charset="utf-8"></script>
 
     @stack('plugin_script')
 

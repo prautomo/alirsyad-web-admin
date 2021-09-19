@@ -12,7 +12,7 @@
         </div>
 		<div class="row mt-4">
 			<!-- nav -->
-			<div class="col-md-4">
+			<div class="col-md-4 mb-4">
 				<div class="card">
 					<div class="card-body">
 						<h5>{{ @$mapel->name ?? '-' }}</h5>
@@ -43,8 +43,9 @@
 						<div class="row">
                             @forelse($moduls as $modul)
                             <div class="col-md-4 mb-4">
+                            <a href="{{ route('app.modul.detail', @$modul->slug) }}.html" style="text-decoration: none;">
                                 <div class="card" style="width: 100%;">
-                                    <img class="card-img-top" style="max-height: 140px;" src="{{ @$modul->icon ? asset($modul->icon) : "https://ideas.or.id/wp-content/themes/consultix/images/no-image-found-360x250.png" }}" alt="{{ @$modul->name ?? "-" }}">
+                                    <img class="card-img-top" style="max-height: 140px; height: 140px;" src="{{ @$modul->icon ? asset($modul->icon) : '/images/placeholder.png' }}" alt="{{ @$modul->name ?? "-" }}">
                                     <div class="card-body text-center">
                                         <h6 class="card-title">
                                             <a href="{{ route('app.modul.detail', @$modul->slug) }}.html" style="text-decoration: none;">
@@ -53,6 +54,7 @@
                                         </h6>
                                     </div>
                                 </div>
+                            </a>
                             </div>
                             @empty
                             <div class="ml-1">Belum ada modul pembelajaran</div>

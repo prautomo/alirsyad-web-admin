@@ -18,7 +18,10 @@ function NilaiSimulasi() {
     var { data, isLoading, isError } = useFetch("/nilai-simulasi/mapels/json")
 
     useEffect(() => {
-        changeMapel(data?.data[0]?.mata_pelajarans[0]?.id)
+        let id = data?.data[0]?.mata_pelajarans[0]?.id;
+        if(id){
+            changeMapel(id)
+        }
     }, [])
 
     async function changeMapel(id){
@@ -26,9 +29,7 @@ function NilaiSimulasi() {
 
         await axios.get(`/nilai-simulasi/mapels/${id}/json`, { headers: { "Content-Type": "application/json" } }).then(function (response) {
 			var data = response.data;
-
-            console.log("dika data", data)
-			
+            // console.log("dika data", data)
 			if(data.success){
 				setDataProgress(data?.data);
 			}
@@ -42,7 +43,7 @@ function NilaiSimulasi() {
 
     return (<>
         <Row className="mb-1 text-left">
-            <Col md="4">
+            <Col md="4" className="mb-4">
                 <Card>
                     <CardBody>
                         {/* active tingkat kelas */}
@@ -99,7 +100,7 @@ function NilaiSimulasi() {
                                     <img src={simulasi?.cover_url ?? "/images/placeholder.png"} width="100%" height="120px" />
                                 </Col>
                                 <Col md="8">
-                                    <div className="">
+                                    <div className="mt-1">
                                         <span className={"fa fa-star"+ ( simulasi?.rata_rata_score >= 33 ? " rating-checked" : "")}></span>
                                         <span className={"fa fa-star"+ ( simulasi?.rata_rata_score >= 66 ? " rating-checked" : "")}></span>
                                         <span className={"fa fa-star"+ ( simulasi?.rata_rata_score >= 99 ? " rating-checked" : "")}></span>

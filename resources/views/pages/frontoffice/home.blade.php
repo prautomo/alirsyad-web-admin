@@ -18,11 +18,11 @@
     </section>
     <!-- Section Intro Start -->
 
-    <section class="section">
+    <section class="mt-5">
         <div class="container">
             <div class="row">
                 <!-- sedang dipelajari -->
-                <div class="col-md-6">
+                <div class="col-md-6 mb-4">
                     <div class="card">
                         <div class="card-body">
                             <div class="card-title mb-0 form-inline">

@@ -3,19 +3,21 @@
 @section('title', __("Profile"))
 
 @section('content')
-<div class="container">
-    <div class="d-flex flex-column align-items-start" >
-        <div class="mb-4 mt-4 prod-page-header">
-            <h3>Profile</h3>
+<section class="mt-4">
+	<div class="container">
+        <div class="row mb-2">
+            <div class="col-md-12 text-left">
+                <h3>Akun Saya</h3>
+            </div>
         </div>
-        @if(Session::has('success'))
-        <div class="alert alert-success w-100">
-            {{Session::get('success')}}
-        </div>
-        @endif
-        <div class="row" style="width: 100%;">
+        <div class="row">
+            @if(Session::has('success'))
+            <div class="alert alert-success w-100">
+                {{Session::get('success')}}
+            </div>
+            @endif
 
-            <div class="col-lg-4">
+            <div class="col-md-4">
                 <div class="card text-center col-lg-12 mb-4">
                     <div class="card-body">
                         <img src="{{$user_data->photo != '' ? $user_data->photo : '/images/placeholder.png'}}" width="200px" height="200px" class="img-fluid rounded-circle" alt="" style="background-color: #eee;height: 200px;">
@@ -32,10 +34,8 @@
                 </div>
             </div>
 
-            <div class="col-lg-8">
-                <div class="row">
-
-                    <div class="card text-left col-lg-12 mb-4">
+            <div class="col-md-8">
+                    <div class="card text-left mb-4">
 
                         <div class="card-body">
 
@@ -78,11 +78,9 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
+            </div>
         </div>
     </div>
-</div>
-
+</section>
 @endsection
