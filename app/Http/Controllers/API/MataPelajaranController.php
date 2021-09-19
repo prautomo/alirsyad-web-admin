@@ -65,11 +65,35 @@ class MataPelajaranController extends BaseController
         $datas = $datas->with('tingkat.jenjang');
         // filter by jenjang yg sama
         $datas = $datas->whereHas('tingkat.jenjang', function($query) {
-            $query->where('id', Auth::user()->kelas->tingkat->jenjang_id);
+            $query->where('id', @Auth::user()->kelas->tingkat->jenjang_id);
         });
         // filter by tingkat atasnya
         $datas = $datas->whereHas('tingkat', function($query) {
-            $query->where('name', '>', Auth::user()->kelas->tingkat->name);
+            $query->where('name', '>', @Auth::user()->kelas->tingkat->name);
+        });
+        // get
+        $datas = $datas->get();
+
+        return $this->sendResponse(MataPelajaranResource::collection($datas), 'Mata Pelajaran retrieved successfully.');
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function passed(Request $request)
+    {
+        // passed mapel
+        $datas = MataPelajaran::search($request);
+        $datas = $datas->with('tingkat.jenjang');
+        // filter by jenjang yg sama
+        $datas = $datas->whereHas('tingkat.jenjang', function($query) {
+            $query->where('id', @Auth::user()->kelas->tingkat->jenjang_id);
+        });
+        // filter by tingkat bawahnya
+        $datas = $datas->whereHas('tingkat', function($query) {
+            $query->where('name', '<', @Auth::user()->kelas->tingkat->name);
         });
         // get
         $datas = $datas->get();

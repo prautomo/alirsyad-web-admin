@@ -26,6 +26,7 @@ Route::middleware('auth:api')->group( function () {
     Route::get("/mata_pelajarans", "API\MataPelajaranController@index");
     Route::get("/mata_pelajarans/inprogress", "API\MataPelajaranController@inprogress");
     Route::get("/mata_pelajarans/upcoming", "API\MataPelajaranController@upcoming");
+    Route::get("/mata_pelajarans/passed", "API\MataPelajaranController@passed");
     Route::get("/mata_pelajarans/{id}", "API\MataPelajaranController@show");
     Route::get("/mata_pelajarans/{id}/summary", "API\MataPelajaranController@summary");
 
