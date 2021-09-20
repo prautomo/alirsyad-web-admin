@@ -28,6 +28,9 @@ class ModulController extends BaseController
                 $query->where('tingkat_id', @Auth::user()->kelas->tingkat_id ?? 0);
             }
         });
+        // sorting by name
+        $datas = $datas->orderBy('name', 'asc');
+        // get list
         $datas = $datas->get();
 
         return $this->sendResponse(ModulResource::collection($datas), 'Modul retrieved successfully.');

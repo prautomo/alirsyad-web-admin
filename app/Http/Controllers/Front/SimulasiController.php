@@ -36,7 +36,12 @@ class SimulasiController extends Controller
             });
         }
         
-        $simulasis = $simulasis->where('mata_pelajaran_id', $idMapel)->get();
+        $simulasis = $simulasis->where('mata_pelajaran_id', $idMapel);
+
+        // sorting by name
+        $simulasis = $simulasis->orderBy('name', 'asc');
+        // get list
+        $simulasis = $simulasis->get();
 
         // dd($simulasis);
 
