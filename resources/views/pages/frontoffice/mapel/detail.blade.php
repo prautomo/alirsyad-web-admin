@@ -33,7 +33,7 @@
                                         <div class="progress-bar" role="progressbar" aria-valuenow="{{ @$progress['progress_modul']['percentage'] ?? 0 }}" aria-valuemin="0" aria-valuemax="{{ @$progress['progress_modul']['percentage'] ?? 0 }}" style="width: {{ @$progress['progress_modul']['percentage'] ?? 0 }}%; background-color: rgb(52, 125, 241);"></div>
                                     </div>
                                     <div class="" style="font-size: 0.8rem;">
-                                        <span>{{ @$progress['progress_modul']['percentage'] ?? 0 }}% selesai</span>
+                                        <span>{{ round((@$progress['progress_modul']['percentage'] ?? 0), 2) }}% selesai</span>
                                     </div>
                                 </div>
 							</div>
@@ -49,7 +49,7 @@
                                         <div class="progress-bar" role="progressbar" aria-valuenow="{{ @$progress['progress_video']['percentage'] ?? 0 }}" aria-valuemin="0" aria-valuemax="{{ @$progress['progress_video']['percentage'] ?? 0 }}" style="width: {{ @$progress['progress_video']['percentage'] ?? 0 }}%; background-color: rgb(52, 125, 241);"></div>
                                     </div>
                                     <div class="" style="font-size: 0.8rem;">
-                                        <span>{{ @$progress['progress_video']['percentage'] ?? 0 }}% selesai</span>
+                                        <span>{{ round((@$progress['progress_video']['percentage'] ?? 0), 2) }}% selesai</span>
                                     </div>
                                 </div>
 							</div>
@@ -65,7 +65,7 @@
                                         <div class="progress-bar" role="progressbar" aria-valuenow="{{ @$progress['progress_simulasi']['percentage'] ?? 0 }}" aria-valuemin="0" aria-valuemax="{{ @$progress['progress_simulasi']['percentage'] ?? 0 }}" style="width: {{ @$progress['progress_simulasi']['percentage'] ?? 0 }}%; background-color: rgb(52, 125, 241);"></div>
                                     </div>
                                     <div class="" style="font-size: 0.8rem;">
-                                        <span>{{ @$progress['progress_simulasi']['percentage'] ?? 0 }}% selesai</span>
+                                        <span>{{ round((@$progress['progress_simulasi']['percentage'] ?? 0), 2) }}% selesai</span>
                                     </div>
                                 </div>
 							</div>
