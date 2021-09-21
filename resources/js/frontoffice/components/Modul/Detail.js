@@ -154,6 +154,49 @@ function ModulDetail({
             {showCanvas &&
             <>
             <div id="layer-coret" style={{ position: "absolute", paddingRight: "12px" }}>
+                {/*  */}
+                <Button
+                    onClick={() => {
+                        canvas.current.clearCanvas();
+                    }}
+                    className="btn-main mr-2 btn-small"
+                >
+                    Clear
+                </Button>
+                <Button
+                    onClick={() => {
+                        canvas.current.undo();
+                    }}
+                    className="btn-main mr-2 btn-small"
+                >
+                    Undo
+                </Button>
+                <Button
+                    onClick={() => {
+                        canvas.current.redo();
+                    }}
+                    className="btn-main mr-2 btn-small"
+                >
+                    Redo
+                </Button>
+                <Button
+                    onClick={() => {
+                        setWarna("red");
+                    }}
+                    className="btn-main mr-2 btn-small"
+                >
+                    Red
+                </Button>
+                <Button
+                    onClick={() => {
+                        setWarna("black");
+                    }}
+                    className="btn-main mr-2 btn-small"
+                >
+                    Black
+                </Button>
+
+                {/*  */}
                 <ReactSketchCanvas
                     ref={canvas}
                     style={styles}
@@ -188,7 +231,7 @@ function ModulDetail({
         </>
         }
 
-        {showCanvas &&
+        {(showCanvas && false)&&
         <div className="layer-toolbox">
             <Button
                 onClick={() => {

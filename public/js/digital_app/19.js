@@ -334,7 +334,32 @@ function ModulDetail(_ref) {
       position: "absolute",
       paddingRight: "12px"
     }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_sketch_canvas__WEBPACK_IMPORTED_MODULE_8__["ReactSketchCanvas"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
+    onClick: function onClick() {
+      canvas.current.clearCanvas();
+    },
+    className: "btn-main mr-2 btn-small"
+  }, "Clear"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
+    onClick: function onClick() {
+      canvas.current.undo();
+    },
+    className: "btn-main mr-2 btn-small"
+  }, "Undo"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
+    onClick: function onClick() {
+      canvas.current.redo();
+    },
+    className: "btn-main mr-2 btn-small"
+  }, "Redo"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
+    onClick: function onClick() {
+      setWarna("red");
+    },
+    className: "btn-main mr-2 btn-small"
+  }, "Red"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
+    onClick: function onClick() {
+      setWarna("black");
+    },
+    className: "btn-main mr-2 btn-small"
+  }, "Black"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_sketch_canvas__WEBPACK_IMPORTED_MODULE_8__["ReactSketchCanvas"], {
     ref: canvas,
     style: styles,
     width: "100%",
@@ -367,7 +392,7 @@ function ModulDetail(_ref) {
     onClick: function onClick() {
       return finishModul();
     }
-  }, "Selesai Membaca")), showCanvas && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+  }, "Selesai Membaca")), showCanvas && false && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
     className: "layer-toolbox"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
     onClick: function onClick() {
