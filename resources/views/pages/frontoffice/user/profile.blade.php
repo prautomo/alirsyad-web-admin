@@ -21,15 +21,6 @@
                 <div class="card text-center col-lg-12 mb-4">
                     <div class="card-body">
                         <img src="{{$user_data->photo != '' ? $user_data->photo : '/images/placeholder.png'}}" width="200px" height="200px" class="img-fluid rounded-circle" alt="" style="background-color: #eee;height: 200px;">
-
-                        <div class="btn-group mt-4" role="group" aria-label="Edit">
-                            <!-- <button type="button" class="btn btn-main btn-small">
-                                Edit Profile
-                            </button> -->
-                            <a href="{{ route('app.akun-saya.password-edit') }}" type="button" class="ml-1 btn btn-main btn-small">
-                                Edit Password
-                            </a>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -75,6 +66,15 @@
                                     value="{{ @$user_data->kelas->tingkat->jenjang->name ?? 'undefined' }} - Kelas {{ @$user_data->kelas->tingkat->name ?? 'undefined' }}{{ @$user_data->kelas->name ?? 'undefined' }}" 
                                     class="form-control" 
                                 />
+                            </div>
+
+                            <div class="form-group mt-2 text-center">
+                                <!-- <button type="button" class="btn btn-main btn-small">
+                                    Edit Profile
+                                </button> -->
+                                <a href="{{ route('app.akun-saya.password-edit') }}" type="button" class="ml-1 btn btn-main btn-small">
+                                    Edit Password
+                                </a>
                             </div>
                         </div>
                     </div>
