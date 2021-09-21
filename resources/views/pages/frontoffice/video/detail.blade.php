@@ -7,10 +7,17 @@
 	<div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h3>
-                    <a href="{{ route('app.mapel.video', @$video->mataPelajaran->id) }}">
-                        {{ @$video->mataPelajaran->name }}
-                    </a> - {{ @$video->name }}</h3>
+                <div class="text-left form-inline">
+                    <h3>
+                        <!-- <a href="{{ route('app.mapel.video', @$video->mataPelajaran->id) }}">
+                            {{ @$video->mataPelajaran->name }}
+                        </a> - -->
+                        {{ @$video->name }}
+                    </h3>
+                    <div id="btn-back" class="ml-auto form-inline">
+                        <a href="{{ route('app.mapel.video', @$video->mataPelajaran->id) }}" class="btn btn-main btn-small">Kembali ke List</a> 
+                    </div>
+                </div>
                 <hr/>
             </div>
         </div>
