@@ -33,8 +33,16 @@ class MataPelajaranController extends Controller
         // sort by active mapel
         $sedangDipelajari = $sedangDipelajari->get();
 
+        // mapel yang akan datang
+        $yangAkanDatang = $this->mapelByTingkat($request, '>');
+
+        // mapel sebelumnya
+        $sebelumnya = $this->mapelByTingkat($request, '<');
+
         $parseData = [
             'sedangDipelajari' => $sedangDipelajari,
+            'yangAkanDatang' => $yangAkanDatang,
+            'sebelumnya' => $sebelumnya,
         ];
 
         return view('pages/frontoffice/mapel/list', $parseData);
@@ -47,22 +55,7 @@ class MataPelajaranController extends Controller
      */
     public function indexUpcoming(Request $request)
     {
-        // upcoming mapel
-        $yangAkanDatang = MataPelajaran::search($request);
-        $yangAkanDatang = $yangAkanDatang->with('tingkat');
-        // filter by jenjang yg sama
-        $yangAkanDatang = $yangAkanDatang->whereHas('tingkat.jenjang', function($query) {
-            $query->where('id', Auth::user()->kelas->tingkat->jenjang_id);
-        });
-        // filter by tingkat atasnya
-        $yangAkanDatang = $yangAkanDatang->whereHas('tingkat', function($query) {
-            $query->where('name', '>', Auth::user()->kelas->tingkat->name);
-        });
-        // get
-        $yangAkanDatang = $yangAkanDatang->get();
-
-        // sorting by tingkat
-        $yangAkanDatang = $yangAkanDatang->sortBy('tingkat.name');
+        $yangAkanDatang = $this->mapelByTingkat($request, '>');
 
         $parseData = [
             'yangAkanDatang' => $yangAkanDatang,
@@ -76,12 +69,57 @@ class MataPelajaranController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
+    public function indexPassed(Request $request)
+    {
+        $sebelumnya = $this->mapelByTingkat($request, '<');
+
+        $parseData = [
+            'sebelumnya' => $sebelumnya,
+        ];
+
+        return view('pages/frontoffice/mapel/list_passed', $parseData);
+    }
+
+    private function mapelByTingkat($request, $condition='>'){
+        // upcoming mapel
+        $mapels = MataPelajaran::search($request);
+        $mapels = $mapels->with('tingkat');
+        // filter by jenjang yg sama
+        $mapels = $mapels->whereHas('tingkat.jenjang', function($query) {
+            $query->where('id', Auth::user()->kelas->tingkat->jenjang_id);
+        });
+        // filter by tingkat condition
+        $mapels = $mapels->whereHas('tingkat', function($query) use ($condition) {
+            $query->where('name', $condition, Auth::user()->kelas->tingkat->name);
+        });
+        // get
+        $mapels = $mapels->get();
+
+        // sorting by tingkat
+        $mapels = $mapels->sortBy('tingkat.name');
+
+        return $mapels;
+    }
+
+    /**
+     * Show the mapel list.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
     public function show(Request $request, $id)
     {
         // mapel
         $mapel = MataPelajaran::with('tingkat');
-        $mapel = $mapel->whereHas('tingkat.kelas', function($query) {
-            $query->where('id', Auth::user()->kelas_id);
+        // filter by jenjang yg sama
+        $mapel = $mapel->whereHas('tingkat.jenjang', function($query) {
+            $query->where('id', Auth::user()->kelas->tingkat->jenjang_id);
+        });
+        // $mapel = $mapel->whereHas('tingkat.kelas', function($query) {
+        //     $query->where('id', Auth::user()->kelas_id);
+        // });
+        // filter by tingkat bawahnya
+        $mapel = $mapel->whereHas('tingkat', function($query) {
+            $query->where('name', '<=', Auth::user()->kelas->tingkat->name);
         });
         $mapel = $mapel->findOrFail($id);
 
