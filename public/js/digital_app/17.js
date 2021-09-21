@@ -151,8 +151,9 @@ function VideoDetail(_ref) {
         // https://developers.google.com/youtube/player_parameters
         fs: 1,
         autoplay: 0,
-        controls: 0,
-        disablekb: 1
+        controls: 1,
+        disablekb: 1,
+        rel: 0
       }
     },
     onReady: _onReady,

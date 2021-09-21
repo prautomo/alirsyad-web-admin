@@ -76,8 +76,9 @@ function VideoDetail({ idVideo }) {
                     // https://developers.google.com/youtube/player_parameters
                     fs: 1,
                     autoplay: 0,
-                    controls: 0,
+                    controls: 1,
                     disablekb: 1,
+                    rel: 0, 
                 },
             }} 
             onReady={_onReady} 
