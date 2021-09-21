@@ -27,6 +27,7 @@ class Modul extends Model
         'uploader_id',
         'slug',
         'semester',
+        'tahun_ajaran',
     ];
 
     public static function search($request)
@@ -39,6 +40,7 @@ class Modul extends Model
             "uploader_id" => "=",
             "slug" => "=",
             "semester" => "=",
+            "tahun_ajaran" => "=",
         ]);
 
         return $data;
