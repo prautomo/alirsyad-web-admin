@@ -92,6 +92,7 @@ class Modul extends Model
                 'id' => @$previousModul->id,
                 'name' => @$previousModul->name,
                 'url' => route('app.modul.detail', @$previousModul->id),
+                'slug_url' => route('app.modul.detail', @$previousModul->slug).".html",
                 'endpoint' => route('api.modul.detail', @$previousModul->id),
             ];
         }

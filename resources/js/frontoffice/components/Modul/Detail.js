@@ -175,7 +175,7 @@ function ModulDetail({
             </div> */}
 
             {(data?.data?.previous?.url) &&
-            <Button className="mt-4 btn-main btn-small mr-4" href={data?.data?.previous?.url}>Modul Sebelumnya</Button>
+            <Button className="mt-4 btn-main btn-small mr-4" href={data?.data?.previous?.slug_url}>Modul Sebelumnya</Button>
             }
 
             {data?.data?.next?.url ?

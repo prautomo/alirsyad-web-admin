@@ -353,7 +353,7 @@ function ModulDetail(_ref) {
     height: "800px"
   })), (data === null || data === void 0 ? void 0 : (_data$data3 = data.data) === null || _data$data3 === void 0 ? void 0 : (_data$data3$previous = _data$data3.previous) === null || _data$data3$previous === void 0 ? void 0 : _data$data3$previous.url) && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
     className: "mt-4 btn-main btn-small mr-4",
-    href: data === null || data === void 0 ? void 0 : (_data$data4 = data.data) === null || _data$data4 === void 0 ? void 0 : (_data$data4$previous = _data$data4.previous) === null || _data$data4$previous === void 0 ? void 0 : _data$data4$previous.url
+    href: data === null || data === void 0 ? void 0 : (_data$data4 = data.data) === null || _data$data4 === void 0 ? void 0 : (_data$data4$previous = _data$data4.previous) === null || _data$data4$previous === void 0 ? void 0 : _data$data4$previous.slug_url
   }, "Modul Sebelumnya"), (data === null || data === void 0 ? void 0 : (_data$data5 = data.data) === null || _data$data5 === void 0 ? void 0 : (_data$data5$next = _data$data5.next) === null || _data$data5$next === void 0 ? void 0 : _data$data5$next.url) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
     className: "mt-4 btn-main btn-small",
     onClick: function onClick() {
