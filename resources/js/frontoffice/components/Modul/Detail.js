@@ -10,7 +10,12 @@ import useFetch from '../../../store/useFetch';
 import ToggleSwitch from '../ToggleSwitch/ToggleSwitch';
 import { Provider as AlertProvider } from 'react-alert'
 import AlertTemplate from 'react-alert-template-basic'
-import { useAlert } from 'react-alert'
+import { useAlert } from 'react-alert';
+import { ColorPicker, useColor } from "react-color-palette";
+import "react-color-palette/lib/css/styles.css";
+import { PhotoshopPicker, SketchPicker } from 'react-color';
+import reactCSS from 'reactcss'
+import "./Detail.css";
 
 const styles = {
     border: "0.0625rem solid #9c9c9c",
@@ -29,8 +34,11 @@ function ModulDetail({
     
     const [showCanvas, setShowCanvas] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
-    const [warna, setWarna] = useState("black");
+    const [warna, setWarna] = useState("#000000");
+    const [warnaTemp, setWarnaTemp] = useState("#000000");
     const [disabledBtnDone, setDisabledBtnDone] = useState(false);
+    const [showColor, setShowColor] = useState(false);
+    const [color, setColor] = useColor("hex", "#121212");
 
     const { data, isLoading, isError } = useFetch("/modul/"+idModul+"/json")
     const alert = useAlert()
@@ -93,6 +101,10 @@ function ModulDetail({
                 <div className="text-left form-inline">
                     <h3>{data?.data?.name ?? '-'}</h3>
                     <div id="toggle" className="ml-auto form-inline">
+                        {/* <Button className="btn-main btn-small mr-2" href={linkModul}>
+                            Kembali ke List
+                        </Button> */}
+
                         <ToggleSwitch 
                             id="showCanvas"
                             small
@@ -140,47 +152,8 @@ function ModulDetail({
             {/* <p>{ JSON.stringify(data) }</p> */}
 
             {showCanvas &&
+            <>
             <div id="layer-coret" style={{ position: "absolute", paddingRight: "12px" }}>
-                <Button
-                    onClick={() => {
-                        canvas.current.clearCanvas();
-                    }}
-                    className="btn-main mr-2 btn-small"
-                >
-                    Clear
-                </Button>
-                <Button
-                    onClick={() => {
-                        canvas.current.undo();
-                    }}
-                    className="btn-main mr-2 btn-small"
-                >
-                    Undo
-                </Button>
-                <Button
-                    onClick={() => {
-                        canvas.current.redo();
-                    }}
-                    className="btn-main mr-2 btn-small"
-                >
-                    Redo
-                </Button>
-                <Button
-                    onClick={() => {
-                        setWarna("red");
-                    }}
-                    className="btn-main mr-2 btn-small"
-                >
-                    Red
-                </Button>
-                <Button
-                    onClick={() => {
-                        setWarna("black");
-                    }}
-                    className="btn-main mr-2 btn-small"
-                >
-                    Black
-                </Button>
                 <ReactSketchCanvas
                     ref={canvas}
                     style={styles}
@@ -190,6 +163,7 @@ function ModulDetail({
                     strokeColor={warna}
                 />
             </div>
+            </>
             }
             
             <div style={{overflowX:'auto', height:'100%'}}>
@@ -212,6 +186,96 @@ function ModulDetail({
                 onClick={() => finishModul()}>Selesai Membaca</Button>
             }
         </>
+        }
+
+        {showCanvas &&
+        <div className="layer-toolbox">
+            <Button
+                onClick={() => {
+                    canvas.current.undo();
+                }}
+                className="btn-main mr-2 btn-small mb-2"
+            >
+                Undo
+            </Button>
+            <Button
+                onClick={() => {
+                    canvas.current.clearCanvas();
+                }}
+                className="btn-main mr-2 btn-small mb-2"
+            >
+                Clear
+            </Button>
+            {/* <Button
+                onClick={() => {
+                    setShowColor(!showColor)
+                }}
+                className="btn-main mr-2 btn-small mb-2"
+            >
+                Change Color
+            </Button> */}
+            <Button
+                onClick={() => {
+                    setWarna("red")
+                }}
+                className="btn-main mr-2 btn-small mb-2"
+            >
+                Pen Red
+            </Button>
+            <Button
+                onClick={() => {
+                    setWarna("black")
+                }}
+                className="btn-main mr-2 btn-small mb-2"
+            >
+                Pen Black
+            </Button>
+            {/* <div style={ {
+                marginRight: '.5rem !important',
+                padding: '5px',
+                background: '#fff',
+                borderRadius: '1px',
+                boxShadow: '0 0 0 1px rgba(0,0,0,.1)',
+                display: 'inline-block',
+                cursor: 'pointer',
+            } } onClick={ () => setShowColor(!showColor) }>
+                    <div style={ {
+                        width: '36px',
+                        height: '14px',
+                        borderRadius: '2px',
+                        background: `${ warna }`,
+                    } } />
+            </div> */}
+            <Button
+                onClick={() => {
+                    canvas.current.redo();
+                }}
+                className="btn-main mr-2 btn-small mb-2"
+            >
+                Redo
+            </Button>
+{/* 
+            <SketchPicker color={ warna } onChange={(color) => setWarna(color.hex)} /> */}
+
+            {showColor &&
+            <PhotoshopPicker
+                className="mr-auto ml-auto"
+                color={ warnaTemp }
+                onChange={(color) => setWarnaTemp(color.hex)}
+                onChangeComplete={(color) => {
+                    setWarnaTemp(color.hex)
+                }}
+                onAccept={() => {
+                    setWarna(warnaTemp)
+                    setShowColor(!showColor)
+                }}
+                onCancel={() => {
+                    setWarnaTemp(warna)
+                    setShowColor(!showColor)
+                }}
+            />
+            }
+        </div>
         }
     </>);
 }
