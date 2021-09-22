@@ -43,11 +43,12 @@
 						<div class="row">
                             @forelse($simulasis as $simulasi)
                             <div class="col-md-4 mb-4">
-                            <a href="{{ route('app.simulasi.detail', @$simulasi->slug) }}.html" style="text-decoration: none;">
                                 <div class="card" style="width: 100%;">
                                     <div>
+                                    <a href="{{ route('app.simulasi.detail', @$simulasi->slug) }}.html" style="text-decoration: none;">
                                         <img class="card-img-top" style="max-height: 140px; height: 140px;" src="{{ @$simulasi->icon ? asset($simulasi->icon) : '/images/placeholder.png' }}" alt="{{ @$simulasi->name ?? "-" }}">
                                         <div class="rating">
+                                    </a>
                                             @php
                                             $rataRataScore = @$simulasi->rata_rata_score ?? 0;
                                             @endphp
@@ -64,7 +65,6 @@
                                         </h6>
                                     </div>
                                 </div>
-                            </a>
                             </div>
                             @empty
                             <div class="ml-1">Belum ada simulasi pembelajaran</div>
