@@ -155,6 +155,7 @@ function ModulDetail({
             <>
             <div id="layer-coret" style={{ position: "absolute", paddingRight: "12px" }}>
                 {/*  */}
+                {/* <SketchPicker color={ warna } onChange={(color) => setWarna(color.hex)} /> */}
                 <Button
                     onClick={() => {
                         canvas.current.clearCanvas();
@@ -209,7 +210,7 @@ function ModulDetail({
             </>
             }
             
-            <div style={{overflowX:'auto', height:'100%'}}>
+            <div style={{overflowX:'auto', height:'100%', marginTop: (showCanvas ? "50px" : "0px")}}>
                 <object data={data?.data?.pdf_url} type="text/html" width="100%" height="800px"></object>
             </div>
 

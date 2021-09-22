@@ -369,7 +369,8 @@ function ModulDetail(_ref) {
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
     style: {
       overflowX: 'auto',
-      height: '100%'
+      height: '100%',
+      marginTop: showCanvas ? "50px" : "0px"
     }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("object", {
     data: data === null || data === void 0 ? void 0 : (_data$data2 = data.data) === null || _data$data2 === void 0 ? void 0 : _data$data2.pdf_url,
