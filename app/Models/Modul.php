@@ -28,6 +28,7 @@ class Modul extends Model
         'slug',
         'semester',
         'tahun_ajaran',
+        'urutan',
     ];
 
     public static function search($request)
@@ -41,6 +42,7 @@ class Modul extends Model
             "slug" => "=",
             "semester" => "=",
             "tahun_ajaran" => "=",
+            "urutan" => "=",
         ]);
 
         return $data;

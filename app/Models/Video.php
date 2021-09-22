@@ -27,6 +27,7 @@ class Video extends Model
         'mata_pelajaran_id',
         'uploader_id',
         'semester',
+        'urutan',
     ];
 
     public static function search($request)
@@ -38,6 +39,7 @@ class Video extends Model
             "mata_pelajaran_id" => "=",
             "uploader_id" => "=",
             "semester" => "=",
+            "urutan" => "=",
         ]);
 
         return $data;

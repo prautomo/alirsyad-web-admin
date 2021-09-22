@@ -27,6 +27,7 @@ class Simulasi extends Model
         'uploader_id',
         'slug',
         'semester',
+        'urutan',
     ];
 
     public static function search($request)
@@ -39,6 +40,7 @@ class Simulasi extends Model
             "uploader_id" => "=",
             "slug" => "=",
             "semester" => "=",
+            "urutan" => "=",
         ]);
 
         return $data;

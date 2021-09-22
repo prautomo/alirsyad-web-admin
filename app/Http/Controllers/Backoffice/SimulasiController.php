@@ -163,7 +163,7 @@ class SimulasiController extends Controller{
         // default image
         $url = "images/placeholder.png";
         // temp request
-        $dataReq = $request->only(['name', 'icon', 'description', 'mata_pelajaran_id', 'semester']);
+        $dataReq = $request->only(['name', 'icon', 'description', 'mata_pelajaran_id', 'semester', 'urutan']);
         $dataReq['uploader_id'] = \Auth::user()->id;
 
         if ($request->hasFile('icon')) {
@@ -224,7 +224,7 @@ class SimulasiController extends Controller{
             'semester' => 'required|numeric|min:1,max:2',
         ]);
 
-        $dataReq = $request->only(['name', 'icon', 'description', 'mata_pelajaran_id', 'slug', 'semester']);
+        $dataReq = $request->only(['name', 'icon', 'description', 'mata_pelajaran_id', 'slug', 'semester', 'urutan']);
 
         if ($request->hasFile('icon')) {
             $validated = $request->validate([
