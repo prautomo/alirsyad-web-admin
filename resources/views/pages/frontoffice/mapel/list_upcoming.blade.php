@@ -15,7 +15,7 @@
 						</div>
 						<hr/>
 						
-                        <div style="height: 500px; overflow: auto;">
+                        <div style="max-height: 500px; overflow: auto;">
 
                             @forelse($yangAkanDatang as $yangAkanDatang)
                             <div class="wrap-kelas form-inline mt-3">
