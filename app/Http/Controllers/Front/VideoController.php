@@ -37,8 +37,8 @@ class VideoController extends Controller
         }
         
         $videos = $videos->where('mata_pelajaran_id', $idMapel);
-        // sorting by name
-        $videos = $videos->orderBy('name', 'asc');
+        // sorting by urutan
+        $videos = $videos->orderBy('urutan', 'asc');
         // get list
         $videos = $videos->get();
 

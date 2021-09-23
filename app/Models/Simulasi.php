@@ -69,9 +69,9 @@ class Simulasi extends Model
     public function getNextAttribute(){
         // get next simulasi
         $nextSimulasi = $this
-            ->where('name', '>', $this->name)
+            ->where('urutan', '>', $this->urutan)
             ->where('mata_pelajaran_id', $this->mata_pelajaran_id)
-            ->orderBy('name','asc')->first();
+            ->orderBy('urutan','asc')->first();
 
         $returnNext = null;
 
@@ -90,9 +90,9 @@ class Simulasi extends Model
     public function getPreviousAttribute(){
         // get previous simulasi
         $previousSimulasi =  $this
-            ->where('name', '<', $this->name)
+            ->where('urutan', '<', $this->urutan)
             ->where('mata_pelajaran_id', $this->mata_pelajaran_id)
-            ->orderBy('name','desc')->first();
+            ->orderBy('urutan','desc')->first();
         
         $returnPrevious = null;
 

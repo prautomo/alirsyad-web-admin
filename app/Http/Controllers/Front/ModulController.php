@@ -37,8 +37,8 @@ class ModulController extends Controller
         }
         
         $moduls = $moduls->where('mata_pelajaran_id', $idMapel);
-        // sorting by name
-        $moduls = $moduls->orderBy('name', 'asc');
+        // sorting by urutan
+        $moduls = $moduls->orderBy('urutan', 'asc');
         // get list
         $moduls = $moduls->get();
 
