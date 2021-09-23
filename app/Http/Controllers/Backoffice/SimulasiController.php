@@ -159,6 +159,7 @@ class SimulasiController extends Controller{
             'mata_pelajaran_id' => 'required',
             'game' => 'required|file|mimes:zip',
             'semester' => 'required|numeric|min:1,max:2',
+            'urutan' => 'required|numeric|min:0',
         ]);
         // default image
         $url = "images/placeholder.png";
@@ -222,6 +223,7 @@ class SimulasiController extends Controller{
             'name' => 'required|string',
             'mata_pelajaran_id' => 'required',
             'semester' => 'required|numeric|min:1,max:2',
+            'urutan' => 'required|numeric|min:0',
         ]);
 
         $dataReq = $request->only(['name', 'icon', 'description', 'mata_pelajaran_id', 'slug', 'semester', 'urutan']);

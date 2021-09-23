@@ -157,6 +157,7 @@ class VideoController extends Controller{
             'mata_pelajaran_id' => 'required',
             'video_url' => 'required|url',
             'semester' => 'required|numeric|min:1,max:2',
+            'urutan' => 'required|numeric|min:0',
         ]);
         // default image
         $url = "images/placeholder.png";
@@ -198,6 +199,7 @@ class VideoController extends Controller{
             'mata_pelajaran_id' => 'required',
             'video_url' => 'required|url',
             'semester' => 'required|numeric|min:1,max:2',
+            'urutan' => 'required|numeric|min:0',
         ]);
 
         $dataReq = $request->only(['name', 'video_url', 'icon', 'description', 'mata_pelajaran_id', 'semester', 'urutan']);

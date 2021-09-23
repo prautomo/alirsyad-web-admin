@@ -160,6 +160,7 @@ class ModulController extends Controller{
             'mata_pelajaran_id' => 'required',
             'modul' => 'required|file|mimes:pdf',
             'semester' => 'required|numeric|min:1,max:2',
+            'urutan' => 'required|numeric|min:0',
         ]);
 
         // default image
@@ -212,6 +213,7 @@ class ModulController extends Controller{
             'name' => 'required|string',
             'mata_pelajaran_id' => 'required',
             'semester' => 'required|numeric|min:1,max:2',
+            'urutan' => 'required|numeric|min:0',
         ]);
 
         $dataReq = $request->only(['name', 'icon', 'description', 'mata_pelajaran_id', 'slug', 'semester', 'tahun_ajaran', 'urutan']);
