@@ -149,11 +149,12 @@ function ModulDetail({
             <p>Loading...</p>
         :
         <>
-            {/* <p>{ JSON.stringify(data) }</p> */}
+            <Row className="mb-1">
+            <Col md="12">
 
             {showCanvas &&
             <>
-            <div id="layer-coret" style={{ position: "absolute", paddingRight: "12px" }}>
+            <div id="layer-coret" style={{ position: "absolute", paddingRight: "25px", width: "100%" }}>
                 {/*  */}
                 {/* <SketchPicker color={ warna } onChange={(color) => setWarna(color.hex)} /> */}
                 <Button
@@ -229,6 +230,9 @@ function ModulDetail({
                 disabled={data?.data?.read || disabledBtnDone}
                 onClick={() => finishModul()}>Selesai Membaca</Button>
             }
+
+            </Col>
+            </Row>
         </>
         }
 
