@@ -4,11 +4,11 @@ namespace App\Http\Controllers\API;
    
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
-use App\Models\Tingkat;
+use App\Models\Kelas;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Resources\Tingkat as TingkatResource;
+use App\Http\Resources\Kelas as KelasResource;
    
-class TingkatController extends BaseController
+class KelasController extends BaseController
 {
 
     /**
@@ -18,9 +18,9 @@ class TingkatController extends BaseController
      */
     public function index(Request $request)
     {
-        $datas = Tingkat::search($request)->get();
+        $datas = Kelas::search($request)->get();
     
-        return $this->sendResponse(TingkatResource::collection($datas), 'Tingkat retrieved successfully.');
+        return $this->sendResponse(KelasResource::collection($datas), 'Kelas retrieved successfully.');
     }
    
     /**
@@ -31,12 +31,12 @@ class TingkatController extends BaseController
      */
     public function show($id)
     {
-        $data = Tingkat::find($id);
+        $data = Kelas::find($id);
   
         if (is_null($data)) {
-            return $this->sendError('Tingkat not found.');
+            return $this->sendError('Kelas not found.');
         }
    
-        return $this->sendResponse(new TingkatResource($data), 'Tingkat retrieved successfully.');
+        return $this->sendResponse(new KelasResource($data), 'Kelas retrieved successfully.');
     }
 }

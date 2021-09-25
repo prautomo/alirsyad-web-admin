@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class Tingkat extends JsonResource
+class Jenjang extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,10 +18,8 @@ class Tingkat extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'jenjang' => new Jenjang($this->jenjang),
-            'description' => $this->description,
-            'created_at' => $this->created_at->format('d/m/Y'),
-            'updated_at' => $this->updated_at->format('d/m/Y'),
+            'logo' => $this->logo,
+            'created_at' => $this->created_at,
         ];
     }
 }

@@ -81,12 +81,57 @@
                                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
                             </div>
 
+                            <div class="form-group ">
+                                <label for="jenjang_id" class=" col-form-label text-md-right" id="jenjang_id">{{ __('Jenjang') }}</label>
+
+                                <select id="jenjang_id" class="form-control @error('jenjang_id') is-invalid @enderror" name="jenjang_id" required autofocus>
+                                    <option value="" selected>Pilih jenjang.</option>
+                                    @forelse(\App\Models\Jenjang::get() as $jenjang)
+                                    <option value="{{ $jenjang->id }}">{{ $jenjang->name }}</option>
+                                    @empty
+                                    <!-- <option value="">Tidak ada jenjang.</option> -->
+                                    @endforelse
+                                </select>
+
+                                @error('jenjang_id')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+
+                            <div class="form-group ">
+                                <label for="tingkat_id" class=" col-form-label text-md-right" id="tingkat_id">{{ __('Tingkat') }}</label>
+
+                                <select id="tingkat_id" class="form-control @error('tingkat_id') is-invalid @enderror" name="tingkat_id" required autofocus>
+                                    <option value="" selected>Pilih tingkat.</option>
+                                </select>
+
+                                @error('tingkat_id')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+
+                            <div class="form-group ">
+                                <label for="kelas_id" class=" col-form-label text-md-right" id="kelas_id">{{ __('Kelas') }}</label>
+
+                                <select id="kelas_id" class="form-control @error('kelas_id') is-invalid @enderror" name="kelas_id" required autofocus>
+                                    <option value="" selected>Pilih kelas.</option>
+                                </select>
+
+                                @error('kelas_id')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+
                             <div class="form-group  mb-0">
                                 <button type="submit" class="btn btn-main w-100">
                                     {{ __('Register') }}
                                 </button>
-
-
                             </div>
                         </div>
                     </form>

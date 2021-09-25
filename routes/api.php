@@ -28,8 +28,12 @@ Route::middleware('auth:api')->group( function () {
     Route::post('upload/photo', [ExternalUserController::class, 'uploadPhoto']);
     Route::post('upload/photo/base64', [ExternalUserController::class, 'uploadImageBase64']);
 
+    Route::get("/jenjangs", "API\JenjangController@index");
+    Route::get("/jenjangs/{id}", "API\JenjangController@show");
     Route::get("/tingkats", "API\TingkatController@index");
     Route::get("/tingkats/{id}", "API\TingkatController@show");
+    Route::get("/kelas", "API\KelasController@index");
+    Route::get("/kelas/{id}", "API\KelasController@show");
 
     Route::get("/mata_pelajarans", "API\MataPelajaranController@index");
     Route::get("/mata_pelajarans/inprogress", "API\MataPelajaranController@inprogress");

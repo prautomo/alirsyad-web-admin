@@ -51,11 +51,12 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'nis' => ['required', 'string', 'max:255'],
+            'nis' => ['required', 'string', 'max:255', 'unique:external_users'],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:external_users'],
             'phone' => ['required', 'string', 'max:255', 'unique:external_users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => ['required', 'string', 'min:6', 'confirmed'],
+            'kelas_id' => ['required', 'integer'],
             // 'user_type' => ['required', 'string', 'in:SISWA'],
         ]);
     }
@@ -76,6 +77,8 @@ class RegisterController extends Controller
             'phone' => $data['phone'],
             'password' => Hash::make($data['password']),
             'role' => "SISWA",
+            'is_pengunjung' => true,
+            'kelas_id' => $data['kelas_id'],
         ]);
         return $registerd;
     }
