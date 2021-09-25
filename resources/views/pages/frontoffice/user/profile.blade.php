@@ -45,11 +45,12 @@
                             <div class="form-group">
                                 <label>Email</label>
                                 <input type="text" disabled value="{{ @$user_data->email }}" class="form-control" />
-                                <!-- <span style="width:200px" class="badge  badge-{{$user_data->email_verified_at ? 'success' : 'danger'}} text-center">{{$user_data->email_verified_at ? "Email Terverifikasi" :  "Email Belum Terverifikasi"}}</span>
+
+                                <!-- <span style="width:200px" class="mt-2 badge badge-{{$user_data->email_verified_at ? 'success' : 'danger'}} text-center">{{$user_data->email_verified_at ? "Email Terverifikasi" :  "Email Belum Terverifikasi"}}</span>
 
                                 @if(!$user_data->email_verified_at )
-
-                                <a href="/app/verification/resend" onclick="event.preventDefault();
+                                <br/>
+                                <a href="/app/verification/resend" class="btn btn-small btn-success" onclick="event.preventDefault();
                                         document.getElementById('resend-form').submit();">
                                     Kirim Ulang Email
                                 </a>
@@ -69,9 +70,9 @@
                             </div>
 
                             <div class="form-group mt-2 text-center">
-                                <!-- <button type="button" class="btn btn-main btn-small">
+                                <a href="{{ route('app.akun-saya.profile-edit') }}" type="button" class="btn btn-main btn-small">
                                     Edit Profile
-                                </button> -->
+                                </a>
                                 <a href="{{ route('app.akun-saya.password-edit') }}" type="button" class="ml-1 btn btn-main btn-small">
                                     Edit Password
                                 </a>

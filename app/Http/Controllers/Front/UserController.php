@@ -25,20 +25,27 @@ class UserController extends Controller
     {
         $mitraDetail = ExternalUser::where("id", Auth::user()->id)->first();
         // dd(Auth::user());
-        return view("app.Screen.user.update", [
+        return view("pages.frontoffice.user.edit_profile", [
             "mitra_detail" =>  $mitraDetail
         ]);
     }
 
     public function profileUpdate(Request $request)
     {
-        $mitraDetail = ExternalUser::where("id", Auth::user()->id)->first();
+        $user = Auth::user();
 
-        $mitraDetail->update($request->only([
-            "name",
-        ]));
+        $validatedData = $request->validate([
+            'email' => 'required|email|unique:external_users,email,'.$user->id,
+        ]);
 
-        return $this->returnStatus("200", "Info Toko Sudah Di Update");
+        $update = $request->only([
+            "email"
+        ]);
+        $update['email_verified_at'] = null;
+
+        $user->update($update);
+
+        return redirect("/profile")->with('success', "Profile Berhasil Di Ubah");;
     }
 
     public function passwordEdit()
