@@ -1,0 +1,78 @@
+<?php
+   
+namespace App\Http\Controllers\API;
+   
+use Illuminate\Http\Request;
+use App\Http\Controllers\API\BaseController as BaseController;
+use App\Models\ExternalUser;
+use Illuminate\Support\Facades\Auth;
+use App\Services\CloudinaryFileManager;
+use App\Services\UploadService;
+use Validator;
+   
+class ExternalUserController extends BaseController
+{
+    /**
+     * Profile api
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function profile(Request $request)
+    {
+        $user = Auth::user(); 
+        
+        $success['nis'] = @$user->nis; 
+        $success['name'] = @$user->name;
+        $success['role'] = @$user->role;
+        $success['kelas'] = @$user->kelas->name;
+        $success['tingkat'] = @$user->kelas->tingkat->name;
+        $success['jenjang'] = @$user->kelas->tingkat->jenjang->name;
+
+        return $this->sendResponse($success, 'User retrieved successfully.');
+    }
+
+    /**
+     * Upload image from base64
+     */
+    public function uploadImageBase64(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'base64_image' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->returnStatus(400, $validator->errors());  
+        }
+
+        $success = [
+            "image_url" => CloudinaryFileManager::saveImageBase64($request->base64_image, 'images'),
+        ];
+
+        return $this->sendResponse($success, 'Image uploaded.');
+    }
+
+    /**
+     * Upload image from file
+     */
+    public function uploadPhoto(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'file' => 'required|image|mimes:jpeg,png,jpg|max:2028'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->returnStatus(400, $validator->errors());     
+        }
+
+        $image = $request->file('file');
+        $extension = $image->extension();
+        $url = UploadService::uploadImage($image, 'file/photo');
+
+        $success = [
+            "image_path" => $url,
+            "image_url" => asset($url),
+        ];
+
+        return $this->sendResponse($success, 'Image uploaded.');
+    }
+}

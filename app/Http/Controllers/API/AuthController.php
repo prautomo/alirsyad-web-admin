@@ -59,23 +59,4 @@ class AuthController extends BaseController
             return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
         }
     }
-
-    /**
-     * Profile api
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function profile(Request $request)
-    {
-        $user = Auth::user(); 
-        
-        $success['nis'] = @$user->nis; 
-        $success['name'] = @$user->name;
-        $success['role'] = @$user->role;
-        $success['kelas'] = @$user->kelas->name;
-        $success['tingkat'] = @$user->kelas->tingkat->name;
-        $success['jenjang'] = @$user->kelas->tingkat->jenjang->name;
-
-        return $this->sendResponse($success, 'User retrieved successfully.');
-    }
 }

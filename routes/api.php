@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
   
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\ExternalUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +20,10 @@ Route::post('login', [AuthController::class, 'login']);
 
 Route::middleware('auth:api')->group( function () {
     Route::post('logout', [AuthController::class, 'logout']);
-    Route::get('profile', [AuthController::class, 'profile']);
+
+    Route::get('profile', [ExternalUserController::class, 'profile']);
+    Route::post('upload/photo', [ExternalUserController::class, 'uploadPhoto']);
+    Route::post('upload/photo/base64', [ExternalUserController::class, 'uploadImageBase64']);
 
     Route::get("/tingkats", "API\TingkatController@index");
     Route::get("/tingkats/{id}", "API\TingkatController@show");
