@@ -134,6 +134,12 @@ class SimulasiController extends BaseController
             return $this->sendResponse(new ScoreResource($sendResponse), 'Score not saved. You\'re not a student.');
         }
 
+        if($user->is_pengunjung){
+            $sendResponse = $request->only(['score', 'semester']);
+
+            return $this->sendResponse(new ScoreResource($sendResponse), 'Score not saved. You\'re a visitor.');
+        }
+
         // get data prev last score
         $lastScore = Score::where(['simulasi_id' => $id, 'siswa_id' => $user->id])
             ->latest('percobaan_ke')
