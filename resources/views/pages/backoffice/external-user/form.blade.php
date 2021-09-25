@@ -82,7 +82,9 @@
 @if(\Request::get('role') === 'SISWA')
 <script>
     $('select#tingkat_id').on('change', function() {
-        loadKelas( this.value );
+        if(this.value){
+            loadKelas( this.value );
+        }
     });
 
     function loadKelas(tingkatId, selectedId){
@@ -108,16 +110,35 @@
     @if(Request::segment(3)!=='create')
     $(async function(){
         
-        var tingkatId = "{{$data->kelas->tingkat_id}}";
-        var kelasId = "{{$data->kelas_id}}";
+        var tingkatId = "{{@$data->kelas->tingkat_id}}";
+        var kelasId = "{{@$data->kelas_id}}";
 
         // select default tingkat
         $("select#tingkat_id").val(tingkatId);
 
         // load list kelas
-        await loadKelas( tingkatId, kelasId );
+        if(tingkatId){
+            await loadKelas( tingkatId, kelasId );
+        }
     }); 
     @endif
 </script>
 @endif
+@endpush
+
+
+@push('plugin_script')
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#tingkat_id').select2();
+    });
+</script>
+@endpush
+
+@push('script')
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+@endpush
+
+@push('plugin_css')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 @endpush
