@@ -61,6 +61,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post("/simulasis/{id}/flag/json", "API\SimulasiController@createHistory");
 
     Route::get('/profile', "Front\UserController@profile")->name('app.akun-saya');
+    Route::post('/profile/photo', "Front\UserController@profilePhoto")->name('app.akun-saya.photo');
     Route::get('/profile/edit', "Front\UserController@profileEdit")->name('app.akun-saya.profile-edit');
     Route::post('/profile/edit', "Front\UserController@profileUpdate")->name('app.akun-saya.profile-update');
     Route::get('/profile/password-edit', "Front\UserController@passwordEdit")->name('app.akun-saya.password-edit');

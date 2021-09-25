@@ -20,7 +20,20 @@
             <div class="col-md-4">
                 <div class="card text-center col-lg-12 mb-4">
                     <div class="card-body">
-                        <img src="{{$user_data->photo != '' ? $user_data->photo : '/images/placeholder.png'}}" width="200px" height="200px" class="img-fluid rounded-circle" alt="" style="background-color: #eee;height: 200px;">
+                        <img id="profileImage" src="{{$user_data->photo != '' ? $user_data->photo : '/images/placeholder.png'}}" width="200px" height="200px" class="img-fluid rounded-circle" alt="" style="background-color: #eee;height: 200px;">
+
+                        <form id="change-photo-form" action="{{ route('app.akun-saya.photo') }}" method="POST" enctype="multipart/form-data" class="d-none">
+                            @csrf
+                            <input type="file" id="img_upload" name="file" accept="image/*" /> 
+                        </form>
+
+                        <button class="mt-3 btn btn-small" id="selectPhoto">Select Photo</button>
+
+                        <button class="mt-3 btn btn-small" 
+                            id="savePhoto"
+                            onclick="event.preventDefault();
+                                        document.getElementById('change-photo-form').submit();"
+                        >Save</button>
                     </div>
                 </div>
             </div>
@@ -85,3 +98,34 @@
     </div>
 </section>
 @endsection
+
+@push('script')
+<script>
+
+    $(() => {
+        $("#savePhoto").hide();
+    });
+
+    $('#selectPhoto').click(function(){ $('#img_upload').click(); });
+
+
+    $("#img_upload").change(function (event) {
+        readURL(this);
+
+        $("#savePhoto").show();
+        $("#savePhoto").show();
+    });
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#profileImage').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+
+            console.log("dika file", input)
+        }
+    }
+</script>
+@endpush

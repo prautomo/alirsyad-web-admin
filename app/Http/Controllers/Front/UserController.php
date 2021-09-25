@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Services\UploadService;
 
 class UserController extends Controller
 {
@@ -45,7 +46,7 @@ class UserController extends Controller
 
         $user->update($update);
 
-        return redirect("/profile")->with('success', "Profile Berhasil Di Ubah");;
+        return redirect("/profile")->with('success', "Profile Berhasil Di Ubah");
     }
 
     public function passwordEdit()
@@ -77,5 +78,23 @@ class UserController extends Controller
         Auth::user()->update(["password" => Hash::make($validatedData['password'])]);
 
         return redirect("/profile")->with('success', "Password Berhasil Di Ubah");;
+    }
+
+    public function profilePhoto(Request $request){
+        
+        $validatedData = $request->validate([
+            'file' => 'required|image|mimes:jpeg,png,jpg|max:2028'
+        ]);
+
+        $image = $request->file('file');
+        $extension = $image->extension();
+        $url = UploadService::uploadImage($image, 'file/photo');
+
+        $update['photo'] = $url;
+
+        $user = Auth::user();
+        $user->update($update);
+
+        return redirect("/profile")->with('success', "Profile Berhasil Di Ubah");
     }
 }
