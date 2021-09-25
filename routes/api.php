@@ -22,6 +22,7 @@ Route::middleware('auth:api')->group( function () {
     Route::post('logout', [AuthController::class, 'logout']);
 
     Route::get('profile', [ExternalUserController::class, 'profile']);
+    Route::post('profile', [ExternalUserController::class, 'profileUpdate']);
     Route::post('upload/photo', [ExternalUserController::class, 'uploadPhoto']);
     Route::post('upload/photo/base64', [ExternalUserController::class, 'uploadImageBase64']);
 

@@ -31,6 +31,39 @@ class ExternalUserController extends BaseController
         return $this->sendResponse($success, 'User retrieved successfully.');
     }
 
+    public function profileUpdate(Request $request){
+        $user = Auth::user(); 
+
+        if(@$request->email){
+            $validator = Validator::make($request->all(), [
+                'email' => 'required|email|unique:external_users,email,'.$user->id,
+            ]);
+    
+            if ($validator->fails()) {
+                return $this->returnStatus(400, $validator->errors());  
+            }
+
+            $user->email = $request->email;
+        }
+
+        if(@$request->photo){
+            $user->photo = $request->photo;
+        }
+
+        $user->save();
+
+        $success['nis'] = @$user->nis; 
+        $success['name'] = @$user->name;
+        $success['email'] = @$user->email;
+        $success['photo'] = @$user->photo ? asset($user->photo) : '/images/placeholder.png';
+        $success['role'] = @$user->role;
+        $success['kelas'] = @$user->kelas->name;
+        $success['tingkat'] = @$user->kelas->tingkat->name;
+        $success['jenjang'] = @$user->kelas->tingkat->jenjang->name;
+
+        return $this->sendResponse($success, 'User updated successfully.');
+    }
+
     /**
      * Upload image from base64
      */
