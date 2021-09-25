@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\ExternalUser;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\ResetPasswordRequest;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use Validator;
    
 class AuthController extends BaseController
@@ -43,6 +46,37 @@ class AuthController extends BaseController
         else{ 
             return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
         } 
+    }
+
+    public function forgot(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->returnStatus(400, $validator->errors());  
+        }
+
+        $credentials = $request->only(['email']);
+
+        Password::sendResetLink($credentials);
+
+        $success = ["msg" => 'Reset password link sent on your email id.'];
+
+        return $this->sendResponse($success, 'User updated successfully.');
+    }
+
+    public function reset(ResetPasswordRequest $request) {
+        $reset_password_status = Password::reset($request->validated(), function ($user, $password) {
+            $user->password = Hash::make($password);
+            $user->save();
+        });
+
+        if ($reset_password_status == Password::INVALID_TOKEN) {
+            return $this->respondBadRequest(ApiCode::INVALID_RESET_PASSWORD_TOKEN);
+        }
+
+        return $this->respondWithMessage("Password has been successfully changed");
     }
 
     /**

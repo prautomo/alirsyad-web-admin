@@ -8,6 +8,7 @@ use App\Models\ExternalUser;
 use Illuminate\Support\Facades\Auth;
 use App\Services\CloudinaryFileManager;
 use App\Services\UploadService;
+use Illuminate\Support\Facades\Hash;
 use Validator;
    
 class ExternalUserController extends BaseController
@@ -62,6 +63,39 @@ class ExternalUserController extends BaseController
         $success['jenjang'] = @$user->kelas->tingkat->jenjang->name;
 
         return $this->sendResponse($success, 'User updated successfully.');
+    }
+
+    public function changePassword(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'old_password' => ['required', 'string'],
+            'new_password' => ['required', 'string', 'min:6', 'confirmed'],
+        ]);
+
+        if ($validator->fails()) {
+            return $this->returnStatus(400, $validator->errors());  
+        }
+
+        $user = Auth::user(); 
+
+        if(Hash::check($request->old_password, $user->password)){
+            $user->password = Hash::make($request->new_password);
+
+            $user->save();
+
+            $success['nis'] = @$user->nis; 
+            $success['name'] = @$user->name;
+            $success['email'] = @$user->email;
+            $success['photo'] = @$user->photo ? asset($user->photo) : '/images/placeholder.png';
+            $success['role'] = @$user->role;
+            $success['kelas'] = @$user->kelas->name;
+            $success['tingkat'] = @$user->kelas->tingkat->name;
+            $success['jenjang'] = @$user->kelas->tingkat->jenjang->name;
+
+            return $this->sendResponse($success, 'User password updated successfully.');
+        }else{
+            return $this->sendResponse([], 'Failed to update password.');
+        }
     }
 
     /**

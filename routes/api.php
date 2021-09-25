@@ -17,12 +17,14 @@ use App\Http\Controllers\API\ExternalUserController;
 |
 */
 Route::post('login', [AuthController::class, 'login']);
+Route::post('password/forgot', [AuthController::class, 'forgot']);
 
 Route::middleware('auth:api')->group( function () {
     Route::post('logout', [AuthController::class, 'logout']);
 
     Route::get('profile', [ExternalUserController::class, 'profile']);
     Route::post('profile', [ExternalUserController::class, 'profileUpdate']);
+    Route::post('profile/password', [ExternalUserController::class, 'changePassword']);
     Route::post('upload/photo', [ExternalUserController::class, 'uploadPhoto']);
     Route::post('upload/photo/base64', [ExternalUserController::class, 'uploadImageBase64']);
 
