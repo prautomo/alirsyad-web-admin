@@ -96,6 +96,7 @@ class VideoController extends Controller{
                     "name" => $data->name,
                     "permissionName" => 'video',
                     "class" => $data->class,
+                    "copySlug" => route("app.video.detail", $data->id),
                     "deleteRoute" => route($this->routePath.".destroy", $data->id),
                     "editRoute" => route($this->routePath.".edit", $data->id),
                 ]);
