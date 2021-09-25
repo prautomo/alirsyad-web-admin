@@ -17,6 +17,7 @@ use App\Http\Controllers\API\ExternalUserController;
 |
 */
 Route::post('login', [AuthController::class, 'login']);
+Route::post('register', [AuthController::class, 'register']);
 Route::post('password/forgot', [AuthController::class, 'forgot']);
 
 Route::middleware('auth:api')->group( function () {

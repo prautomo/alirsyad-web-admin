@@ -14,7 +14,7 @@ class AddIsPengunjungToExternalUsersTable extends Migration
     public function up()
     {
         Schema::table('external_users', function (Blueprint $table) {
-            $table->boolean('is_pengujung')->default(false);
+            $table->boolean('is_pengunjung')->default(false);
         });
     }
 
@@ -26,7 +26,7 @@ class AddIsPengunjungToExternalUsersTable extends Migration
     public function down()
     {
         Schema::table('external_users', function (Blueprint $table) {
-            $table->dropColumn('is_pengujung');
+            $table->dropColumn('is_pengunjung');
         });
     }
 }

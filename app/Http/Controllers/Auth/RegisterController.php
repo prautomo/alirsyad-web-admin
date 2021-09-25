@@ -69,7 +69,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $registerd =   ExternalUser::create([
+        $registerd = ExternalUser::create([
             'nis' => $data['nis'],
             'name' => $data['name'],
             'email' => $data['email'],

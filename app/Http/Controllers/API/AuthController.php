@@ -48,6 +48,40 @@ class AuthController extends BaseController
         } 
     }
 
+    public function register(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'nis' => ['required', 'string', 'max:255', 'unique:external_users'],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:external_users'],
+            'phone' => ['required', 'string', 'max:255', 'unique:external_users'],
+            'password' => ['required', 'string', 'min:6', 'confirmed'],
+            'kelas_id' => ['required', 'integer'],
+            // 'user_type' => ['required', 'string', 'in:SISWA'],
+        ]);
+
+        if ($validator->fails()) {
+            return $this->returnStatus(400, $validator->errors());  
+        }
+
+        $data = $request;
+
+        $registerd = ExternalUser::create([
+            'nis' => $data['nis'],
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'username' => $data['email'],
+            'phone' => $data['phone'],
+            'password' => Hash::make($data['password']),
+            'role' => "SISWA",
+            'is_pengunjung' => true,
+            'kelas_id' => $data['kelas_id'],
+        ]);
+
+        $success = ["data" => $registerd];
+
+        return $this->sendResponse($success, 'User registered successfully.');
+    }
+
     public function forgot(Request $request) {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
@@ -61,9 +95,7 @@ class AuthController extends BaseController
 
         Password::sendResetLink($credentials);
 
-        $success = ["msg" => 'Reset password link sent on your email id.'];
-
-        return $this->sendResponse($success, 'User updated successfully.');
+        return $this->sendResponse([], 'Reset password link sent on your email id.');
     }
 
     public function reset(ResetPasswordRequest $request) {
