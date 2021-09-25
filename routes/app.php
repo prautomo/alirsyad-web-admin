@@ -19,29 +19,6 @@ use Laravolt\Indonesia\Models\District;
 
 Auth::routes();
 
-// Route::get('/product', "Front\ProductController@index");
-// Route::get('/product/detail/{id}', "Front\ProductController@detail");
-
-// Route::get('/cart', "Front\TransactionController@index");
-// Route::get('/jasa', "Front\TransactionJasaController@index");
-// Route::get("/article/read/{slug}", "Front\ArticleController@read");
-
-// Route::get('/home/nearestmitra', "Front\HomeController@getNearestMitra");
-// Route::get("/app/data/getunit",  "Front\HomeController@getAllUnit");
-// Route::get("/app/data/getcategory",  "Front\HomeController@getAllCategoryWithSubCategory");
-// Route::get("/app/data/getcategory/{category_id}", "Front\HomeController@getSubCategory");
-
-// Route::get("/app/data/getsubcategory",  "Front\HomeController@getAllSubCategory");
-// Route::get("/app/data/getproducts",  "Front\HomeController@getAllProducts");
-// Route::get("/app/data/getbrand",  "Front\HomeController@getAllBrand");
-// Route::get("/app/data/district", function () {
-//     return District::all();
-// });
-
-// Route::get("/app/data/service", "Front\HomeController@getService");
-// Route::get("/app/data/service/{service_id}", "Front\HomeController@getSubService");
-
-
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
@@ -52,6 +29,10 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
 })->middleware('auth')->name('verification.notice');
+
+
+Route::get("/tingkats/json", "API\TingkatController@index")->name('app.tingkat.json');
+Route::get("/kelas/json", "API\KelasController@index")->name('app.kelas.json');
 
 // route front office keur nu login (siswa/guru)
 Route::middleware(['auth'])->group(function () {

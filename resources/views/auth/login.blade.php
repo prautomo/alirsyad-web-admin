@@ -18,6 +18,15 @@
                                     <strong>Gagal!</strong> {!! \Session::get('error') !!}
                                 </div>
                             @endif
+
+                            @if (\Session::has('success'))
+                                <div class="alert alert-success alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong>Sukses!</strong> {!! \Session::get('success') !!}
+                                </div>
+                            @endif
+
+                            
                             <div class="form-group ">
                                 <label for="email" class=" col-form-label text-md-right">{{ __('NIS') }}</label>
 

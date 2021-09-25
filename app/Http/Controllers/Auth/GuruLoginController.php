@@ -58,7 +58,7 @@ class GuruLoginController extends Controller
 
         $fieldType = filter_var($request->email, FILTER_VALIDATE_EMAIL) ? 'email' : 'nis';
 
-        if (auth()->guard('guru')->attempt(array($fieldType => $input['email'], 'password' => $input['password'], 'role' => "GURU"))) {
+        if (auth()->guard('guru')->attempt(array($fieldType => $input['email'], 'password' => $input['password'], 'role' => "GURU", 'status' => "AKTIF"))) {
             $request->session()->regenerate();
             $this->clearLoginAttempts($request);
             return redirect()->intended(route('guru::dashboard'));
