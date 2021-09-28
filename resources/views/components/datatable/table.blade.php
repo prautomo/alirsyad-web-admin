@@ -20,6 +20,18 @@
 <script>
     $(document).ready(function () {
         const datatable = initDatatable('.datatable-serverside');
+
+        // copy slug
+        $(document).on('click', '#datatable-copy-btn', function(event) {
+            event.preventDefault();
+            const slug = $(this).data("slug");
+
+            /* Copy the text inside the text field */
+            navigator.clipboard?.writeText(slug);
+            
+            alert("Copied the text: " + slug);
+        });
+
         $(document).on('click', '.datatable-delete-btn', function(event) {
             event.preventDefault();
             const url = $(this).attr("href");

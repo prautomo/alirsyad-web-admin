@@ -57,25 +57,8 @@
 @endif
 
 @if(isset($copySlug))
-<a href="#" onclick="copySlug()" class="btn btn-sm btn-icon btn-warning datatable-copy-btn">
+<a href="#" data-slug="{{$copySlug ?? ''}}" class="btn btn-sm btn-icon btn-warning" id="datatable-copy-btn">
     <i class="far fa-copy"></i>
     {{__("Copy Slug")}}
 </a>
-<input type="text" id="copySlug" value="{{$copySlug ?? ""}}" style="opacity:0" />
-
-<script>
-    function copySlug() {
-        /* Get the text field */
-        var copyText = document.getElementById("copySlug");
-
-        /* Select the text field */
-        copyText.select();
-        copyText.setSelectionRange(0, 99999); /* For mobile devices */
-
-        /* Copy the text inside the text field */
-        navigator.clipboard?.writeText(copyText.value);
-        
-        alert("Copied the text: " + copyText.value);
-    }
-</script>
 @endif
