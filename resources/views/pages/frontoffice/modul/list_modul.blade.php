@@ -49,7 +49,7 @@
                             <div class="col-md-4 mb-4">
                             <a href="{{ route('app.modul.detail', @$modul->slug) }}.html" style="text-decoration: none;">
                                 <div class="card" style="width: 100%;">
-                                    <img class="card-img-top" style="max-height: 140px; height: 140px;" src="{{ @$modul->icon ? asset($modul->icon) : '/images/placeholder.png' }}" alt="{{ @$modul->name ?? "-" }}">
+                                    <img class="card-img-top" style="max-height: auto; height: auto;" src="{{ @$modul->icon ? asset($modul->icon) : '/images/placeholder.png' }}" alt="{{ @$modul->name ?? "-" }}">
                                     <div class="card-body text-center">
                                         <h6 class="card-title">
                                             <a href="{{ route('app.modul.detail', @$modul->slug) }}.html" style="text-decoration: none;">

@@ -49,7 +49,7 @@
                             <div class="col-md-4 mb-4">
                             <a href="{{ route('app.video.detail', @$video->id) }}" style="text-decoration: none;">
                                 <div class="card" style="width: 100%;">
-                                    <img class="card-img-top" style="max-height: 140px; height: 140px;" src="{{ @$video->icon ? asset($video->icon) : '/images/placeholder.png' }}" alt="{{ @$video->name ?? "-" }}">
+                                    <img class="card-img-top" style="max-height: auto; height: auto;" src="{{ @$video->icon ? asset($video->icon) : '/images/placeholder.png' }}" alt="{{ @$video->name ?? "-" }}">
                                     <div class="card-body text-center">
                                         <h6 class="card-title">
                                             <a href="{{ route('app.video.detail', @$video->id) }}" style="text-decoration: none;">

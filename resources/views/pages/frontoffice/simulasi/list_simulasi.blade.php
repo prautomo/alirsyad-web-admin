@@ -50,7 +50,7 @@
                                 <div class="card" style="width: 100%;">
                                     <div>
                                     <a href="{{ route('app.simulasi.detail', @$simulasi->slug) }}.html" style="text-decoration: none;">
-                                        <img class="card-img-top" style="max-height: 140px; height: 140px;" src="{{ @$simulasi->icon ? asset($simulasi->icon) : '/images/placeholder.png' }}" alt="{{ @$simulasi->name ?? "-" }}">
+                                        <img class="card-img-top" style="max-height: auto; height: auto;" src="{{ @$simulasi->icon ? asset($simulasi->icon) : '/images/placeholder.png' }}" alt="{{ @$simulasi->name ?? "-" }}">
                                         <div class="rating">
                                     </a>
                                             @php
