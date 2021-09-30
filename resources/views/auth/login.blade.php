@@ -13,16 +13,13 @@
             </ol>
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                <!-- <img src="..." class="d-block w-100" alt="..."> -->
-                    <svg class="bd-placeholder-img bd-placeholder-img-lg d-block w-100" width="800" height="400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: First slide"><title>Placeholder</title><rect width="100%" height="100%" fill="#666"></rect><text x="50%" y="50%" fill="#444" dy=".3em">First slide</text></svg>
+                    <img src="https://via.placeholder.com/800x720?text=Slide+1+800x720" class="d-block w-100" alt="Slide">
                 </div>
                 <div class="carousel-item">
-                    <!-- <img src="..." class="d-block w-100" alt="..."> -->
-                    <svg class="bd-placeholder-img bd-placeholder-img-lg d-block w-100" width="800" height="400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Second slide"><title>Placeholder</title><rect width="100%" height="100%" fill="#666"></rect><text x="50%" y="50%" fill="#444" dy=".3em">Second slide</text></svg>
+                    <img src="https://via.placeholder.com/800x720?text=Slide+2+800x720" class="d-block w-100" alt="Slide">
                 </div>
                 <div class="carousel-item">
-                    <!-- <img src="..." class="d-block w-100" alt="..."> -->
-                    <svg class="bd-placeholder-img bd-placeholder-img-lg d-block w-100" width="800" height="400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Third slide"><title>Placeholder</title><rect width="100%" height="100%" fill="#666"></rect><text x="50%" y="50%" fill="#444" dy=".3em">Third slide</text></svg>
+                    <img src="https://via.placeholder.com/800x720?text=Slide+3+800x720" class="d-block w-100" alt="Slide">
                 </div>
             </div>
             <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
