@@ -15,7 +15,14 @@
                         {{ @$simulasi->name }}
                     </h3>
                     <div id="btn-back" class="ml-auto form-inline">
+                        @php
+                        @$relParam = \Request()->get('rel');
+                        @endphp
+                        @if($relParam)
+                        <a href="{{ url($relParam) }}" class="btn btn-main btn-small">Kembali ke List</a> 
+                        @else
                         <a href="{{ route('app.mapel.simulasi', @$simulasi->mata_pelajaran_id) }}" class="btn btn-main btn-small">Kembali ke List</a> 
+                        @endif
                     </div>
                 </div>
             </div>
