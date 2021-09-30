@@ -144,7 +144,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var styles = {
   border: "0.0625rem solid #9c9c9c",
   borderRadius: "0.25rem",
-  opacity: "40%"
+  opacity: "40%",
+  marginTop: "10px"
 };
 
 function ModulDetail(_ref) {
@@ -377,23 +378,24 @@ function ModulDetail(_ref) {
       height: '100%',
       marginTop: showCanvas ? "50px" : "0px"
     }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("object", {
-    data: data === null || data === void 0 ? void 0 : (_data$data2 = data.data) === null || _data$data2 === void 0 ? void 0 : _data$data2.pdf_url,
-    type: "text/html",
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("iframe", {
+    src: "/frontoffice/plugins/pdfviewer/#" + (data === null || data === void 0 ? void 0 : (_data$data2 = data.data) === null || _data$data2 === void 0 ? void 0 : _data$data2.pdf_url),
     width: "100%",
-    height: "800px"
+    height: "800px",
+    allowfullscreen: true,
+    webkitallowfullscreen: true
   })), (data === null || data === void 0 ? void 0 : (_data$data3 = data.data) === null || _data$data3 === void 0 ? void 0 : (_data$data3$previous = _data$data3.previous) === null || _data$data3$previous === void 0 ? void 0 : _data$data3$previous.url) && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
-    className: "mt-4 btn-main btn-small mr-4",
+    className: "mt-1 btn-main btn-small mr-4",
     href: data === null || data === void 0 ? void 0 : (_data$data4 = data.data) === null || _data$data4 === void 0 ? void 0 : (_data$data4$previous = _data$data4.previous) === null || _data$data4$previous === void 0 ? void 0 : _data$data4$previous.slug_url
   }, "Modul Sebelumnya"), (data === null || data === void 0 ? void 0 : (_data$data5 = data.data) === null || _data$data5 === void 0 ? void 0 : (_data$data5$next = _data$data5.next) === null || _data$data5$next === void 0 ? void 0 : _data$data5$next.url) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
-    className: "mt-4 btn-main btn-small",
+    className: "mt-1 btn-main btn-small",
     onClick: function onClick() {
       var _data$data6, _data$data6$next;
 
       return finishModul(data === null || data === void 0 ? void 0 : (_data$data6 = data.data) === null || _data$data6 === void 0 ? void 0 : (_data$data6$next = _data$data6.next) === null || _data$data6$next === void 0 ? void 0 : _data$data6$next.slug_url);
     }
   }, "Modul Berikutnya") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
-    className: "mt-4 btn-main btn-small",
+    className: "mt-1 btn-main btn-small",
     disabled: (data === null || data === void 0 ? void 0 : (_data$data7 = data.data) === null || _data$data7 === void 0 ? void 0 : _data$data7.read) || disabledBtnDone,
     onClick: function onClick() {
       return finishModul();

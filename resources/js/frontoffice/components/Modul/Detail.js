@@ -21,6 +21,7 @@ const styles = {
     border: "0.0625rem solid #9c9c9c",
     borderRadius: "0.25rem",
     opacity: "40%",
+    marginTop: "10px",
 };
 
 function ModulDetail({ 
@@ -212,7 +213,8 @@ function ModulDetail({
             }
             
             <div style={{overflowX:'auto', height:'100%', marginTop: (showCanvas ? "50px" : "0px")}}>
-                <object data={data?.data?.pdf_url} type="text/html" width="100%" height="800px"></object>
+                <iframe src={"/frontoffice/plugins/pdfviewer/#"+data?.data?.pdf_url} width='100%' height='800px' allowfullscreen webkitallowfullscreen></iframe> 
+                {/* <object data={data?.data?.pdf_url} type="text/html" width="100%" height="800px"></object> */}
             </div>
 
             {/* <div style={{overflowX:'auto', height:'100%', maxHeight:'800px'}}>
@@ -220,13 +222,13 @@ function ModulDetail({
             </div> */}
 
             {(data?.data?.previous?.url) &&
-            <Button className="mt-4 btn-main btn-small mr-4" href={data?.data?.previous?.slug_url}>Modul Sebelumnya</Button>
+            <Button className="mt-1 btn-main btn-small mr-4" href={data?.data?.previous?.slug_url}>Modul Sebelumnya</Button>
             }
 
             {data?.data?.next?.url ?
-            <Button className="mt-4 btn-main btn-small" onClick={() => finishModul(data?.data?.next?.slug_url)}>Modul Berikutnya</Button>
+            <Button className="mt-1 btn-main btn-small" onClick={() => finishModul(data?.data?.next?.slug_url)}>Modul Berikutnya</Button>
             :
-            <Button className="mt-4 btn-main btn-small" 
+            <Button className="mt-1 btn-main btn-small" 
                 disabled={data?.data?.read || disabledBtnDone}
                 onClick={() => finishModul()}>Selesai Membaca</Button>
             }
