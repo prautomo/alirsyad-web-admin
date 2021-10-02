@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use App\Services\UploadService;
 use App\Models\MataPelajaran;
+use App\Models\Modul;
 use App\Models\Simulasi;
 use App\Helpers\GenerateSlug;
 
@@ -34,7 +35,7 @@ class SimulasiController extends Controller{
         $query = Simulasi::query();
 
         // relation with tingkat
-        $query = $query->with('mataPelajaran.tingkat.jenjang');
+        $query = $query->with('modul.mataPelajaran.tingkat.jenjang');
 
         return datatables()
             ->of($query)
@@ -45,15 +46,19 @@ class SimulasiController extends Controller{
                 if($search){
                     $query->where('name', 'LIKE', '%'.$search.'%');
                     
-                    $query = $query->orWhereHas('mataPelajaran.tingkat.jenjang', function($query2) use ( $search ){
+                    $query = $query->orWhereHas('modul.mataPelajaran.tingkat.jenjang', function($query2) use ( $search ){
                         $query2->where('name', 'LIKE', '%'.$search.'%');
                     });
 
-                    $query = $query->orWhereHas('mataPelajaran.tingkat', function($query2) use ( $search ){
+                    $query = $query->orWhereHas('modul.mataPelajaran.tingkat', function($query2) use ( $search ){
                         $query2->where('name', 'LIKE', '%'.$search.'%');
                     });
 
-                    $query = $query->orWhereHas('mataPelajaran', function($query2) use ( $search ){
+                    $query = $query->orWhereHas('modul.mataPelajaran', function($query2) use ( $search ){
+                        $query2->where('name', 'LIKE', '%'.$search.'%');
+                    });
+
+                    $query = $query->orWhereHas('modul', function($query2) use ( $search ){
                         $query2->where('name', 'LIKE', '%'.$search.'%');
                     });
                 }
@@ -72,14 +77,14 @@ class SimulasiController extends Controller{
                 }
             })
             ->addColumn("jenjang", function ($data) {
-                return @$data->mataPelajaran->tingkat->jenjang ? $data->mataPelajaran->tingkat->jenjang->name : '-';
+                return @$data->modul->mataPelajaran->tingkat->jenjang ? $data->modul->mataPelajaran->tingkat->jenjang->name : '-';
             })
             ->addColumn("tingkat", function ($data) {
-                return @$data->mataPelajaran->tingkat ? $data->mataPelajaran->tingkat->name : '-';
+                return @$data->modul->mataPelajaran->tingkat ? $data->modul->mataPelajaran->tingkat->name : '-';
             })
             ->addColumn("mapel", function ($data) {
-                $mapel = @$data->mataPelajaran->name ? $data->mataPelajaran->name : 'none';
-                $mapelID = @$data->mataPelajaran->id ? $data->mataPelajaran->id : '';
+                $mapel = @$data->modul->mataPelajaran->name ? $data->modul->mataPelajaran->name : 'none';
+                $mapelID = @$data->modul->mataPelajaran->id ? $data->modul->mataPelajaran->id : '';
 
                 return view("components.datatable.link", [
                     "link" => route($this->routePath.".index")."?mata_pelajaran_id=".$mapelID,
@@ -87,17 +92,27 @@ class SimulasiController extends Controller{
                 ]);
                 return $mapel;
             })
+            ->addColumn("modul", function ($data) {
+                $modul = @$data->modul->name ? $data->modul->name : 'none';
+                $modulID = @$data->modul->id ? $data->modul->id : '';
+
+                return view("components.datatable.link", [
+                    "link" => route($this->routePath.".index")."?modul_id=".$modulID,
+                    "text" => $modul,
+                ]);
+            })
             ->addColumn("created_at", function ($data) {
                 $createdAt = new Carbon($data->created_at);
 
                 return $createdAt->format("d-m-Y H:i:s");
             })
             ->addColumn("action", function ($data) {
+                $relModul = @$data->modul->slug ? "?rel=modul/".@$data->modul->slug.".html" : "";
                 return view("components.datatable.actions", [
                     "name" => $data->name,
                     "permissionName" => 'simulasi',
                     "class" => $data->class,
-                    "copySlug" => asset('simulasi/'.$data->slug.".html"),
+                    "copySlug" => asset('simulasi/'.$data->slug.".html").$relModul,
                     "deleteRoute" => route($this->routePath.".destroy", $data->id),
                     "editRoute" => route($this->routePath.".edit", $data->id),
                 ]);
@@ -135,6 +150,23 @@ class SimulasiController extends Controller{
         return $mapelList;
     }
 
+    /**
+     * Get modul
+     */
+    private function getModul(){
+        // get list modul
+        $moduls = Modul::with('mataPelajaran.tingkat')->get();
+
+        $modulList = [];
+        $modulList[""] = "Pilih modul";
+
+        foreach($moduls as $modul){
+            $modulList[$modul->id] = $modul->name . " (".@$modul->mataPelajaran->name." Tingkat: ".@$modul->mataPelajaran->tingkat->name. " ". @$modul->mataPelajaran->tingkat->jenjang->name .")";
+        }
+
+        return $modulList;
+    }
+
     private function getSemester(){
         $semesterList = [];
         $semesterList[""] = "Pilih semester";
@@ -147,16 +179,17 @@ class SimulasiController extends Controller{
 
     public function create(){
         $mapelList = $this->getMataPelajaran();
+        $modulList = $this->getModul();
         $semesterList = $this->getSemester();
 
-        return view($this->prefix.'.create', ['mapelList' => $mapelList, 'semesterList' => $semesterList]);
+        return view($this->prefix.'.create', ['mapelList' => $mapelList, 'semesterList' => $semesterList, 'modulList' => $modulList]);
     }
 
     public function store(Request $request){
         // validasi form
         $this->validate($request, [
             'name' => 'required|string',
-            'mata_pelajaran_id' => 'required',
+            'modul_id' => 'required',
             'game' => 'required|file|mimes:zip',
             'semester' => 'required|numeric|min:1,max:2',
             'urutan' => 'required|numeric|min:0',
@@ -164,7 +197,7 @@ class SimulasiController extends Controller{
         // default image
         $url = "images/placeholder.png";
         // temp request
-        $dataReq = $request->only(['name', 'icon', 'description', 'mata_pelajaran_id', 'semester', 'urutan']);
+        $dataReq = $request->only(['name', 'icon', 'description', 'modul_id', 'semester', 'urutan']);
         $dataReq['uploader_id'] = \Auth::user()->id;
 
         if ($request->hasFile('icon')) {
@@ -196,6 +229,11 @@ class SimulasiController extends Controller{
             }
         }
 
+        // assign mapel id (temporary bad strucure)
+        // get mapel id from modul
+        $modul = Modul::find($request->modul_id);
+        $dataReq['mata_pelajaran_id'] = @$modul->mata_pelajaran_id;
+
         $data = Simulasi::create($dataReq);
 
         if(empty($request->slug)){
@@ -211,9 +249,10 @@ class SimulasiController extends Controller{
     public function edit(Request $request, $id){
         $dt = Simulasi::with('mataPelajaran')->findOrFail($id);
         $mapelList = $this->getMataPelajaran();
+        $modulList = $this->getModul();
         $semesterList = $this->getSemester();
 
-        return view($this->prefix.'.edit', ['data' => $dt, 'mapelList' => $mapelList, 'semesterList' => $semesterList]);
+        return view($this->prefix.'.edit', ['data' => $dt, 'mapelList' => $mapelList, 'semesterList' => $semesterList, 'modulList' => $modulList]);
     }
 
     public function update(Request $request, $id){
@@ -221,12 +260,12 @@ class SimulasiController extends Controller{
         $this->validate($request, [
             'slug' => 'unique:mata_pelajarans,slug,'.$id,
             'name' => 'required|string',
-            'mata_pelajaran_id' => 'required',
+            'modul_id' => 'required',
             'semester' => 'required|numeric|min:1,max:2',
             'urutan' => 'required|numeric|min:0',
         ]);
 
-        $dataReq = $request->only(['name', 'icon', 'description', 'mata_pelajaran_id', 'slug', 'semester', 'urutan']);
+        $dataReq = $request->only(['name', 'icon', 'description', 'modul_id', 'slug', 'semester', 'urutan']);
 
         if ($request->hasFile('icon')) {
             $validated = $request->validate([
@@ -264,6 +303,11 @@ class SimulasiController extends Controller{
         if(empty($request->slug)){
             $dataReq['slug'] = GenerateSlug::generateSlug($id, $request->name);
         }
+
+        // assign mapel id (temporary bad strucure)
+        // get mapel id from modul
+        $modul = Modul::find($request->modul_id);
+        $dataReq['mata_pelajaran_id'] = @$modul->mata_pelajaran_id;
 
         $dt = Simulasi::findOrFail($id);
         $dt->update($dataReq);

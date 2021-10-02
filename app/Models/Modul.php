@@ -60,6 +60,12 @@ class Modul extends Model
                 $video->mata_pelajaran_id = $model->mata_pelajaran_id;
                 $video->save();
             }
+
+            // update simulasi mapel_id
+            foreach ($model->simulasis()->get() as $simulasi) {
+                $simulasi->mata_pelajaran_id = $model->mata_pelajaran_id;
+                $simulasi->save();
+            }
         });
     }
 
@@ -135,5 +141,10 @@ class Modul extends Model
     public function videos()
     {
         return $this->hasMany("App\Models\Video", "modul_id", "id")->withTrashed();
+    }
+
+    public function simulasis()
+    {
+        return $this->hasMany("App\Models\Simulasi", "modul_id", "id")->withTrashed();
     }
 }

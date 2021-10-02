@@ -28,6 +28,7 @@ class Simulasi extends Model
         'slug',
         'semester',
         'urutan',
+        'modul_id',
     ];
 
     public static function search($request)
@@ -41,6 +42,7 @@ class Simulasi extends Model
             "slug" => "=",
             "semester" => "=",
             "urutan" => "=",
+            "modul_id" => "=",
         ]);
 
         return $data;
@@ -159,6 +161,11 @@ class Simulasi extends Model
     public function mataPelajaran()
     {
         return $this->belongsTo("App\Models\MataPelajaran",  "mata_pelajaran_id", "id")->withTrashed();
+    }
+
+    public function modul()
+    {
+        return $this->belongsTo("App\Models\Modul",  "modul_id", "id")->withTrashed();
     }
 
     public function uploader()

@@ -41,6 +41,7 @@
                 <!-- <th data-data="show-img">@lang("Cover")</th> -->
                 <th data-data="name">@lang("Name")</th>
                 <th data-data="mapel">@lang("Mata Pelajaran")</th>
+                <th data-data="modul">@lang("Modul")</th>
                 <th data-data="jenjang">@lang("Jenjang")</th>
                 <th data-data="tingkat">@lang("Tingkat")</th>
                 <th data-data="semester">@lang("Semester")</th>
