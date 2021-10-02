@@ -1,6 +1,6 @@
 @csrf
 <div class="row">
-    <x-input.select :label="__('Mata Pelajaran')" id="mata_pelajaran_id" name="mata_pelajaran_id" :sources="$mapelList" :data="$data" required />
+    <x-input.select :label="__('Modul')" id="modul_id" name="modul_id" :sources="$modulList" :data="$data" required />
     
     <x-input.select :label="__('Semester')" id="semester" name="semester" :sources="$semesterList" :data="$data" required />
 
@@ -19,7 +19,7 @@
 @push('plugin_script')
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#mata_pelajaran_id').select2();
+        $('#modul_id').select2();
     });
 </script>
 @endpush

@@ -48,6 +48,21 @@ class Modul extends Model
         return $data;
     }
 
+    /**
+     * Cascade update
+     */
+    protected static function boot() {
+        parent::boot();
+
+        static::updated(function($model) {
+            // update video mapel_id
+            foreach ($model->videos()->get() as $video) {
+                $video->mata_pelajaran_id = $model->mata_pelajaran_id;
+                $video->save();
+            }
+        });
+    }
+
     public function getReadAttribute()
     {
         return is_object(HistoryModul::where(['siswa_id' => \Auth::user()->id, 'modul_id' => $this->id])->first());
@@ -115,5 +130,10 @@ class Modul extends Model
     public function storyPath()
     {
         return $this->hasOne("App\Models\StoryPath", "modul_id", "id")->withTrashed();
+    }
+
+    public function videos()
+    {
+        return $this->hasMany("App\Models\Video", "modul_id", "id")->withTrashed();
     }
 }
