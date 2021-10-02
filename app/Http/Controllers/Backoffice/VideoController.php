@@ -34,7 +34,7 @@ class VideoController extends Controller{
         $query = Video::query();
 
         // relation with tingkat
-        $query = $query->with('mataPelajaran.tingkat.jenjang');
+        $query = $query->with('modul.mataPelajaran.tingkat.jenjang');
 
         return datatables()
             ->of($query)
@@ -76,10 +76,10 @@ class VideoController extends Controller{
                 }
             })
             ->addColumn("jenjang", function ($data) {
-                return @$data->mataPelajaran->tingkat->jenjang ? $data->mataPelajaran->tingkat->jenjang->name : '-';
+                return @$data->modul->mataPelajaran->tingkat->jenjang ? $data->modul->mataPelajaran->tingkat->jenjang->name : '-';
             })
             ->addColumn("tingkat", function ($data) {
-                return @$data->mataPelajaran->tingkat ? $data->mataPelajaran->tingkat->name : '-';
+                return @$data->modul->mataPelajaran->tingkat ? $data->modul->mataPelajaran->tingkat->name : '-';
             })
             ->addColumn("mapel", function ($data) {
                 $mapel = @$data->modul->mataPelajaran->name ? $data->modul->mataPelajaran->name : 'none';
