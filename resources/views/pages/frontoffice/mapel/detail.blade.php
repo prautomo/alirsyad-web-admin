@@ -15,7 +15,7 @@
         </div>
 		<div class="row mt-4">
 			<!-- sedang dipelajari -->
-			<div class="col-md-6">
+			<div class="col-md-6 mb-4">
 				<div class="card">
 					<div class="card-body">
 						<div class="card-title mb-0 form-inline">
