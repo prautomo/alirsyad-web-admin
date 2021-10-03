@@ -21,8 +21,13 @@ class VideoController extends Controller
     {
         // mapel data
         $mapel = MataPelajaran::with('tingkat');
-        $mapel = $mapel->whereHas('tingkat.kelas', function($query) {
-            $query->where('id', Auth::user()->kelas_id);
+        // filter by jenjang yg sama
+        $mapel = $mapel->whereHas('tingkat.jenjang', function($query) {
+            $query->where('id', @Auth::user()->kelas->tingkat->jenjang_id);
+        });
+        // filter by tingkat bawahnya
+        $mapel = $mapel->whereHas('tingkat', function($query) {
+            $query->where('name', '<', @Auth::user()->kelas->tingkat->name);
         });
         $mapel = $mapel->findOrFail($idMapel);
 
