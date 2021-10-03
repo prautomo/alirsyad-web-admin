@@ -33,6 +33,7 @@ class AuthController extends BaseController
                 $success['expires_at'] = @$generateToken->token->expires_at; 
                 $success['nis'] = @$user->nis; 
                 $success['name'] = @$user->name;
+                $success['photo'] = @$user->photo ? asset($user->photo) : '';
                 $success['email'] = @$user->email;
                 $success['role'] = @$user->role;
                 $success['kelas'] = @$user->kelas->name;
