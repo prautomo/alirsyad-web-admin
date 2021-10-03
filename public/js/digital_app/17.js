@@ -55,7 +55,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function VideoDetail(_ref) {
   var _data$data2, _data$data3, _data$data3$previous, _data$data4, _data$data4$previous, _data$data5, _data$data5$next, _data$data6, _data$data6$next;
 
-  var idVideo = _ref.idVideo;
+  var idVideo = _ref.idVideo,
+      rel = _ref.rel;
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(idVideo),
       _useState2 = _slicedToArray(_useState, 2),
@@ -73,7 +74,8 @@ function VideoDetail(_ref) {
       isError = _useFetch.isError;
 
   var alert = Object(react_alert__WEBPACK_IMPORTED_MODULE_7__["useAlert"])();
-  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {// console.log("dika idVideo", idVideo)
+  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
+    console.log("dika idVideo", idVideo, rel);
   }, []);
 
   function _onReady(event) {
@@ -106,6 +108,13 @@ function VideoDetail(_ref) {
               return axios__WEBPACK_IMPORTED_MODULE_4___default.a.post("/videos/".concat(idVideo, "/flag/json"), {
                 payload: payload
               }).then(function (res) {
+                // if from modul
+                if (rel) {
+                  console.log("dika close tab", rel);
+                  window.close();
+                  close();
+                }
+
                 setShowNext(true); // console.log("dika res post flag", res.data);
 
                 alert.show('Berhasil menonton video!', {
@@ -179,7 +188,8 @@ var RootVideoDetail = function RootVideoDetail(props) {
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_alert__WEBPACK_IMPORTED_MODULE_7__["Provider"], _extends({
     template: react_alert_template_basic__WEBPACK_IMPORTED_MODULE_8__["default"]
   }, options), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(VideoDetail, {
-    idVideo: props === null || props === void 0 ? void 0 : props.idVideo
+    idVideo: props === null || props === void 0 ? void 0 : props.idVideo,
+    rel: props === null || props === void 0 ? void 0 : props.rel
   }));
 };
 
@@ -187,8 +197,10 @@ var container = document.getElementById("video-detail-fe");
 
 if (container) {
   var idVideo = container.getAttribute("video-id");
+  var rel = container.getAttribute("video-rel");
   react_dom__WEBPACK_IMPORTED_MODULE_2___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(RootVideoDetail, {
-    idVideo: idVideo
+    idVideo: idVideo,
+    rel: rel
   }), container);
 }
 

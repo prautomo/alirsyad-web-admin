@@ -8,7 +8,7 @@ import { Provider as AlertProvider } from 'react-alert'
 import AlertTemplate from 'react-alert-template-basic'
 import { useAlert } from 'react-alert'
 
-function VideoDetail({ idVideo }) {
+function VideoDetail({ idVideo, rel }) {
     
     const [videoId, setVideoId] = useState(idVideo);
     const [showNext, setShowNext] = useState(false);
@@ -17,7 +17,7 @@ function VideoDetail({ idVideo }) {
     const alert = useAlert()
 
     useEffect(() => {
-        // console.log("dika idVideo", idVideo)
+        console.log("dika idVideo", idVideo, rel)
     }, [])
 
     function _onReady(event) {
@@ -37,6 +37,12 @@ function VideoDetail({ idVideo }) {
 
         await axios.post(`/videos/${idVideo}/flag/json`, { payload })
         .then(res => {
+            // if from modul
+            if(rel){
+                console.log("dika close tab", rel)
+                window.close();
+                close();
+            }
             setShowNext(true);
             // console.log("dika res post flag", res.data);
             alert.show('Berhasil menonton video!', {
@@ -108,7 +114,7 @@ const options = {
 const RootVideoDetail = (props) => {
     return (
     <AlertProvider template={AlertTemplate} {...options}>
-        <VideoDetail idVideo={props?.idVideo}  />
+        <VideoDetail idVideo={props?.idVideo} rel={props?.rel} />
     </AlertProvider>
     )
 }
@@ -117,6 +123,7 @@ var container = document.getElementById("video-detail-fe");
 
 if (container) {
     var idVideo = container.getAttribute("video-id");
+    var rel = container.getAttribute("video-rel");
 
-    ReactDOM.render(<RootVideoDetail idVideo={idVideo} />, container);
+    ReactDOM.render(<RootVideoDetail idVideo={idVideo} rel={rel} />, container);
 }

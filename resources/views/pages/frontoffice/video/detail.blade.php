@@ -30,7 +30,7 @@
         </div>
         <div class="row mt-2">
             <div class="col-md-12 text-center">
-                <div id="video-detail-fe" video-id="{{ $videoId }}">Loading...</div>
+                <div id="video-detail-fe" video-id="{{ $videoId }}" video-rel="{{ $relParam }}">Loading...</div>
             </div>
         </div>
     </div>
