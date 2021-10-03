@@ -24,6 +24,7 @@ class ExternalUserController extends BaseController
         
         $success['nis'] = @$user->nis; 
         $success['name'] = @$user->name;
+        $success['photo'] = @$user->photo ? asset($user->photo) : '';
         $success['email'] = @$user->email;
         $success['role'] = @$user->role;
         $success['kelas'] = @$user->kelas->name;
