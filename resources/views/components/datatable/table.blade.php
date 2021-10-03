@@ -51,7 +51,7 @@
             const slug = $(this).data("slug");
 
             /* Copy the text inside the text field */
-            navigator.clipboard?.writeText(slug);
+            copyToClipboard(slug);
             
             alert("Copied the text: " + slug);
         });
