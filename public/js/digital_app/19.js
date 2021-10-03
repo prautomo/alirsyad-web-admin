@@ -182,10 +182,15 @@ function ModulDetail(_ref) {
       disabledBtnDone = _useState10[0],
       setDisabledBtnDone = _useState10[1];
 
-  var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(false),
+  var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])([]),
       _useState12 = _slicedToArray(_useState11, 2),
-      showColor = _useState12[0],
-      setShowColor = _useState12[1];
+      path = _useState12[0],
+      setPath = _useState12[1];
+
+  var _useState13 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(false),
+      _useState14 = _slicedToArray(_useState13, 2),
+      showColor = _useState14[0],
+      setShowColor = _useState14[1];
 
   var _useColor = Object(react_color_palette__WEBPACK_IMPORTED_MODULE_13__["useColor"])("hex", "#121212"),
       _useColor2 = _slicedToArray(_useColor, 2),
@@ -295,6 +300,42 @@ function ModulDetail(_ref) {
     return _postFlag.apply(this, arguments);
   }
 
+  function savePath() {
+    return _savePath.apply(this, arguments);
+  }
+
+  function _savePath() {
+    _savePath = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+      var _canvas$current2;
+
+      var a;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.next = 2;
+              return canvas === null || canvas === void 0 ? void 0 : (_canvas$current2 = canvas.current) === null || _canvas$current2 === void 0 ? void 0 : _canvas$current2.exportPaths();
+
+            case 2:
+              a = _context3.sent;
+              setPath(a);
+
+            case 4:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3);
+    }));
+    return _savePath.apply(this, arguments);
+  }
+
+  function loadPath() {
+    var _canvas$current;
+
+    canvas === null || canvas === void 0 ? void 0 : (_canvas$current = canvas.current) === null || _canvas$current === void 0 ? void 0 : _canvas$current.loadPaths(path);
+  }
+
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Row"], {
     className: "mb-1"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Col"], {
@@ -308,7 +349,15 @@ function ModulDetail(_ref) {
     id: "showCanvas",
     small: true,
     checked: showCanvas,
-    onChange: setShowCanvas
+    onChange: function onChange() {
+      setShowCanvas(!showCanvas);
+
+      if (showCanvas) {
+        loadPath();
+      } else {
+        savePath();
+      }
+    }
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Dropdown"], {
     isOpen: dropdownOpen,
     toggle: toggle,
@@ -379,11 +428,12 @@ function ModulDetail(_ref) {
       marginTop: showCanvas ? "50px" : "0px"
     }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("iframe", {
-    src: "/frontoffice/plugins/pdfviewer/#" + (data === null || data === void 0 ? void 0 : (_data$data2 = data.data) === null || _data$data2 === void 0 ? void 0 : _data$data2.pdf_url),
-    width: "100%",
-    height: "800px",
-    allowfullscreen: true,
-    webkitallowfullscreen: true
+    src: "https://docs.google.com/gview?url=" + (data === null || data === void 0 ? void 0 : (_data$data2 = data.data) === null || _data$data2 === void 0 ? void 0 : _data$data2.pdf_url) + "?hsLang=en&embedded=true",
+    style: {
+      width: "100%",
+      height: "800px"
+    },
+    frameBorder: "0"
   })), (data === null || data === void 0 ? void 0 : (_data$data3 = data.data) === null || _data$data3 === void 0 ? void 0 : (_data$data3$previous = _data$data3.previous) === null || _data$data3$previous === void 0 ? void 0 : _data$data3$previous.url) && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
     className: "mt-1 btn-main btn-small mr-4",
     href: data === null || data === void 0 ? void 0 : (_data$data4 = data.data) === null || _data$data4 === void 0 ? void 0 : (_data$data4$previous = _data$data4.previous) === null || _data$data4$previous === void 0 ? void 0 : _data$data4$previous.slug_url

@@ -38,6 +38,7 @@ function ModulDetail({
     const [warna, setWarna] = useState("#000000");
     const [warnaTemp, setWarnaTemp] = useState("#000000");
     const [disabledBtnDone, setDisabledBtnDone] = useState(false);
+    const [path, setPath] = useState([]);
     const [showColor, setShowColor] = useState(false);
     const [color, setColor] = useColor("hex", "#121212");
 
@@ -94,6 +95,15 @@ function ModulDetail({
         })
     }
 
+    async function savePath(){
+        let a = await canvas?.current?.exportPaths();
+        setPath(a);
+    }
+
+    function loadPath(){
+        canvas?.current?.loadPaths(path);
+    }
+
     return (<>
         <Row className="mb-1">
             <Col md="12">
@@ -110,7 +120,14 @@ function ModulDetail({
                             id="showCanvas"
                             small
                             checked={showCanvas}
-                            onChange={setShowCanvas}
+                            onChange={() => {
+                                setShowCanvas(!showCanvas)
+                                if(showCanvas){
+                                    loadPath()
+                                }else{
+                                    savePath()
+                                }
+                            }}
                         />
 
                         <Dropdown isOpen={dropdownOpen} toggle={toggle} size="sm" className="btn-outline" direction="left">
@@ -213,8 +230,19 @@ function ModulDetail({
             }
             
             <div style={{overflowX:'auto', height:'100%', marginTop: (showCanvas ? "50px" : "0px")}}>
-                <iframe src={"/frontoffice/plugins/pdfviewer/#"+data?.data?.pdf_url} width='100%' height='800px' allowfullscreen webkitallowfullscreen></iframe> 
+                {/* <iframe src={"/frontoffice/plugins/pdfviewer/#"+data?.data?.pdf_url} width='100%' height='800px' allowfullscreen webkitallowfullscreen></iframe>  */}
                 {/* <object data={data?.data?.pdf_url} type="text/html" width="100%" height="800px"></object> */}
+
+                {/* 
+                    Google Docs
+                    Pro:
+                    - Works on desktop and mobile browser
+                    Cons:
+                    - 25MB file limit
+                    - Requires additional time to download viewer
+                */}
+                <iframe src={"https://docs.google.com/gview?url="+data?.data?.pdf_url+"?hsLang=en&embedded=true"} style={{ width: "100%", height: "800px" }} frameBorder="0"></iframe>
+
             </div>
 
             {/* <div style={{overflowX:'auto', height:'100%', maxHeight:'800px'}}>
