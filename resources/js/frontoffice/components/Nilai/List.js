@@ -97,7 +97,7 @@ function NilaiSimulasi() {
                             {(dataProgress?.simulasis ?? []).map((simulasi) => {
                                 return <Row className="mt-3 mr-0 ml-0" key={simulasi?.id}>
                                 <Col md="4">
-                                    <img src={simulasi?.cover_url ?? "/images/placeholder.png"} width="100%" height="120px" />
+                                    <img src={(simulasi?.icon==="" || simulasi?.icon===null) ? "/images/placeholder.png" : simulasi?.cover_url} width="100%" height="120px" />
                                 </Col>
                                 <Col md="8">
                                     <div className="mt-1">

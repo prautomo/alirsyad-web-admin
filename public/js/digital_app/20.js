@@ -535,7 +535,7 @@ function NilaiSimulasi() {
       overflow: "auto"
     }
   }, ((_dataProgress$simulas = dataProgress === null || dataProgress === void 0 ? void 0 : dataProgress.simulasis) !== null && _dataProgress$simulas !== void 0 ? _dataProgress$simulas : []).map(function (simulasi) {
-    var _simulasi$cover_url, _simulasi$rata_rata_s, _simulasi$slug_url, _simulasi$name, _simulasi$first_score;
+    var _simulasi$rata_rata_s, _simulasi$slug_url, _simulasi$name, _simulasi$first_score;
 
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Row"], {
       className: "mt-3 mr-0 ml-0",
@@ -543,7 +543,7 @@ function NilaiSimulasi() {
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Col"], {
       md: "4"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("img", {
-      src: (_simulasi$cover_url = simulasi === null || simulasi === void 0 ? void 0 : simulasi.cover_url) !== null && _simulasi$cover_url !== void 0 ? _simulasi$cover_url : "/images/placeholder.png",
+      src: (simulasi === null || simulasi === void 0 ? void 0 : simulasi.icon) === "" || (simulasi === null || simulasi === void 0 ? void 0 : simulasi.icon) === null ? "/images/placeholder.png" : simulasi === null || simulasi === void 0 ? void 0 : simulasi.cover_url,
       width: "100%",
       height: "120px"
     })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Col"], {
