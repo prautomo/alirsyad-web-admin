@@ -59,6 +59,6 @@
 @if(isset($copySlug))
 <a href="#" data-slug="{{$copySlug ?? ''}}" class="btn btn-sm btn-icon btn-warning" id="datatable-copy-btn">
     <i class="far fa-copy"></i>
-    {{__("Copy Slug")}}
+    {{__("Copy Link")}}
 </a>
 @endif
