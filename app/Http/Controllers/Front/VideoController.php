@@ -27,7 +27,7 @@ class VideoController extends Controller
         });
         // filter by tingkat bawahnya
         $mapel = $mapel->whereHas('tingkat', function($query) {
-            $query->where('name', '<', @Auth::user()->kelas->tingkat->name);
+            $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
         });
         $mapel = $mapel->findOrFail($idMapel);
 
