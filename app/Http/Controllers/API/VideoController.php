@@ -75,8 +75,8 @@ class VideoController extends BaseController
         $user = Auth::user();
   
         // handle hak akses mapel
-        $data = $data->whereHas('mataPelajaran', function($query) use ($user){
-            $query->where('tingkat_id', @$user->kelas->tingkat_id ?? 0);
+        $data = $data->whereHas('mataPelajaran.tingkat', function($query) use ($user){
+            $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
         });
 
         $data = $data->find($id);

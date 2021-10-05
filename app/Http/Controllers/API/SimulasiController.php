@@ -26,9 +26,9 @@ class SimulasiController extends BaseController
         $datas = Simulasi::search($request);
         $datas = $datas->with('uploader', 'mataPelajaran');
         // handle hak akses mapel
-        $datas = $datas->whereHas('mataPelajaran', function($query){
+        $datas = $datas->whereHas('mataPelajaran.tingkat', function($query){
             if(@Auth::user()->role==="SISWA"){
-                $query->where('tingkat_id', @Auth::user()->kelas->tingkat_id ?? 0);
+                $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
             }
         });
         // get list
@@ -50,9 +50,9 @@ class SimulasiController extends BaseController
         $data = Simulasi::with('mataPelajaran.tingkat.jenjang');
   
         // handle hak akses mapel
-        $data = $data->whereHas('mataPelajaran', function($query){
+        $data = $data->whereHas('mataPelajaran.tingkat', function($query){
             if(@Auth::user()->role==="SISWA"){
-                $query->where('tingkat_id', @Auth::user()->kelas->tingkat_id ?? 0);
+                $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
             }
         });
 
@@ -78,8 +78,8 @@ class SimulasiController extends BaseController
         $user = Auth::user();
   
         // handle hak akses mapel
-        $data = $data->whereHas('mataPelajaran', function($query) use ($user){
-            $query->where('tingkat_id', @$user->kelas->tingkat_id ?? 0);
+        $data = $data->whereHas('mataPelajaran.tingkat', function($query) use ($user){
+            $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
         });
 
         $data = $data->find($id);

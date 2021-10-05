@@ -36,8 +36,8 @@ class SimulasiController extends Controller
         // handle hak akses mapel
         $user = Auth::user();
         if($user->role !== "GURU"){
-            $simulasis = $simulasis->whereHas('mataPelajaran', function($query) use($user) {
-                $query->where('tingkat_id', $user->kelas->tingkat_id);
+            $simulasis = $simulasis->whereHas('mataPelajaran.tingkat', function($query) use($user) {
+                $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
             });
         }
         
