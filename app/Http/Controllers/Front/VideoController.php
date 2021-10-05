@@ -36,8 +36,8 @@ class VideoController extends Controller
         // handle hak akses mapel
         $user = Auth::user();
         if($user->role !== "GURU"){
-            $videos = $videos->whereHas('mataPelajaran', function($query) use($user) {
-                $query->where('tingkat_id', $user->kelas->tingkat_id);
+            $videos = $videos->whereHas('mataPelajaran.tingkat', function($query) use($user) {
+                $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
             });
         }
         
