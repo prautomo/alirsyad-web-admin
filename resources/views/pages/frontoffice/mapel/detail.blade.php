@@ -20,7 +20,7 @@
 					<div class="card-body">
 						<div class="card-title mb-0 form-inline">
 							<i class="ni ni-check-bold icon-title"></i>
-							<div>Program Belajar {{ @$mapel->name ?? "-" }}</div>
+							<div>Progres Belajar {{ @$mapel->name ?? "-" }}</div>
 						</div>
 						<hr/>
 						<div class="wrap-kelas row mt-3 ml-1 mr-1">
