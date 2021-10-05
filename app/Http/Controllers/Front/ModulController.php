@@ -36,8 +36,8 @@ class ModulController extends Controller
         // handle hak akses mapel
         $user = Auth::user();
         if($user->role !== "GURU"){
-            $moduls = $moduls->whereHas('mataPelajaran', function($query) use($user) {
-                $query->where('tingkat_id', $user->kelas->tingkat_id);
+            $moduls = $moduls->whereHas('mataPelajaran.tingkat', function($query) use($user) {
+                $query->where('name', '<=', $user->kelas->tingkat->name);
             });
         }
         
