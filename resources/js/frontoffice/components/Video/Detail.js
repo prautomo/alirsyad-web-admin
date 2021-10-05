@@ -55,6 +55,13 @@ function VideoDetail({ idVideo, rel }) {
                    
                 } // callback that will be executed after this alert is removed
             })
+
+            setTimeout(function(){
+                // redirect to modul sebelumnya
+                if(rel){
+                    
+                }
+            }, 3000)
         }).catch((e) => {
             console.error("dika res post flag failed", e.response.data)
             alert.show(e.response.data?.message, {
