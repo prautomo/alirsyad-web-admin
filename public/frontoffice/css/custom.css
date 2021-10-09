@@ -40,3 +40,18 @@
 .rating .checked {
     color: orange;
 }
+
+.image-cover {
+    max-width: 80px;
+    max-height: 80px;
+    display: block;
+    text-align: center;
+}
+
+.image-cover img {
+    border-radius: 10% !important;
+}
+
+.rating-simulasi-star {
+    margin-top: -30px;
+}

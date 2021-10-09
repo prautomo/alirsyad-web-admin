@@ -44,15 +44,15 @@
 			<div class="col-md-8">
 				<div class="card">
 					<div class="card-body" style="height: 500px; overflow: auto;">
-						<div class="row">
-                            @forelse($simulasis as $simulasi)
-                            <div class="col-md-4 mb-4">
-                                <div class="card" style="width: 100%;">
-                                    <div>
-                                    <a href="{{ route('app.simulasi.detail', @$simulasi->slug) }}.html" style="text-decoration: none;">
-                                        <img class="card-img-top" style="max-height: auto; height: auto;" src="{{ @$simulasi->icon ? asset($simulasi->icon) : '/images/placeholder.png' }}" alt="{{ @$simulasi->name ?? "-" }}">
-                                        <div class="rating">
-                                    </a>
+                        @forelse($simulasis as $simulasi)
+
+                            <div class="wrap-kelas row mt-3 ml-1 mr-1" style="padding: 15px 15px 15px 15px !important; cursor: pointer;" onclick="location.href='{{ route('app.simulasi.detail', @$simulasi->slug) }}.html';">
+                                
+                                <div class="col-md-2 mb-md-1 mb-3 pl-0 pr-0">
+                                    <span class="image-cover mr-auto ml-auto">
+                                        <img class="card-img-top" style="max-height: auto; height: auto;" src="{{ @$simulasi->icon ? asset($simulasi->icon) : '/images/image-placeholder.jpg' }}" alt="{{ @$simulasi->name ?? "-" }}">
+
+                                        <div class="rating-simulasi-star text-center">
                                             @php
                                             $rataRataScore = @$simulasi->rata_rata_score ?? 0;
                                             @endphp
@@ -60,21 +60,19 @@
                                             <span class="fa fa-star{{ ($rataRataScore>=66) ? ' checked' : '' }}"></span>
                                             <span class="fa fa-star{{ ($rataRataScore>=99) ? ' checked' : '' }}"></span>
                                         </div>
-                                    </div>
-                                    <div class="card-body text-center">
-                                        <h6 class="card-title">
-                                            <a href="{{ route('app.simulasi.detail', @$simulasi->slug) }}.html" style="text-decoration: none;">
-                                                {{ @$simulasi->name ?? "-" }}
-                                            </a>
-                                        </h6>
-                                    </div>
+                                    </span>
+                                </div>
+                                <div class="col-md-10 mt-auto mb-auto">
+                                    <h6 class="font-weight-bold text-sm-left text-center">
+                                        <a href="{{ route('app.simulasi.detail', @$simulasi->slug) }}.html" style="text-decoration: none;">
+                                            {{ @$simulasi->name ?? "-" }}
+                                        </a>
+                                    </h6>
                                 </div>
                             </div>
-                            @empty
+                        @empty
                             <div class="ml-1">Belum ada simulasi pembelajaran</div>
-                            @endforelse
-                            
-                        </div>
+                        @endforelse
 					</div>
 				</div>
 			</div>
