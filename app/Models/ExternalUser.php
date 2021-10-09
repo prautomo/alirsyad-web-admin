@@ -11,10 +11,11 @@ use Spatie\Permission\Traits\HasRoles;
 use App\Traits\SearchableTrait;
 use Illuminate\Support\Facades\DB;
 use Laravel\Passport\HasApiTokens;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ExternalUser extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, SearchableTrait, HasRoles;
+    use SoftDeletes, HasApiTokens, HasFactory, Notifiable, SearchableTrait, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -36,6 +37,7 @@ class ExternalUser extends Authenticatable implements MustVerifyEmail
         'nis',
         'rombongan_belajar',
         'kelas_id',
+        'is_pengunjung',
     ];
 
     /**
@@ -76,7 +78,7 @@ class ExternalUser extends Authenticatable implements MustVerifyEmail
 
     public function kelas()
     {
-        return $this->belongsTo("App\Models\Kelas",  "kelas_id", "id");
+        return $this->belongsTo("App\Models\Kelas",  "kelas_id", "id")->withTrashed();
     }
 
     public function historyModul()
@@ -92,5 +94,17 @@ class ExternalUser extends Authenticatable implements MustVerifyEmail
     public function historySimulasi()
     {
         return $this->hasMany("App\Models\HistorySimulasi", "siswa_id", "id");
+    }
+
+    /**
+     * The mapels that belong to the gurus.
+     */
+    public function mataPelajarans()
+    {
+        return $this->belongsToMany('App\Models\MataPelajaran', 'guru_mata_pelajarans', 'guru_id', 'mata_pelajaran_id');
+    }
+
+    public function AauthAcessToken(){
+        return $this->hasMany('App\Models\OauthAccessToken', "user_id", "id");
     }
 }

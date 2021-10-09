@@ -1,0 +1,13 @@
+.layer-toolbox {
+    padding: 30px 30px 10px 30px;
+    width: 66.66666667%;
+    background-color: #d2f1f0 ;
+    position: fixed;
+    left: 17%;
+    bottom: 0;
+    z-index: 999999;
+}
+
+.rcp-dark {
+    width: 100% !important;
+}

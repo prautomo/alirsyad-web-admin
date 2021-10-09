@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Validator;
 use Auth;
 use DB;
+use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use App\Services\UploadService;
@@ -31,15 +32,37 @@ class MataPelajaranController extends Controller{
      *
      * @return void
      */
-    public function datatable(){
+    public function datatable($request){
         $query = MataPelajaran::query();
 
         // relation with tingkat
-        $query = $query->with('kelas.tingkat');
+        $query = $query->with('tingkat.jenjang');
 
         return datatables()
             ->of($query)
+            ->filter(function ($query) use ($request) {
+
+                $search = @$request->search['value'];
+
+                if($search){
+                    $query->where('name', 'LIKE', '%'.$search.'%');
+                    
+                    $query = $query->orWhereHas('tingkat.jenjang', function($query2) use ( $search ){
+                        $query2->where('name', 'LIKE', '%'.$search.'%');
+                    });
+
+                    $query = $query->orWhereHas('tingkat', function($query2) use ( $search ){
+                        $query2->where('name', 'LIKE', '%'.$search.'%');
+                    });
+                }
+            })
             ->addIndexColumn()
+            ->addColumn("jenjang", function ($data) {
+                return @$data->tingkat->jenjang ? $data->tingkat->jenjang->name : '-';
+            })
+            ->addColumn("tingkat", function ($data) {
+                return @$data->tingkat ? $data->tingkat->name : '-';
+            })
             ->addColumn('show-img', function($data) {
                 if(empty($data->icon)){
                     return "not available";
@@ -70,7 +93,7 @@ class MataPelajaranController extends Controller{
 
     public function index(Request $request){
         if ($request->ajax()) {
-            return $this->datatable();
+            return $this->datatable($request);
         }
 
         return view($this->prefix.'.index');
@@ -86,7 +109,7 @@ class MataPelajaranController extends Controller{
         $tingkatList[""] = "Pilih tingkat";
 
         foreach($tingkats as $tingkat){
-            $tingkatList[$tingkat->id] = $tingkat->name;
+            $tingkatList[$tingkat->id] = $tingkat->name . " " . @$tingkat->jenjang->name;
         }
 
         return $tingkatList;
@@ -101,13 +124,17 @@ class MataPelajaranController extends Controller{
     public function store(Request $request){
         // validasi form
         $this->validate($request, [
-            'name' => 'required|string',
-            'kelas_id' => 'required',
+            // 'name' => 'required|string',
+            'tingkat_id' => 'required',
+            'name' => Rule::unique('mata_pelajarans')->where(function ($query) use ($request) {
+                return $query->where('name', $request->name)
+                   ->where('tingkat_id', $request->tingkat_id);
+            }),
         ]);
         // default image
         $url = "images/placeholder.png";
         // temp request
-        $dataReq = $request->only(['class', 'name', 'icon', 'slug', 'kelas_id']);
+        $dataReq = $request->only(['class', 'name', 'icon', 'slug', 'tingkat_id']);
 
         if ($request->hasFile('icon')) {
 
@@ -134,7 +161,7 @@ class MataPelajaranController extends Controller{
     }
 
     public function edit(Request $request, $id){
-        $dt = MataPelajaran::with('kelas')->findOrFail($id);
+        $dt = MataPelajaran::with('tingkat')->findOrFail($id);
         $tingkatList = $this->getTingkat();
 
         return view($this->prefix.'.edit', ['data' => $dt, 'tingkatList' => $tingkatList]);
@@ -144,11 +171,15 @@ class MataPelajaranController extends Controller{
         // validasi form
         $this->validate($request, [
             'slug' => 'unique:mata_pelajarans,slug,'.$id,
-            'name' => 'required|string',
-            'kelas_id' => 'required',
+            // 'name' => 'required|string',
+            'tingkat_id' => 'required',
+            'name' => Rule::unique('mata_pelajarans')->ignore($id)->where(function ($query) use ($request) {
+                return $query->where('name', $request->name)
+                   ->where('tingkat_id', $request->tingkat_id);
+            }),
         ]);
 
-        $dataReq = $request->only(['class', 'name', 'icon', 'slug', 'kelas_id']);
+        $dataReq = $request->only(['class', 'name', 'icon', 'slug', 'tingkat_id']);
 
         if ($request->hasFile('icon')) {
             $validated = $request->validate([

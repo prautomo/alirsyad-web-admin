@@ -9,6 +9,7 @@ use DB;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Jenjang;
 use App\Models\Tingkat;
 
 class TingkatController extends Controller{
@@ -40,7 +41,7 @@ class TingkatController extends Controller{
                 if($search){
                     $query->where('name', 'LIKE', '%'.$search.'%');
                     
-                    $query = $query->orWhereHas('uploader', function($query2) use ( $search ){
+                    $query = $query->orWhereHas('jenjang', function($query2) use ( $search ){
                         $query2->where('name', 'LIKE', '%'.$search.'%');
                     });
                 }
@@ -54,8 +55,8 @@ class TingkatController extends Controller{
                     "editRoute" => route($this->routePath.".edit", $data->id),
                 ]);
             })
-            ->addColumn("uploader", function ($data) {
-                return @$data->uploader_id ? $data->uploader->name : "not set";
+            ->addColumn("jenjang", function ($data) {
+                return @$data->jenjang_id ? $data->jenjang->name : "not set";
             })
             ->addColumn("created_at", function ($data) {
                 $createdAt = new Carbon($data->created_at);
@@ -79,35 +80,32 @@ class TingkatController extends Controller{
     /**
      * Get List Teacher Uploader
      */
-    private function getGuruUploader(){
-        // get list tingkat
-        $role = "GURU";
-        $users = User::whereHas("roles", function($q) use ($role){ $q->where("key", $role); })->get();
-        $users = $users->whereNotIn('id', Tingkat::whereNotNull('uploader_id')->pluck('uploader_id'));
-        
-        $uploaderList = [];
-        $uploaderList[""] = "Pilih guru uploader";
-        foreach($users as $user){
-            $uploaderList[$user->id] = $user->name;
+    private function getJenjang(){
+        // get list jenjang
+        $jenjangs = Jenjang::get();        
+        $jenjangList = [];
+        $jenjangList[""] = "Pilih jenjang pendidikan";
+        foreach($jenjangs as $jenjang){
+            $jenjangList[$jenjang->id] = $jenjang->name;
         }
 
-        return $uploaderList;
+        return $jenjangList;
     }
     
     public function create(){
-        $uploaderList = $this->getGuruUploader();
+        $jenjangList = $this->getJenjang();
 
-        return view($this->prefix.'.create', ['uploaderList' => $uploaderList]);
+        return view($this->prefix.'.create', ['jenjangList' => $jenjangList]);
     }
 
     public function store(Request $request){
         // validasi form
         $this->validate($request, [
+            'jenjang_id' => 'required',
             'name' => 'required|string',
-            'order' => 'required|integer',
         ]);
 
-        $data = Tingkat::create($request->only(['description', 'name', 'order']));
+        $data = Tingkat::create($request->only(['description', 'name', 'jenjang_id']));
 
         return redirect()->route($this->routePath.'.index')->with(
             $this->success(__("Success to create Tingkat"), $data)
@@ -116,21 +114,20 @@ class TingkatController extends Controller{
 
     public function edit(Request $request, $id){
         $dt = Tingkat::findOrFail($id);
-        $uploaderList = $this->getGuruUploader();
+        $jenjangList = $this->getJenjang();
 
-        return view($this->prefix.'.edit', ['data'=>$dt, 'uploaderList' => $uploaderList]);
+        return view($this->prefix.'.edit', ['data'=>$dt, 'jenjangList' => $jenjangList]);
     }
 
     public function update(Request $request, $id){
         // validasi form
         $this->validate($request, [
             'name' => 'required|string',
-            'uploader_id' => 'required',
-            'order' => 'required|integer',
+            'jenjang_id' => 'required',
         ]);
         
         $dt = Tingkat::findOrFail($id);
-        $dt->update($request->only(['description', 'name', 'uploader_id', 'order']));
+        $dt->update($request->only(['description', 'name', 'jenjang_id']));
 
         return redirect()->route($this->routePath.'.index')->with(
             $this->success(__("Success to update Tingkat"), $dt)

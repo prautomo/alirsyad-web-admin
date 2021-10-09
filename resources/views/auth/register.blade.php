@@ -81,12 +81,57 @@
                                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
                             </div>
 
+                            <div class="form-group ">
+                                <label for="jenjang_id" class=" col-form-label text-md-right" id="jenjang_id">{{ __('Jenjang') }}</label>
+
+                                <select id="jenjang_id" class="form-control @error('jenjang_id') is-invalid @enderror" name="jenjang_id" required autofocus>
+                                    <option value="" selected>Pilih jenjang.</option>
+                                    @forelse(\App\Models\Jenjang::get() as $jenjang)
+                                    <option value="{{ $jenjang->id }}">{{ $jenjang->name }}</option>
+                                    @empty
+                                    <!-- <option value="">Tidak ada jenjang.</option> -->
+                                    @endforelse
+                                </select>
+
+                                @error('jenjang_id')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+
+                            <div class="form-group ">
+                                <label for="tingkat_id" class=" col-form-label text-md-right">{{ __('Tingkat') }}</label>
+
+                                <select id="tingkat_id" class="form-control @error('tingkat_id') is-invalid @enderror" name="tingkat_id" required autofocus>
+                                    <option value="" selected>Pilih tingkat.</option>
+                                </select>
+
+                                @error('tingkat_id')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+
+                            <div class="form-group ">
+                                <label for="kelas_id" class=" col-form-label text-md-right" >{{ __('Kelas') }}</label>
+
+                                <select id="kelas_id" class="form-control @error('kelas_id') is-invalid @enderror" name="kelas_id" required autofocus>
+                                    <option value="" selected>Pilih kelas.</option>
+                                </select>
+
+                                @error('kelas_id')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+
                             <div class="form-group  mb-0">
                                 <button type="submit" class="btn btn-main w-100">
                                     {{ __('Register') }}
                                 </button>
-
-
                             </div>
                         </div>
                     </form>
@@ -97,3 +142,56 @@
 </div>
 <div class="spacer"></div>
 @endsection
+
+@push('script')
+<script>
+    $('select#jenjang_id').on('change', function() {
+        loadTingkat( this.value );
+        // clear option kelas
+        $('#kelas_id').html("<option selected>Pilih kelas.</option>");
+    });
+
+    $('select#tingkat_id').on('change', function() {
+        loadKelas( this.value );
+    });
+
+    function loadTingkat(jenjangId){
+
+        $.ajax({
+            type:'GET',
+            url:"{{ route('app.tingkat.json') }}",
+            data:"q_jenjang_id=" + jenjangId,
+            success: function(res){ 
+                $('#tingkat_id').html("<option selected>Pilih tingkat.</option>");
+
+                let data = res?.data ?? [];
+                
+                for(var i=0; i<data.length; i++){
+                    var tingkat = data[i];
+                    console.log("dika tingkat", tingkat)
+
+                    $('#tingkat_id').append($('<option>').val(tingkat.id).text(tingkat.name));
+                }
+            }
+        });
+    }
+
+    function loadKelas(tingkatId){
+        $.ajax({
+            type:'GET',
+            url:"{{ route('app.kelas.json') }}",
+            data:"q_tingkat_id=" + tingkatId,
+            success: function(res){ 
+                $('#kelas_id').html("<option selected>Pilih kelas.</option>");
+
+                let data = res?.data ?? [];
+
+                for(var i=0; i<data.length; i++){
+                    var kelas = data[i];
+                    $('#kelas_id').append($('<option>').val(kelas.id).text(kelas.name));
+                }
+            }
+        }); 
+    }
+</script>
+@endpush

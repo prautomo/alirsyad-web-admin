@@ -9,6 +9,8 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
+use Illuminate\Auth\Events\Registered;
 
 class RegisterController extends Controller
 {
@@ -51,11 +53,12 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'nis' => ['required', 'string', 'max:255'],
+            'nis' => ['required', 'string', 'max:255', 'unique:external_users'],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:external_users'],
             'phone' => ['required', 'string', 'max:255', 'unique:external_users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => ['required', 'string', 'min:6', 'confirmed'],
+            'kelas_id' => ['required', 'integer'],
             // 'user_type' => ['required', 'string', 'in:SISWA'],
         ]);
     }
@@ -68,7 +71,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $registerd =   ExternalUser::create([
+        $registerd = ExternalUser::create([
             'nis' => $data['nis'],
             'name' => $data['name'],
             'email' => $data['email'],
@@ -76,7 +79,25 @@ class RegisterController extends Controller
             'phone' => $data['phone'],
             'password' => Hash::make($data['password']),
             'role' => "SISWA",
+            'is_pengunjung' => true,
+            'kelas_id' => $data['kelas_id'],
         ]);
         return $registerd;
+    }
+
+    /**
+     * Handle a registration request for the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        event(new Registered($user = $this->create($request->all())));
+
+        return redirect()->route('login')
+                ->with('success', 'User registered successfully.');
     }
 }

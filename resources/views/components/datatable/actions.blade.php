@@ -40,6 +40,7 @@
 @endif
 
 @if(isset($saldoRoute) || isset($productRoute))
+<!-- gakepake -->
 <div class="btn-group" role="group">
     <button id="btnGroupDrop1" type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         More
@@ -51,9 +52,13 @@
         @if(isset($productRoute) && \Request::get('role')=="MITRA")
         <a class="dropdown-item" href="{{$productRoute}}">Product List</a>
         @endif
-        @if(isset($transactionProductRoute) && \Request::get('role')=="MITRA")
-        <a class="dropdown-item" href="{{$transactionProductRoute}}">Transaction Product List</a>
-        @endif
     </div>
 </div>
+@endif
+
+@if(isset($copySlug))
+<a href="#" data-slug="{{$copySlug ?? ''}}" class="btn btn-sm btn-icon btn-warning" id="datatable-copy-btn">
+    <i class="far fa-copy"></i>
+    {{__("Copy Link")}}
+</a>
 @endif

@@ -18,6 +18,7 @@ class HistoryVideo extends Model
     protected $fillable = [
         'siswa_id',
         'video_id',
+        'semester',
     ];
 
     public static function search($request)
@@ -26,6 +27,7 @@ class HistoryVideo extends Model
         $data = self::appendSearchQuery($data, $request, [
             "video_id" => "=",
             "siswa_id" => "=",
+            "semester" => "=",
         ]);
 
         return $data;
@@ -33,11 +35,11 @@ class HistoryVideo extends Model
 
     public function video()
     {
-        return $this->belongsTo("App\Models\Video",  "video_id", "id");
+        return $this->belongsTo("App\Models\Video",  "video_id", "id")->withTrashed();
     }
 
     public function siswa()
     {
-        return $this->belongsTo("App\Models\ExternalUser",  "siswa_id", "id");
+        return $this->belongsTo("App\Models\ExternalUser",  "siswa_id", "id")->withTrashed();
     }
 }

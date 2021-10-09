@@ -18,11 +18,10 @@ class CreateMataPelajaransTable extends Migration
             $table->string('name');
             $table->string('icon')->nullable();
             $table->string('slug')->nullable();
-            $table->unsignedBigInteger('kelas_id');
+            $table->unsignedBigInteger('tingkat_id');
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('kelas_id')->references('id')->on('kelas')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

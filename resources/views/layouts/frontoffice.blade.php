@@ -4,7 +4,7 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="digital interactive book,bootstrap4">
+  <meta name="description" content="{{ config('app.name', 'Laravel') }}">
   
   <meta name="author" content="Anon">
 
@@ -13,6 +13,7 @@
   <!-- bootstrap.min css -->
   <link rel="stylesheet" href="{{ asset('frontoffice/plugins/bootstrap/css/bootstrap.min.css') }}">
   <!-- Icon Font Css -->
+  <link rel="stylesheet" href="{{ asset('backoffice/assets/vendor/nucleo/css/nucleo.css') }}" type="text/css">
   <link rel="stylesheet" href="{{ asset('frontoffice/plugins/themify/css/themify-icons.css') }}">
   <link rel="stylesheet" href="{{ asset('frontoffice/plugins/fontawesome/css/all.css') }}">
   <link rel="stylesheet" href="{{ asset('frontoffice/plugins/magnific-popup/dist/magnific-popup.css') }}">
@@ -26,6 +27,8 @@
 
   <!-- Page plugins -->
   @stack('plugin_css')
+
+  @stack('style')
 </head>
 
 <body>
@@ -35,16 +38,16 @@
 	<nav class="navbar navbar-expand-lg  py-4" id="navbar">
 		<div class="container">
 		  <a class="navbar-brand" href="{{ route('app.home') }}">
-		  	Digital <span>Interactive.</span>
+		  	Al Irsyad <span>EDU.</span>
 		  </a>
-
-		  <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarsExample09" aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="fa fa-bars"></span>
-		  </button>
 
           @guest
 
           @else
+          <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarsExample09" aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="fa fa-bars"></span>
+          </button>
+          
 		  <div class="collapse navbar-collapse text-center" id="navbarsExample09">
 			<ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
@@ -61,10 +64,10 @@
                    <a class="nav-link" href="{{ route('app.mapel.list') }}">Mata Pelajaran</a>
                 </li>
 			    <li class="nav-item">
-                    <a class="nav-link" href="nilai.html">Nilai Simulasi</a>
+                    <a class="nav-link" href="{{ route('app.nilai-simulasi') }}">Nilai Simulasi</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="akun.html">Akun Saya</a>
+                    <a class="nav-link" href="{{ route('app.akun-saya') }}">Akun Saya</a>
                 </li>
 			</ul>
 
@@ -92,14 +95,15 @@
     <!-- 
     Essential Scripts
     =====================================-->
-    
-    
+
     <!-- Main jQuery -->
     <script src="{{ asset('frontoffice/plugins/jquery/jquery.js') }}"></script>
-    <script src="{{ asset('frontoffice/js/contact.js') }}"></script>
+    <!-- App.js -->
+    <script src="{{ asset('js/app.js') }}" charset="utf-8"></script>
     <!-- Bootstrap 4.3.1 -->
     <script src="{{ asset('frontoffice/plugins/bootstrap/js/popper.js') }}"></script>
     <script src="{{ asset('frontoffice/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
+
    <!--  Magnific Popup-->
     <script src="{{ asset('frontoffice/plugins/magnific-popup/dist/jquery.magnific-popup.min.js') }}"></script>
     <!-- Slick Slider -->
@@ -109,8 +113,6 @@
     <script src="{{ asset('frontoffice/plugins/counterup/jquery.counterup.min.js') }}"></script>   
     
     <script src="{{ asset('frontoffice/js/script.js') }}"></script>
-
-    <script src="{{ asset('js/app.js') }}" charset="utf-8"></script>
 
     @stack('plugin_script')
 

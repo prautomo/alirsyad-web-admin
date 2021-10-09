@@ -16,9 +16,9 @@ class TingkatController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $datas = Tingkat::all();
+        $datas = Tingkat::search($request)->get();
     
         return $this->sendResponse(TingkatResource::collection($datas), 'Tingkat retrieved successfully.');
     }

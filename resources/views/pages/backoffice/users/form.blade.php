@@ -26,7 +26,7 @@
 
     <!-- <x-input.select :wrappingId="__('mapel')" :label="__('Guru Mata Pelajaran')" id="mata_pelajaran_id" name="mata_pelajaran_id" :sources="$mapelList" :data="$data" /> -->
 
-    <x-input.select :wrappingId="__('uploader')" :label="__('Uploader At')" id="uploader_tingkat_id" name="uploader_tingkat_id" :sources="$tingkatList" :data="$data" />
+    <x-input.select :wrappingId="__('uploader')" :label="__('Uploader At')" id="uploader_jenjang_id" name="uploader_jenjang_id" :sources="$jenjangList" :data="$data" />
 
     <div class="col-xs-12 col-sm-12 col-md-12 text-right">
         <button type="submit" class="btn btn-sm btn-primary">@lang("Save")</button>
@@ -49,8 +49,8 @@
         @if(strtolower(\Request::get('role'))==="guru" || strtolower(!empty($userRole) ? array_keys(@$userRole)[0] : "" ) === "guru")
         // hide uploader
         $("#uploader").show();
-        @if(@$data->uploader_tingkat_id)
-        $('select#uploader_tingkat_id').val({{$data->uploader_tingkat_id}});
+        @if(@$data->uploader_jenjang_id)
+        $('select#uploader_jenjang_id').val({{$data->uploader_jenjang_id}});
         @endif
         @endif
 
@@ -59,8 +59,8 @@
 
         if(roleFirsChild.toLowerCase() === "guru"){
             $("#uploader").show();
-            @if(@$data->uploader_tingkat_id)
-            $('select#uploader_tingkat_id').val({{$data->uploader_tingkat_id}});
+            @if(@$data->uploader_jenjang_id)
+            $('select#uploader_jenjang_id').val({{$data->uploader_jenjang_id}});
             @endif
         }else{
             $("#uploader").hide();
@@ -73,8 +73,8 @@
 
         if(value.toLowerCase()==="guru"){
             $("#uploader").show();
-            @if(@$data->uploader_tingkat_id)
-            $('select#uploader_tingkat_id').val({{$data->uploader_tingkat_id}});
+            @if(@$data->uploader_jenjang_id)
+            $('select#uploader_jenjang_id').val({{$data->uploader_jenjang_id}});
             @endif
         }else{
             $("#uploader").hide();

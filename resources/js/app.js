@@ -13,6 +13,12 @@ require('./datatable');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+// admin
 import('./backoffice/components/ExternalUser');
 import('./backoffice/components/StoryPath/Form');
-import('./frontoffice/components/VideoDetail');
+// siswa
+import('./frontoffice/components/Video/Detail');
+import('./frontoffice/components/Modul/Detail');
+import('./frontoffice/components/Nilai/List');
+// guru
+import('./guru/components/Dashboard/DetailProgressBelajar');

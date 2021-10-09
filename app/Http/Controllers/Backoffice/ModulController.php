@@ -13,6 +13,7 @@ use App\Models\Modul;
 use App\Models\MataPelajaran;
 use App\Models\Tingkat;
 use App\Helpers\ExtractArchive;
+use App\Helpers\GenerateSlug;
 
 class ModulController extends Controller{
 
@@ -35,7 +36,7 @@ class ModulController extends Controller{
         $query = Modul::query();
 
         // relation with tingkat
-        $query = $query->with('mataPelajaran');
+        $query = $query->with('mataPelajaran.tingkat.jenjang');
 
         return datatables()
             ->of($query)
@@ -46,6 +47,14 @@ class ModulController extends Controller{
                 if($search){
                     $query->where('name', 'LIKE', '%'.$search.'%');
                     
+                    $query = $query->orWhereHas('mataPelajaran.tingkat.jenjang', function($query2) use ( $search ){
+                        $query2->where('name', 'LIKE', '%'.$search.'%');
+                    });
+
+                    $query = $query->orWhereHas('mataPelajaran.tingkat', function($query2) use ( $search ){
+                        $query2->where('name', 'LIKE', '%'.$search.'%');
+                    });
+
                     $query = $query->orWhereHas('mataPelajaran', function($query2) use ( $search ){
                         $query2->where('name', 'LIKE', '%'.$search.'%');
                     });
@@ -63,6 +72,12 @@ class ModulController extends Controller{
                         "url" => asset($data->icon)
                     ]);
                 }
+            })
+            ->addColumn("jenjang", function ($data) {
+                return @$data->mataPelajaran->tingkat->jenjang ? $data->mataPelajaran->tingkat->jenjang->name : '-';
+            })
+            ->addColumn("tingkat", function ($data) {
+                return @$data->mataPelajaran->tingkat ? $data->mataPelajaran->tingkat->name : '-';
             })
             ->addColumn("mapel", function ($data) {
                 $mapel = @$data->mataPelajaran->name ? $data->mataPelajaran->name : 'none';
@@ -107,7 +122,7 @@ class ModulController extends Controller{
      */
     private function getMataPelajaran(){
         // get list mapel
-        $mapels = MataPelajaran::with('kelas.tingkat')->get();
+        $mapels = MataPelajaran::with('tingkat')->get();
 
         // filter kalo rolenya guru uploader (khusus mapel di tingkatnya aja)
 
@@ -115,16 +130,27 @@ class ModulController extends Controller{
         $mapelList[""] = "Pilih mata pelajaran";
 
         foreach($mapels as $mapel){
-            $mapelList[$mapel->id] = $mapel->name . " (Kelas ".@$mapel->kelas->name." ".@$mapel->kelas->tingkat->name.")";
+            $mapelList[$mapel->id] = $mapel->name . " (Tingkat ".@$mapel->tingkat->name." ".@$mapel->tingkat->jenjang->name.")";
         }
 
         return $mapelList;
     }
+
+    private function getSemester(){
+        $semesterList = [];
+        $semesterList[""] = "Pilih semester";
+
+        $semesterList[1] = "1";
+        $semesterList[2] = "2";
+
+        return $semesterList;
+    }
     
     public function create(){
         $mapelList = $this->getMataPelajaran();
+        $semesterList = $this->getSemester();
 
-        return view($this->prefix.'.create', ['mapelList' => $mapelList]);
+        return view($this->prefix.'.create', ['mapelList' => $mapelList, 'semesterList' => $semesterList]);
     }
 
     public function store(Request $request){
@@ -133,12 +159,14 @@ class ModulController extends Controller{
             'name' => 'required|string',
             'mata_pelajaran_id' => 'required',
             'modul' => 'required|file|mimes:pdf',
+            'semester' => 'required|numeric|min:1,max:2',
+            'urutan' => 'required|numeric|min:0',
         ]);
 
         // default image
         $url = "images/placeholder.png";
         // temp request
-        $dataReq = $request->only(['name', 'icon', 'description', 'mata_pelajaran_id']);
+        $dataReq = $request->only(['name', 'icon', 'description', 'mata_pelajaran_id', 'slug', 'semester', 'tahun_ajaran', 'urutan']);
         $dataReq['uploader_id'] = \Auth::user()->id;
 
         if ($request->hasFile('icon')) {
@@ -160,6 +188,11 @@ class ModulController extends Controller{
 
         $data = Modul::create($dataReq);
 
+        if(empty($request->slug)){
+            $data->slug = GenerateSlug::generateSlug($data->id, $data->name);
+            $data->save();
+        }
+
         return redirect()->route($this->routePath.'.index')->with(
             $this->success(__("Success to create Modul"), $data)
         );
@@ -168,18 +201,22 @@ class ModulController extends Controller{
     public function edit(Request $request, $id){
         $dt = Modul::with('mataPelajaran')->findOrFail($id);
         $mapelList = $this->getMataPelajaran();
+        $semesterList = $this->getSemester();
 
-        return view($this->prefix.'.edit', ['data' => $dt, 'mapelList' => $mapelList]);
+        return view($this->prefix.'.edit', ['data' => $dt, 'mapelList' => $mapelList, 'semesterList' => $semesterList]);
     }
 
     public function update(Request $request, $id){
         // validasi form
         $this->validate($request, [
+            'slug' => 'unique:mata_pelajarans,slug,'.$id,
             'name' => 'required|string',
             'mata_pelajaran_id' => 'required',
+            'semester' => 'required|numeric|min:1,max:2',
+            'urutan' => 'required|numeric|min:0',
         ]);
 
-        $dataReq = $request->only(['name', 'icon', 'description', 'mata_pelajaran_id']);
+        $dataReq = $request->only(['name', 'icon', 'description', 'mata_pelajaran_id', 'slug', 'semester', 'tahun_ajaran', 'urutan']);
 
         if ($request->hasFile('icon')) {
             $validated = $request->validate([
@@ -200,6 +237,10 @@ class ModulController extends Controller{
             $dataReq['pdf_path'] = $url;
         }
 
+        if(empty($request->slug)){
+            $dataReq['slug'] = GenerateSlug::generateSlug($id, $request->name);
+        }
+        
         $dt = Modul::findOrFail($id);
         $dt->update($dataReq);
 

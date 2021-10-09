@@ -18,6 +18,7 @@ class HistoryModul extends Model
     protected $fillable = [
         'siswa_id',
         'modul_id',
+        'semester',
     ];
 
     public static function search($request)
@@ -26,6 +27,7 @@ class HistoryModul extends Model
         $data = self::appendSearchQuery($data, $request, [
             "modul_id" => "=",
             "siswa_id" => "=",
+            "semester" => "=",
         ]);
 
         return $data;
@@ -33,11 +35,11 @@ class HistoryModul extends Model
 
     public function modul()
     {
-        return $this->belongsTo("App\Models\Modul",  "modul_id", "id");
+        return $this->belongsTo("App\Models\Modul",  "modul_id", "id")->withTrashed();
     }
 
     public function siswa()
     {
-        return $this->belongsTo("App\Models\ExternalUser",  "siswa_id", "id");
+        return $this->belongsTo("App\Models\ExternalUser",  "siswa_id", "id")->withTrashed();
     }
 }

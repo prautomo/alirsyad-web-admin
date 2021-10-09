@@ -23,9 +23,13 @@
         </div>
     </div>
 
+    <x-input.select :label="__('Semester')" id="semester" name="semester" :sources="$semesterList" :data="$data" required />
+
     <x-input.text :label="__('Name')" name="name" :data="$data" required />
     <x-input.textarea :label="__('Description')" name="description" :data="$data" />
     <x-input.images :label="__('Cover Modul')" name="icon" :data="$data" />
+    <x-input.text :label="__('Tahun Ajaran')" name="tahun_ajaran" :data="$data" />
+    <x-input.text type="number" :label="__('Urutan')" name="urutan" :data="$data" required />
 
     <div class="col-xs-12 col-sm-12 col-md-12 text-right">
         <button type="submit" class="btn btn-sm btn-primary">@lang("Save")</button>

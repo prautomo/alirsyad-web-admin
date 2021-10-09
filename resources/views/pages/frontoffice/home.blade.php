@@ -18,22 +18,23 @@
     </section>
     <!-- Section Intro Start -->
 
-    <section class="section">
+    <section class="mt-5">
         <div class="container">
             <div class="row">
                 <!-- sedang dipelajari -->
-                <div class="col-md-6">
+                <div class="col-md-6 mb-4">
                     <div class="card">
                         <div class="card-body">
-                            <div class="card-title">
-                                Mata Pelajaran yang Sedang Dipelajari
+                            <div class="card-title mb-0 form-inline">
+                                <i class="ni ni-books icon-title"></i>
+                                <div>Mata Pelajaran yang Sedang Dipelajari</div>
                             </div>
                             <hr/>
 
                             @forelse($sedangDipelajari as $sedangDipelajari)
                             <div class="wrap-kelas form-inline mt-3">
-                                <div>
-                                    <span class="kelas-title">Kelas {{ $sedangDipelajari->kelas->name ?? "-" }} {{ @$sedangDipelajari->kelas->tingkat->name }}</span>
+                                <div style="max-width: 270px;">
+                                    <span class="kelas-title">Kelas {{ $sedangDipelajari->tingkat->name ?? "-" }} {{ @$sedangDipelajari->tingkat->jenjang->name }}</span>
                                     <h4 class="font-weight-bold">
                                         {{ @$sedangDipelajari->name ?? "-" }}
                                     </h4>
@@ -62,15 +63,16 @@
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-body">
-                            <div class="card-title">
-                                Mata Pelajaran yang Akan Datang
+                            <div class="card-title mb-0 form-inline">
+                                <i class="ni ni-books icon-title"></i>
+                                <div>Mata Pelajaran yang Akan Datang</div>
                             </div>
                             <hr/>
 
                             @forelse($yangAkanDatang as $yangAkanDatang)
                             <div class="wrap-kelas-disable form-inline mt-3">
-                                <div>
-                                    <span class="kelas-title">Kelas {{ @$yangAkanDatang->kelas->name ?? '-' }} {{ @$yangAkanDatang->kelas->tingkat->name }}</span>
+                                <div style="max-width: 270px;">
+                                    <span class="kelas-title">Kelas {{ @$yangAkanDatang->tingkat->name ?? '-' }} {{ @$yangAkanDatang->tingkat->jenjang->name }}</span>
                                     <h4 class="font-weight-bold disable">
                                         {{ @$yangAkanDatang->name ?? "-" }}
                                     </h4>
@@ -88,7 +90,7 @@
 
                             @if(!empty($yangAkanDatang))
                             <div class="mt-2 text-right">
-                                <a href="">Selengkapnya</a>
+                                <a href="{{ route('app.mapel.upcoming') }}">Selengkapnya</a>
                             </div>
                             @endif
                         </div>

@@ -12,7 +12,7 @@ class Kelas extends Model
     use HasFactory, SoftDeletes, SearchableTrait;
 
     protected $fillable = [
-        "tingkat_id", 'name', 'description', 'status', 'logo', 'wali_kelas_id', 'order',
+        "tingkat_id", 'name', 'description', 'status', 'logo', 'wali_kelas_id', 'order', 'kelas',
     ];
 
     /**
@@ -21,7 +21,8 @@ class Kelas extends Model
      * 
      * @var array
      */
-    protected static $relations_to_cascade = ['mataPelajaran', 'externalUser']; 
+    // protected static $relations_to_cascade = ['mataPelajaran', 'externalUser']; 
+    protected static $relations_to_cascade = []; 
 
     /**
      * Cascade delete and restore
@@ -55,6 +56,7 @@ class Kelas extends Model
             "id" => "=",
             "tingkat_id" => "=",
             "status" => "=",
+            "kelas" => "=",
         ]);
 
         return $data;
@@ -62,22 +64,22 @@ class Kelas extends Model
 
     public function tingkat()
     {
-        return $this->belongsTo("App\Models\Tingkat",  "tingkat_id", "id");
+        return $this->belongsTo("App\Models\Tingkat",  "tingkat_id", "id")->withTrashed();
     }
 
     public function waliKelas()
     {
-        return $this->belongsTo("App\Models\User",  "wali_kelas_id", "id");
+        return $this->belongsTo("App\Models\ExternalUser",  "wali_kelas_id", "id")->withTrashed();
     }
 
     public function mataPelajaran()
     {
-        return $this->hasMany("App\Models\MataPelajaran", "kelas_id", "id");
+        return $this->hasMany("App\Models\MataPelajaran", "kelas_id", "id")->withTrashed();
     }
 
-    public function externalUser()
+    public function siswa()
     {
-        return $this->hasMany("App\Models\ExternalUser", "kelas_id", "id");
+        return $this->hasMany("App\Models\ExternalUser", "kelas_id", "id")->withTrashed();
     }
 
     // Get all Mata Pelajaran

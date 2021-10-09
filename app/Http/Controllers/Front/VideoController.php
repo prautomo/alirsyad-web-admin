@@ -20,17 +20,32 @@ class VideoController extends Controller
     public function indexByMapel(Request $request, $idMapel)
     {
         // mapel data
-        $mapel = MataPelajaran::with('kelas.tingkat');
-        $mapel = $mapel->where('kelas_id', Auth::user()->kelas_id);
+        $mapel = MataPelajaran::with('tingkat');
+        // filter by jenjang yg sama
+        $mapel = $mapel->whereHas('tingkat.jenjang', function($query) {
+            $query->where('id', @Auth::user()->kelas->tingkat->jenjang_id);
+        });
+        // filter by tingkat bawahnya
+        $mapel = $mapel->whereHas('tingkat', function($query) {
+            $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
+        });
         $mapel = $mapel->findOrFail($idMapel);
 
         // videos
         $videos = Video::with('uploader', 'mataPelajaran');
         // handle hak akses mapel
-        $videos = $videos->whereHas('mataPelajaran', function($query){
-            $query->where('kelas_id', Auth::user()->kelas_id);
-        });
-        $videos = $videos->where('mata_pelajaran_id', $idMapel)->get();
+        $user = Auth::user();
+        if($user->role !== "GURU"){
+            $videos = $videos->whereHas('mataPelajaran.tingkat', function($query) use($user) {
+                $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
+            });
+        }
+        
+        $videos = $videos->where('mata_pelajaran_id', $idMapel);
+        // sorting by urutan
+        $videos = $videos->orderBy('urutan', 'asc');
+        // get list
+        $videos = $videos->get();
 
         $parseData = [
             'idMapel' => $idMapel,

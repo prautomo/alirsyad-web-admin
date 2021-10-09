@@ -10,7 +10,7 @@ namespace App\Http\Controllers\Backoffice;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Tingkat;
+use App\Models\Jenjang;
 use App\Models\MataPelajaran;
 use Spatie\Permission\Models\Role;
 use DB;
@@ -83,19 +83,19 @@ class UserController extends Controller{
                     "text" => $roles,
                 ]);
             })
-            ->addColumn("uploader", function ($data) {
-                if($data->uploaderTingkat){
-                    return view("components.datatable.label", [
-                        "badge" => 'success',
-                        "text" => 'Tingkat : '.@$data->uploaderTingkat->name ,
-                    ]);
-                }else{
-                    return view("components.datatable.label", [
-                        "badge" => 'warning',
-                        "text" => 'Bukan',
-                    ]);
-                }
-            })
+            // ->addColumn("uploader", function ($data) {
+            //     if($data->uploaderTingkat){
+            //         return view("components.datatable.label", [
+            //             "badge" => 'success',
+            //             "text" => 'Tingkat : '.@$data->uploaderTingkat->name ,
+            //         ]);
+            //     }else{
+            //         return view("components.datatable.label", [
+            //             "badge" => 'warning',
+            //             "text" => 'Bukan',
+            //         ]);
+            //     }
+            // })
             ->addColumn("mapel", function ($data) {
                 return @$data->mataPelajaran->name ? $data->mataPelajaran->name : 'not set';
             })
@@ -145,32 +145,32 @@ class UserController extends Controller{
     }
 
     /**
-     * Get Available Tingkat List
+     * Get Available Jenjang List
      */
-    private function getTingkat(){
-        // get list tingkat
-        $tingkats = Tingkat::whereNull('uploader_id')->get();
+    private function getJenjang(){
+        // get list jenjang
+        $jenjangs = Jenjang::whereNull('uploader_id')->get();
         
-        $tingkatList = [];
-        $tingkatList[""] = "Bukan Uploader";
-        foreach($tingkats as $tingkat){
-            $tingkatList[$tingkat->id] = $tingkat->name;
+        $jenjangList = [];
+        $jenjangList[""] = "Semua Jenjang";
+        foreach($jenjangs as $jenjang){
+            $jenjangList[$jenjang->id] = $jenjang->name;
         }
 
-        return $tingkatList;
+        return $jenjangList;
     }
 
     /**
      * Get Mata Pelajaran
      */
     private function getMataPelajaran(){
-        // get list tingkat
+        // get list jenjang
         $mapels = MataPelajaran::whereNotIn('id', User::whereNotNull('mata_pelajaran_id')->pluck('mata_pelajaran_id'))->get();
         
         $mapelList = [];
         // $mapelList[""] = "-";
         foreach($mapels as $mapel){
-            $mapelList[$mapel->id] = $mapel->name . " (Kelas ". @$mapel->kelas->name ." ".@$mapel->kelas->tingkat->name.")";
+            $mapelList[$mapel->id] = $mapel->name . " (Kelas ". @$mapel->kelas->name ." ".@$mapel->kelas->jenjang->name.")";
         }
 
         return $mapelList;
@@ -184,10 +184,10 @@ class UserController extends Controller{
     public function create()
     {
         $roles = Role::pluck('name','name')->all();
-        $tingkatList = $this->getTingkat();
+        $jenjangList = $this->getJenjang();
         $mapelList = $this->getMataPelajaran();
 
-        return view($this->prefix.'.create',compact('roles', 'tingkatList', 'mapelList'));
+        return view($this->prefix.'.create',compact('roles', 'jenjangList', 'mapelList'));
     }
     
     /**
@@ -206,7 +206,7 @@ class UserController extends Controller{
             'roles' => 'required'
         ]);
     
-        $input = $request->except(['uploader_tingkat_id']);
+        $input = $request->except(['uploader_jenjang_id']);
         $input['password'] = Hash::make($input['password']);
 
         $user = User::create($input);
@@ -216,13 +216,13 @@ class UserController extends Controller{
         if(strtolower(@$request->input('roles')[0]) === "guru"){
             // validate assign uploader
             // $this->validate($request, [
-            //     'uploader_tingkat_id' => 'required'
+            //     'uploader_jenjang_id' => 'required'
             // ]);
 
-            // check tingkat
-            if($request->uploader_tingkat_id){
-                $tingkat = Tingkat::find($request->uploader_tingkat_id);
-                $tingkat->update(['uploader_id' => $user->id]);
+            // check jenjang
+            if($request->uploader_jenjang_id){
+                $jenjang = Tingkat::find($request->uploader_jenjang_id);
+                $jenjang->update(['uploader_id' => $user->id]);
             }
         }
     
@@ -253,23 +253,23 @@ class UserController extends Controller{
         $data = User::find($id);
         $roles = Role::pluck('name','name')->all();
         $userRole = $data->roles->pluck('name','name')->all();
-        $tingkatList = $this->getTingkat();
+        $jenjangList = $this->getJenjang();
         $mapelList = $this->getMataPelajaran();
 
-        // get selected tingkat
+        // get selected jenjang
         $uploaderTingkat = @$data->uploaderTingkat;
         if($uploaderTingkat){
-            $tingkatList[$uploaderTingkat->id] = $uploaderTingkat->name;
-            $data->uploader_tingkat_id = $uploaderTingkat->id;
+            $jenjangList[$uploaderTingkat->id] = $uploaderTingkat->name;
+            $data->uploader_jenjang_id = $uploaderTingkat->id;
         }
 
         // get selected mapel
         $mapel = @$data->mataPelajaran;
         if($mapel){
-            $mapelList[$mapel->id] = $mapel->name . " (Kelas ". @$mapel->kelas->name ." ".@$mapel->kelas->tingkat->name.")";
+            $mapelList[$mapel->id] = $mapel->name . " (Kelas ". @$mapel->kelas->name ." ".@$mapel->kelas->jenjang->name.")";
         }
     
-        return view($this->prefix.'.edit', compact('data','roles','userRole', 'tingkatList', 'mapelList'));
+        return view($this->prefix.'.edit', compact('data','roles','userRole', 'jenjangList', 'mapelList'));
     }
     
     /**
@@ -307,19 +307,19 @@ class UserController extends Controller{
         if(strtolower(@$request->input('roles')[0]) === "guru"){
             // validate assign uploader
             // $this->validate($request, [
-            //     'uploader_tingkat_id' => 'required'
+            //     'uploader_jenjang_id' => 'required'
             // ]);
             
-            // update tingkat sebelumnya
+            // update jenjang sebelumnya
             if(@$user->uploaderTingkat){
-                $tingkatBefore = Tingkat::find($user->uploaderTingkat->id);
-                $tingkatBefore->update(['uploader_id' => null]);
+                $jenjangBefore = Tingkat::find($user->uploaderTingkat->id);
+                $jenjangBefore->update(['uploader_id' => null]);
             }
 
-            // check tingkat
-            if($request->uploader_tingkat_id){
-                $tingkat = Tingkat::find($request->uploader_tingkat_id);
-                $tingkat->update(['uploader_id' => $user->id]);
+            // check jenjang
+            if($request->uploader_jenjang_id){
+                $jenjang = Tingkat::find($request->uploader_jenjang_id);
+                $jenjang->update(['uploader_id' => $user->id]);
             }
         }
     

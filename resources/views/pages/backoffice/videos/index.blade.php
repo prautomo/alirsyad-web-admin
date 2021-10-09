@@ -38,10 +38,14 @@
                     https://datatables.net/reference/option/columns
                 --}}
                 <th data-data="DT_RowIndex" data-searchable="false">@lang("No")</th>
-                <th data-data="show-img">@lang("Cover")</th>
+                <!-- <th data-data="show-img">@lang("Cover")</th> -->
                 <th data-data="name">@lang("Name")</th>
                 <th data-data="mapel">@lang("Mata Pelajaran")</th>
-                <th data-data="created_at">@lang("Created At")</th>
+                <th data-data="modul">@lang("Modul")</th>
+                <th data-data="jenjang">@lang("Jenjang")</th>
+                <th data-data="tingkat">@lang("Tingkat")</th>
+                <th data-data="semester">@lang("Semester")</th>
+                <!-- <th data-data="created_at">@lang("Created At")</th> -->
                 <th data-data="action" data-orderable="false" data-searchable="false">@lang("Action")</th>
             </x-datatable>
         </div>

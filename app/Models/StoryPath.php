@@ -17,6 +17,7 @@ class StoryPath extends Model
         "template_path",
         "description",
         "uploader_id",
+        'semester',
     ];
 
     public static function search($request)
@@ -28,6 +29,7 @@ class StoryPath extends Model
             "id" => "=",
             "modul_id" => "=",
             "uploader_id" => "=",
+            "semester" => "=",
         ]);
 
         return $data;
@@ -35,7 +37,7 @@ class StoryPath extends Model
 
     public function modul()
     {
-        return $this->belongsTo("App\Models\Modul",  "modul_id", "id");
+        return $this->belongsTo("App\Models\Modul",  "modul_id", "id")->withTrashed();
     }
 
     public function uploader()
@@ -45,6 +47,6 @@ class StoryPath extends Model
 
     public function storyPathSimulasi()
     {
-        return $this->hasMany("App\Models\StoryPathSimulasi", "story_path_id", "id");
+        return $this->hasMany("App\Models\StoryPathSimulasi", "story_path_id", "id")->withTrashed();
     }
 }

@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use Faker;
+use App\Models\ExternalUser;
 
 class InitDemoData extends Command
 {
@@ -40,7 +41,30 @@ class InitDemoData extends Command
      */
     public function handle()
     {
-        $fake =   Faker\Factory::create();
-        echo ("Init Demo Data \n");
+        $fake = Faker\Factory::create();
+        echo ("================Init Demo Data===============\n");
+        echo ("Create Guru Data \n");
+
+        $gurus = [
+            [
+                'nis' => '321345352535',
+                'username' => 'priyani_sri_rukmingsih',
+                'name' => 'Priyani Sri Rukminingsih, S.Pd',
+                'email' => 'priyani_sri_rukmingsih@gmail.com',
+                'email_verified_at' => now(),
+                'phone' => '08321231323',
+                'phone_verified_at' => now(),
+                'password' => bcrypt('123456'),
+                'photo' => "",
+                'role' => 'GURU',
+                'status' => 'AKTIF',
+            ]
+        ];
+        foreach($gurus as $guru){
+            if (!ExternalUser::where("nis", $guru['nis'])->first()) {
+                $guruCreate = ExternalUser::create($guru);
+            }
+        }
+        
     }
 }

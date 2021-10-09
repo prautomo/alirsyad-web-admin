@@ -61,13 +61,13 @@ class User extends Authenticatable
         return $data;
     }
 
-    public function uploaderTingkat()
+    public function uploaderJenjang()
     {
-        return $this->hasOne("App\Models\Tingkat", "uploader_id", "id");
+        return $this->hasOne("App\Models\Jenjang", "uploader_id", "id")->withTrashed();
     }
 
     public function mataPelajaran()
     {
-        return $this->belongsTo("App\Models\MataPelajaran",  "mata_pelajaran_id", "id");
+        return $this->belongsTo("App\Models\MataPelajaran",  "mata_pelajaran_id", "id")->withTrashed();
     }
 }

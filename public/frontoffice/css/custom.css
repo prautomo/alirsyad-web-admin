@@ -21,3 +21,22 @@
 .progress {
     background-color: #bdc0f0;
 }
+
+.dropdown-item a:hover {
+    color: #00594D;
+}
+
+.icon-title {
+    color: #FFC727;
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+.rating {
+    margin-top: -30px;
+    margin-left: 10px;
+}
+
+.rating .checked {
+    color: orange;
+}

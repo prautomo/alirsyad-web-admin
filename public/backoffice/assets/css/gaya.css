@@ -2,3 +2,43 @@
 {
     background-color: #DF2935 !important;
 }
+
+.bg-ijo
+{
+    background-color: #00594d !important;
+}
+
+.text-dark-green {
+    color: #00594d !important;
+}
+
+.bg-grey{
+    background-color: #f2ebeb;
+}
+
+.progress-value {
+    font-weight: bolder;
+    color: black;
+}
+
+.bg-modul {
+    background-image: url("https://iconarchive.com/download/i83507/custom-icon-design/mono-general-2/copy.ico"); 
+    background-position: bottom 20% right 10%; 
+    background-repeat: no-repeat; 
+    background-size: 50px; 
+}
+
+
+.bg-video {
+    background-image: url("https://iconarchive.com/download/i83507/custom-icon-design/mono-general-2/copy.ico"); 
+    background-position: bottom 20% right 10%; 
+    background-repeat: no-repeat; 
+    background-size: 50px; 
+}
+
+.bg-simulasi {
+    background-image: url("https://iconarchive.com/download/i83507/custom-icon-design/mono-general-2/copy.ico"); 
+    background-position: bottom 20% right 10%; 
+    background-repeat: no-repeat; 
+    background-size: 50px; 
+}

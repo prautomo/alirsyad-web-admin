@@ -22,7 +22,7 @@ class MataPelajaran extends Model
         'name',
         'icon',
         'slug',
-        'kelas_id',
+        'tingkat_id',
     ];
 
     public static function search($request)
@@ -31,31 +31,31 @@ class MataPelajaran extends Model
         $data = self::appendSearchQuery($data, $request, [
             "name" => "LIKE",
             "slug" => "=",
-            "kelas_id" => "=",
+            "tingkat_id" => "=",
         ]);
 
         return $data;
     }
 
-    public function kelas()
+    public function tingkat()
     {
-        return $this->belongsTo("App\Models\Kelas",  "kelas_id", "id");
+        return $this->belongsTo("App\Models\Tingkat",  "tingkat_id", "id")->withTrashed();
     }
 
-    /**
-     * Guru Pengajar (Mata Pelajaran)
-     */
-    public function guru()
-    {
-        return $this->hasMany("App\Models\User", "mata_pelajaran_id", "id");
-    }
+    // /**
+    //  * Guru Pengajar (Mata Pelajaran)
+    //  */
+    // public function guru()
+    // {
+    //     return $this->hasMany("App\Models\User", "mata_pelajaran_id", "id");
+    // }
 
     /**
      * Modul
      */
     public function modul()
     {
-        return $this->hasMany("App\Models\Modul", "mata_pelajaran_id", "id");
+        return $this->hasMany("App\Models\Modul", "mata_pelajaran_id", "id")->withTrashed();
     }
 
     /**
@@ -63,7 +63,7 @@ class MataPelajaran extends Model
      */
     public function simulasi()
     {
-        return $this->hasMany("App\Models\Simulasi", "mata_pelajaran_id", "id");
+        return $this->hasMany("App\Models\Simulasi", "mata_pelajaran_id", "id")->withTrashed();
     }
 
     /**
@@ -71,12 +71,22 @@ class MataPelajaran extends Model
      */
     public function video()
     {
-        return $this->hasMany("App\Models\Video", "mata_pelajaran_id", "id");
+        return $this->hasMany("App\Models\Video", "mata_pelajaran_id", "id")->withTrashed();
+    }
+
+    /**
+     * The gurus that belong to the mapel.
+     */
+    public function gurus()
+    {
+        return $this->belongsToMany('App\Models\ExternalUser', 'guru_mata_pelajarans', 'mata_pelajaran_id' , 'guru_id');
     }
 
     // 
     public function getDisabledAttribute()
     {
-        return $this->kelas_id !== \Auth::user()->kelas_id;
+        // drop logic here
+        // return $this->tingkat_id !== \Auth::user()->kelas_id;
+        return false;
     }
 }

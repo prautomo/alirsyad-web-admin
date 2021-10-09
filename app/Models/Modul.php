@@ -11,7 +11,7 @@ class Modul extends Model
 {
     use HasFactory, SearchableTrait, SoftDeletes;
 
-    protected $appends = ['read'];
+    protected $appends = ['read', 'pdf_url', 'next', 'previous'];
 
     /**
      * The attributes that are mass assignable.
@@ -25,6 +25,10 @@ class Modul extends Model
         'icon',
         'mata_pelajaran_id',
         'uploader_id',
+        'slug',
+        'semester',
+        'tahun_ajaran',
+        'urutan',
     ];
 
     public static function search($request)
@@ -35,9 +39,34 @@ class Modul extends Model
             "description" => "LIKE",
             "mata_pelajaran_id" => "=",
             "uploader_id" => "=",
+            "slug" => "=",
+            "semester" => "=",
+            "tahun_ajaran" => "=",
+            "urutan" => "=",
         ]);
 
         return $data;
+    }
+
+    /**
+     * Cascade update
+     */
+    protected static function boot() {
+        parent::boot();
+
+        static::updated(function($model) {
+            // update video mapel_id
+            foreach ($model->videos()->get() as $video) {
+                $video->mata_pelajaran_id = $model->mata_pelajaran_id;
+                $video->save();
+            }
+
+            // update simulasi mapel_id
+            foreach ($model->simulasis()->get() as $simulasi) {
+                $simulasi->mata_pelajaran_id = $model->mata_pelajaran_id;
+                $simulasi->save();
+            }
+        });
     }
 
     public function getReadAttribute()
@@ -45,9 +74,58 @@ class Modul extends Model
         return is_object(HistoryModul::where(['siswa_id' => \Auth::user()->id, 'modul_id' => $this->id])->first());
     }
 
+    public function getPDFUrlAttribute()
+    {
+        return asset($this->pdf_path);
+    }
+
+    public function getNextAttribute(){
+        // get next modul
+        $nextModul = $this
+            ->where('urutan', '>', $this->urutan)
+            ->where('mata_pelajaran_id', $this->mata_pelajaran_id)
+            ->orderBy('urutan','asc')->first();
+
+        $returnNext = null;
+
+        if($nextModul){
+            $returnNext = [
+                'id' => @$nextModul->id,
+                'name' => @$nextModul->name,
+                'slug_url' => route('app.modul.detail', @$nextModul->slug).".html",
+                'url' => route('app.modul.detail', @$nextModul->id),
+                'endpoint' => route('api.modul.detail', @$nextModul->id),
+            ];
+        }
+        
+        return $returnNext;
+    }
+
+    public function getPreviousAttribute(){
+        // get previous modul
+        $previousModul =  $this
+            ->where('urutan', '<', $this->urutan)
+            ->where('mata_pelajaran_id', $this->mata_pelajaran_id)
+            ->orderBy('urutan','desc')->first();
+        
+        $returnPrevious = null;
+
+        if($previousModul){
+            $returnPrevious = [
+                'id' => @$previousModul->id,
+                'name' => @$previousModul->name,
+                'url' => route('app.modul.detail', @$previousModul->id),
+                'slug_url' => route('app.modul.detail', @$previousModul->slug).".html",
+                'endpoint' => route('api.modul.detail', @$previousModul->id),
+            ];
+        }
+        
+        return $returnPrevious;
+    }
+
     public function mataPelajaran()
     {
-        return $this->belongsTo("App\Models\MataPelajaran",  "mata_pelajaran_id", "id");
+        return $this->belongsTo("App\Models\MataPelajaran",  "mata_pelajaran_id", "id")->withTrashed();
     }
 
     public function uploader()
@@ -57,6 +135,16 @@ class Modul extends Model
 
     public function storyPath()
     {
-        return $this->hasOne("App\Models\StoryPath", "modul_id", "id");
+        return $this->hasOne("App\Models\StoryPath", "modul_id", "id")->withTrashed();
+    }
+
+    public function videos()
+    {
+        return $this->hasMany("App\Models\Video", "modul_id", "id")->withTrashed();
+    }
+
+    public function simulasis()
+    {
+        return $this->hasMany("App\Models\Simulasi", "modul_id", "id")->withTrashed();
     }
 }

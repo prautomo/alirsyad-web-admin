@@ -10,8 +10,11 @@ namespace App\Http\Controllers\Backoffice;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\ExternalUser;
+use App\Models\MataPelajaran;
+use App\Models\Jenjang;
 use App\Models\Tingkat;
 use App\Models\Kelas;
+use App\Models\GuruMataPelajaran;
 use App\Services\UploadService;
 use DB;
 use Hash;
@@ -35,10 +38,11 @@ class ExternalUserController extends Controller{
      *
      * @return void
      */
-    public function datatable($role){
+    public function datatable($request){
+        $role = $request->role;
         $query = ExternalUser::query();
         // relation with kelas and tingkat
-        $query = $query->with('kelas.tingkat');
+        $query = $query->with('kelas.tingkat.jenjang', 'mataPelajarans');
 
         if(!empty($role)){
             $query = $query->where('role', $role);
@@ -46,6 +50,19 @@ class ExternalUserController extends Controller{
 
         $dt = datatables()
         ->of($query)
+        ->filter(function ($query) use ($request) {
+
+            $search = @$request->search['value'];
+
+            if($search){
+                $query->where('name', 'LIKE', '%'.$search.'%');
+                $query->orWhere('nis', 'LIKE', '%'.$search.'%');
+                
+                $query = $query->orWhereHas('mataPelajarans', function($query2) use ( $search ){
+                    $query2->where('name', 'LIKE', '%'.$search.'%');
+                });
+            }
+        })
         ->addIndexColumn()
         ->addColumn('show-img', function($data) {
             return view("components.datatable.image", [
@@ -60,6 +77,18 @@ class ExternalUserController extends Controller{
                 "role" => $data->role
             ]);
         })
+        ->addColumn('mengajar', function($data) {
+            $mapels = $data->mataPelajarans->pluck('name');
+
+            $m = [];
+            foreach($mapels as $idx){
+                $m[] = $idx;
+            }
+
+            return view("components.datatable.wrapText", [
+                "text" => (implode(', ', $m)),
+            ]);
+        })
         ->addColumn("created_at", function ($data) {
             $createdAt = new Carbon($data->created_at);
 
@@ -68,8 +97,8 @@ class ExternalUserController extends Controller{
         ->addColumn("action", function ($data) {
             return view("components.datatable.actions", [
                 "name" => $data->name,
-                // "deleteRoute" => route($this->routePath.".destroy", $data->id),
-                "editRoute" => route($this->routePath.".edit", $data->id),
+                "deleteRoute" => route($this->routePath.".destroy", $data->id),
+                "editRoute" => route($this->routePath.".edit", $data->id).(\Request::get('role') ? "?role=".\Request::get('role') : ""),
             ]);
         });
 
@@ -88,7 +117,7 @@ class ExternalUserController extends Controller{
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            return $this->datatable($request->role);
+            return $this->datatable($request);
         }
 
         return view($this->prefix.'.index');
@@ -104,10 +133,37 @@ class ExternalUserController extends Controller{
         $tingkatList[""] = "Pilih tingkat";
 
         foreach($tingkats as $tingkat){
-            $tingkatList[$tingkat->id] = $tingkat->name;
+            $tingkatList[$tingkat->id] = $tingkat->name . " " . @$tingkat->jenjang->name;
         }
 
         return $tingkatList;
+    }
+
+    /**
+     * Get mata pelajaran
+     */
+    private function getMataPelajaran($guruId=""){
+        // get list mapel
+        $mapels = MataPelajaran::with('tingkat');
+
+        // // filter kalo mapel nya udah ada yg ngajar
+        // $guruMengajar = GuruMataPelajaran::get();
+        // // for edit
+        // if(@$guruId){
+        //     $guruMengajar = GuruMataPelajaran::where('guru_id', '!=', $guruId)->get();
+        // }
+        // $guruMengajar = $guruMengajar->pluck('mata_pelajaran_id');
+        // $mapels = $mapels->whereNotIn('id', $guruMengajar);
+
+        $mapels = $mapels->get();
+
+        $mapelList = [];
+
+        foreach($mapels as $mapel){
+            $mapelList[$mapel->id] = $mapel->name . " (Tingkat ".@$mapel->tingkat->name." ".@$mapel->tingkat->jenjang->name.")";
+        }
+
+        return $mapelList;
     }
 
     /**
@@ -118,8 +174,10 @@ class ExternalUserController extends Controller{
     public function create()
     {
         $tingkatList = $this->getTingkat();
+        $mapelList = $this->getMataPelajaran();
+        $mapelIDS = [];
 
-        return view($this->prefix.'.create', ['tingkatList' => $tingkatList]);
+        return view($this->prefix.'.create', ['tingkatList' => $tingkatList, 'mapelList' => $mapelList, 'mapelIDS' => $mapelIDS]);
     }
 
     /**
@@ -137,8 +195,13 @@ class ExternalUserController extends Controller{
             'email' => 'required|email|unique:external_users,email',
             // 'phone' => 'required|unique:external_users,phone',
             'password' => 'required',
-            'kelas_id' => 'required',
         ]);
+
+        if(@$request->role === "SISWA"){
+            $this->validate($request, [
+                'kelas_id' => 'required',
+            ]);
+        }
 
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
@@ -160,6 +223,12 @@ class ExternalUserController extends Controller{
 
         $user = ExternalUser::create($input);
 
+        if(@$request->role === "GURU"){
+            if(@$request->mapel && count($request->mapel) > 0){
+                $user->mataPelajarans()->sync($request->mapel);
+            }
+        }
+
         return redirect()->route($this->routePath.'.index', ['role'=>$request->role])->with(
             $this->success(__("External User created successfully"), $user)
         );
@@ -175,8 +244,15 @@ class ExternalUserController extends Controller{
     {
         $dt = ExternalUser::with('kelas')->findOrFail($id);
         $tingkatList = $this->getTingkat();
+        $mapelList = $this->getMataPelajaran($id);
 
-        return view($this->prefix.'.edit', ['data' => $dt, 'tingkatList' => $tingkatList]);
+        $mapelIDS = [];
+        foreach($dt->mataPelajarans as $mapel)
+        {
+            $mapelIDS[] = $mapel->id;
+        }  
+
+        return view($this->prefix.'.edit', ['data' => $dt, 'tingkatList' => $tingkatList, 'mapelList' => $mapelList, 'mapelIDS' => $mapelIDS]);
     }
 
     /**
@@ -217,6 +293,14 @@ class ExternalUserController extends Controller{
         $user = ExternalUser::find($id);
         $user->update($input);
 
+        if(@$request->role === "GURU"){
+            if(@$request->mapel){
+                if(count(@$request->mapel) > 0){
+                    $user->mataPelajarans()->sync($request->mapel);
+                }
+            }
+        }
+
         return redirect()->route($this->routePath.'.index', ['role'=>$request->role])->with(
             $this->success(__("External User updated successfully"), $user)
         );
@@ -243,13 +327,22 @@ class ExternalUserController extends Controller{
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $id)
-    {
-        ExternalUser::find($id)->delete();
+    // public function destroy(Request $request, $id)
+    // {
+    //     ExternalUser::find($id)->delete();
 
-        return redirect()->route($this->routePath.'.index', ['role'=>$request->role])->with(
-            $this->success(__("User deleted successfully"), $data)
-        );
+    //     return redirect()->route($this->routePath.'.index', ['role'=>$request->role])->with(
+    //         $this->success(__("User deleted successfully"), $data)
+    //     );
+    // }
+    public function destroy(Request $request, $id){
+        $d = ExternalUser::findOrFail($id);
+        $d->nis = "DEL_".date('Ymdhis');
+        $d->username = "DEL_".date('Ymdhis')."_".$d->username;
+        $d->email = "DEL_".date('Ymdhis')."@sample.id";
+        $d->save();
+
+        $d->delete();
     }
 
     /**
@@ -275,12 +368,12 @@ class ExternalUserController extends Controller{
                     // assign init data
                     $nis = $row["A"];
                     $name = $row["B"];
-                    $username = $row["C"];
-                    $email = $row["D"];
-                    $phone = @$row["E"];
-                    $rombonganBelajar = @$row["F"];
-                    $tingkat = $row["G"];
-                    $kelas = $row["H"];
+                    $jenjang = $row["C"];
+                    $tingkat = $row["D"];
+                    $kelas = @$row["E"];
+                    $username = @$row["F"];
+                    $password = @$row["G"];
+                    $email = $row["H"];
 
                     // skip existing nis
                     if(ExternalUser::where('nis', $nis)->first()!==null){
@@ -292,9 +385,19 @@ class ExternalUserController extends Controller{
                         
                     }
 
+                    // cek jenjang if not exist
+                    $jenjangObject = Jenjang::firstOrCreate([
+                        'name' => $jenjang,
+                    ], [
+                        'name' => $jenjang,
+                        'description' => $jenjang.' from batch',
+                        'status' => 'active',
+                    ]);
+
                     // cek tingkat if not exist
                     $tingkatObject = Tingkat::firstOrCreate([
                         'name' => $tingkat,
+                        'jenjang_id' => $jenjangObject->id,
                     ], [
                         'name' => $tingkat,
                         'description' => $tingkat.' from batch',
@@ -316,17 +419,19 @@ class ExternalUserController extends Controller{
                         $input['kelas_id'] = $kelasObject->id;
                     }
 
-                    $password = "123456"; // default password
+                    if(!$password){
+                        $password = "123456"; // default password
+                    }
 
                     $input['nis'] = $nis;
                     $input['name'] = $name;
                     $input['username'] = $name;
                     $input['email'] = $email;
-                    if($phone){
+                    if(@$phone){
                         $input['phone'] = $phone;
                         $input['phone_verified_at'] = now();
                     }
-                    if($rombonganBelajar){
+                    if(@$rombonganBelajar){
                         $input['rombongan_belajar'] = $rombonganBelajar;
                     }
                     $input['password'] = Hash::make($password);

@@ -12,7 +12,7 @@ class Video extends Model
 {
     use HasFactory, SearchableTrait, SoftDeletes;
 
-    protected $appends = ['watched', 'youtubeId'];
+    protected $appends = ['watched', 'youtubeId', 'next', 'previous'];
 
     /**
      * The attributes that are mass assignable.
@@ -26,6 +26,9 @@ class Video extends Model
         'icon',
         'mata_pelajaran_id',
         'uploader_id',
+        'semester',
+        'urutan',
+        'modul_id',
     ];
 
     public static function search($request)
@@ -36,9 +39,54 @@ class Video extends Model
             "description" => "LIKE",
             "mata_pelajaran_id" => "=",
             "uploader_id" => "=",
+            "semester" => "=",
+            "urutan" => "=",
+            "modul_id" => "=",
         ]);
 
         return $data;
+    }
+
+    public function getNextAttribute(){
+        // get next video
+        $nextVideo = $this
+            ->where('urutan', '>', $this->urutan)
+            ->where('mata_pelajaran_id', $this->mata_pelajaran_id)
+            ->orderBy('urutan','asc')->first();
+
+        $returnNext = null;
+
+        if($nextVideo){
+            $returnNext = [
+                'id' => @$nextVideo->id,
+                'name' => @$nextVideo->name,
+                'url' => route('app.video.detail', @$nextVideo->id),
+                'endpoint' => route('api.video.detail', @$nextVideo->id),
+            ];
+        }
+        
+        return $returnNext;
+    }
+
+    public function getPreviousAttribute(){
+        // get previous video
+        $previousVideo =  $this
+            ->where('urutan', '<', $this->urutan)
+            ->where('mata_pelajaran_id', $this->mata_pelajaran_id)
+            ->orderBy('urutan', 'desc')->first();
+        
+        $returnPrevious = null;
+
+        if($previousVideo){
+            $returnPrevious = [
+                'id' => @$previousVideo->id,
+                'name' => @$previousVideo->name,
+                'url' => route('app.video.detail', @$previousVideo->id),
+                'endpoint' => route('api.video.detail', @$previousVideo->id),
+            ];
+        }
+        
+        return $returnPrevious;
     }
 
     public function getWatchedAttribute()
@@ -56,7 +104,12 @@ class Video extends Model
 
     public function mataPelajaran()
     {
-        return $this->belongsTo("App\Models\MataPelajaran",  "mata_pelajaran_id", "id");
+        return $this->belongsTo("App\Models\MataPelajaran",  "mata_pelajaran_id", "id")->withTrashed();
+    }
+
+    public function modul()
+    {
+        return $this->belongsTo("App\Models\Modul",  "modul_id", "id")->withTrashed();
     }
 
     public function uploader()
@@ -66,6 +119,6 @@ class Video extends Model
 
     public function history()
     {
-        return $this->hasMany("App\Models\HistoryVideo", "video_id", "id");
+        return $this->hasMany("App\Models\HistoryVideo", "video_id", "id")->withTrashed();
     }
 }

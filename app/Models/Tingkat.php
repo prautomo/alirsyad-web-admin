@@ -12,7 +12,7 @@ class Tingkat extends Model
     use HasFactory, SoftDeletes, SearchableTrait;
 
     protected $fillable = [
-        'name', 'description', 'status', 'logo', 'uploader_id', 'use_story_path', 'order',
+        'name', 'description', 'status', 'logo', 'jenjang_id', 'use_story_path', 
     ];
 
     /**
@@ -53,19 +53,25 @@ class Tingkat extends Model
             "name" => "LIKE",
             "description" => "LIKE",
             "status" => "=",
-            "uploader_id" => "=",
+            "jenjang_id" => "=",
+            "use_story_path" => "=",
         ]);
 
         return $data;
     }
 
-    public function uploader()
+    public function jenjang()
     {
-        return $this->belongsTo("App\Models\User",  "uploader_id", "id");
+        return $this->belongsTo("App\Models\Jenjang",  "jenjang_id", "id")->withTrashed();
     }
 
     public function kelas()
     {
-        return $this->hasMany("App\Models\Kelas", "tingkat_id", "id");
+        return $this->hasMany("App\Models\Kelas", "tingkat_id", "id")->withTrashed();
+    }
+
+    public function mataPelajaran()
+    {
+        return $this->hasMany("App\Models\MataPelajaran", "tingkat_id", "id")->withTrashed();
     }
 }

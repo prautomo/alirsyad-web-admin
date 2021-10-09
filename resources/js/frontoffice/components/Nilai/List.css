@@ -1,0 +1,11 @@
+
+.rating-checked {
+    color: orange;
+}
+
+.title-nilai-simulasi {
+    line-height: 0 !important;
+    margin-top: 15px;
+}
+
+.cursor-pointer {cursor: pointer;}

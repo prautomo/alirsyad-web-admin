@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddOrderToKelasTable extends Migration
+class AddSemesterToHistoryVideosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddOrderToKelasTable extends Migration
      */
     public function up()
     {
-        Schema::table('kelas', function (Blueprint $table) {
-            $table->integer("order")->default(0);
+        Schema::table('history_videos', function (Blueprint $table) {
+            $table->integer('semester')->default(1);
         });
     }
 
@@ -25,8 +25,8 @@ class AddOrderToKelasTable extends Migration
      */
     public function down()
     {
-        Schema::table('kelas', function (Blueprint $table) {
-            $table->dropColumn('order');
+        Schema::table('history_videos', function (Blueprint $table) {
+            $table->dropColumn('semester');
         });
     }
 }

@@ -1,6 +1,6 @@
 @csrf
 <div class="row">
-    <x-input.select :label="__('Mata Pelajaran')" id="mata_pelajaran_id" name="mata_pelajaran_id" :sources="$mapelList" :data="$data" required />
+    <x-input.select :label="__('Modul')" id="modul_id" name="modul_id" :sources="$modulList" :data="$data" required />
 
     <div class="col-md-12">
         <div class="form-group">
@@ -22,10 +22,13 @@
             @endif
         </div>
     </div>
+    
+    <x-input.select :label="__('Semester')" id="semester" name="semester" :sources="$semesterList" :data="$data" required />
 
     <x-input.text :label="__('Name')" name="name" :data="$data" required />
     <x-input.textarea :label="__('Description')" name="description" :data="$data" />
     <x-input.images :label="__('Cover Simulasi')" name="icon" :data="$data" />
+    <x-input.text type="number" :label="__('Urutan')" name="urutan" :data="$data" required />
 
     <div class="col-xs-12 col-sm-12 col-md-12 text-right">
         <button type="submit" class="btn btn-sm btn-primary">@lang("Save")</button>
@@ -37,7 +40,7 @@
 @push('plugin_script')
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#mata_pelajaran_id').select2();
+        $('#modul_id').select2();
     });
 </script>
 @endpush

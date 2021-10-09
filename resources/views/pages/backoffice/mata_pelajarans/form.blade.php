@@ -3,7 +3,7 @@
     <x-input.select :label="__('Tingkat')" id="tingkat_id" name="tingkat_id" :sources="$tingkatList" :data="$data" required />
 
     <!-- Dropdown Kelas -->
-    <div class="col-md-12">
+    <!-- <div class="col-md-12">
         <div class="form-group">
             <label class="form-control-label" for="input-kelas">Kelas (*)</label>
 
@@ -17,7 +17,7 @@
             </div>
             @endif
         </div>
-    </div>
+    </div> -->
     <!-- End dropdown kelas -->
 
     <!-- <x-input.text :label="__('Slug')" name="slug" :data="$data" /> -->
@@ -33,41 +33,58 @@
 
 @push('script')
 <script>
-    $('select#tingkat_id').on('change', function() {
-        loadKelas( this.value );
-    });
+    // $('select#tingkat_id').on('change', function() {
+    //     loadKelas( this.value );
+    // });
 
-    function loadKelas(tingkatId, selectedId){
-        $.ajax({
-            type:'GET',
-            url:"{{route("backoffice::kelas.listJson")}}",
-            data:"q_tingkat_id=" + tingkatId,
-            success: function(res){ 
-                $('#kelas').html("");
-                for(var i=0; i<res.length; i++){
-                    var kelas = res[i];
-                    if(kelas.id==selectedId){
-                        $('#kelas').append($('<option selected>').val(kelas.id).text(kelas.name));
-                    }else{
-                        $('#kelas').append($('<option>').val(kelas.id).text(kelas.name));
-                    }
-                }
-            }
-        }); 
-    }
+    // function loadKelas(tingkatId, selectedId){
+    //     $.ajax({
+    //         type:'GET',
+    //         url:"{{route("backoffice::kelas.listJson")}}",
+    //         data:"q_tingkat_id=" + tingkatId,
+    //         success: function(res){ 
+    //             $('#kelas').html("");
+    //             for(var i=0; i<res.length; i++){
+    //                 var kelas = res[i];
+    //                 if(kelas.id==selectedId){
+    //                     $('#kelas').append($('<option selected>').val(kelas.id).text(kelas.name));
+    //                 }else{
+    //                     $('#kelas').append($('<option>').val(kelas.id).text(kelas.name));
+    //                 }
+    //             }
+    //         }
+    //     }); 
+    // }
 
     // default select if edit
-    @if($data)
-    $(async function(){
-        var tingkatId = "{{$data->kelas->tingkat_id}}";
-        var kelasId = "{{$data->kelas_id}}";
+    // @if($data)
+    // $(async function(){
+    //     var tingkatId = "{{@$data->kelas->tingkat_id}}";
+    //     var kelasId = "{{@$data->kelas_id}}";
 
-        // select default tingkat
-        $("select#tingkat_id").val(tingkatId);
+    //     // select default tingkat
+    //     $("select#tingkat_id").val(tingkatId);
 
-        // load list kelas
-        await loadKelas( tingkatId, kelasId );
-    }); 
-    @endif
+    //     // load list kelas
+    //     await loadKelas( tingkatId, kelasId );
+    // }); 
+    // @endif
 </script>
+@endpush
+
+
+@push('plugin_script')
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#tingkat_id').select2();
+    });
+</script>
+@endpush
+
+@push('script')
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+@endpush
+
+@push('plugin_css')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 @endpush

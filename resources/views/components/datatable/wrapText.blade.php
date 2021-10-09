@@ -1,0 +1,1 @@
+<div class="text-wrap width-200">{{ $text ?? ''}}</div>

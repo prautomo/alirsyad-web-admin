@@ -23,10 +23,15 @@ class VideoController extends BaseController
         $datas = Video::search($request);
         $datas = $datas->with('uploader', 'mataPelajaran');
         // handle hak akses mapel
-        $datas = $datas->whereHas('mataPelajaran', function($query){
-            $query->where('kelas_id', Auth::user()->kelas_id);
+        $datas = $datas->whereHas('mataPelajaran.tingkat', function($query){
+            if(@Auth::user()->role==="SISWA"){
+                $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
+            }
         });
+        // get list
         $datas = $datas->get();
+        // sorting by urutan
+        $datas = $datas->sortBy('urutan');
 
         return $this->sendResponse(VideoResource::collection($datas), 'Video retrieved successfully.');
     }
@@ -39,11 +44,13 @@ class VideoController extends BaseController
      */
     public function show($id)
     {
-        $data = Video::with('mataPelajaran.kelas.tingkat');
+        $data = Video::with('mataPelajaran.tingkat.jenjang');
   
         // handle hak akses mapel
-        $data = $data->whereHas('mataPelajaran', function($query){
-            $query->where('kelas_id', Auth::user()->kelas_id);
+        $data = $data->whereHas('mataPelajaran.tingkat', function($query){
+            if(@Auth::user()->role==="SISWA"){
+                $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
+            }
         });
 
         $data = $data->find($id);
@@ -68,8 +75,8 @@ class VideoController extends BaseController
         $user = Auth::user();
   
         // handle hak akses mapel
-        $data = $data->whereHas('mataPelajaran', function($query) use ($user){
-            $query->where('kelas_id', $user->kelas_id);
+        $data = $data->whereHas('mataPelajaran.tingkat', function($query) use ($user){
+            $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
         });
 
         $data = $data->find($id);
@@ -78,8 +85,9 @@ class VideoController extends BaseController
             return $this->sendError('Video not found.');
         }
 
-        $historyVideo = HistoryVideo::firstOrCreate(
-            ['video_id' => $id, 'siswa_id' => $user->id]
+        $historyVideo = HistoryVideo::updateOrCreate(
+            ['video_id' => $id, 'siswa_id' => $user->id],
+            ['semester' => @$data->semester ?? 1]
         );
 
         return $this->sendResponse(new HistoryVideoResource($historyVideo), 'History Video created successfully.');
