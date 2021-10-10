@@ -97,13 +97,16 @@ class MataPelajaranController extends Controller
 
     private function mapelByTingkat($request, $condition='>'){
         $user = @Auth::user();
-        
+
         // upcoming mapel
         $mapels = MataPelajaran::search($request);
         $mapels = $mapels->with('tingkat');
         // filter by jenjang yg sama
-        $mapels = $mapels->whereHas('tingkat.jenjang', function($query) {
-            $query->where('id', @Auth::user()->kelas->tingkat->jenjang_id ?? 0);
+        $mapels = $mapels->whereHas('tingkat.jenjang', function($query) use ($user) {
+            // disable, terus ganti ama yg bawah buat kelas 6 sd bsa liat mapel smp sma kalo $condition nya >
+            $query->where('id', $user->kelas->tingkat->jenjang_id ?? 0);
+            // $isTk = @$user->kelas->jenjang->name ?? false;
+            // if($isTk) $query->where('name', '!=','TK');
         });
         // filter by tingkat condition
         $mapels = $mapels->whereHas('tingkat', function($query) use ($condition) {
