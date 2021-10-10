@@ -24,6 +24,8 @@ class MataPelajaranController extends Controller
      */
     public function index(Request $request)
     {
+        $user = @Auth::user();
+
         // sedang di pelajari
         $sedangDipelajari = MataPelajaran::search($request);
         $sedangDipelajari = $sedangDipelajari->with('tingkat');
@@ -39,10 +41,23 @@ class MataPelajaranController extends Controller
         // mapel sebelumnya
         $sebelumnya = $this->mapelByTingkat($request, '<');
 
+        /**
+         * Mapel Aktif buat Pengunjung
+         */
+        $aktif = [];
+
+        /**
+         * Mapel Tidak Aktif buat Pengunjung
+         */
+        $tidakAktif = [];
+
         $parseData = [
             'sedangDipelajari' => $sedangDipelajari,
             'yangAkanDatang' => $yangAkanDatang,
             'sebelumnya' => $sebelumnya,
+
+            'aktif' => $aktif,
+            'tidakAktif' => $tidakAktif,
         ];
 
         return view('pages/frontoffice/mapel/list', $parseData);
@@ -81,16 +96,18 @@ class MataPelajaranController extends Controller
     }
 
     private function mapelByTingkat($request, $condition='>'){
+        $user = @Auth::user();
+        
         // upcoming mapel
         $mapels = MataPelajaran::search($request);
         $mapels = $mapels->with('tingkat');
         // filter by jenjang yg sama
         $mapels = $mapels->whereHas('tingkat.jenjang', function($query) {
-            $query->where('id', Auth::user()->kelas->tingkat->jenjang_id);
+            $query->where('id', @Auth::user()->kelas->tingkat->jenjang_id ?? 0);
         });
         // filter by tingkat condition
         $mapels = $mapels->whereHas('tingkat', function($query) use ($condition) {
-            $query->where('name', $condition, Auth::user()->kelas->tingkat->name);
+            $query->where('name', $condition, @Auth::user()->kelas->tingkat->name ?? '-');
         });
         // get
         $mapels = $mapels->get();

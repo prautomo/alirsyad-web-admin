@@ -75,11 +75,19 @@
                             </div>
 
                             <div class="form-group">
+                                @if(!@$user_data->is_pengunjung)
                                 <label>Kelas Aktif</label>
                                 <input type="text" disabled 
                                     value="{{ @$user_data->kelas->tingkat->jenjang->name ?? 'undefined' }} - Kelas {{ @$user_data->kelas->tingkat->name ?? 'undefined' }}{{ @$user_data->kelas->name ?? 'undefined' }}" 
                                     class="form-control" 
                                 />
+                                @else
+                                <label>Jenjang</label>
+                                <input type="text" disabled 
+                                    value="{{ @$user_data->jenjang->name ?? 'undefined' }}" 
+                                    class="form-control" 
+                                />
+                                @endif
                             </div>
 
                             <div class="form-group mt-2 text-center">

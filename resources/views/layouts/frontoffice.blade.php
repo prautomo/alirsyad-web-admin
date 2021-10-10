@@ -61,14 +61,16 @@
 					</ul>
 			  </li> -->
 			    <li class="nav-item">
-                   <a class="nav-link" href="{{ route('app.mapel.list') }}">Mata Pelajaran</a>
-                </li>
-			    <li class="nav-item">
-                    <a class="nav-link" href="{{ route('app.nilai-simulasi') }}">Nilai Simulasi</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('app.akun-saya') }}">Akun Saya</a>
-                </li>
+              <a class="nav-link" href="{{ route('app.mapel.list') }}">Mata Pelajaran</a>
+          </li>
+          @if(!@\Auth::user()->is_pengunjung)
+          <li class="nav-item">
+              <a class="nav-link" href="{{ route('app.nilai-simulasi') }}">Nilai Simulasi</a>
+          </li>
+          @endif
+          <li class="nav-item">
+              <a class="nav-link" href="{{ route('app.akun-saya') }}">Akun Saya</a>
+          </li>
 			</ul>
 
 			<form action="{{ route('logout') }}" class="form-lg-inline my-2 my-md-0 ml-lg-4 text-center" method="POST">

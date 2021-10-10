@@ -10,9 +10,11 @@
         </div>
         @can('external-user-create')
         <div class="col-lg-6 col-5 text-right">
+            @if(!@\Request::get('is_pengunjung'))
             <a href="{{ route('backoffice::external-users.create', ['role'=>\Request::get('role')]) }}" class="btn btn-sm btn-neutral">New</a>
+            @endif
             <!-- <a href="#" class="btn btn-sm btn-neutral">Filters</a> -->
-            @if(\Request::get('role') === 'SISWA')
+            @if(\Request::get('role') === 'SISWA' && !@\Request::get('is_pengunjung'))
             <a href="{{ route('backoffice::external-users.batch_create', ['role'=>\Request::get('role')]) }}" class="btn btn-sm btn-primary">
               Import dari Excel
             </a>
@@ -50,10 +52,12 @@
                 <th data-data="nis">@lang("NIP")</th>
                 @endif
                 <th data-data="name">@lang("Name")</th>
-                @if(\Request::get('role') === 'SISWA')
+                @if(\Request::get('role') === 'SISWA' && !@\Request::get('is_pengunjung'))
                 <th data-data="kelas.tingkat.jenjang.name">@lang("Jenjang")</th>
                 <th data-data="kelas.tingkat.name">@lang("Tingkat")</th>
                 <th data-data="kelas.name">@lang("Kelas")</th>
+                @elseif(\Request::get('role') === 'SISWA' && @\Request::get('is_pengunjung'))
+                <th data-data="jenjang.name">@lang("Jenjang")</th>
                 @else
                 <th data-data="mengajar">@lang("Mengajar")</th>
                 @endif

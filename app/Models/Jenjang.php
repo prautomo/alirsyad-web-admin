@@ -69,4 +69,10 @@ class Jenjang extends Model
     {
         return $this->hasMany("App\Models\Tingkat", "jenjang_id", "id")->withTrashed();
     }
+
+    // ortu siswa yg register
+    public function guest()
+    {
+        return $this->hasMany("App\Models\ExternalUser", "jenjang_id", "id")->withTrashed();
+    }
 }

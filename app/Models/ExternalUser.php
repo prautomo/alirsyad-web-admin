@@ -38,6 +38,7 @@ class ExternalUser extends Authenticatable implements MustVerifyEmail
         'rombongan_belajar',
         'kelas_id',
         'is_pengunjung',
+        'jenjang_id',
     ];
 
     /**
@@ -71,6 +72,7 @@ class ExternalUser extends Authenticatable implements MustVerifyEmail
             "phone" => "LIKE",
             "role" => "=",
             "kelas_id" => "=",
+            "jenjang_id" => "=",
         ]);
 
         return $data;
@@ -79,6 +81,11 @@ class ExternalUser extends Authenticatable implements MustVerifyEmail
     public function kelas()
     {
         return $this->belongsTo("App\Models\Kelas",  "kelas_id", "id")->withTrashed();
+    }
+
+    public function jenjang()
+    {
+        return $this->belongsTo("App\Models\Jenjang",  "jenjang_id", "id")->withTrashed();
     }
 
     public function historyModul()

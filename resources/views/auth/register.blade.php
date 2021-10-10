@@ -100,7 +100,7 @@
                                 @enderror
                             </div>
 
-                            <div class="form-group ">
+                            <!-- <div class="form-group ">
                                 <label for="tingkat_id" class=" col-form-label text-md-right">{{ __('Tingkat') }}</label>
 
                                 <select id="tingkat_id" class="form-control @error('tingkat_id') is-invalid @enderror" name="tingkat_id" required autofocus>
@@ -126,7 +126,7 @@
                                     <strong>{{ $message }}</strong>
                                 </span>
                                 @enderror
-                            </div>
+                            </div> -->
 
                             <div class="form-group  mb-0">
                                 <button type="submit" class="btn btn-main w-100">
@@ -145,53 +145,53 @@
 
 @push('script')
 <script>
-    $('select#jenjang_id').on('change', function() {
-        loadTingkat( this.value );
-        // clear option kelas
-        $('#kelas_id').html("<option selected>Pilih kelas.</option>");
-    });
+    // $('select#jenjang_id').on('change', function() {
+    //     loadTingkat( this.value );
+    //     // clear option kelas
+    //     $('#kelas_id').html("<option selected>Pilih kelas.</option>");
+    // });
 
-    $('select#tingkat_id').on('change', function() {
-        loadKelas( this.value );
-    });
+    // $('select#tingkat_id').on('change', function() {
+    //     loadKelas( this.value );
+    // });
 
-    function loadTingkat(jenjangId){
+    // function loadTingkat(jenjangId){
 
-        $.ajax({
-            type:'GET',
-            url:"{{ route('app.tingkat.json') }}",
-            data:"q_jenjang_id=" + jenjangId,
-            success: function(res){ 
-                $('#tingkat_id').html("<option selected>Pilih tingkat.</option>");
+    //     $.ajax({
+    //         type:'GET',
+    //         url:"{{ route('app.tingkat.json') }}",
+    //         data:"q_jenjang_id=" + jenjangId,
+    //         success: function(res){ 
+    //             $('#tingkat_id').html("<option selected>Pilih tingkat.</option>");
 
-                let data = res?.data ?? [];
+    //             let data = res?.data ?? [];
                 
-                for(var i=0; i<data.length; i++){
-                    var tingkat = data[i];
-                    console.log("dika tingkat", tingkat)
+    //             for(var i=0; i<data.length; i++){
+    //                 var tingkat = data[i];
+    //                 console.log("dika tingkat", tingkat)
 
-                    $('#tingkat_id').append($('<option>').val(tingkat.id).text(tingkat.name));
-                }
-            }
-        });
-    }
+    //                 $('#tingkat_id').append($('<option>').val(tingkat.id).text(tingkat.name));
+    //             }
+    //         }
+    //     });
+    // }
 
-    function loadKelas(tingkatId){
-        $.ajax({
-            type:'GET',
-            url:"{{ route('app.kelas.json') }}",
-            data:"q_tingkat_id=" + tingkatId,
-            success: function(res){ 
-                $('#kelas_id').html("<option selected>Pilih kelas.</option>");
+    // function loadKelas(tingkatId){
+    //     $.ajax({
+    //         type:'GET',
+    //         url:"{{ route('app.kelas.json') }}",
+    //         data:"q_tingkat_id=" + tingkatId,
+    //         success: function(res){ 
+    //             $('#kelas_id').html("<option selected>Pilih kelas.</option>");
 
-                let data = res?.data ?? [];
+    //             let data = res?.data ?? [];
 
-                for(var i=0; i<data.length; i++){
-                    var kelas = data[i];
-                    $('#kelas_id').append($('<option>').val(kelas.id).text(kelas.name));
-                }
-            }
-        }); 
-    }
+    //             for(var i=0; i<data.length; i++){
+    //                 var kelas = data[i];
+    //                 $('#kelas_id').append($('<option>').val(kelas.id).text(kelas.name));
+    //             }
+    //         }
+    //     }); 
+    // }
 </script>
 @endpush

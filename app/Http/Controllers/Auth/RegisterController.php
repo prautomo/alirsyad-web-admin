@@ -58,7 +58,7 @@ class RegisterController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:external_users'],
             'phone' => ['required', 'string', 'max:255', 'unique:external_users'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
-            'kelas_id' => ['required', 'integer'],
+            'jenjang_id' => ['required', 'integer'],
             // 'user_type' => ['required', 'string', 'in:SISWA'],
         ]);
     }
@@ -80,7 +80,7 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
             'role' => "SISWA",
             'is_pengunjung' => true,
-            'kelas_id' => $data['kelas_id'],
+            'jenjang_id' => $data['jenjang_id'],
         ]);
         return $registerd;
     }

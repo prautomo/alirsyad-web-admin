@@ -40,28 +40,42 @@ class ExternalUserController extends Controller{
      */
     public function datatable($request){
         $role = $request->role;
+        $isPengunjung = $request->is_pengunjung;
         $query = ExternalUser::query();
         // relation with kelas and tingkat
-        $query = $query->with('kelas.tingkat.jenjang', 'mataPelajarans');
+        $query = $query->with('kelas.tingkat.jenjang', 'mataPelajarans', 'jenjang');
 
         if(!empty($role)){
             $query = $query->where('role', $role);
         }
 
+        $query = $query->where('is_pengunjung', @$isPengunjung ?? 0);
+
         $dt = datatables()
         ->of($query)
         ->filter(function ($query) use ($request) {
 
+            $role = $request->role;
+            $isPengunjung = $request->is_pengunjung;
+
             $search = @$request->search['value'];
 
             if($search){
+                
                 $query->where('name', 'LIKE', '%'.$search.'%');
                 $query->orWhere('nis', 'LIKE', '%'.$search.'%');
                 
-                $query = $query->orWhereHas('mataPelajarans', function($query2) use ( $search ){
+                $query->orWhereHas('mataPelajarans', function($query2) use ( $search ){
                     $query2->where('name', 'LIKE', '%'.$search.'%');
                 });
+
+                if(!empty($role)){
+                    $query->where('role', $role);
+                }
+        
+                $query->where('is_pengunjung', @$isPengunjung ?? 0);
             }
+           
         })
         ->addIndexColumn()
         ->addColumn('show-img', function($data) {
@@ -95,11 +109,16 @@ class ExternalUserController extends Controller{
             return $createdAt->format("d-m-Y H:i:s");
         })
         ->addColumn("action", function ($data) {
-            return view("components.datatable.actions", [
+            $actions = [
                 "name" => $data->name,
                 "deleteRoute" => route($this->routePath.".destroy", $data->id),
-                "editRoute" => route($this->routePath.".edit", $data->id).(\Request::get('role') ? "?role=".\Request::get('role') : ""),
-            ]);
+            ];
+
+            if(!$data->is_pengunjung){
+                $actions["editRoute"] = route($this->routePath.".edit", $data->id).(\Request::get('role') ? "?role=".\Request::get('role') : "");
+            }
+
+            return view("components.datatable.actions", $actions);
         });
 
         $dt = $dt->order(function ($query) {
