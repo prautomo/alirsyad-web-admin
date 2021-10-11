@@ -56,7 +56,7 @@
 
                             
                             <div class="form-group ">
-                                <label for="email" class=" col-form-label text-md-right">{{ __('NIS') }}</label>
+                                <label for="email" class=" col-form-label text-md-right">{{ __('NIS/Email') }}</label>
 
                                 <input id="email" type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
 

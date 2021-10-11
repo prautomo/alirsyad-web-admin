@@ -107,6 +107,9 @@ class MataPelajaranController extends Controller
             $query->where('id', $user->kelas->tingkat->jenjang_id ?? 0);
             // $isTk = @$user->kelas->jenjang->name ?? false;
             // if($isTk) $query->where('name', '!=','TK');
+            // cek tingkat terakhir di jenjang
+            // 1. order by desc tngkat by jenjang
+            // 2. bandingin sama tingkat user sekarang 
         });
         // filter by tingkat condition
         $mapels = $mapels->whereHas('tingkat', function($query) use ($condition) {

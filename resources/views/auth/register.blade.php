@@ -15,7 +15,7 @@
 
                         <div style="width:300px; margin-bottom:50px">
 
-                            <div class="form-group ">
+                            <!-- <div class="form-group ">
                                 <label for="nis" class=" col-form-label text-md-right" id="nis">{{ __('NIS') }}</label>
 
                                 <input id="nis" type="text" class="form-control @error('nis') is-invalid @enderror" name="nis" value="{{ old('nis') }}" required autocomplete="nis" autofocus>
@@ -25,7 +25,7 @@
                                     <strong>{{ $message }}</strong>
                                 </span>
                                 @enderror
-                            </div>
+                            </div> -->
 
                             <div class="form-group ">
                                 <label for="name" class=" col-form-label text-md-right" id="nama">{{ __('Nama Lengkap') }}</label>

@@ -53,7 +53,7 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'nis' => ['required', 'string', 'max:255', 'unique:external_users'],
+            // 'nis' => ['required', 'string', 'max:255', 'unique:external_users'],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:external_users'],
             'phone' => ['required', 'string', 'max:255', 'unique:external_users'],
@@ -72,7 +72,7 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         $registerd = ExternalUser::create([
-            'nis' => $data['nis'],
+            'nis' => $data['email'],
             'name' => $data['name'],
             'email' => $data['email'],
             'username' => $data['email'],
