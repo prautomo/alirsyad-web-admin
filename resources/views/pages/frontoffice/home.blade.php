@@ -21,6 +21,7 @@
     <section class="mt-5">
         <div class="container">
             <div class="row">
+                @if(!@\Auth::user()->is_pengunjung)
                 <!-- sedang dipelajari -->
                 <div class="col-md-6 mb-4">
                     <div class="card">
@@ -96,6 +97,85 @@
                         </div>
                     </div>
                 </div>
+                @else
+                <!-- mapel aktif -->
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-title mb-0 form-inline">
+                                <i class="ni ni-books icon-title"></i>
+                                <div>Mata Pelajaran Aktif</div>
+                            </div>
+                            <hr/>
+
+                            @forelse($aktif as $mpa)
+                            <div class="wrap-kelas form-inline mt-3">
+                                <div style="max-width: 270px;">
+                                    <span class="kelas-title">Kelas {{ $mpa->tingkat->name ?? "-" }} {{ @$mpa->tingkat->jenjang->name }}</span>
+                                    <h4 class="font-weight-bold">
+                                        {{ @$mpa->name ?? "-" }}
+                                    </h4>
+                                </div>
+                                <div class="ml-auto">
+                                    <a href="{{ route('app.mapel.detail', @$mpa->id) }}" class="btn btn-main btn-small">
+                                        <i class="btn-icon fa fa-play ml-2"></i> Lanjut Belajar
+                                    </a>
+                                </div>
+                            </div>
+                            @empty
+                            <div class="wrap-kelas form-inline mt-3">
+                                <h4 class="font-weight-bold">Belum ada mata pelajaran.</h4>
+                            </div>
+                            @endforelse
+
+                            @if(!empty($mpa))
+                            <div class="mt-2 text-right">
+                                <a href="{{ route('app.mapel.list') }}">Selengkapnya</a>
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                <!-- mapel tidak aktif -->
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-title mb-0 form-inline">
+                                <i class="ni ni-books icon-title"></i>
+                                <div>Mata Pelajaran Tidak Aktif</div>
+                            </div>
+                            <hr/>
+
+                            @forelse($tidakAktif as $mpta)
+                            <div class="wrap-kelas form-inline mt-3">
+                                <div style="max-width: 270px;">
+                                    <span class="kelas-title">Kelas {{ $mpta->tingkat->name ?? "-" }} {{ @$mpta->tingkat->jenjang->name }}</span>
+                                    <h4 class="font-weight-bold">
+                                        {{ @$mpta->name ?? "-" }}
+                                    </h4>
+                                </div>
+                                <div class="ml-auto">
+                                    <a href="{{ route('app.mapel.detail', @$mpta->id) }}" class="btn btn-main btn-small">
+                                        <i class="btn-icon fa fa-play ml-2"></i> Lanjut Belajar
+                                    </a>
+                                </div>
+                            </div>
+                            @empty
+                            <div class="wrap-kelas form-inline mt-3">
+                                <h4 class="font-weight-bold">Belum ada mata pelajaran.</h4>
+                            </div>
+                            @endforelse
+
+                            @if(!empty($mpta))
+                            <div class="mt-2 text-right">
+                                <a href="{{ route('app.mapel.list') }}">Selengkapnya</a>
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
 </section>

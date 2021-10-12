@@ -18,11 +18,14 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
+        $user = @Auth::user();
+
         // sedang di pelajari
         $sedangDipelajari = MataPelajaran::search($request);
         $sedangDipelajari = $sedangDipelajari->with('tingkat');
-        $sedangDipelajari = $sedangDipelajari->whereHas('tingkat.kelas', function($query) {
-            $query->where('id', Auth::user()->kelas_id);
+        // user is siswa and not visitor
+        if(!@$user->is_pengunjung) $sedangDipelajari = $sedangDipelajari->whereHas('tingkat.kelas', function($query) use ($user) {
+            $query->where('id', $user->kelas_id);
         });
         // sort by active mapel
         $sedangDipelajari = $sedangDipelajari->limit(2)->get()->sortBy('name');
@@ -30,13 +33,13 @@ class HomeController extends Controller
         // upcoming mapel
         $yangAkanDatang = MataPelajaran::search($request);
         $yangAkanDatang = $yangAkanDatang->with('tingkat');
-        // filter by jenjang yg sama
-        $yangAkanDatang = $yangAkanDatang->whereHas('tingkat.jenjang', function($query) {
-            $query->where('id', Auth::user()->kelas->tingkat->jenjang_id);
+        // filter by jenjang yg sama & siswa is not visitor
+        if(!@$user->is_pengunjung) $yangAkanDatang = $yangAkanDatang->whereHas('tingkat.jenjang', function($query) use ($user) {
+            $query->where('id', $user->kelas->tingkat->jenjang_id);
         });
-        // filter by tingkat atasnya
-        $yangAkanDatang = $yangAkanDatang->whereHas('tingkat', function($query) {
-            $query->where('name', '>', Auth::user()->kelas->tingkat->name);
+        // filter by tingkat atasnya & siswa is not visitor
+        if(!@$user->is_pengunjung) $yangAkanDatang = $yangAkanDatang->whereHas('tingkat', function($query) use ($user) {
+            $query->where('name', '>', $user->kelas->tingkat->name);
         });
         // get
         $yangAkanDatang = $yangAkanDatang->limit(2)->get();
@@ -44,9 +47,21 @@ class HomeController extends Controller
         // sorting by tingkat
         $yangAkanDatang = $yangAkanDatang->sortBy('tingkat.name');
 
+        /**
+         * Mapel Aktif buat Pengunjung
+         */
+        $aktif = [];
+
+        /**
+         * Mapel Tidak Aktif buat Pengunjung
+         */
+        $tidakAktif = [];
+
         $parseData = [
             'sedangDipelajari' => $sedangDipelajari,
             'yangAkanDatang' => $yangAkanDatang,
+            'aktif' => $aktif,
+            'tidakAktif' => $tidakAktif,
         ];
 
         return view('pages/frontoffice/home', $parseData);

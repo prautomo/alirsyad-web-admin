@@ -134,8 +134,13 @@
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="{{ route('backoffice::external-users.index', ['role'=>'SISWA']) }}" class="nav-link">
+                    <a href="{{ route('backoffice::external-users.index', ['role'=>'SISWA', 'is_pengunjung' => false]) }}" class="nav-link">
                       <span class="sidenav-normal"> Siswa </span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{{ route('backoffice::external-users.index', ['role'=>'SISWA', 'is_pengunjung' => true]) }}" class="nav-link">
+                      <span class="sidenav-normal"> Pengunjung </span>
                     </a>
                   </li>
                   <!-- <li class="nav-item">

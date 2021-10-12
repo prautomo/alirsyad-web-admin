@@ -52,12 +52,12 @@ class AuthController extends BaseController
 
     public function register(Request $request) {
         $validator = Validator::make($request->all(), [
-            'nis' => ['required', 'string', 'max:255', 'unique:external_users'],
+            // 'nis' => ['required', 'string', 'max:255', 'unique:external_users'],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:external_users'],
             'phone' => ['required', 'string', 'max:255', 'unique:external_users'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
-            'kelas_id' => ['required', 'integer'],
+            'jenjang_id' => ['required', 'integer'],
             // 'user_type' => ['required', 'string', 'in:SISWA'],
         ]);
 
@@ -68,7 +68,7 @@ class AuthController extends BaseController
         $data = $request;
 
         $registerd = ExternalUser::create([
-            'nis' => $data['nis'],
+            'nis' => $data['email'],
             'name' => $data['name'],
             'email' => $data['email'],
             'username' => $data['email'],
@@ -76,12 +76,10 @@ class AuthController extends BaseController
             'password' => Hash::make($data['password']),
             'role' => "SISWA",
             'is_pengunjung' => true,
-            'kelas_id' => $data['kelas_id'],
+            'jenjang_id' => $data['jenjang_id'],
         ]);
 
-        $success = ["data" => $registerd];
-
-        return $this->sendResponse($success, 'User registered successfully.');
+        return $this->sendResponse($registerd, 'User registered successfully.');
     }
 
     public function forgot(Request $request) {
