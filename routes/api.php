@@ -20,6 +20,9 @@ Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
 Route::post('password/forgot', [AuthController::class, 'forgot']);
 
+Route::get("/jenjangs", "API\JenjangController@index");
+Route::get("/jenjangs/{id}", "API\JenjangController@show");
+
 Route::middleware('auth:api')->group( function () {
     Route::post('logout', [AuthController::class, 'logout']);
 
@@ -29,8 +32,6 @@ Route::middleware('auth:api')->group( function () {
     Route::post('upload/photo', [ExternalUserController::class, 'uploadPhoto']);
     Route::post('upload/photo/base64', [ExternalUserController::class, 'uploadImageBase64']);
 
-    Route::get("/jenjangs", "API\JenjangController@index");
-    Route::get("/jenjangs/{id}", "API\JenjangController@show");
     Route::get("/tingkats", "API\TingkatController@index");
     Route::get("/tingkats/{id}", "API\TingkatController@show");
     Route::get("/kelas", "API\KelasController@index");
