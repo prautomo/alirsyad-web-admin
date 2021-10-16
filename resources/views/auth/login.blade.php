@@ -36,7 +36,7 @@
             <div class="card">
                 <div class="card-body">
                     <h3 class="text-center mb-4">Masuk</h3>
-                    <form method="POST" class="justify-content-center d-flex" action="{{ route('login') }}">
+                    <form method="POST" id="login-form" class="justify-content-center d-flex" action="{{ route('login') }}">
                         @csrf
                         <div style="width:300px;">
 
@@ -90,7 +90,9 @@
                             </div> -->
 
                             <div class="form-group mb-0 text-center">
-                                <button type="submit" class="btn btn-main w-100">
+                                <button type="submit" class="btn btn-main w-100"
+                                onclick="login()"
+                                >
                                     {{ __('Login') }}
                                 </button>
 
@@ -121,3 +123,56 @@
 </div>
 <div class="spacer"></div>
 @endsection
+
+@push('script')
+<script>
+    function login(){
+        event.preventDefault(); 
+
+        var request;
+        var email = document.getElementById('email')?.value ?? "";
+        var password = document.getElementById('password')?.value ?? "";
+
+        // Request to endpoint
+        request = $.ajax({
+            url: "/api/login",
+            type: "POST",
+            data: {
+                nis: email,
+                password: password,
+            }
+        });
+
+        // Callback handler that will be called on success
+        request.done(function (response, textStatus, jqXHR){
+            // Log a message to the console
+            // console.log("Hooray, it worked!", response, textStatus, jqXHR);
+            if(response?.success){
+                var data = response?.data;
+                window.localStorage.setItem('token', data?.token);
+                window.localStorage.setItem('name', data?.name);
+            }
+        });
+
+        // Callback handler that will be called on failure
+        request.fail(function (jqXHR, textStatus, errorThrown){
+            // Log the error to the console
+            console.error(
+                "The following error occurred: "+
+                textStatus, errorThrown
+            );
+        });
+
+        // Callback handler that will be called regardless
+        // if the request failed or succeeded
+        request.always(function () {
+            // submit ae
+            submitForm();
+        });
+    }
+
+    function submitForm(){
+        document.getElementById('login-form').submit();
+    }
+</script>
+@endpush

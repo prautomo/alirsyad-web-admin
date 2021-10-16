@@ -30,7 +30,7 @@
         <div class="row">
             <div class="col-md-12 text-center">
                 <iframe 
-                    src="{{ asset(@$simulasi->path_simulasi.'/index.html') }}" 
+                    id="simulasi-frame" 
                     style="height:550px;width:100%;"
                     title="{{ @$simulasi->name }}"></iframe> 
             </div>
@@ -38,3 +38,13 @@
     </div>
 </section>
 @endsection
+
+@push("script")
+<script>
+    $(function(){
+        var token = window.localStorage.getItem('token');
+
+        $("#simulasi-frame").prop('src', "{{ asset(@$simulasi->path_simulasi.'/index.html?simulasi_id='.@$simulasi->id) }}&token="+token);
+    });
+</script>
+@endpush

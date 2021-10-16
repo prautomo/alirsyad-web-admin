@@ -73,9 +73,9 @@
           </li>
 			</ul>
 
-			<form action="{{ route('logout') }}" class="form-lg-inline my-2 my-md-0 ml-lg-4 text-center" method="POST">
+			<form action="{{ route('logout') }}" id="logout-form" class="form-lg-inline my-2 my-md-0 ml-lg-4 text-center" method="POST">
                 @csrf
-			  <button class="btn btn-solid-border btn-round-full">Keluar</button>
+			  <button class="btn btn-solid-border btn-round-full" onclick="event.preventDefault(); window.localStorage.clear(); document.getElementById('logout-form').submit();">Keluar</button>
 			</form>
 		  </div>
 
