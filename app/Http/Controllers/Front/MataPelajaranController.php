@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
 use App\Models\MataPelajaran;
+use App\Models\GuestMataPelajaran;
 use App\Models\Modul;
 use App\Models\HistoryModul;
 use App\Models\Video;
@@ -44,12 +45,29 @@ class MataPelajaranController extends Controller
         /**
          * Mapel Aktif buat Pengunjung
          */
-        $aktif = [];
+        $aktif = MataPelajaran::search($request);
+        $aktif = $aktif->with('tingkat');
+        // mapel pilihan admin
+        $aktif = $aktif->whereHas('guests', function($query) use ($user) {
+            $query->where('guest_id', $user->id);
+        });
+        // sort by active mapel
+        $aktif = $aktif->get()->sortBy('name');
 
         /**
          * Mapel Tidak Aktif buat Pengunjung
          */
-        $tidakAktif = [];
+        $tidakAktif = MataPelajaran::search($request);
+        $tidakAktif = $tidakAktif->with('tingkat');
+        // by tingkat
+        $tidakAktif = $tidakAktif->whereHas('tingkat', function($q2) use ($user){
+            $q2->where('jenjang_id', $user->jenjang_id);
+        });
+        // mapel bukan pilihan admin
+        $selectedMapel = GuestMataPelajaran::where('guest_id', $user->id)->get()->pluck('mata_pelajaran_id');
+        $tidakAktif = $tidakAktif->whereNotIn('id', $selectedMapel);
+        // sort by active mapel
+        $tidakAktif = $tidakAktif->get()->sortBy('tingkat');
 
         $parseData = [
             'sedangDipelajari' => $sedangDipelajari,
@@ -131,17 +149,19 @@ class MataPelajaranController extends Controller
      */
     public function show(Request $request, $id)
     {
+        $user = Auth::user();
         // mapel
         $mapel = MataPelajaran::with('tingkat');
         // filter by jenjang yg sama
-        $mapel = $mapel->whereHas('tingkat.jenjang', function($query) {
-            $query->where('id', Auth::user()->kelas->tingkat->jenjang_id);
+        $mapel = $mapel->whereHas('tingkat.jenjang', function($query) use ($user) {
+            $jenjangId = $user->is_pengunjung ? $user->jenjang_id : $user->kelas->tingkat->jenjang_id;
+            $query->where('id', $jenjangId);
         });
         // $mapel = $mapel->whereHas('tingkat.kelas', function($query) {
         //     $query->where('id', Auth::user()->kelas_id);
         // });
         // filter by tingkat bawahnya
-        $mapel = $mapel->whereHas('tingkat', function($query) {
+        if (!$user->is_pengunjung) $mapel = $mapel->whereHas('tingkat', function($query) {
             $query->where('name', '<=', Auth::user()->kelas->tingkat->name);
         });
         $mapel = $mapel->findOrFail($id);

@@ -20,12 +20,14 @@ class ModulController extends BaseController
      */
     public function index(Request $request)
     {
+        $user = @Auth::user();
+
         $datas = Modul::search($request);
         $datas = $datas->with('mataPelajaran');
         // handle hak akses mapel
-        $datas = $datas->whereHas('mataPelajaran.tingkat', function($query){
+        $datas = $datas->whereHas('mataPelajaran.tingkat', function($query) use ($user){
             if(@Auth::user()->role==="SISWA"){
-                $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
+                if (!$user->is_pengunjung) $query->where('name', '<=', @$user->kelas->tingkat->name);
             }
         });
         // get list
@@ -46,11 +48,13 @@ class ModulController extends BaseController
     public function show($id)
     {
         $data = Modul::with('mataPelajaran.tingkat.jenjang');
+
+        $user = @Auth::user();
   
         // handle hak akses mapel
-        $data = $data->whereHas('mataPelajaran.tingkat', function($query){
+        $data = $data->whereHas('mataPelajaran.tingkat', function($query) use ($user){
             if(@Auth::user()->role==="SISWA"){
-                $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
+                if (!$user->is_pengunjung) $query->where('name', '<=', $user->kelas->tingkat->name);
             }
             // if(@Auth::user()->role==="GURU"){
             //     // filter by guru

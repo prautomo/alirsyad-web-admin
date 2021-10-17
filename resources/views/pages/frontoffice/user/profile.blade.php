@@ -47,10 +47,12 @@
                                 <h5>Akun Saya</h5>
                                 <hr/>
                             </div>
+                            @if(!@$user_data->is_pengunjung)
                             <div class="form-group">
                                 <label>NIS</label>
                                 <input type="text" disabled value="{{ @$user_data->nis }}" class="form-control" />
                             </div>
+                            @endif
                             <div class="form-group">
                                 <label>Nama</label>
                                 <input type="text" disabled value="{{ @$user_data->name }}" class="form-control" />

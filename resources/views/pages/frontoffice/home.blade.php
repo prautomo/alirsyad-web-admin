@@ -150,15 +150,10 @@
                             @forelse($tidakAktif as $mpta)
                             <div class="wrap-kelas form-inline mt-3">
                                 <div style="max-width: 270px;">
-                                    <span class="kelas-title">Kelas {{ $mpta->tingkat->name ?? "-" }} {{ @$mpta->tingkat->jenjang->name }}</span>
-                                    <h4 class="font-weight-bold">
+                                    <span class="kelas-title disable">Kelas {{ $mpta->tingkat->name ?? "-" }} {{ @$mpta->tingkat->jenjang->name }}</span>
+                                    <h4 class="font-weight-bold disable">
                                         {{ @$mpta->name ?? "-" }}
                                     </h4>
-                                </div>
-                                <div class="ml-auto">
-                                    <a href="{{ route('app.mapel.detail', @$mpta->id) }}" class="btn btn-main btn-small">
-                                        <i class="btn-icon fa fa-play ml-2"></i> Lanjut Belajar
-                                    </a>
                                 </div>
                             </div>
                             @empty

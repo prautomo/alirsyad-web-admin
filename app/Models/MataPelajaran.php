@@ -82,6 +82,14 @@ class MataPelajaran extends Model
         return $this->belongsToMany('App\Models\ExternalUser', 'guru_mata_pelajarans', 'mata_pelajaran_id' , 'guru_id');
     }
 
+    /**
+     * The guests that belong to the mapel.
+     */
+    public function guests()
+    {
+        return $this->belongsToMany('App\Models\ExternalUser', 'guest_mata_pelajarans', 'mata_pelajaran_id' , 'guest_id');
+    }
+
     // 
     public function getDisabledAttribute()
     {

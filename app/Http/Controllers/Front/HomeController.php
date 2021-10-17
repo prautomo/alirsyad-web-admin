@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
 use App\Models\MataPelajaran;
+use App\Models\GuestMataPelajaran;
 use App\Services\UploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -50,12 +51,29 @@ class HomeController extends Controller
         /**
          * Mapel Aktif buat Pengunjung
          */
-        $aktif = [];
+        $aktif = MataPelajaran::search($request);
+        $aktif = $aktif->with('tingkat');
+        // mapel pilihan admin
+        $aktif = $aktif->whereHas('guests', function($query) use ($user) {
+            $query->where('guest_id', $user->id);
+        });
+        // sort by active mapel
+        $aktif = $aktif->limit(2)->get()->sortBy('name');
 
         /**
          * Mapel Tidak Aktif buat Pengunjung
          */
-        $tidakAktif = [];
+        $tidakAktif = MataPelajaran::search($request);
+        $tidakAktif = $tidakAktif->with('tingkat');
+        // by tingkat
+        $tidakAktif = $tidakAktif->whereHas('tingkat', function($q2) use ($user){
+            $q2->where('jenjang_id', $user->jenjang_id);
+        });
+        // mapel bukan pilihan admin
+        $selectedMapel = GuestMataPelajaran::where('guest_id', $user->id)->get()->pluck('mata_pelajaran_id');
+        $tidakAktif = $tidakAktif->whereNotIn('id', $selectedMapel);
+        // sort by active mapel
+        $tidakAktif = $tidakAktif->limit(2)->get()->sortBy('name');
 
         $parseData = [
             'sedangDipelajari' => $sedangDipelajari,

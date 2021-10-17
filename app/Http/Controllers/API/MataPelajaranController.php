@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\GuruMataPelajaran;
+use App\Models\GuestMataPelajaran;
 use App\Models\MataPelajaran;
 use App\Models\Modul;
 use App\Models\HistoryModul;
@@ -45,7 +46,7 @@ class MataPelajaranController extends BaseController
         $datas = MataPelajaran::search($request);
         $datas = $datas->with('tingkat.jenjang');
         $datas = $datas->whereHas('tingkat.kelas', function($query) {
-            $query->where('id', Auth::user()->kelas_id);
+            $query->where('id', @Auth::user()->kelas_id);
         });
         // sort by active mapel
         $datas = $datas->get();
@@ -60,19 +61,22 @@ class MataPelajaranController extends BaseController
      */
     public function upcoming(Request $request)
     {
+        $user = @Auth::user();
+
         // upcoming mapel
         $datas = MataPelajaran::search($request);
         $datas = $datas->with('tingkat.jenjang');
         // filter by jenjang yg sama
-        $datas = $datas->whereHas('tingkat.jenjang', function($query) {
-            $query->where('id', @Auth::user()->kelas->tingkat->jenjang_id);
+        $datas = $datas->whereHas('tingkat.jenjang', function($query) use ($user) {
+            $jenjangId = $user->is_pengunjung ? $user->jenjang_id : $user->kelas->tingkat->jenjang_id;
+            $query->where('id', $jenjangId);
         });
         // filter by tingkat atasnya
-        $datas = $datas->whereHas('tingkat', function($query) {
-            $query->where('name', '>', @Auth::user()->kelas->tingkat->name);
+        $datas = $datas->whereHas('tingkat', function($query) use ($user) {
+            if (!$user->is_pengunjung) $query->where('name', '>', @Auth::user()->kelas->tingkat->name);
         });
         // get
-        $datas = $datas->get();
+        $datas = $user->is_pengunjung ? [] : $datas->get();
 
         return $this->sendResponse(MataPelajaranResource::collection($datas), 'Mata Pelajaran retrieved successfully.');
     }
@@ -84,20 +88,69 @@ class MataPelajaranController extends BaseController
      */
     public function passed(Request $request)
     {
+        $user = @Auth::user();
+        
         // passed mapel
         $datas = MataPelajaran::search($request);
         $datas = $datas->with('tingkat.jenjang');
         // filter by jenjang yg sama
-        $datas = $datas->whereHas('tingkat.jenjang', function($query) {
-            $query->where('id', @Auth::user()->kelas->tingkat->jenjang_id);
+        $datas = $datas->whereHas('tingkat.jenjang', function($query) use ($user) {
+            $jenjangId = $user->is_pengunjung ? $user->jenjang_id : $user->kelas->tingkat->jenjang_id;
+            $query->where('id', $jenjangId);
         });
         // filter by tingkat bawahnya
-        $datas = $datas->whereHas('tingkat', function($query) {
-            $query->where('name', '<', @Auth::user()->kelas->tingkat->name);
+        $datas = $datas->whereHas('tingkat', function($query) use ($user) {
+            if(!$user->is_pengunjung) $query->where('name', '<', @Auth::user()->kelas->tingkat->name);
         });
         // get
-        $datas = $datas->get();
+        $datas = $user->is_pengunjung ? [] : $datas->get();
 
+        return $this->sendResponse(MataPelajaranResource::collection($datas), 'Mata Pelajaran retrieved successfully.');
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function active(Request $request)
+    {
+        $user = @Auth::user();
+
+        // active mapel by admin
+        $aktif = MataPelajaran::search($request);
+        $aktif = $aktif->with('tingkat.jenjang');
+        // mapel pilihan admin
+        $aktif = $aktif->whereHas('guests', function($query) use ($user) {
+            $query->where('guest_id', $user->id);
+        });
+        // sort by active mapel
+        $datas = $aktif->get()->sortBy('name');
+        
+        return $this->sendResponse(MataPelajaranResource::collection($datas), 'Mata Pelajaran retrieved successfully.');
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function notActive(Request $request)
+    {
+        $user = @Auth::user();
+
+        $tidakAktif = MataPelajaran::search($request);
+        $tidakAktif = $tidakAktif->with('tingkat');
+        // by tingkat
+        $tidakAktif = $tidakAktif->whereHas('tingkat', function($q2) use ($user){
+            $q2->where('jenjang_id', $user->jenjang_id);
+        });
+        // mapel bukan pilihan admin
+        $selectedMapel = GuestMataPelajaran::where('guest_id', $user->id)->get()->pluck('mata_pelajaran_id');
+        $tidakAktif = $tidakAktif->whereNotIn('id', $selectedMapel);
+        // sort by active mapel
+        $datas = $tidakAktif->get()->sortBy('tingkat');
+   
         return $this->sendResponse(MataPelajaranResource::collection($datas), 'Mata Pelajaran retrieved successfully.');
     }
    
