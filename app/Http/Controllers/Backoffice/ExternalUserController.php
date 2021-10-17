@@ -161,9 +161,15 @@ class ExternalUserController extends Controller{
     /**
      * Get mata pelajaran
      */
-    private function getMataPelajaran($guruId=""){
+    private function getMataPelajaran($guruId="", $jenjangId=null){
         // get list mapel
         $mapels = MataPelajaran::with('tingkat');
+
+        if($jenjangId){
+            $mapels = $mapels->whereHas('tingkat', function($q2) use($jenjangId) {
+                $q2->where('jenjang_id', $jenjangId);
+            });
+        }
 
         // // filter kalo mapel nya udah ada yg ngajar
         // $guruMengajar = GuruMataPelajaran::get();
@@ -466,5 +472,46 @@ class ExternalUserController extends Controller{
         } catch (\Throwable $th) {
             return $this->returnError($th);
         }
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function enableMapel($id)
+    {
+        $dt = ExternalUser::with('kelas')->findOrFail($id);
+
+        $mapelList = $this->getMataPelajaran($id, @$dt->jenjang->id);
+
+        $mapelIDS = [];
+        foreach($dt->mataPelajarans as $mapel)
+        {
+            $mapelIDS[] = $mapel->id;
+        }  
+
+        return view($this->prefix.'.enableMapel', ['data' => $dt, 'mapelList' => $mapelList, 'mapelIDS' => $mapelIDS]);
+    }
+
+    public function enableMapelUpdate(Request $request, $id){
+
+        $this->validate($request, [
+            'mapel' => 'required',
+        ]);
+
+        $user = ExternalUser::find($id);
+
+        if(@$request->mapel){
+            if(count(@$request->mapel) > 0){
+                $user->mataPelajaranGuests()->sync($request->mapel);
+            }
+        }
+
+        return redirect()->route($this->routePath.'.index', ['role'=>$request->role, 'is_pengunjung' => 1])->with(
+            $this->success(__("External User updated successfully"), $user)
+        );
+
     }
 }

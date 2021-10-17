@@ -43,6 +43,8 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
 
     Route::get('external-users/batch_create',  "ExternalUserController@batchImport")->name('external-users.batch_create');
     Route::post('external-users/import', 'ExternalUserController@import')->name('external-users.import');
+    Route::get('external-users/enableMapel/{id}', 'ExternalUserController@enableMapel')->name('external-users.enableMapel');
+    Route::put('external-users/enableMapel/{id}', 'ExternalUserController@enableMapelUpdate')->name('external-users.enableMapelUpdate');
     Route::resource('external-users', 'ExternalUserController');
     Route::post('external-users/update-status/{id}', 'ExternalUserController@updateStatus')->name('external-users.update-status');
 

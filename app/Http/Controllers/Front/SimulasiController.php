@@ -19,14 +19,17 @@ class SimulasiController extends Controller
      */
     public function indexByMapel(Request $request, $idMapel)
     {
+        $user = @Auth::user();
+
         // mapel data
         $mapel = MataPelajaran::with('tingkat');
         // filter by jenjang yg sama
-        $mapel = $mapel->whereHas('tingkat.jenjang', function($query) {
-            $query->where('id', @Auth::user()->kelas->tingkat->jenjang_id);
+        $mapel = $mapel->whereHas('tingkat.jenjang', function($query) use ($user){
+            $jenjangId = $user->is_pengunjung ? $user->jenjang_id : $user->kelas->tingkat->jenjang_id;
+            $query->where('id', $jenjangId);
         });
         // filter by tingkat bawahnya
-        $mapel = $mapel->whereHas('tingkat', function($query) {
+        if (!$user->is_pengunjung) $mapel = $mapel->whereHas('tingkat', function($query) {
             $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
         });
         $mapel = $mapel->findOrFail($idMapel);
@@ -36,7 +39,7 @@ class SimulasiController extends Controller
         // handle hak akses mapel
         $user = Auth::user();
         if($user->role !== "GURU"){
-            $simulasis = $simulasis->whereHas('mataPelajaran.tingkat', function($query) use($user) {
+            if (!$user->is_pengunjung) $simulasis = $simulasis->whereHas('mataPelajaran.tingkat', function($query) use($user) {
                 $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
             });
         }

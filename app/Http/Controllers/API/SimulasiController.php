@@ -23,12 +23,15 @@ class SimulasiController extends BaseController
      */
     public function index(Request $request)
     {
+
+        $user = @Auth::user();
+
         $datas = Simulasi::search($request);
         $datas = $datas->with('uploader', 'mataPelajaran');
         // handle hak akses mapel
-        $datas = $datas->whereHas('mataPelajaran.tingkat', function($query){
+        $datas = $datas->whereHas('mataPelajaran.tingkat', function($query) use($user){
             if(@Auth::user()->role==="SISWA"){
-                $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
+                if(!$user->is_pengunjung) $query->where('name', '<=', $user->kelas->tingkat->name);
             }
         });
         // get list
@@ -47,12 +50,14 @@ class SimulasiController extends BaseController
      */
     public function show($id)
     {
+        $user = @Auth::user();
+
         $data = Simulasi::with('mataPelajaran.tingkat.jenjang');
   
         // handle hak akses mapel
-        $data = $data->whereHas('mataPelajaran.tingkat', function($query){
+        $data = $data->whereHas('mataPelajaran.tingkat', function($query) use ($user){
             if(@Auth::user()->role==="SISWA"){
-                $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
+                if (!$user->is_pengunjung) $query->where('name', '<=', @$user->kelas->tingkat->name);
             }
         });
 
@@ -79,7 +84,7 @@ class SimulasiController extends BaseController
   
         // handle hak akses mapel
         $data = $data->whereHas('mataPelajaran.tingkat', function($query) use ($user){
-            $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
+            if (!$user->is_pengunjung) $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
         });
 
         $data = $data->find($id);
@@ -114,10 +119,14 @@ class SimulasiController extends BaseController
 
         $data = Simulasi::with('mataPelajaran');
         $user = Auth::user();
+
+        if ($user->is_pengunjung){
+            return $this->returnStatus(400, "Score not saved. You\'re not a student.");   
+        }
   
         // handle hak akses mapel
         $data = $data->whereHas('mataPelajaran', function($query) use ($user){
-            $query->where('tingkat_id', @$user->kelas->tingkat_id ?? 0);
+            if (!$user->is_pengunjung) $query->where('tingkat_id', @$user->kelas->tingkat_id ?? 0);
         });
 
         $data = $data->find($id);
