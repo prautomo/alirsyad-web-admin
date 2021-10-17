@@ -114,7 +114,9 @@ class ExternalUserController extends Controller{
                 "deleteRoute" => route($this->routePath.".destroy", $data->id),
             ];
 
-            if(!$data->is_pengunjung){
+            if($data->is_pengunjung){
+                $actions["enableMapelRoute"] = route($this->routePath.".enableMapel", $data->id).(\Request::get('role') ? "?role=".\Request::get('role') : "");
+            }else{
                 $actions["editRoute"] = route($this->routePath.".edit", $data->id).(\Request::get('role') ? "?role=".\Request::get('role') : "");
             }
 
@@ -487,7 +489,7 @@ class ExternalUserController extends Controller{
         $mapelList = $this->getMataPelajaran($id, @$dt->jenjang->id);
 
         $mapelIDS = [];
-        foreach($dt->mataPelajarans as $mapel)
+        foreach($dt->mataPelajaranGuests as $mapel)
         {
             $mapelIDS[] = $mapel->id;
         }  
