@@ -511,7 +511,7 @@ class ExternalUserController extends Controller{
             }
         }
 
-        return redirect()->route($this->routePath.'.index', ['role'=>$request->role, 'is_pengunjung' => 1])->with(
+        return redirect()->route($this->routePath.'.index', ['role'=> 'SISWA', 'is_pengunjung' => 1])->with(
             $this->success(__("External User updated successfully"), $user)
         );
 
