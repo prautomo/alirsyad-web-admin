@@ -7,7 +7,7 @@
                 <div class="form-group">
                     <label class="form-control-label" for="input-mapel">Mata Pelajaran</label>
 
-                    <select id="mapel" multiple name="mapel[]" class="js-example-basic-multiple form-control {{($errors->has('mapel') ? ' is-invalid' : '')}}">
+                    <select id="mapel" multiple="multiple" name="mapel[]" class="js-example-basic-multiple form-control {{($errors->has('mapel') ? ' is-invalid' : '')}}">
                         @foreach(@$mapelList as $idx => $mapel)
 
                         @if(in_array($idx, $mapelIDS))
@@ -35,21 +35,21 @@
             </div>
         </div>
     </form>
+
+    @push('plugin_css')
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    @endpush
+
+
+    @push('script')
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    @endpush
+
+    @push('plugin_script')
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.js-example-basic-multiple').select2();
+        });
+    </script>
+    @endpush
 </x-page.form>
-
-
-@push('script')
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-@endpush
-
-@push('plugin_css')
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-@endpush
-
-@push('plugin_script')
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('.js-example-basic-multiple').select2();
-    });
-</script>
-@endpush

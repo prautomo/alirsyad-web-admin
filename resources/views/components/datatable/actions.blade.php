@@ -32,6 +32,15 @@
     @endif
 @endcan
 
+@can(isset($permissionName).'-edit')
+    @if(isset($enableMapelRoute))
+    <a href="{{$enableMapelRoute}}" class="btn btn-sm btn-icon btn-primary enable-mapel-btn">
+        <i class="ni ni-atom"></i>
+        {{__("Choose Mata Pelajaran")}}
+    </a>
+    @endif
+@endcan
+
 @if(isset($statusRequestDanaRoute))
 <a href="{{$statusRequestDanaRoute}}" data-name="{{$name ?? ""}}" data-status="{{$status ?? ""}}" class="btn btn-sm btn-icon btn-primary datatable-status-dana-btn">
     <i class="fa fa-pencil-alt"></i>

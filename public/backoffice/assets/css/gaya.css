@@ -42,3 +42,7 @@
     background-repeat: no-repeat; 
     background-size: 50px; 
 }
+
+.select2-container .select2-selection--single {
+    height: 50px !important;
+}
