@@ -27,7 +27,7 @@ class AuthController extends BaseController
         if(Auth::attempt([$login_type => $request->nis, 'password' => $request->password])){
             $user = Auth::user(); 
             // handle status belum aktif
-            if($user->status === 'AKTIF'){
+            // if($user->status === 'AKTIF'){
                 $generateToken = $user->createToken('MyAppDigiBook308');
                 $success['token'] = @$generateToken->accessToken; 
                 $success['expires_at'] = @$generateToken->token->expires_at; 
@@ -41,9 +41,9 @@ class AuthController extends BaseController
                 $success['jenjang'] = @$user->kelas->tingkat->jenjang->name;
 
                 return $this->sendResponse($success, 'User login successfully.');
-            }else {
-                return $this->sendError('Maaf, status akun kamu : '.(str_replace('_', ' ', @$user->status)).'. Silahkan kontak administrator/guru.', ['error'=>'Unauthorised']);
-            }
+            // }else {
+            //     return $this->sendError('Maaf, status akun kamu : '.(str_replace('_', ' ', @$user->status)).'. Silahkan kontak administrator/guru.', ['error'=>'Unauthorised']);
+            // }
         } 
         else{ 
             return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
