@@ -29,7 +29,8 @@ class ExternalUserController extends BaseController
         $success['role'] = @$user->role;
         $success['kelas'] = @$user->kelas->name;
         $success['tingkat'] = @$user->kelas->tingkat->name;
-        $success['jenjang'] = @$user->kelas->tingkat->jenjang->name;
+        $success['jenjang'] = @$user->kelas->tingkat->jenjang->name ?? @$user->jenjang->name;
+        $success['is_pengunjung'] = @$user->is_pengunjung;
 
         return $this->sendResponse($success, 'User retrieved successfully.');
     }
@@ -62,7 +63,8 @@ class ExternalUserController extends BaseController
         $success['role'] = @$user->role;
         $success['kelas'] = @$user->kelas->name;
         $success['tingkat'] = @$user->kelas->tingkat->name;
-        $success['jenjang'] = @$user->kelas->tingkat->jenjang->name;
+        $success['jenjang'] = @$user->kelas->tingkat->jenjang->name ?? @$user->jenjang->name;
+        $success['is_pengunjung'] = @$user->is_pengunjung;
 
         return $this->sendResponse($success, 'User updated successfully.');
     }
@@ -92,7 +94,8 @@ class ExternalUserController extends BaseController
             $success['role'] = @$user->role;
             $success['kelas'] = @$user->kelas->name;
             $success['tingkat'] = @$user->kelas->tingkat->name;
-            $success['jenjang'] = @$user->kelas->tingkat->jenjang->name;
+            $success['jenjang'] = @$user->kelas->tingkat->jenjang->name ?? @$user->jenjang->name;
+            $success['is_pengunjung'] = @$user->is_pengunjung;
 
             return $this->sendResponse($success, 'User password updated successfully.');
         }else{
