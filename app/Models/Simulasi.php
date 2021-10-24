@@ -110,7 +110,7 @@ class Simulasi extends Model
         return $returnPrevious;
     }
 
-    private function avgScore()
+    private function avgScoreOld()
     {
         $scores = $this->scores->where('siswa_id', \Auth::user()->id);
         $bintang = 0;
@@ -126,6 +126,26 @@ class Simulasi extends Model
         }
 
         return ($totalScore === 0 || $scores === 0) ? 0 : $totalScore/count($scores);
+    }
+
+    private function avgScore()
+    {
+        $scores = $this->scores->where('siswa_id', \Auth::user()->id);
+        $bintang = 0;
+        $totalScore = 0;
+        // sort percobaan yg baru
+        $scores = $scores->sortByDesc('percobaan_ke');
+        // calculate average score
+        $jumlahPercobaan = 0;
+        foreach($scores as $score){
+            $jumlahPercobaan += 1;
+            // ambil 10 percobaan terakhir
+            if($jumlahPercobaan <= 10){
+                $totalScore += @$score->score;
+            }
+        }
+
+        return ($totalScore === 0 || $scores === 0) ? 0 : $totalScore/(count($scores) < 10 ? count($scores) : 10);
     }
 
     public function getRataRataScoreAttribute()
