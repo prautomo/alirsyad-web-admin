@@ -505,13 +505,16 @@ class ExternalUserController extends Controller{
 
         $user = ExternalUser::find($id);
 
+        $user->status = "AKTIF";
+        $user->save();
+
         if(@$request->mapel){
             if(count(@$request->mapel) > 0){
                 $user->mataPelajaranGuests()->sync($request->mapel);
             }
         }
 
-        return redirect()->route($this->routePath.'.index', ['role'=>$request->role, 'is_pengunjung' => 1])->with(
+        return redirect()->route($this->routePath.'.index', ['role'=> 'SISWA', 'is_pengunjung' => 1])->with(
             $this->success(__("External User updated successfully"), $user)
         );
 

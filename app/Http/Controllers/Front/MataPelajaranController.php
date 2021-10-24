@@ -53,6 +53,8 @@ class MataPelajaranController extends Controller
         });
         // sort by active mapel
         $aktif = $aktif->get()->sortBy('name');
+        // kalo user belum aktif (kosongin aja list mapelna)
+        if($user->status!=="AKTIF") $aktif = [];
 
         /**
          * Mapel Tidak Aktif buat Pengunjung
@@ -64,8 +66,10 @@ class MataPelajaranController extends Controller
             $q2->where('jenjang_id', $user->jenjang_id);
         });
         // mapel bukan pilihan admin
-        $selectedMapel = GuestMataPelajaran::where('guest_id', $user->id)->get()->pluck('mata_pelajaran_id');
-        $tidakAktif = $tidakAktif->whereNotIn('id', $selectedMapel);
+        if($user->status==="AKTIF"){ 
+            $selectedMapel = GuestMataPelajaran::where('guest_id', $user->id)->get()->pluck('mata_pelajaran_id');
+            $tidakAktif = $tidakAktif->whereNotIn('id', $selectedMapel);
+        }
         // sort by active mapel
         $tidakAktif = $tidakAktif->get()->sortBy('tingkat');
 

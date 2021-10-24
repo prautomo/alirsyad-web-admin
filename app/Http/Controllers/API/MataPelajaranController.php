@@ -125,9 +125,12 @@ class MataPelajaranController extends BaseController
             $query->where('guest_id', $user->id);
         });
         // sort by active mapel
-        $datas = $aktif->get()->sortBy('name');
+        $aktif = $aktif->get()->sortBy('name');
+
+        // kalo user belum aktif (kosongin aja list mapelna)
+        if($user->status!=="AKTIF") $aktif = [];
         
-        return $this->sendResponse(MataPelajaranResource::collection($datas), 'Mata Pelajaran retrieved successfully.');
+        return $this->sendResponse(MataPelajaranResource::collection($aktif), 'Mata Pelajaran retrieved successfully.');
     }
 
     /**
@@ -146,8 +149,10 @@ class MataPelajaranController extends BaseController
             $q2->where('jenjang_id', $user->jenjang_id);
         });
         // mapel bukan pilihan admin
-        $selectedMapel = GuestMataPelajaran::where('guest_id', $user->id)->get()->pluck('mata_pelajaran_id');
-        $tidakAktif = $tidakAktif->whereNotIn('id', $selectedMapel);
+        if($user->status==="AKTIF"){ 
+            $selectedMapel = GuestMataPelajaran::where('guest_id', $user->id)->get()->pluck('mata_pelajaran_id');
+            $tidakAktif = $tidakAktif->whereNotIn('id', $selectedMapel);
+        }
         // sort by active mapel
         $datas = $tidakAktif->get()->sortBy('tingkat');
    
