@@ -170,12 +170,15 @@ class SimulasiController extends BaseController
         $saveData['pengajar_id'] = @$pengajar[0]->id ?? null;
         $saveData['nama_pengajar'] = @$pengajar[0]->name ?? "";
 
-        if(@$lastScore->percobaan_ke <= 10){
-            $createScore = Score::create($saveData);
-        }else{
-            // update score
-            $createScore = $lastScore->update($saveData);;
-        }
+        // kode lama
+        // if(@$lastScore->percobaan_ke <= 10){
+        //     $createScore = Score::create($saveData);
+        // }else{
+        //     // update score
+        //     $createScore = $lastScore->update($saveData);;
+        // }
+        //kode baru
+        $createScore = Score::create($saveData);
 
         $sendResponse = $request->only(['score', 'semester']);
         $sendResponse['percobaan_ke'] = @$saveData['percobaan_ke'] ?? 1;
