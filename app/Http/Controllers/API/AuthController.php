@@ -37,6 +37,7 @@ class AuthController extends BaseController
                 $success['email'] = @$user->email;
                 $success['role'] = @$user->role;
                 $success['kelas'] = @$user->kelas->name;
+                $success['is_pengunjung'] = @$user->is_pengunjung;
                 $success['tingkat'] = @$user->kelas->tingkat->name;
                 $success['jenjang'] = @$user->kelas->tingkat->jenjang->name;
 
