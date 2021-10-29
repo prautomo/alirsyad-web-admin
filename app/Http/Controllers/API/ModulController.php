@@ -88,7 +88,7 @@ class ModulController extends BaseController
         // handle hak akses mapel
         $data = $data->whereHas('mataPelajaran.tingkat', function($query) use ($user){
             // $query->where('id', @$user->kelas->tingkat_id ?? 0);
-            $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
+            if(!@$user->is_pengunjung) $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
         });
 
         $data = $data->find($id);

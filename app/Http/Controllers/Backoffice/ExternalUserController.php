@@ -486,7 +486,41 @@ class ExternalUserController extends Controller{
     {
         $dt = ExternalUser::with('kelas')->findOrFail($id);
 
-        $mapelList = $this->getMataPelajaran($id, @$dt->jenjang->id);
+        $jenjangId = @$dt->jenjang->id;
+
+        // get list group mapel 
+        $mapels = MataPelajaran::with('tingkat');
+
+        if($jenjangId){
+            $mapels = $mapels->whereHas('tingkat', function($q2) use($jenjangId) {
+                $q2->where('jenjang_id', $jenjangId);
+            });
+        }
+
+        $mapels = $mapels->get();
+
+
+        $groupMapelList = [];
+        foreach($mapels as $mapel){
+
+            $textTingkat = "Tingkat ".@$mapel->tingkat->name." ".@$mapel->tingkat->jenjang->name;
+            $idxSearch = array_search("Semua ". @$textTingkat, array_column($groupMapelList, 'text'));
+
+            // belum ada
+            if($idxSearch === false){
+                array_push($groupMapelList, [
+                    'id' => $mapel->tingkat_id,
+                    'text' => "Semua ". @$textTingkat,
+                    'children' => [],
+                ]);
+            }else {
+                // udah ada
+                array_push($groupMapelList[$idxSearch]['children'], [
+                    'id' => $mapel->id,
+                    'text' => @$mapel->name . " (".$textTingkat.")",
+                ]);
+            }
+        }
 
         $mapelIDS = [];
         foreach($dt->mataPelajaranGuests as $mapel)
@@ -494,7 +528,7 @@ class ExternalUserController extends Controller{
             $mapelIDS[] = $mapel->id;
         }  
 
-        return view($this->prefix.'.enableMapel', ['data' => $dt, 'mapelList' => $mapelList, 'mapelIDS' => $mapelIDS]);
+        return view($this->prefix.'.enableMapel', ['data' => $dt, 'mapelList' => $groupMapelList, 'mapelIDS' => $mapelIDS]);
     }
 
     public function enableMapelUpdate(Request $request, $id){
