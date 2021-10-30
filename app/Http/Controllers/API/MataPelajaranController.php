@@ -143,7 +143,7 @@ class MataPelajaranController extends BaseController
         $user = @Auth::user();
 
         $tidakAktif = MataPelajaran::search($request);
-        $tidakAktif = $tidakAktif->with('tingkat');
+        $tidakAktif = $tidakAktif->with('tingkat.jenjang');
         // by tingkat
         $tidakAktif = $tidakAktif->whereHas('tingkat', function($q2) use ($user){
             $q2->where('jenjang_id', $user->jenjang_id);
