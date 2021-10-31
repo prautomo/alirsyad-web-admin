@@ -499,7 +499,6 @@ class ExternalUserController extends Controller{
 
         $mapels = $mapels->get();
 
-
         $groupMapelList = [];
         foreach($mapels as $mapel){
 
@@ -511,7 +510,10 @@ class ExternalUserController extends Controller{
                 array_push($groupMapelList, [
                     'id' => $mapel->tingkat_id,
                     'text' => "Semua ". @$textTingkat,
-                    'children' => [],
+                    'children' => [[
+                        'id' => $mapel->id,
+                        'text' => @$mapel->name . " (".$textTingkat.")",
+                    ]],
                 ]);
             }else {
                 // udah ada
@@ -520,6 +522,7 @@ class ExternalUserController extends Controller{
                     'text' => @$mapel->name . " (".$textTingkat.")",
                 ]);
             }
+
         }
 
         $mapelIDS = [];
