@@ -127,6 +127,6 @@ class ScoreController extends BaseController
     }
 
     private function calculatePercentage($total, $done){
-        return ($done === 0 || $total === 0) ? 0 : ($done/$total) * 100;
+        return ($done === 0 || $total === 0) ? 0 : round(($done/$total) * 100, 2);
     }
 }
