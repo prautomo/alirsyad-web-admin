@@ -44,7 +44,7 @@
     $(function(){
         var token = window.localStorage.getItem('token');
 
-        $("#simulasi-frame").prop('src', "{{ asset(@$simulasi->path_simulasi.'/index.html?simulasi_id='.@$simulasi->id) }}&token="+token);
+        $("#simulasi-frame").prop('src', "{{ asset(@$simulasi->path_simulasi.'/index.html?simulasi_id='.@$simulasi->id) }}&base_url={{ url('') }}&token="+token);
     });
 </script>
 @endpush
