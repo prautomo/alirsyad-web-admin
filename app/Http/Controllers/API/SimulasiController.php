@@ -26,18 +26,29 @@ class SimulasiController extends BaseController
 
         $user = @Auth::user();
 
-        $datas = Simulasi::search($request);
-        $datas = $datas->with('uploader', 'mataPelajaran');
+        $datas = Simulasi::with('uploader', 'mataPelajaran');
+
         // handle hak akses mapel
-        $datas = $datas->whereHas('mataPelajaran.tingkat', function($query) use($user){
-            if(@Auth::user()->role==="SISWA"){
-                if(!$user->is_pengunjung) $query->where('name', '<=', $user->kelas->tingkat->name);
-            }
-        });
+        $user = Auth::user();
+        if($user->role !== "GURU"){
+            if (!$user->is_pengunjung) $datas = $datas->whereHas('mataPelajaran.tingkat', function($query) use($user) {
+                $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
+            });
+        }
+
+        $idMapel = @$request->q_mata_pelajaran_id;
+
+        if($idMapel){
+            $datas = $datas->where('mata_pelajaran_id', $idMapel);
+        }
+        
+        // sorting by urutan
+        $datas = $datas->orderBy('urutan', 'asc')->orderBy('level', 'asc');
+
         // get list
         $datas = $datas->get();
         // sorting by urutan
-        $datas = $datas->sortBy('urutan');
+        // $datas = $datas->sortBy('urutan')->sortBy('level');
 
         return $this->sendResponse(SimulasiResource::collection($datas), 'Simulasi retrieved successfully.');
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Front;
 use App\Http\Controllers\Controller;
 use App\Models\MataPelajaran;
 use App\Models\GuestMataPelajaran;
+use App\Models\Tingkat;
 use App\Services\UploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -47,6 +48,25 @@ class HomeController extends Controller
 
         // sorting by tingkat
         $yangAkanDatang = $yangAkanDatang->sortBy('tingkat.name');
+
+        // yg akan datang kalo tingkat akhir
+        // 1. get tingkat akhir
+        $getTingkatAkhir = Tingkat::where('jenjang_id', @Auth::user()->kelas->tingkat->jenjang_id)->orderBy('name', 'desc')->first();
+        // 2. cek tingkat akhir
+        if($getTingkatAkhir->name===@Auth::user()->kelas->tingkat->name){
+            $yangAkanDatangNextJenjang = MataPelajaran::search($request);
+            $yangAkanDatangNextJenjang = $yangAkanDatangNextJenjang->with('tingkat');
+            $yangAkanDatangNextJenjang = $yangAkanDatangNextJenjang->whereHas('tingkat', function($query) {
+                $tingkatnya = @Auth::user()->kelas->tingkat->name;
+                // kalo tk b, assign aja akhirnya jadi tingkat 1
+                $tingkatnya = $tingkatnya==="B" ? 1 : $tingkatnya+1;
+                
+                $query->where('name', '=', $tingkatnya ?? '-');
+            });
+            $yangAkanDatangNextJenjang = $yangAkanDatangNextJenjang->get();
+            $yangAkanDatang = $yangAkanDatang->merge($yangAkanDatangNextJenjang)->slice(0,2);
+        }
+        //end
 
         /**
          * Mapel Aktif buat Pengunjung
