@@ -51,18 +51,23 @@ class Simulasi extends Model
     }
 
     public function getDisabledAttribute(){
-        $statusDisabled = false;
+        $statusDisabled = true;
         $name = $this->name;
         $level = $this->level;
 
-        if($level > 1){
+        if($level===1){
+            $statusDisabled = false;
+        }elseif($level > 1){
             // mundur satu level
             $level -= 1;
             // cek level sebelumnya
-            $simulasiSebelumnya = $this->with('scores')->where(["name"=>$name, "level"=>$level])->first();
+            $simulasiSebelumnya = $this->with('scores')->whereHas('scores', function($q){
+                $q->where('siswa_id', @\Auth::user()->id ?? 0);
+            })->where(["name"=>$name, "level"=>$level])->first();
             // cek punya score di level sebelumnya
-            if(count(@$simulasiSebelumnya->scores) < 1){
-                $statusDisabled = true;
+            $scores = @$simulasiSebelumnya->scores ?? [];
+            if(count($scores) > 1){
+                $statusDisabled = false;
             }
         }
 
