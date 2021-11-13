@@ -93,7 +93,7 @@ class SimulasiController extends Controller{
                 return $mapel;
             })
             ->addColumn("modul", function ($data) {
-                $modul = @$data->modul->name ? $data->modul->name : 'none';
+                $modul = (@$data->modul->name ? $data->modul->name : 'none') . " (Level ".(@$data->level ?? '1').")";
                 $modulID = @$data->modul->id ? $data->modul->id : '';
 
                 return view("components.datatable.link", [
@@ -193,11 +193,12 @@ class SimulasiController extends Controller{
             'game' => 'required|file|mimes:zip',
             'semester' => 'required|numeric|min:1,max:2',
             'urutan' => 'required|numeric|min:0',
+            'level' => 'required|numeric|min:1',
         ]);
         // default image
         $url = "images/placeholder.png";
         // temp request
-        $dataReq = $request->only(['name', 'icon', 'description', 'modul_id', 'semester', 'urutan']);
+        $dataReq = $request->only(['name', 'icon', 'description', 'modul_id', 'semester', 'urutan', 'level']);
         $dataReq['uploader_id'] = \Auth::user()->id;
 
         if ($request->hasFile('icon')) {
@@ -263,9 +264,10 @@ class SimulasiController extends Controller{
             'modul_id' => 'required',
             'semester' => 'required|numeric|min:1,max:2',
             'urutan' => 'required|numeric|min:0',
+            'level' => 'required|numeric|min:1',
         ]);
 
-        $dataReq = $request->only(['name', 'icon', 'description', 'modul_id', 'slug', 'semester', 'urutan']);
+        $dataReq = $request->only(['name', 'icon', 'description', 'modul_id', 'slug', 'semester', 'urutan', 'level']);
 
         if ($request->hasFile('icon')) {
             $validated = $request->validate([

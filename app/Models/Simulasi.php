@@ -11,7 +11,7 @@ class Simulasi extends Model
 {
     use HasFactory, SearchableTrait, SoftDeletes;
 
-    protected $appends = ['played', 'rata_rata_score', 'bintang_score', 'simulasi_url', 'slug_url', 'cover_url', 'last_score', 'first_score', 'next', 'previous' ];
+    protected $appends = ['played', 'rata_rata_score', 'bintang_score', 'simulasi_url', 'slug_url', 'cover_url', 'last_score', 'first_score', 'next', 'previous', 'disabled' ];
 
     /**
      * The attributes that are mass assignable.
@@ -29,6 +29,7 @@ class Simulasi extends Model
         'semester',
         'urutan',
         'modul_id',
+        'level',
     ];
 
     public static function search($request)
@@ -43,9 +44,29 @@ class Simulasi extends Model
             "semester" => "=",
             "urutan" => "=",
             "modul_id" => "=",
+            "level" => "=",
         ]);
 
         return $data;
+    }
+
+    public function getDisabledAttribute(){
+        $statusDisabled = false;
+        $name = $this->name;
+        $level = $this->level;
+
+        if($level > 1){
+            // mundur satu level
+            $level -= 1;
+            // cek level sebelumnya
+            $simulasiSebelumnya = $this->with('scores')->where(["name"=>$name, "level"=>$level])->first();
+            // cek punya score di level sebelumnya
+            if(count(@$simulasiSebelumnya->scores) < 1){
+                $statusDisabled = true;
+            }
+        }
+
+        return $statusDisabled;
     }
 
     public function getPlayedAttribute()
