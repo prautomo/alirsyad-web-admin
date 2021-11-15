@@ -116,12 +116,16 @@ function VideoDetail({ idVideo, rel }) {
             <Button className="mt-4 btn-main btn-small" href={data?.data?.next?.url}>Video Berikutnya</Button>
             } */}
 
+            {showNext &&
+            <>
             {data?.data?.next?.url ?
-            <Button className="mt-4 btn-main btn-small" onClick={() => finishModul(data?.data?.next?.slug_url)}>Modul Berikutnya</Button>
+            <Button className="mt-4 btn-main btn-small" onClick={() => finishModul(data?.data?.next?.slug_url)}>Video Berikutnya</Button>
             :
             <Button className="mt-4 btn-main btn-small" 
                 disabled={data?.data?.read || disabledBtnDone}
-                onClick={() => finishModul()}>Selesai Membaca</Button>
+                onClick={() => finishModul()}>Selesai Menonton</Button>
+            }
+            </>
             }
         </>
         }
