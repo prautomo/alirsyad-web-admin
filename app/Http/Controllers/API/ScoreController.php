@@ -121,7 +121,12 @@ class ScoreController extends BaseController
             });
         }
         
-        $simulasis = $simulasis->where('mata_pelajaran_id', $id)->get();
+        $simulasis = $simulasis->where('mata_pelajaran_id', $id);
+        
+        // sorting by urutan
+        $simulasis = $simulasis->orderBy('urutan', 'asc')->orderBy('level', 'asc');
+        $simulasis = $simulasis->get();
+        
         $datas['simulasis'] = $simulasis;
 
         return $datas;

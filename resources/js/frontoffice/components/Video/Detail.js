@@ -32,6 +32,17 @@ function VideoDetail({ idVideo, rel }) {
         postFlag(videoId);
     }
 
+    async function finishModul(nextUrl){
+        console.log("dika nextUrl", nextUrl)
+        // update history
+        await postFlag(videoId)
+
+        // direct to next url
+        if(nextUrl){
+            setTimeout(function(){ window.location.href = nextUrl; }, 3000);
+        }
+    }
+
     async function postFlag(idVideo){
         const payload = {};
 
@@ -101,8 +112,20 @@ function VideoDetail({ idVideo, rel }) {
             <Button className="mt-4 btn-main mr-4 btn-small" href={data?.data?.previous?.url}>Video Sebelumnya</Button>
             }
 
-            {(showNext && data?.data?.next?.url) &&
+            {/* {(showNext && data?.data?.next?.url) &&
             <Button className="mt-4 btn-main btn-small" href={data?.data?.next?.url}>Video Berikutnya</Button>
+            } */}
+
+            {showNext &&
+            <>
+            {data?.data?.next?.url ?
+            <Button className="mt-4 btn-main btn-small" onClick={() => finishModul(data?.data?.next?.slug_url)}>Video Berikutnya</Button>
+            :
+            <Button className="mt-4 btn-main btn-small" 
+                disabled={data?.data?.read || disabledBtnDone}
+                onClick={() => finishModul()}>Selesai Menonton</Button>
+            }
+            </>
             }
         </>
         }

@@ -76,12 +76,18 @@
                                             {{ @$simulasi->name ?? "-" }}
                                         </a>
                                         @else
-                                        <span style="text-decoration: none;" class="disable"">
+                                        <span style="text-decoration: none;" class="disable">
                                             {{ @$simulasi->name ?? "-" }}
                                         </span>
                                         @endif
                                     </h6>
                                     <span style="font-size: 14px; font-weight: 300;">Level {{ @$simulasi->level ?? 1}}</span>
+                                    
+                                    @if(@$simulasi->played)
+                                        <small class="badge badge-success">Sudah dikerjakan</small>
+                                    @else
+                                        <small class="badge badge-warning">Belum pernah dikerjakan.</small>
+                                    @endif
                                 </div>
                             </div>
                         @empty

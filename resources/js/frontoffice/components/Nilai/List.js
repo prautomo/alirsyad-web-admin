@@ -100,17 +100,26 @@ function NilaiSimulasi() {
                                     <img src={(simulasi?.icon==="" || simulasi?.icon===null) ? "/images/placeholder.png" : simulasi?.cover_url} width="100%" height="120px" />
                                 </Col>
                                 <Col md="8">
-                                    <div className="mt-1">
+                                    <div className={"mt-1"+(simulasi?.disabled ? " disable": "")}>
                                         <span className={"fa fa-star"+ ( simulasi?.rata_rata_score >= 33 ? " rating-checked" : "")}></span>
                                         <span className={"fa fa-star"+ ( simulasi?.rata_rata_score >= 66 ? " rating-checked" : "")}></span>
                                         <span className={"fa fa-star"+ ( simulasi?.rata_rata_score >= 99 ? " rating-checked" : "")}></span>
                                         <span className="ml-3 pt-1">{simulasi?.rata_rata_score.toFixed(2) ?? 0}/100</span>
                                     </div>
                                     <h6 className="title-nilai-simulasi">
+                                        {simulasi?.disabled ? 
+                                        <span className={"disable"}>
+                                            {simulasi?.name ?? "-"}
+                                        </span>
+                                        :
                                         <a href={simulasi?.slug_url ?? "#"}>
                                             {simulasi?.name ?? "-"}
                                         </a>
+                                        }
+                                        
                                     </h6>
+                                    <span style={{fontSize: "14px", fontWeight: "300"}}>(Level { simulasi?.level ?? 1})</span>
+                                    {" "}
                                     {simulasi?.first_score ? 
                                     <small>Selesai dikerjakan pada {moment(simulasi?.first_score?.created_at).format("DD MMMM YYYY")}</small>
                                     :

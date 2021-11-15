@@ -9,3 +9,7 @@
 }
 
 .cursor-pointer {cursor: pointer;}
+
+.disable {
+    color: #9f9d9d !important;
+}
