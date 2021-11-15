@@ -11,7 +11,7 @@ class Simulasi extends Model
 {
     use HasFactory, SearchableTrait, SoftDeletes;
 
-    protected $appends = ['played', 'rata_rata_score', 'bintang_score', 'simulasi_url', 'slug_url', 'cover_url', 'last_score', 'first_score', 'next', 'previous' ];
+    protected $appends = ['played', 'rata_rata_score', 'bintang_score', 'simulasi_url', 'slug_url', 'cover_url', 'last_score', 'first_score', 'next', 'previous', 'disabled' ];
 
     /**
      * The attributes that are mass assignable.
@@ -29,6 +29,7 @@ class Simulasi extends Model
         'semester',
         'urutan',
         'modul_id',
+        'level',
     ];
 
     public static function search($request)
@@ -43,9 +44,34 @@ class Simulasi extends Model
             "semester" => "=",
             "urutan" => "=",
             "modul_id" => "=",
+            "level" => "=",
         ]);
 
         return $data;
+    }
+
+    public function getDisabledAttribute(){
+        $statusDisabled = true;
+        $name = $this->name;
+        $level = $this->level;
+
+        if($level===1){
+            $statusDisabled = false;
+        }elseif($level > 1){
+            // mundur satu level
+            $level -= 1;
+            // cek level sebelumnya
+            $simulasiSebelumnya = $this->with('scores')->whereHas('scores', function($q){
+                $q->where('siswa_id', @\Auth::user()->id ?? 0);
+            })->where(["name"=>$name, "level"=>$level])->first();
+            // cek punya score di level sebelumnya
+            $scores = @$simulasiSebelumnya->scores ?? [];
+            if(count($scores) > 1){
+                $statusDisabled = false;
+            }
+        }
+
+        return $statusDisabled;
     }
 
     public function getPlayedAttribute()
@@ -155,12 +181,12 @@ class Simulasi extends Model
 
     public function getLastScoreAttribute()
     {
-        return $this->scores->sortByDesc('created_at')->first();
+        return $this->scores->where('siswa_id', \Auth::user()->id)->sortByDesc('created_at')->first();
     }
 
     public function getFirstScoreAttribute()
     {
-        return $this->scores->sortBy('created_at')->first();
+        return $this->scores->where('siswa_id', \Auth::user()->id)->sortBy('created_at')->first();
     }
 
     public function getBintangScoreAttribute()

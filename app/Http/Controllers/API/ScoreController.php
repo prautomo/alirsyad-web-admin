@@ -12,6 +12,7 @@ use App\Models\Modul;
 use App\Models\HistoryModul;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\Score as ScoreResource;
+use Validator;
    
 class ScoreController extends BaseController
 {
@@ -120,7 +121,12 @@ class ScoreController extends BaseController
             });
         }
         
-        $simulasis = $simulasis->where('mata_pelajaran_id', $id)->get();
+        $simulasis = $simulasis->where('mata_pelajaran_id', $id);
+        
+        // sorting by urutan
+        $simulasis = $simulasis->orderBy('urutan', 'asc')->orderBy('level', 'asc');
+        $simulasis = $simulasis->get();
+        
         $datas['simulasis'] = $simulasis;
 
         return $datas;
@@ -128,5 +134,79 @@ class ScoreController extends BaseController
 
     private function calculatePercentage($total, $done){
         return ($done === 0 || $total === 0) ? 0 : round(($done/$total) * 100, 2);
+    }
+
+    // GURU
+    /**
+     * Display a mata pelajaran listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function listNilaiSiswa(Request $request, $id)
+    {
+        $datas = [];
+        
+        return $this->sendResponse(ScoreResource::collection($datas), 'Siswas retrieved.');
+    }
+    
+    /**
+     * Display a mata pelajaran listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function nilaiSiswa(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'siswa_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->returnStatus(400, $validator->errors());     
+        }
+
+        $idSiswa = $request->siswa_id;
+        $idSimulasi = $id;
+
+        $scores = Score::where(['siswa_id'=> $idSiswa, 'simulasi_id' => $idSimulasi])->get();
+
+        // data semua percobaan
+        $percobaans = [];
+        foreach($scores as $score){
+            $percobaans[] = [
+                'percobaan_ke' => @$score->percobaan_ke,
+                'status' => (@$score->score ?? 0) < 50 ? 'salah' : 'benar',
+            ];
+        }
+
+        $percobaans = collect($percobaans)->sortBy('percobaan_ke');
+        $jumlahPercobaan = count($scores->toArray());
+        $percobaansBenar = $percobaans->where('status', 'benar')->all();
+        $percobaansSalah = $percobaans->where('status', 'salah')->all();
+        
+        // 10 percobaan terakhir
+        $percobaanTerakhirs = $percobaans->take(-10);
+        $percobaanTerakhirsBenar = $percobaanTerakhirs->where('status', 'benar')->all();
+        $percobaanTerakhirsSalah = $percobaanTerakhirs->where('status', 'salah')->all();
+        
+        $jumlahPercobaanTerakhirBenar = count(@$percobaanTerakhirsBenar ?? []);
+        $jumlahPercobaanTerakhirSalah = count(@$percobaanTerakhirsSalah ?? []);
+
+        // nilai akhir
+        $nilaiAkhir = ($jumlahPercobaanTerakhirBenar === 0) ? 0 : $jumlahPercobaanTerakhirBenar/($jumlahPercobaan <= 10 ? $jumlahPercobaan : 10) * 100;
+
+        $datas = [
+            'jumlah_percobaan' => $jumlahPercobaan,
+            'jumlah_benar' => count(@$percobaansBenar ?? []),
+            'jumlah_salah' => count(@$percobaansSalah ?? []),
+            'percobaan_terakhir' => [
+                'jumlah_benar' => $jumlahPercobaanTerakhirBenar,
+                'jumlah_salah' => count(@$percobaanTerakhirsSalah ?? []),
+                'data_percobaan' => $percobaanTerakhirs,
+            ],
+            'data_percobaan' => $percobaans,
+            'nilai_akhir' => round($nilaiAkhir, 2),
+        ];
+
+        return $this->sendResponse(new ScoreResource($datas), 'Score retrieved successfully.');
     }
 }

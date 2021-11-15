@@ -47,7 +47,7 @@ class SimulasiController extends Controller
         $simulasis = $simulasis->where('mata_pelajaran_id', $idMapel);
 
         // sorting by urutan
-        $simulasis = $simulasis->orderBy('urutan', 'asc');
+        $simulasis = $simulasis->orderBy('urutan', 'asc')->orderBy('level', 'asc');
         // get list
         $simulasis = $simulasis->get();
 
