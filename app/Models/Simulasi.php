@@ -181,12 +181,12 @@ class Simulasi extends Model
 
     public function getLastScoreAttribute()
     {
-        return $this->scores->sortByDesc('created_at')->first();
+        return $this->scores->where('siswa_id', \Auth::user()->id)->sortByDesc('created_at')->first();
     }
 
     public function getFirstScoreAttribute()
     {
-        return $this->scores->sortBy('created_at')->first();
+        return $this->scores->where('siswa_id', \Auth::user()->id)->sortBy('created_at')->first();
     }
 
     public function getBintangScoreAttribute()

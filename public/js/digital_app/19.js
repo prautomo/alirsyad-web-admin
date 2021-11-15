@@ -31,7 +31,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, ".layer-toolbox {\n    padding: 30px 30px 10px 30px;\n    width: 66.66666667%;\n    background-color: #d2f1f0 ;\n    position: fixed;\n    left: 17%;\n    bottom: 0;\n    z-index: 999999;\n}\n\n.rcp-dark {\n    width: 100% !important;\n}", ""]);
+exports.push([module.i, ".layer-toolbox {\r\n    padding: 30px 30px 10px 30px;\r\n    width: 66.66666667%;\r\n    background-color: #d2f1f0 ;\r\n    position: fixed;\r\n    left: 17%;\r\n    bottom: 0;\r\n    z-index: 999999;\r\n}\r\n\r\n.rcp-dark {\r\n    width: 100% !important;\r\n}", ""]);
 
 // exports
 

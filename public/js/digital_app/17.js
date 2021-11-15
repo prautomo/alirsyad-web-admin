@@ -53,7 +53,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 function VideoDetail(_ref) {
-  var _data$data2, _data$data3, _data$data3$previous, _data$data4, _data$data4$previous, _data$data5, _data$data5$next, _data$data6, _data$data6$next;
+  var _data$data2, _data$data3, _data$data3$previous, _data$data4, _data$data4$previous, _data$data5, _data$data5$next, _data$data7;
 
   var idVideo = _ref.idVideo,
       rel = _ref.rel;
@@ -92,19 +92,52 @@ function VideoDetail(_ref) {
     postFlag(videoId);
   }
 
-  function postFlag(_x) {
-    return _postFlag.apply(this, arguments);
+  function finishModul(_x) {
+    return _finishModul.apply(this, arguments);
   }
 
-  function _postFlag() {
-    _postFlag = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(idVideo) {
-      var payload;
+  function _finishModul() {
+    _finishModul = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(nextUrl) {
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              payload = {};
+              console.log("dika nextUrl", nextUrl); // update history
+
               _context.next = 3;
+              return postFlag(videoId);
+
+            case 3:
+              // direct to next url
+              if (nextUrl) {
+                setTimeout(function () {
+                  window.location.href = nextUrl;
+                }, 3000);
+              }
+
+            case 4:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }));
+    return _finishModul.apply(this, arguments);
+  }
+
+  function postFlag(_x2) {
+    return _postFlag.apply(this, arguments);
+  }
+
+  function _postFlag() {
+    _postFlag = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(idVideo) {
+      var payload;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              payload = {};
+              _context2.next = 3;
               return axios__WEBPACK_IMPORTED_MODULE_4___default.a.post("/videos/".concat(idVideo, "/flag/json"), {
                 payload: payload
               }).then(function (res) {
@@ -126,6 +159,10 @@ function VideoDetail(_ref) {
                   onClose: function onClose() {} // callback that will be executed after this alert is removed
 
                 });
+                setTimeout(function () {
+                  // redirect to modul sebelumnya
+                  if (rel) {}
+                }, 3000);
               })["catch"](function (e) {
                 var _e$response$data;
 
@@ -143,10 +180,10 @@ function VideoDetail(_ref) {
 
             case 3:
             case "end":
-              return _context.stop();
+              return _context2.stop();
           }
         }
-      }, _callee);
+      }, _callee2);
     }));
     return _postFlag.apply(this, arguments);
   }
@@ -170,10 +207,20 @@ function VideoDetail(_ref) {
   }), (data === null || data === void 0 ? void 0 : (_data$data3 = data.data) === null || _data$data3 === void 0 ? void 0 : (_data$data3$previous = _data$data3.previous) === null || _data$data3$previous === void 0 ? void 0 : _data$data3$previous.url) && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
     className: "mt-4 btn-main mr-4 btn-small",
     href: data === null || data === void 0 ? void 0 : (_data$data4 = data.data) === null || _data$data4 === void 0 ? void 0 : (_data$data4$previous = _data$data4.previous) === null || _data$data4$previous === void 0 ? void 0 : _data$data4$previous.url
-  }, "Video Sebelumnya"), showNext && (data === null || data === void 0 ? void 0 : (_data$data5 = data.data) === null || _data$data5 === void 0 ? void 0 : (_data$data5$next = _data$data5.next) === null || _data$data5$next === void 0 ? void 0 : _data$data5$next.url) && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
+  }, "Video Sebelumnya"), (data === null || data === void 0 ? void 0 : (_data$data5 = data.data) === null || _data$data5 === void 0 ? void 0 : (_data$data5$next = _data$data5.next) === null || _data$data5$next === void 0 ? void 0 : _data$data5$next.url) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
     className: "mt-4 btn-main btn-small",
-    href: data === null || data === void 0 ? void 0 : (_data$data6 = data.data) === null || _data$data6 === void 0 ? void 0 : (_data$data6$next = _data$data6.next) === null || _data$data6$next === void 0 ? void 0 : _data$data6$next.url
-  }, "Video Berikutnya")));
+    onClick: function onClick() {
+      var _data$data6, _data$data6$next;
+
+      return finishModul(data === null || data === void 0 ? void 0 : (_data$data6 = data.data) === null || _data$data6 === void 0 ? void 0 : (_data$data6$next = _data$data6.next) === null || _data$data6$next === void 0 ? void 0 : _data$data6$next.slug_url);
+    }
+  }, "Modul Berikutnya") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
+    className: "mt-4 btn-main btn-small",
+    disabled: (data === null || data === void 0 ? void 0 : (_data$data7 = data.data) === null || _data$data7 === void 0 ? void 0 : _data$data7.read) || disabledBtnDone,
+    onClick: function onClick() {
+      return finishModul();
+    }
+  }, "Selesai Membaca")));
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (VideoDetail);

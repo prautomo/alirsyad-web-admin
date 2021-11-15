@@ -58,6 +58,11 @@
                                             {{ @$modul->name ?? "-" }}
                                         </a>
                                     </h6>
+                                    @if(@$modul->read)
+                                        <span class="badge badge-success">Sudah dibaca</span>
+                                    @else
+                                        <span class="badge badge-warning">Belum dibaca</span>
+                                    @endif
                                 </div>
                             </div>
                             @empty

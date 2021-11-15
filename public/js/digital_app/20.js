@@ -12,7 +12,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, "\n.rating-checked {\n    color: orange;\n}\n\n.title-nilai-simulasi {\n    line-height: 0 !important;\n    margin-top: 15px;\n}\n\n.cursor-pointer {cursor: pointer;}", ""]);
+exports.push([module.i, "\r\n.rating-checked {\r\n    color: orange;\r\n}\r\n\r\n.title-nilai-simulasi {\r\n    line-height: 0 !important;\r\n    margin-top: 15px;\r\n}\r\n\r\n.cursor-pointer {cursor: pointer;}\r\n\r\n.disable {\r\n    color: #9f9d9d !important;\r\n}", ""]);
 
 // exports
 
@@ -535,7 +535,7 @@ function NilaiSimulasi() {
       overflow: "auto"
     }
   }, ((_dataProgress$simulas = dataProgress === null || dataProgress === void 0 ? void 0 : dataProgress.simulasis) !== null && _dataProgress$simulas !== void 0 ? _dataProgress$simulas : []).map(function (simulasi) {
-    var _simulasi$rata_rata_s, _simulasi$slug_url, _simulasi$name, _simulasi$first_score;
+    var _simulasi$rata_rata_s, _simulasi$name, _simulasi$slug_url, _simulasi$name2, _simulasi$level, _simulasi$first_score;
 
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Row"], {
       className: "mt-3 mr-0 ml-0",
@@ -549,7 +549,7 @@ function NilaiSimulasi() {
     })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Col"], {
       md: "8"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
-      className: "mt-1"
+      className: "mt-1" + ((simulasi === null || simulasi === void 0 ? void 0 : simulasi.disabled) ? " disable" : "")
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("span", {
       className: "fa fa-star" + ((simulasi === null || simulasi === void 0 ? void 0 : simulasi.rata_rata_score) >= 33 ? " rating-checked" : "")
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("span", {
@@ -560,9 +560,16 @@ function NilaiSimulasi() {
       className: "ml-3 pt-1"
     }, (_simulasi$rata_rata_s = simulasi === null || simulasi === void 0 ? void 0 : simulasi.rata_rata_score.toFixed(2)) !== null && _simulasi$rata_rata_s !== void 0 ? _simulasi$rata_rata_s : 0, "/100")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("h6", {
       className: "title-nilai-simulasi"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("a", {
+    }, (simulasi === null || simulasi === void 0 ? void 0 : simulasi.disabled) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("span", {
+      className: "disable"
+    }, (_simulasi$name = simulasi === null || simulasi === void 0 ? void 0 : simulasi.name) !== null && _simulasi$name !== void 0 ? _simulasi$name : "-") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("a", {
       href: (_simulasi$slug_url = simulasi === null || simulasi === void 0 ? void 0 : simulasi.slug_url) !== null && _simulasi$slug_url !== void 0 ? _simulasi$slug_url : "#"
-    }, (_simulasi$name = simulasi === null || simulasi === void 0 ? void 0 : simulasi.name) !== null && _simulasi$name !== void 0 ? _simulasi$name : "-")), (simulasi === null || simulasi === void 0 ? void 0 : simulasi.first_score) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("small", null, "Selesai dikerjakan pada ", moment__WEBPACK_IMPORTED_MODULE_10___default()(simulasi === null || simulasi === void 0 ? void 0 : (_simulasi$first_score = simulasi.first_score) === null || _simulasi$first_score === void 0 ? void 0 : _simulasi$first_score.created_at).format("DD MMMM YYYY")) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("small", null, "Belum pernah dikerjakan.")));
+    }, (_simulasi$name2 = simulasi === null || simulasi === void 0 ? void 0 : simulasi.name) !== null && _simulasi$name2 !== void 0 ? _simulasi$name2 : "-")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("span", {
+      style: {
+        fontSize: "14px",
+        fontWeight: "300"
+      }
+    }, "(Level ", (_simulasi$level = simulasi === null || simulasi === void 0 ? void 0 : simulasi.level) !== null && _simulasi$level !== void 0 ? _simulasi$level : 1, ")"), " ", (simulasi === null || simulasi === void 0 ? void 0 : simulasi.first_score) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("small", null, "Selesai dikerjakan pada ", moment__WEBPACK_IMPORTED_MODULE_10___default()(simulasi === null || simulasi === void 0 ? void 0 : (_simulasi$first_score = simulasi.first_score) === null || _simulasi$first_score === void 0 ? void 0 : _simulasi$first_score.created_at).format("DD MMMM YYYY")) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("small", null, "Belum pernah dikerjakan.")));
   }))))))));
 }
 
