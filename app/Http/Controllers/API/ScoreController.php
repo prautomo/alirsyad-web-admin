@@ -157,7 +157,7 @@ class ScoreController extends BaseController
     public function nilaiSiswa(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'siswa_id' => 'required',
+            'q_siswa_id' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -165,9 +165,10 @@ class ScoreController extends BaseController
         }
 
         $idSiswa = $request->siswa_id;
-        $idSimulasi = $id;
+        
+        $simulasi = Simulasi::find($id);
 
-        $scores = Score::where(['siswa_id'=> $idSiswa, 'simulasi_id' => $idSimulasi])->get();
+        $scores = @$simulasi->scores ?? [];
 
         // data semua percobaan
         $percobaans = [];
@@ -179,32 +180,25 @@ class ScoreController extends BaseController
         }
 
         $percobaans = collect($percobaans)->sortBy('percobaan_ke');
-        $jumlahPercobaan = count($scores->toArray());
+        // $jumlahPercobaan = count($scores->toArray());
+
         $percobaansBenar = $percobaans->where('status', 'benar')->all();
         $percobaansSalah = $percobaans->where('status', 'salah')->all();
         
         // 10 percobaan terakhir
-        $percobaanTerakhirs = $percobaans->take(-10);
-        $percobaanTerakhirsBenar = $percobaanTerakhirs->where('status', 'benar')->all();
-        $percobaanTerakhirsSalah = $percobaanTerakhirs->where('status', 'salah')->all();
+        $dataPercobaanTerakhir = $scores->take(-10);
         
-        $jumlahPercobaanTerakhirBenar = count(@$percobaanTerakhirsBenar ?? []);
-        $jumlahPercobaanTerakhirSalah = count(@$percobaanTerakhirsSalah ?? []);
-
-        // nilai akhir
-        $nilaiAkhir = ($jumlahPercobaanTerakhirBenar === 0) ? 0 : $jumlahPercobaanTerakhirBenar/($jumlahPercobaan <= 10 ? $jumlahPercobaan : 10) * 100;
-
         $datas = [
-            'jumlah_percobaan' => $jumlahPercobaan,
+            'jumlah_percobaan' => @$simulasi->total_percobaan ?? 0,
             'jumlah_benar' => count(@$percobaansBenar ?? []),
             'jumlah_salah' => count(@$percobaansSalah ?? []),
             'percobaan_terakhir' => [
-                'jumlah_benar' => $jumlahPercobaanTerakhirBenar,
-                'jumlah_salah' => count(@$percobaanTerakhirsSalah ?? []),
-                'data_percobaan' => $percobaanTerakhirs,
+                'jumlah_benar' => @$simulasi->{"10_percobaan_terakhir_berhasil"} ?? 0,
+                'jumlah_salah' => @$simulasi->{"10_percobaan_terakhir_gagal"} ?? 0,
+                'data_percobaan' => @$dataPercobaanTerakhir ?? [],
             ],
-            'data_percobaan' => $percobaans,
-            'nilai_akhir' => round($nilaiAkhir, 2),
+            'data_percobaan' => @$simulasi->scores ?? [],
+            'nilai_akhir' => round(@$simulasi->rata_rata_score ?? 0, 2),
         ];
 
         return $this->sendResponse(new ScoreResource($datas), 'Score retrieved successfully.');
