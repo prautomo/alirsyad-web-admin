@@ -569,7 +569,7 @@ function NilaiSimulasi() {
         fontSize: "14px",
         fontWeight: "300"
       }
-    }, "(Level ", (_simulasi$level = simulasi === null || simulasi === void 0 ? void 0 : simulasi.level) !== null && _simulasi$level !== void 0 ? _simulasi$level : 1, ")"), " ", (simulasi === null || simulasi === void 0 ? void 0 : simulasi.first_score) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("small", null, "Selesai dikerjakan pada ", moment__WEBPACK_IMPORTED_MODULE_10___default()(simulasi === null || simulasi === void 0 ? void 0 : (_simulasi$first_score = simulasi.first_score) === null || _simulasi$first_score === void 0 ? void 0 : _simulasi$first_score.created_at).format("DD MMMM YYYY")) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("small", null, "Belum pernah dikerjakan.")));
+    }, "(Level ", (_simulasi$level = simulasi === null || simulasi === void 0 ? void 0 : simulasi.level) !== null && _simulasi$level !== void 0 ? _simulasi$level : 1, ")"), " ", (simulasi === null || simulasi === void 0 ? void 0 : simulasi.first_score) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("small", null, "Selesai dikerjakan pada ", (simulasi === null || simulasi === void 0 ? void 0 : (_simulasi$first_score = simulasi.first_score) === null || _simulasi$first_score === void 0 ? void 0 : _simulasi$first_score.created_at) ? moment__WEBPACK_IMPORTED_MODULE_10___default()(simulasi.first_score.created_at).format("DD MMMM YYYY") : "-") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("small", null, "Belum pernah dikerjakan.")));
   }))))))));
 }
 
