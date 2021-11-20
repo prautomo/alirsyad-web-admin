@@ -121,7 +121,7 @@ function NilaiSimulasi() {
                                     <span style={{fontSize: "14px", fontWeight: "300"}}>(Level { simulasi?.level ?? 1})</span>
                                     {" "}
                                     {simulasi?.first_score ? 
-                                    <small>Selesai dikerjakan pada {moment(simulasi?.first_score?.created_at).format("DD MMMM YYYY")}</small>
+                                    <small>Selesai dikerjakan pada {simulasi?.first_score?.created_at ? moment(simulasi.first_score.created_at).format("DD MMMM YYYY") : "-"}</small>
                                     :
                                     <small>Belum pernah dikerjakan.</small>
                                     }
