@@ -59,9 +59,9 @@
                                         </a>
                                     </h6>
                                     @if(@$modul->read)
-                                        <span class="badge badge-success">Sudah dibaca</span>
+                                        <span class="badge badge-success">Selesai dipelajari</span>
                                     @else
-                                        <span class="badge badge-warning">Belum dibaca</span>
+                                        <span class="badge badge-warning">Sedang dipelajari</span>
                                     @endif
                                 </div>
                             </div>

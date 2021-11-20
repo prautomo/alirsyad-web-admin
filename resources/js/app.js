@@ -22,3 +22,5 @@ import('./frontoffice/components/Modul/Detail');
 import('./frontoffice/components/Nilai/List');
 // guru
 import('./guru/components/Dashboard/DetailProgressBelajar');
+import('./guru/components/Progress/ListSiswa');
+import('./guru/components/Progress/DetailSiswa');
