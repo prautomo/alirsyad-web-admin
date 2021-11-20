@@ -17,6 +17,9 @@ use App\Http\Controllers\API\ExternalUserController;
 |
 */
 Route::post('login', [AuthController::class, 'login']);
+Route::get("login", function (Request $request) {
+    return "ok";
+});
 Route::post('register', [AuthController::class, 'register']);
 Route::post('password/forgot', [AuthController::class, 'forgot']);
 
