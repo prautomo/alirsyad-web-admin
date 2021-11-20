@@ -89,7 +89,7 @@ class MataPelajaranController extends BaseController
             $yangAkanDatangNextJenjang = $yangAkanDatangNextJenjang->whereHas('tingkat', function($query) {
                 $tingkatnya = @Auth::user()->kelas->tingkat->name;
                 // kalo tk b, assign aja akhirnya jadi tingkat 1
-                $tingkatnya = $tingkatnya==="B" ? 1 : $tingkatnya+1;
+                $tingkatnya = $tingkatnya==="B" ? 1 : ((int) $tingkatnya)+1;
                 
                 $query->where('name', '=', $tingkatnya ?? '-');
             });
