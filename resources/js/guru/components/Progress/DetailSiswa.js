@@ -271,7 +271,7 @@ function DetailSiswa({ idMapel, idSiswa }) {
                     <Col sm="12">
                         <Card>
                             <CardBody className="pr-0 pl-0">
-                                <TableScrollbar height="350px">
+                                <TableScrollbar height="350px" style={{ overflowX: "hidden !important" }}>
                                     <table className="table" id="user">
                                         <thead>
                                             <tr style={{ backgroundColor: "#FFFFFF" }}>
@@ -311,7 +311,8 @@ function DetailSiswa({ idMapel, idSiswa }) {
                                                         {idx+1}
                                                     </td>
                                                     <td width={"45%"} className="">
-                                                        {val['name'] ?? '-'}
+                                                        {val['name'] ?? '-'}<br/>
+                                                        <span className="text-primary" style={{ fontSize:"12px" }}>Level {val['level'] ?? '-'}</span>
                                                     </td>
                                                     <td width={"10%"} className="text-center">
                                                         {val['total_percobaan'] ?? 0}

@@ -11,7 +11,7 @@ class Simulasi extends Model
 {
     use HasFactory, SearchableTrait, SoftDeletes;
 
-    protected $appends = ['played', 'rata_rata_score', 'bintang_score', 'simulasi_url', 'slug_url', 'cover_url', 'last_score', 'first_score', 'next', 'previous', 'disabled', 'total_percobaan', '10_percobaan_terakhir_berhasil', '10_percobaan_terakhir_gagal'];
+    protected $appends = ['played', 'rata_rata_score', 'bintang_score', 'simulasi_url', 'slug_url', 'cover_url', 'last_score', 'first_score', 'next', 'previous', 'next_level', 'previous_level', 'disabled', 'total_percobaan', '10_percobaan_terakhir_berhasil', '10_percobaan_terakhir_gagal'];
 
     /**
      * The attributes that are mass assignable.
@@ -99,6 +99,50 @@ class Simulasi extends Model
     public function getCoverUrlAttribute()
     {
         return asset($this->icon);
+    }
+
+    public function getNextLevelAttribute(){
+        // get next simulasi
+        $nextSimulasi = $this
+            ->where('urutan', '=', $this->urutan)
+            ->where('level', '>', $this->level)
+            ->where('mata_pelajaran_id', $this->mata_pelajaran_id)
+            ->orderBy('urutan','asc')->first();
+
+        $returnNext = null;
+
+        if($nextSimulasi){
+            $returnNext = [
+                'id' => @$nextSimulasi->id,
+                'name' => @$nextSimulasi->name,
+                'url' => route('app.simulasi.detail', @$nextSimulasi->id),
+                'endpoint' => route('api.simulasi.detail', @$nextSimulasi->id),
+            ];
+        }
+        
+        return $returnNext;
+    }
+
+    public function getPreviousLevelAttribute(){
+        // get previous simulasi
+        $previousSimulasi =  $this
+            ->where('urutan', '=', $this->urutan)
+            ->where('level', '<', $this->level)
+            ->where('mata_pelajaran_id', $this->mata_pelajaran_id)
+            ->orderBy('urutan','desc')->first();
+        
+        $returnPrevious = null;
+
+        if($previousSimulasi){
+            $returnPrevious = [
+                'id' => @$previousSimulasi->id,
+                'name' => @$previousSimulasi->name,
+                'url' => route('app.simulasi.detail', @$previousSimulasi->id),
+                'endpoint' => route('api.simulasi.detail', @$previousSimulasi->id),
+            ];
+        }
+        
+        return $returnPrevious;
     }
 
     public function getNextAttribute(){

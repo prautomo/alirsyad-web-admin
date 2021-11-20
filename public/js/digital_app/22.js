@@ -452,7 +452,10 @@ function DetailSiswa(_ref) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_6__["Card"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_6__["CardBody"], {
     className: "pr-0 pl-0"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_table_scrollbar__WEBPACK_IMPORTED_MODULE_4___default.a, {
-    height: "350px"
+    height: "350px",
+    style: {
+      overflowX: "hidden !important"
+    }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("table", {
     className: "table",
     id: "user"
@@ -493,7 +496,7 @@ function DetailSiswa(_ref) {
     },
     className: "text-primary"
   }, "10 Percobaan terakhir")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tbody", null, !isLoadingSimulasi && (dataSimulasi === null || dataSimulasi === void 0 ? void 0 : dataSimulasi.map(function (val, idx) {
-    var _val$name3, _val$total_percobaan, _val$10_percobaan_ter, _val$10_percobaan_ter2, _val$rata_rata_score;
+    var _val$name3, _val$level, _val$total_percobaan, _val$10_percobaan_ter, _val$10_percobaan_ter2, _val$rata_rata_score;
 
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", {
       key: idx
@@ -503,7 +506,12 @@ function DetailSiswa(_ref) {
     }, idx + 1), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", {
       width: "45%",
       className: ""
-    }, (_val$name3 = val['name']) !== null && _val$name3 !== void 0 ? _val$name3 : '-'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", {
+    }, (_val$name3 = val['name']) !== null && _val$name3 !== void 0 ? _val$name3 : '-', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("span", {
+      className: "text-primary",
+      style: {
+        fontSize: "12px"
+      }
+    }, "Level ", (_val$level = val['level']) !== null && _val$level !== void 0 ? _val$level : '-')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", {
       width: "10%",
       className: "text-center"
     }, (_val$total_percobaan = val['total_percobaan']) !== null && _val$total_percobaan !== void 0 ? _val$total_percobaan : 0), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", {
