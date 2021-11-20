@@ -127,20 +127,24 @@ class DashboardController extends BaseController
 
         // manipulate field
         foreach($siswaLists as $siswa){
+            $historyModul = @$siswa->historyModul->where('modul.mata_pelajaran_id', $mapelId);
+            $historyVideo = @$siswa->historyVideo->where('video.mata_pelajaran_id', $mapelId);
+            $historySimulasi = @$siswa->historySimulasi->where('simulasi.mata_pelajaran_id', $mapelId);
+
             $details[] = [
                 'id' => @$siswa->id,
                 'name' => @$siswa->name,
                 'progress_modul' => [
                     'total' => @$totalModul ?? 0,
-                    'done' => @$siswa->historyModul ? count($siswa->historyModul) : 0,
+                    'done' => @$historyModul ? count($historyModul) : 0,
                 ],
                 'progress_video' => [
                     'total' => @$totalVideo ?? 0,
-                    'done' => @$siswa->historyVideo ? count($siswa->historyVideo) : 0,
+                    'done' => @$historyVideo ? count($historyVideo) : 0,
                 ],
                 'progress_simulasi' => [
                     'total' => @$totalSimulasi ?? 0,
-                    'done' => @$siswa->historySimulasi ? count($siswa->historySimulasi) : 0,
+                    'done' => @$historySimulasi ? count($historySimulasi) : 0,
                 ],
             ];
         }
