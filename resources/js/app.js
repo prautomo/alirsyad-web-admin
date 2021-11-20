@@ -24,3 +24,4 @@ import('./frontoffice/components/Nilai/List');
 import('./guru/components/Dashboard/DetailProgressBelajar');
 import('./guru/components/Progress/ListSiswa');
 import('./guru/components/Progress/DetailSiswa');
+import('./guru/components/Progress/DetailSimulasiPercobaan');

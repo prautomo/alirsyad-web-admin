@@ -167,9 +167,9 @@ function DetailSiswa({ idMapel, idSiswa }) {
                                                     </td>
                                                     <td width={"30%"} className="text-left">
                                                     {val['read'] ?
-                                                        <span class="badge badge-success">Selesai dipelajari</span>
+                                                        <span className="badge badge-success">Selesai dipelajari</span>
                                                     :
-                                                        <span class="badge badge-warning">Sedang dipelajari</span>
+                                                        <span className="badge badge-warning">Sedang dipelajari</span>
                                                     }
                                                     </td>
                                                 </tr>
@@ -311,8 +311,10 @@ function DetailSiswa({ idMapel, idSiswa }) {
                                                         {idx+1}
                                                     </td>
                                                     <td width={"45%"} className="">
-                                                        {val['name'] ?? '-'}<br/>
-                                                        <span className="text-primary" style={{ fontSize:"12px" }}>Level {val['level'] ?? '-'}</span>
+                                                        <a href={`/guru/simulasi-percobaan/${val['id']}/detail?q_siswa_id=${idSiswa}`} target="_blank">
+                                                            {val['name'] ?? '-'}<br/>
+                                                            <span className="text-primary" style={{ fontSize:"12px" }}>Level {val['level'] ?? '-'}</span>
+                                                        </a>
                                                     </td>
                                                     <td width={"10%"} className="text-center">
                                                         {val['total_percobaan'] ?? 0}

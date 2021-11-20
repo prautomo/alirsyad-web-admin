@@ -1,6 +1,6 @@
 @extends('layouts.guru')
 
-@section('title', 'Detail Siswa')
+@section('title', 'Progres Siswa')
 
 @section('header')
   @parent
