@@ -71,7 +71,8 @@ class Modul extends Model
 
     public function getReadAttribute()
     {
-        return is_object(HistoryModul::where(['siswa_id' => \Auth::user()->id, 'modul_id' => $this->id])->first());
+        $paramSiswaId = @\Request::get('q_siswa_id') ?? \Auth::user()->id;
+        return is_object(HistoryModul::where(['siswa_id' => $paramSiswaId, 'modul_id' => $this->id])->first());
     }
 
     public function getPDFUrlAttribute()

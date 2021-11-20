@@ -91,7 +91,9 @@ class Video extends Model
 
     public function getWatchedAttribute()
     {
-        return is_object(HistoryVideo::where(['siswa_id' => \Auth::user()->id, 'video_id' => $this->id])->first());
+        $paramSiswaId = @\Request::get('q_siswa_id') ?? @\Auth::user()->id;
+
+        return is_object(HistoryVideo::where(['siswa_id' => $paramSiswaId, 'video_id' => $this->id])->first());
     }
 
     public function getYoutubeIdAttribute()

@@ -5,9 +5,9 @@ import TableScrollbar from 'react-table-scrollbar';
 import useFetch from '../../../store/useFetch';
 import { TabContent, TabPane, Nav, NavItem, NavLink, Card, Button, CardTitle, CardText, Row, Col, CardBody } from 'reactstrap';
 import classnames from 'classnames';
-import './DetailProgressBelajar.css';
+import './ListSiswa.css';
 
-function DetailProgressBelajar({ }) {
+function ListSiswa({ }) {
 
     const [activeTab, setActiveTab] = useState(-1);
     const [isLoadingSiswa, setIsLoadingSiswa] = useState(false);
@@ -146,10 +146,10 @@ function DetailProgressBelajar({ }) {
     </>);
 }
 
-export default DetailProgressBelajar;
+export default ListSiswa;
 
-var container = document.getElementById("progress-detail-guru");
+var container = document.getElementById("progress-siswa");
 
 if (container) {
-    ReactDOM.render(<DetailProgressBelajar />, container);
+    ReactDOM.render(<ListSiswa />, container);
 }
