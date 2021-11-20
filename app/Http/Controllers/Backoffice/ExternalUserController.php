@@ -92,11 +92,11 @@ class ExternalUserController extends Controller{
             ]);
         })
         ->addColumn('mengajar', function($data) {
-            $mapels = $data->mataPelajarans->pluck('name');
+            $mapels = $data->mataPelajarans;
 
             $m = [];
-            foreach($mapels as $idx){
-                $m[] = $idx;
+            foreach($mapels as $value){
+                $m[] = $value->name . " (".@$value->tingkat->name." ".@$value->tingkat->jenjang->name.")";
             }
 
             return view("components.datatable.wrapText", [
