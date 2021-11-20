@@ -45,7 +45,7 @@
         <div class="form-group">
             <label class="form-control-label" for="input-mapel">Mata Pelajaran</label>
 
-            <select id="mapel" multiple name="mapel[]" class="form-control {{($errors->has('mapel') ? ' is-invalid' : '')}}">
+            <select id="chooseMapel" multiple="multiple" name="mapel[]" class="form-control {{($errors->has('mapel') ? ' is-invalid' : '')}}">
                 @foreach(@$mapelList as $idx => $mapel)
 
                 @if(in_array($idx, $mapelIDS))
@@ -131,6 +131,13 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $('#tingkat_id').select2();
+
+        @if(\Request::get('role') === 'GURU' || @$mapelIDS)
+            // $('#chooseMapel').select2({
+            //     theme: "classic",
+            //     width: 'resolve',
+            // });
+        @endif
     });
 </script>
 @endpush
@@ -141,4 +148,11 @@
 
 @push('plugin_css')
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<style>
+    li.select2-results__option strong.select2-results__group:hover {
+        background-color: #ddd;
+        cursor: pointer;
+    }
+</style>
 @endpush

@@ -56,6 +56,7 @@
                 allowClear: true,
                 width: '100%',
                 data: countries,
+                theme: "classic",
             });
 
             var vals = <?php echo json_encode($mapelIDS); ?>;
