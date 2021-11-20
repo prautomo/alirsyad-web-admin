@@ -104,7 +104,7 @@ function NilaiSimulasi() {
                                         <span className={"fa fa-star"+ ( simulasi?.rata_rata_score >= 33 ? " rating-checked" : "")}></span>
                                         <span className={"fa fa-star"+ ( simulasi?.rata_rata_score >= 66 ? " rating-checked" : "")}></span>
                                         <span className={"fa fa-star"+ ( simulasi?.rata_rata_score >= 99 ? " rating-checked" : "")}></span>
-                                        <span className="ml-3 pt-1">{simulasi?.rata_rata_score.toFixed(2) ?? 0}/100</span>
+                                        <span className="ml-3 pt-1">{simulasi?.rata_rata_score ?? 0}/100</span>
                                     </div>
                                     <h6 className="title-nilai-simulasi">
                                         {simulasi?.disabled ? 
