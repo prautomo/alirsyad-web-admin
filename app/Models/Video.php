@@ -29,6 +29,7 @@ class Video extends Model
         'semester',
         'urutan',
         'modul_id',
+        'visible',
     ];
 
     public static function search($request)
