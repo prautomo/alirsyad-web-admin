@@ -12,6 +12,7 @@ function VideoDetail({ idVideo, rel }) {
     
     const [videoId, setVideoId] = useState(idVideo);
     const [showNext, setShowNext] = useState(false);
+    const [disabledBtnDone, setDisabledBtnDone] = useState(false);
 
     const { data, isLoading, isError } = useFetch("/video/"+idVideo+"/json")
     const alert = useAlert()
@@ -48,6 +49,7 @@ function VideoDetail({ idVideo, rel }) {
 
         await axios.post(`/videos/${idVideo}/flag/json`, { payload })
         .then(res => {
+            setDisabledBtnDone(true);
             // if from modul
             if(rel){
                 console.log("dika close tab", rel)
@@ -74,7 +76,8 @@ function VideoDetail({ idVideo, rel }) {
                 }
             }, 3000)
         }).catch((e) => {
-            console.error("dika res post flag failed", e.response.data)
+            setDisabledBtnDone(false);
+            // console.error("dika res post flag failed", e.response.data)
             alert.show(e.response.data?.message, {
                 timeout: 3000, // custom timeout just for this one alert
                 type: 'error',
