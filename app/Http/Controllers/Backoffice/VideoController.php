@@ -210,7 +210,9 @@ class VideoController extends Controller{
         // default image
         $url = "images/placeholder.png";
         // temp request
-        $dataReq = $request->only(['name', 'video_url', 'icon', 'description', 'modul_id', 'mata_pelajaran_id', 'semester', 'urutan']);
+        $dataReq = $request->only(['name', 'video_url', 'icon', 'description', 'modul_id', 'mata_pelajaran_id', 'semester', 'urutan', 'visible']);
+
+        $dataReq['visible'] = @$request->visible=="ya" ? 1 : 0;
         
         $dataReq['uploader_id'] = \Auth::user()->id;
 
@@ -264,7 +266,9 @@ class VideoController extends Controller{
             ]);
         }
 
-        $dataReq = $request->only(['name', 'video_url', 'icon', 'description', 'modul_id', 'mata_pelajaran_id', 'semester', 'urutan']);
+        $dataReq = $request->only(['name', 'video_url', 'icon', 'description', 'modul_id', 'mata_pelajaran_id', 'semester', 'urutan', 'visible']);
+
+        $dataReq['visible'] = @$request->visible=="ya" ? 1 : 0;
 
         if ($request->hasFile('icon')) {
             $validated = $request->validate([

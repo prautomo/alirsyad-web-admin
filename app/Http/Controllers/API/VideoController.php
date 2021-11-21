@@ -30,6 +30,10 @@ class VideoController extends BaseController
                 if (!$user->is_pengunjung) $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
             }
         });
+        // visible for siswa/guest
+        if(@Auth::user()->role==="SISWA"){
+            $datas = $datas->where('visible', 1);
+        }
         // get list
         $datas = $datas->get();
         // sorting by urutan

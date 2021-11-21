@@ -44,6 +44,9 @@ class VideoController extends Controller
             });
         }
         
+        // visible for siswa/guest
+        $videos = $videos->where('visible', 1);
+
         $videos = $videos->where('mata_pelajaran_id', $idMapel);
         // sorting by urutan
         $videos = $videos->orderBy('urutan', 'asc');
