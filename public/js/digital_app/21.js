@@ -117,7 +117,7 @@ function VideoDetail(_ref) {
               if (nextUrl) {
                 setTimeout(function () {
                   window.location.href = nextUrl;
-                }, 3000);
+                }, 2000);
               }
 
             case 4:
@@ -219,7 +219,7 @@ function VideoDetail(_ref) {
     onClick: function onClick() {
       var _data$data6, _data$data6$next;
 
-      return finishModul(data === null || data === void 0 ? void 0 : (_data$data6 = data.data) === null || _data$data6 === void 0 ? void 0 : (_data$data6$next = _data$data6.next) === null || _data$data6$next === void 0 ? void 0 : _data$data6$next.slug_url);
+      return finishModul(data === null || data === void 0 ? void 0 : (_data$data6 = data.data) === null || _data$data6 === void 0 ? void 0 : (_data$data6$next = _data$data6.next) === null || _data$data6$next === void 0 ? void 0 : _data$data6$next.url);
     }
   }, "Video Berikutnya") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
     className: "mt-4 btn-main btn-small",
