@@ -57,6 +57,10 @@ class VideoController extends Controller{
                         $query2->where('name', 'LIKE', '%'.$search.'%');
                     });
 
+                    $query = $query->orWhereHas('mataPelajaran', function($query2) use ( $search ){
+                        $query2->where('name', 'LIKE', '%'.$search.'%');
+                    });
+
                     $query = $query->orWhereHas('modul', function($query2) use ( $search ){
                         $query2->where('name', 'LIKE', '%'.$search.'%');
                     });
@@ -82,9 +86,14 @@ class VideoController extends Controller{
                 return @$data->modul->mataPelajaran->tingkat ? $data->modul->mataPelajaran->tingkat->name : '-';
             })
             ->addColumn("mapel", function ($data) {
-                $mapel = @$data->modul->mataPelajaran->name ? $data->modul->mataPelajaran->name : 'none';
-                $mapelID = @$data->modul->mataPelajaran->id ? $data->modul->mataPelajaran->id : '';
-
+                if(@$data->modul->mataPelajaran){
+                    $mapel = @$data->modul->mataPelajaran->name ? $data->modul->mataPelajaran->name : 'none';
+                    $mapelID = @$data->modul->mataPelajaran->id ? $data->modul->mataPelajaran->id : '';
+                }else{
+                    $mapel = @$data->mataPelajaran->name ?? 'none';
+                    $mapelID = @$data->mataPelajaran->id ?? '';
+                }
+                
                 return view("components.datatable.link", [
                     "link" => route($this->routePath.".index")."?mata_pelajaran_id=".$mapelID,
                     "text" => $mapel,
@@ -187,15 +196,22 @@ class VideoController extends Controller{
         // validasi form
         $this->validate($request, [
             'name' => 'required|string',
-            'modul_id' => 'required',
             'video_url' => 'required|url',
             'semester' => 'required|numeric|min:1,max:2',
             'urutan' => 'required|numeric|min:0',
         ]);
+
+        if (@$request->modul_id==null) {
+            $validated = $request->validate([
+                'mata_pelajaran_id' => 'required',
+            ]);
+        }
+
         // default image
         $url = "images/placeholder.png";
         // temp request
-        $dataReq = $request->only(['name', 'video_url', 'icon', 'description', 'modul_id', 'semester', 'urutan']);
+        $dataReq = $request->only(['name', 'video_url', 'icon', 'description', 'modul_id', 'mata_pelajaran_id', 'semester', 'urutan']);
+        
         $dataReq['uploader_id'] = \Auth::user()->id;
 
         if ($request->hasFile('icon')) {
@@ -210,10 +226,12 @@ class VideoController extends Controller{
             $dataReq['icon'] = $url;
         }
 
-        // assign mapel id (temporary bad strucure)
-        // get mapel id from modul
-        $modul = Modul::find($request->modul_id);
-        $dataReq['mata_pelajaran_id'] = @$modul->mata_pelajaran_id;
+        if(@$request->mata_pelajaran_id==null){
+            // assign mapel id (temporary bad strucure)
+            // get mapel id from modul
+            $modul = Modul::find($request->modul_id);
+            $dataReq['mata_pelajaran_id'] = @$modul->mata_pelajaran_id;
+        }
 
         $data = Video::create($dataReq);
 
@@ -235,13 +253,18 @@ class VideoController extends Controller{
         // validasi form
         $this->validate($request, [
             'name' => 'required|string',
-            'modul_id' => 'required',
             'video_url' => 'required|url',
             'semester' => 'required|numeric|min:1,max:2',
             'urutan' => 'required|numeric|min:0',
         ]);
 
-        $dataReq = $request->only(['name', 'video_url', 'icon', 'description', 'modul_id', 'semester', 'urutan']);
+        if (@$request->modul_id==null) {
+            $validated = $request->validate([
+                'mata_pelajaran_id' => 'required',
+            ]);
+        }
+
+        $dataReq = $request->only(['name', 'video_url', 'icon', 'description', 'modul_id', 'mata_pelajaran_id', 'semester', 'urutan']);
 
         if ($request->hasFile('icon')) {
             $validated = $request->validate([
@@ -255,10 +278,12 @@ class VideoController extends Controller{
             $dataReq['icon'] = $url;
         }
 
-        // assign mapel id (temporary bad strucure)
-        // get mapel id from modul
-        $modul = Modul::find($request->modul_id);
-        $dataReq['mata_pelajaran_id'] = @$modul->mata_pelajaran_id;
+        if(@$request->mata_pelajaran_id==null){
+            // assign mapel id (temporary bad strucure)
+            // get mapel id from modul
+            $modul = Modul::find($request->modul_id);
+            $dataReq['mata_pelajaran_id'] = @$modul->mata_pelajaran_id;
+        }
 
         $dt = Video::findOrFail($id);
         $dt->update($dataReq);

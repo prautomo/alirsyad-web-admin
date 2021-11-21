@@ -35,6 +35,7 @@ class Modul extends Model
     {
         $data =  self::where("id", "!=", null);
         $data = self::appendSearchQuery($data, $request, [
+            "id" => "=",
             "name" => "LIKE",
             "description" => "LIKE",
             "mata_pelajaran_id" => "=",
