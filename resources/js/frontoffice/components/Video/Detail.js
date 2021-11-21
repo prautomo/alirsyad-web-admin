@@ -40,7 +40,7 @@ function VideoDetail({ idVideo, rel }) {
 
         // direct to next url
         if(nextUrl){
-            setTimeout(function(){ window.location.href = nextUrl; }, 3000);
+            setTimeout(function(){ window.location.href = nextUrl; }, 2000);
         }
     }
 
@@ -122,7 +122,7 @@ function VideoDetail({ idVideo, rel }) {
             {showNext &&
             <>
             {data?.data?.next?.url ?
-            <Button className="mt-4 btn-main btn-small" onClick={() => finishModul(data?.data?.next?.slug_url)}>Video Berikutnya</Button>
+            <Button className="mt-4 btn-main btn-small" onClick={() => finishModul(data?.data?.next?.url)}>Video Berikutnya</Button>
             :
             <Button className="mt-4 btn-main btn-small" 
                 disabled={data?.data?.read || disabledBtnDone}
