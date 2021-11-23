@@ -12,7 +12,7 @@ class Jenjang extends Model
     use HasFactory, SoftDeletes, SearchableTrait;
 
     protected $fillable = [
-        'name', 'description', 'status', 'logo', 'uploader_id', 
+        'name', 'description', 'status', 'logo', 'uploader_id', 'show_for_guest', 
     ];
 
     /**
@@ -55,6 +55,7 @@ class Jenjang extends Model
             "description" => "LIKE",
             "status" => "=",
             "uploader_id" => "=",
+            "show_for_guest" => "=",
         ]);
 
         return $data;

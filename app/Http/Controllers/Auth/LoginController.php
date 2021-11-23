@@ -62,7 +62,7 @@ class LoginController extends Controller
 
         $fieldType = filter_var($request->email, FILTER_VALIDATE_EMAIL) ? 'email' : 'nis';
 
-        if(auth()->attempt(array($fieldType => $input['email'], 'password' => $input['password'], 'role' => "SISWA"))){
+        if(auth()->attempt(array($fieldType => $input['email'], 'password' => $input['password'], 'role' => "SISWA", 'status' => 'AKTIF'))){
             return redirect()->route('app.home');
             // $user = Auth::user();
             // if($user->status === "AKTIF"){
@@ -73,7 +73,7 @@ class LoginController extends Controller
             // }
         }else{
             return redirect()->route('login')
-                ->with('error','Login gagal, NIS atau Password tidak sesuai.');
+                ->with('error','Login gagal, NIS atau Password tidak sesuai. Atau akun kamu belum aktif, silahkan hubungi pihak admin.');
         }
     }
 }
