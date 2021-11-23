@@ -10,7 +10,7 @@
 
             <select id="show_for_guest" name="show_for_guest" class="form-control {{($errors->has('show_for_guest') ? ' is-invalid' : '')}}">
                 @foreach($showForGuest as $val => $label)
-                <option value="{{ $val }}" {{ ((int)$val==(int) $data['show_for_guest']) ? ' selected' : '' }}>{{ $label }}</option>
+                <option value="{{ $val }}" {{ ((int)$val==(int) @$data['show_for_guest']) ? ' selected' : '' }}>{{ $label }}</option>
                 @endforeach
             </select>
 
