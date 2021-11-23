@@ -68,6 +68,11 @@ function VideoDetail(_ref) {
       showNext = _useState4[0],
       setShowNext = _useState4[1];
 
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(false),
+      _useState6 = _slicedToArray(_useState5, 2),
+      disabledBtnDone = _useState6[0],
+      setDisabledBtnDone = _useState6[1];
+
   var _useFetch = Object(_store_useFetch__WEBPACK_IMPORTED_MODULE_6__["default"])("/video/" + idVideo + "/json"),
       data = _useFetch.data,
       isLoading = _useFetch.isLoading,
@@ -112,7 +117,7 @@ function VideoDetail(_ref) {
               if (nextUrl) {
                 setTimeout(function () {
                   window.location.href = nextUrl;
-                }, 3000);
+                }, 2000);
               }
 
             case 4:
@@ -141,7 +146,8 @@ function VideoDetail(_ref) {
               return axios__WEBPACK_IMPORTED_MODULE_4___default.a.post("/videos/".concat(idVideo, "/flag/json"), {
                 payload: payload
               }).then(function (res) {
-                // if from modul
+                setDisabledBtnDone(true); // if from modul
+
                 if (rel) {
                   console.log("dika close tab", rel);
                   window.close();
@@ -166,7 +172,8 @@ function VideoDetail(_ref) {
               })["catch"](function (e) {
                 var _e$response$data;
 
-                console.error("dika res post flag failed", e.response.data);
+                setDisabledBtnDone(false); // console.error("dika res post flag failed", e.response.data)
+
                 alert.show((_e$response$data = e.response.data) === null || _e$response$data === void 0 ? void 0 : _e$response$data.message, {
                   timeout: 3000,
                   // custom timeout just for this one alert
@@ -212,7 +219,7 @@ function VideoDetail(_ref) {
     onClick: function onClick() {
       var _data$data6, _data$data6$next;
 
-      return finishModul(data === null || data === void 0 ? void 0 : (_data$data6 = data.data) === null || _data$data6 === void 0 ? void 0 : (_data$data6$next = _data$data6.next) === null || _data$data6$next === void 0 ? void 0 : _data$data6$next.slug_url);
+      return finishModul(data === null || data === void 0 ? void 0 : (_data$data6 = data.data) === null || _data$data6 === void 0 ? void 0 : (_data$data6$next = _data$data6.next) === null || _data$data6$next === void 0 ? void 0 : _data$data6$next.url);
     }
   }, "Video Berikutnya") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
     className: "mt-4 btn-main btn-small",

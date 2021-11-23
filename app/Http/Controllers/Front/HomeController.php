@@ -27,7 +27,7 @@ class HomeController extends Controller
         $sedangDipelajari = $sedangDipelajari->with('tingkat');
         // user is siswa and not visitor
         if(!@$user->is_pengunjung) $sedangDipelajari = $sedangDipelajari->whereHas('tingkat.kelas', function($query) use ($user) {
-            $query->where('id', $user->kelas_id);
+            $query->where('id', @$user->kelas_id);
         });
         // sort by active mapel
         $sedangDipelajari = $sedangDipelajari->limit(2)->get()->sortBy('name');
@@ -37,11 +37,11 @@ class HomeController extends Controller
         $yangAkanDatang = $yangAkanDatang->with('tingkat');
         // filter by jenjang yg sama & siswa is not visitor
         if(!@$user->is_pengunjung) $yangAkanDatang = $yangAkanDatang->whereHas('tingkat.jenjang', function($query) use ($user) {
-            $query->where('id', $user->kelas->tingkat->jenjang_id);
+            $query->where('id', @$user->kelas->tingkat->jenjang_id);
         });
         // filter by tingkat atasnya & siswa is not visitor
         if(!@$user->is_pengunjung) $yangAkanDatang = $yangAkanDatang->whereHas('tingkat', function($query) use ($user) {
-            $query->where('name', '>', $user->kelas->tingkat->name);
+            $query->where('name', '>', @$user->kelas->tingkat->name);
         });
         // get
         $yangAkanDatang = $yangAkanDatang->limit(2)->get();
@@ -49,22 +49,24 @@ class HomeController extends Controller
         // sorting by tingkat
         $yangAkanDatang = $yangAkanDatang->sortBy('tingkat.name');
 
-        // yg akan datang kalo tingkat akhir
-        // 1. get tingkat akhir
-        $getTingkatAkhir = Tingkat::where('jenjang_id', @Auth::user()->kelas->tingkat->jenjang_id)->orderBy('name', 'desc')->first();
-        // 2. cek tingkat akhir
-        if($getTingkatAkhir->name===@Auth::user()->kelas->tingkat->name){
-            $yangAkanDatangNextJenjang = MataPelajaran::search($request);
-            $yangAkanDatangNextJenjang = $yangAkanDatangNextJenjang->with('tingkat');
-            $yangAkanDatangNextJenjang = $yangAkanDatangNextJenjang->whereHas('tingkat', function($query) {
-                $tingkatnya = @Auth::user()->kelas->tingkat->name;
-                // kalo tk b, assign aja akhirnya jadi tingkat 1
-                $tingkatnya = $tingkatnya==="B" ? 1 : ((int) $tingkatnya)+1;
-                
-                $query->where('name', '=', $tingkatnya ?? '-');
-            });
-            $yangAkanDatangNextJenjang = $yangAkanDatangNextJenjang->get();
-            $yangAkanDatang = $yangAkanDatang->merge($yangAkanDatangNextJenjang)->slice(0,2);
+        // yg akan datang kalo tingkat akhir & bukan pengunjung
+        if(!@$user->is_pengunjung){
+            // 1. get tingkat akhir
+            $getTingkatAkhir = Tingkat::where('jenjang_id', @Auth::user()->kelas->tingkat->jenjang_id)->orderBy('name', 'desc')->first();
+            // 2. cek tingkat akhir
+            if($getTingkatAkhir->name===@Auth::user()->kelas->tingkat->name){
+                $yangAkanDatangNextJenjang = MataPelajaran::search($request);
+                $yangAkanDatangNextJenjang = $yangAkanDatangNextJenjang->with('tingkat');
+                $yangAkanDatangNextJenjang = $yangAkanDatangNextJenjang->whereHas('tingkat', function($query) {
+                    $tingkatnya = @Auth::user()->kelas->tingkat->name;
+                    // kalo tk b, assign aja akhirnya jadi tingkat 1
+                    $tingkatnya = $tingkatnya==="B" ? 1 : ((int) $tingkatnya)+1;
+                    
+                    $query->where('name', '=', $tingkatnya ?? '-');
+                });
+                $yangAkanDatangNextJenjang = $yangAkanDatangNextJenjang->get();
+                $yangAkanDatang = $yangAkanDatang->merge($yangAkanDatangNextJenjang)->slice(0,2);
+            }
         }
         //end
 

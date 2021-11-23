@@ -83,7 +83,7 @@ class JenjangController extends Controller{
         // get list jenjang
         $role = "GURU";
         $users = User::whereHas("roles", function($q) use ($role){ $q->where("key", $role); })->get();
-        $users = $users->whereNotIn('id', Jenjang::whereNotNull('uploader_id')->pluck('uploader_id'));
+        // $users = $users->whereNotIn('id', Jenjang::whereNotNull('uploader_id')->pluck('uploader_id'));
         
         $uploaderList = [];
         $uploaderList[""] = "Pilih guru uploader";
@@ -96,8 +96,12 @@ class JenjangController extends Controller{
     
     public function create(){
         $uploaderList = $this->getGuruUploader();
+        $showForGuest = [
+            1 => 'Ya',
+            0 => 'Tidak',
+        ];
 
-        return view($this->prefix.'.create', ['uploaderList' => $uploaderList]);
+        return view($this->prefix.'.create', ['uploaderList' => $uploaderList, 'showForGuest' => $showForGuest]);
     }
 
     public function store(Request $request){
@@ -106,7 +110,7 @@ class JenjangController extends Controller{
             'name' => 'required|string',
         ]);
 
-        $data = Jenjang::create($request->only(['description', 'name']));
+        $data = Jenjang::create($request->only(['description', 'name', 'uploader_id', 'show_for_guest']));
 
         return redirect()->route($this->routePath.'.index')->with(
             $this->success(__("Success to create Jenjang"), $data)
@@ -116,8 +120,12 @@ class JenjangController extends Controller{
     public function edit(Request $request, $id){
         $dt = Jenjang::findOrFail($id);
         $uploaderList = $this->getGuruUploader();
+        $showForGuest = [
+            1 => 'Ya',
+            0 => 'Tidak',
+        ];
 
-        return view($this->prefix.'.edit', ['data'=>$dt, 'uploaderList' => $uploaderList]);
+        return view($this->prefix.'.edit', ['data'=>$dt, 'uploaderList' => $uploaderList, 'showForGuest' => $showForGuest]);
     }
 
     public function update(Request $request, $id){
@@ -128,7 +136,7 @@ class JenjangController extends Controller{
         ]);
         
         $dt = Jenjang::findOrFail($id);
-        $dt->update($request->only(['description', 'name', 'uploader_id']));
+        $dt->update($request->only(['description', 'name', 'uploader_id', 'show_for_guest']));
 
         return redirect()->route($this->routePath.'.index')->with(
             $this->success(__("Success to update Jenjang"), $dt)
