@@ -23,6 +23,7 @@
               </a>
             </li>
 
+            @canany(['jenjang-list', 'tingkat-list', 'kelas-list', 'mata_pelajaran-list'])
             <li class="nav-item">
               <a class="nav-link{{ request()->is('backoffice/jenjangs*', 'backoffice/tingkats*', 'backoffice/kelas*', 'backoffice/mata_pelajarans*', 'backoffice/promos*') ? ' active' : ' collapsed' }}" href="#navbar-master" data-toggle="collapse" role="button" aria-expanded="{{ request()->is('backoffice/jenjangs*', 'backoffice/tingkats*', 'backoffice/kelas*', 'backoffice/mata_pelajarans*') ? 'true' : 'false' }}" aria-controls="navbar-master">
                 <i class="ni ni-ungroup text-dark-green"></i>
@@ -65,7 +66,9 @@
                 </ul>
               </div>
             </li>
+            @endcanany
 
+            @canany(['modul-list', 'video-list', 'simulasi-list', 'story-path-list'])
             <li class="nav-item">
               <a class="nav-link{{ request()->is('backoffice/simulasis*', 'backoffice/videos*', 'backoffice/moduls*', 'backoffice/story-paths*') ? ' active' : ' collapsed' }}" href="#navbar-konten" data-toggle="collapse" role="button" aria-expanded="{{ request()->is('backoffice/simulasis*', 'backoffice/videos*', 'backoffice/moduls*', 'backoffice/story-paths*') ? 'true' : 'false' }}" aria-controls="navbar-konten">
                 <i class="ni ni-atom text-dark-green"></i>
@@ -109,6 +112,7 @@
                 </ul>
               </div>
             </li>
+            @endcanany
 
             @canany(['user-list', 'external-user-list'])
             <li class="nav-item">
