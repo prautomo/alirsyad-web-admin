@@ -12,6 +12,7 @@ use App\Services\UploadService;
 use App\Models\Modul;
 use App\Models\MataPelajaran;
 use App\Models\Tingkat;
+use App\Models\UploaderMataPelajaran;
 use App\Helpers\ExtractArchive;
 use App\Helpers\GenerateSlug;
 
@@ -35,28 +36,37 @@ class ModulController extends Controller{
     public function datatable(Request $request){
         $query = Modul::query();
 
-        // relation with tingkat
+        // kalo bukan superadmin, tambahin filter by mapel na
+        if(!@\Auth::user()->hasRole('Superadmin')){
+            $mapelIdsUser = $this->getMapelIdsUser();
+            $query = $query->whereIn('mata_pelajaran_id', $mapelIdsUser);
+        }
+
         $query = $query->with('mataPelajaran.tingkat.jenjang');
 
+        $datas = $query->select('*');
+
         return datatables()
-            ->of($query)
+            ->of($datas)
             ->filter(function ($query) use ($request) {
 
                 $search = @$request->search['value'];
 
                 if($search){
-                    $query->where('name', 'LIKE', '%'.$search.'%');
-                    
-                    $query = $query->orWhereHas('mataPelajaran.tingkat.jenjang', function($query2) use ( $search ){
-                        $query2->where('name', 'LIKE', '%'.$search.'%');
-                    });
+                    $query->where(function($query) use ($search){
+                        $query->where('name', 'LIKE', '%'.$search.'%');
+                        
+                        $query = $query->orWhereHas('mataPelajaran.tingkat.jenjang', function($query2) use ( $search ){
+                            $query2->where('name', 'LIKE', '%'.$search.'%');
+                        });
 
-                    $query = $query->orWhereHas('mataPelajaran.tingkat', function($query2) use ( $search ){
-                        $query2->where('name', 'LIKE', '%'.$search.'%');
-                    });
+                        $query = $query->orWhereHas('mataPelajaran.tingkat', function($query2) use ( $search ){
+                            $query2->where('name', 'LIKE', '%'.$search.'%');
+                        });
 
-                    $query = $query->orWhereHas('mataPelajaran', function($query2) use ( $search ){
-                        $query2->where('name', 'LIKE', '%'.$search.'%');
+                        $query = $query->orWhereHas('mataPelajaran', function($query2) use ( $search ){
+                            $query2->where('name', 'LIKE', '%'.$search.'%');
+                        });
                     });
                 }
 
@@ -94,6 +104,9 @@ class ModulController extends Controller{
 
                 return $createdAt->format("d-m-Y H:i:s");
             })
+            ->addColumn("created_by", function ($data) {
+                return @$data->uploader->name ?? "-";
+            })
             ->addColumn("action", function ($data) {
                 return view("components.datatable.actions", [
                     "name" => $data->name,
@@ -109,6 +122,14 @@ class ModulController extends Controller{
             ->toJson();
     }
 
+    private function getMapelIdsUser(){
+        $userId = @\Auth::user()->id;
+        $mapelIdsUser = UploaderMataPelajaran::where('guru_uploader_id', $userId)->pluck('mata_pelajaran_id')->all();
+        $mapelIdsUser = count($mapelIdsUser) > 0 ? $mapelIdsUser : [];
+        
+        return $mapelIdsUser;
+    }
+
     public function index(Request $request){
         if ($request->ajax()) {
             return $this->datatable($request);
@@ -122,9 +143,16 @@ class ModulController extends Controller{
      */
     private function getMataPelajaran(){
         // get list mapel
-        $mapels = MataPelajaran::with('tingkat')->get();
+        $mapels = MataPelajaran::with('tingkat');
 
-        // filter kalo rolenya guru uploader (khusus mapel di tingkatnya aja)
+        // filter kalo rolenya guru uploader (khusus mapel aja)
+        // kalo bukan superadmin, tambahin filter by mapel na
+        if(!@\Auth::user()->hasRole('Superadmin')){
+            $mapelIdsUser = $this->getMapelIdsUser();
+            $mapels = $mapels->whereIn('id', $mapelIdsUser);
+        }
+
+        $mapels = $mapels->get();
 
         $mapelList = [];
         $mapelList[""] = "Pilih mata pelajaran";

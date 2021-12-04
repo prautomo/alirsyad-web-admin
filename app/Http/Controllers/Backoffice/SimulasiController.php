@@ -12,6 +12,7 @@ use App\Services\UploadService;
 use App\Models\MataPelajaran;
 use App\Models\Modul;
 use App\Models\Simulasi;
+use App\Models\UploaderMataPelajaran;
 use App\Helpers\GenerateSlug;
 
 class SimulasiController extends Controller{
@@ -37,29 +38,39 @@ class SimulasiController extends Controller{
         // relation with tingkat
         $query = $query->with('modul.mataPelajaran.tingkat.jenjang');
 
+        $datas = $query->select('*');
+
         return datatables()
-            ->of($query)
+            ->of($datas)
             ->filter(function ($query) use ($request) {
+
+                // kalo bukan superadmin, tambahin filter by mapel na
+                if(!@\Auth::user()->hasRole('Superadmin')){
+                    $mapelIdsUser = $this->getMapelIdsUser();
+                    $query = $query->whereIn('mata_pelajaran_id', $mapelIdsUser);
+                }
 
                 $search = @$request->search['value'];
 
                 if($search){
-                    $query->where('name', 'LIKE', '%'.$search.'%');
+                    $query->where(function($query) use ($search){
+                        $query->where('name', 'LIKE', '%'.$search.'%');
                     
-                    $query = $query->orWhereHas('modul.mataPelajaran.tingkat.jenjang', function($query2) use ( $search ){
-                        $query2->where('name', 'LIKE', '%'.$search.'%');
-                    });
+                        $query = $query->orWhereHas('modul.mataPelajaran.tingkat.jenjang', function($query2) use ( $search ){
+                            $query2->where('name', 'LIKE', '%'.$search.'%');
+                        });
 
-                    $query = $query->orWhereHas('modul.mataPelajaran.tingkat', function($query2) use ( $search ){
-                        $query2->where('name', 'LIKE', '%'.$search.'%');
-                    });
+                        $query = $query->orWhereHas('modul.mataPelajaran.tingkat', function($query2) use ( $search ){
+                            $query2->where('name', 'LIKE', '%'.$search.'%');
+                        });
 
-                    $query = $query->orWhereHas('modul.mataPelajaran', function($query2) use ( $search ){
-                        $query2->where('name', 'LIKE', '%'.$search.'%');
-                    });
+                        $query = $query->orWhereHas('modul.mataPelajaran', function($query2) use ( $search ){
+                            $query2->where('name', 'LIKE', '%'.$search.'%');
+                        });
 
-                    $query = $query->orWhereHas('modul', function($query2) use ( $search ){
-                        $query2->where('name', 'LIKE', '%'.$search.'%');
+                        $query = $query->orWhereHas('modul', function($query2) use ( $search ){
+                            $query2->where('name', 'LIKE', '%'.$search.'%');
+                        });
                     });
                 }
 
@@ -101,6 +112,9 @@ class SimulasiController extends Controller{
                     "text" => $modul,
                 ]);
             })
+            ->addColumn("created_by", function ($data) {
+                return @$data->uploader->name ?? "-";
+            })
             ->addColumn("created_at", function ($data) {
                 $createdAt = new Carbon($data->created_at);
 
@@ -121,6 +135,14 @@ class SimulasiController extends Controller{
                 $query->orderBy('created_at', 'desc');
             })
             ->toJson();
+    }
+
+    private function getMapelIdsUser(){
+        $userId = @\Auth::user()->id;
+        $mapelIdsUser = UploaderMataPelajaran::where('guru_uploader_id', $userId)->pluck('mata_pelajaran_id')->all();
+        $mapelIdsUser = count($mapelIdsUser) > 0 ? $mapelIdsUser : [];
+        
+        return $mapelIdsUser;
     }
 
     public function index(Request $request){
@@ -155,7 +177,16 @@ class SimulasiController extends Controller{
      */
     private function getModul(){
         // get list modul
-        $moduls = Modul::with('mataPelajaran.tingkat')->get();
+        $moduls = Modul::with('mataPelajaran.tingkat');
+
+        // filter kalo rolenya guru uploader (khusus mapel aja)
+        // kalo bukan superadmin, tambahin filter by mapel na
+        if(!@\Auth::user()->hasRole('Superadmin')){
+            $mapelIdsUser = $this->getMapelIdsUser();
+            $moduls = $moduls->whereIn('mata_pelajaran_id', $mapelIdsUser);
+        }
+
+        $moduls = $moduls->get();
 
         $modulList = [];
         $modulList[""] = "Pilih modul";

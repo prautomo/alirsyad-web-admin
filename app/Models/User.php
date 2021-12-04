@@ -66,8 +66,16 @@ class User extends Authenticatable
         return $this->hasOne("App\Models\Jenjang", "uploader_id", "id")->withTrashed();
     }
 
-    public function mataPelajaran()
+    // public function mataPelajaran()
+    // {
+    //     return $this->belongsTo("App\Models\MataPelajaran",  "mata_pelajaran_id", "id")->withTrashed();
+    // }
+
+    /**
+     * The mapels that belong to the gurus.
+     */
+    public function mataPelajarans()
     {
-        return $this->belongsTo("App\Models\MataPelajaran",  "mata_pelajaran_id", "id")->withTrashed();
+        return $this->belongsToMany('App\Models\MataPelajaran', 'uploader_mata_pelajarans', 'guru_uploader_id', 'mata_pelajaran_id');
     }
 }
