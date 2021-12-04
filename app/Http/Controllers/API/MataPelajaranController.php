@@ -31,7 +31,7 @@ class MataPelajaranController extends BaseController
         $datas = MataPelajaran::search($request);
         $datas = $datas->with('tingkat.jenjang');
         // sort by active mapel
-        $datas = $datas->get();
+        $aktif = $aktif->get()->sortBy('name');
         // ->sortBy('disabled')->sortBy('kelas.tingkat_id')->sortBy('kelas_id');
 
         return $this->sendResponse(MataPelajaranResource::collection($datas), 'Mata Pelajaran retrieved successfully.');
@@ -50,7 +50,7 @@ class MataPelajaranController extends BaseController
             $query->where('id', @Auth::user()->kelas_id);
         });
         // sort by active mapel
-        $datas = $datas->get();
+        $aktif = $aktif->get()->sortBy('name');
         
         return $this->sendResponse(MataPelajaranResource::collection($datas), 'Mata Pelajaran retrieved successfully.');
     }
