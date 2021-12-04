@@ -257,9 +257,11 @@ class UserController extends Controller{
             if(@$request->mapel && count($request->mapel) > 0){
                 $user->mataPelajarans()->sync($request->mapel);
             }
+
+            $roleRedirect = "Guru";
         }
     
-        return redirect()->route($this->routePath.'.index')
+        return redirect()->route($this->routePath.'.index', ['role'=>@$roleRedirect])
                         ->with('success','User created successfully');
     }
     
