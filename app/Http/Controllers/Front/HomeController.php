@@ -30,7 +30,12 @@ class HomeController extends Controller
             $query->where('id', @$user->kelas_id);
         });
         // sort by active mapel
-        $sedangDipelajari = $sedangDipelajari->limit(2)->get()->sortBy('name');
+        $sedangDipelajari = $sedangDipelajari->limit(2)->get();
+        // // sorting by name
+        // $sedangDipelajari = $sedangDipelajari->sortBy('name');
+
+        // sorting by created at descending
+        $sedangDipelajari = $sedangDipelajari->sortByDesc('created_at');
 
         // upcoming mapel
         $yangAkanDatang = MataPelajaran::search($request);
@@ -46,8 +51,10 @@ class HomeController extends Controller
         // get
         $yangAkanDatang = $yangAkanDatang->limit(2)->get();
 
-        // sorting by tingkat
-        $yangAkanDatang = $yangAkanDatang->sortBy('tingkat.name');
+        // // sorting by tingkat
+        // $yangAkanDatang = $yangAkanDatang->sortBy('tingkat.name');
+        // sorting by created at descending
+        $yangAkanDatang = $yangAkanDatang->sortByDesc('created_at');
 
         // yg akan datang kalo tingkat akhir & bukan pengunjung
         if(!@$user->is_pengunjung){
@@ -99,7 +106,11 @@ class HomeController extends Controller
             $tidakAktif = $tidakAktif->whereNotIn('id', $selectedMapel);   
         }
         // sort by active mapel
-        $tidakAktif = $tidakAktif->limit(2)->get()->sortBy('name');
+        $tidakAktif = $tidakAktif->limit(2)->get();
+        // // sorting by name
+        // $tidakAktif = $tidakAktif->sortBy('name')
+        // sorting by created at descending
+        $tidakAktif = $tidakAktif->sortByDesc('created_at');
 
         $parseData = [
             'sedangDipelajari' => $sedangDipelajari,
