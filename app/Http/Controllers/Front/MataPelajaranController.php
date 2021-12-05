@@ -36,6 +36,8 @@ class MataPelajaranController extends Controller
         });
         // sort by active mapel
         $sedangDipelajari = $sedangDipelajari->get();
+        // sort by created at descending
+        $sedangDipelajari = $sedangDipelajari->sortByDesc('created_at');
 
         // mapel yang akan datang
         $yangAkanDatang = $this->mapelByTingkat($request, '>');
@@ -59,10 +61,15 @@ class MataPelajaranController extends Controller
                 $yangAkanDatang = $yangAkanDatang->merge($yangAkanDatangNextJenjang)->all();
             }
         }
+        // sort by created at descending
+        $yangAkanDatang = collect($yangAkanDatang)->sortByDesc('created_at');
         //end
 
         // mapel sebelumnya
         $sebelumnya = $this->mapelByTingkat($request, '<');
+        $sebelumnya = $sebelumnya->sortBy('tingkat');
+        // sort by created at descending
+        // $sebelumnya = $sebelumnya->sortByDesc('created_at');
 
         /**
          * Mapel Aktif buat Pengunjung
@@ -73,8 +80,11 @@ class MataPelajaranController extends Controller
         $aktif = $aktif->whereHas('guests', function($query) use ($user) {
             $query->where('guest_id', $user->id);
         });
-        // sort by active mapel
-        $aktif = $aktif->get()->sortBy('name');
+        $aktif = $aktif->get();
+        // // sort by active mapel
+        // $aktif = $aktif->sortBy('name');
+        // sort by created at descending
+        $aktif = $aktif->sortByDesc('created_at');
         // kalo user belum aktif (kosongin aja list mapelna)
         if($user->status!=="AKTIF") $aktif = [];
 
@@ -94,6 +104,8 @@ class MataPelajaranController extends Controller
         }
         // sort by active mapel
         $tidakAktif = $tidakAktif->get()->sortBy('tingkat');
+        // sort by created at descending
+        $tidakAktif = $tidakAktif->sortByDesc('created_at');
 
         $parseData = [
             'sedangDipelajari' => $sedangDipelajari,
