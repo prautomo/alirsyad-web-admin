@@ -46,7 +46,7 @@
                             @if(@\Auth::user()->hasRole('Guru Uploader'))
                             <div class="form-group">
                                 <label>NIP</label>
-                                <input type="text" disabled value="{{ @$user_data->nis }}" class="form-control" />
+                                <input type="text" disabled value="{{ @$user_data->username }}" class="form-control" />
                             </div>
                             @endif
                             <div class="form-group">
