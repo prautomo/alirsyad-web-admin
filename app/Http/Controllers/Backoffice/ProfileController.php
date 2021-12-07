@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Guru;
+namespace App\Http\Controllers\Backoffice;
 
 use App\Http\Controllers\Controller;
 use App\Models\ExternalUser;
@@ -11,12 +11,12 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
-class UserController extends Controller
+class ProfileController extends Controller
 {
 
     public function profile()
     {
-        return view("pages.guru.user.profile", [
+        return view("pages.backoffice.profile.profile", [
             "user_data" => Auth::user()
         ]);
     }
@@ -25,7 +25,7 @@ class UserController extends Controller
     {
         $userDetail = ExternalUser::where("id", Auth::user()->id)->first();
         // dd(Auth::user());
-        return view("pages.guru.user.edit_password", [
+        return view("pages.backoffice.profile.edit_password", [
             "user_detail" =>  $userDetail
         ]);
     }
@@ -49,7 +49,7 @@ class UserController extends Controller
         ]);
         Auth::user()->update(["password" => Hash::make($validatedData['password'])]);
 
-        return redirect()->route('guru::akun-saya')->with(
+        return redirect()->route('backoffice::akun-saya')->with(
             $this->success(__("Password Berhasil Di Ubah"), $validatedData)
         );
     }

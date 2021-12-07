@@ -39,6 +39,7 @@ class ExternalUser extends Authenticatable implements MustVerifyEmail
         'kelas_id',
         'is_pengunjung',
         'jenjang_id',
+        'is_uploader',
     ];
 
     /**
@@ -73,6 +74,7 @@ class ExternalUser extends Authenticatable implements MustVerifyEmail
             "role" => "=",
             "kelas_id" => "=",
             "jenjang_id" => "=",
+            "is_uploader" => "=",
         ]);
 
         return $data;
