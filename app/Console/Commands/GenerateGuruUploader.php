@@ -48,7 +48,7 @@ class GenerateGuruUploader extends Command
 
         // loop guru biasa
         foreach($guruBiasas as $guruBiasa){
-            $checkExistUser = User::where('username', $guruBiasa->nis)->first();
+            $checkExistUser = User::where('username', $guruBiasa->nis)->orWhere('email', $guruBiasa->email)->first();
             if(!$checkExistUser){
                 // insert ke table user jadi guru uploader
                 $inputUploader['name'] = $guruBiasa->name;
