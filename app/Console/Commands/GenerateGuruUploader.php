@@ -44,7 +44,7 @@ class GenerateGuruUploader extends Command
     {
         echo ("================Generate Guru Uploader===============\n");
 
-        $guruBiasas = ExternalUser::where('role', 'GURU')->get();
+        $guruBiasas = ExternalUser::with('mataPelajarans')->where('role', 'GURU')->get();
 
         // loop guru biasa
         foreach($guruBiasas as $guruBiasa){
@@ -58,6 +58,12 @@ class GenerateGuruUploader extends Command
     
                 $guruUploader = User::create($inputUploader);
                 $guruUploader->assignRole("Guru Uploader");
+
+                // assign mapel na
+                $mapels = @$guruBiasa->mataPelajarans;
+                if(@$mapels && count($mapels) > 0){
+                    $guruUploader->mataPelajarans()->sync($mapels);
+                }
             }
         }
         
