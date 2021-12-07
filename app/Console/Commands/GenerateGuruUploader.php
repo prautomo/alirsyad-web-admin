@@ -65,6 +65,8 @@ class GenerateGuruUploader extends Command
                     $guruUploader->mataPelajarans()->sync($mapels);
                 }
             }
+            $guruBiasa->is_uploader = 1;
+            $guruBiasa->save();
         }
         
         echo ("================Done===============\n");
