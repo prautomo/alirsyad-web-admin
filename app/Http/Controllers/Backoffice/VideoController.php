@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use App\Services\UploadService;
 use App\Models\Modul;
+use App\Models\UploaderMataPelajaran;
 use App\Models\MataPelajaran;
 use App\Models\Video;
 
@@ -33,36 +34,46 @@ class VideoController extends Controller{
     public function datatable(Request $request){
         $query = Video::query();
 
+        // kalo bukan superadmin, tambahin filter by mapel na
+        if(!@\Auth::user()->hasRole('Superadmin')){
+            $mapelIdsUser = $this->getMapelIdsUser();
+            $query = $query->whereIn('mata_pelajaran_id', $mapelIdsUser);
+        }
+
         // relation with tingkat
         $query = $query->with('modul.mataPelajaran.tingkat.jenjang');
 
+        $datas = $query->select('*');
+
         return datatables()
-            ->of($query)
+            ->of($datas)
             ->filter(function ($query) use ($request) {
 
                 $search = @$request->search['value'];
 
                 if($search){
-                    $query->where('name', 'LIKE', '%'.$search.'%');
-                    
-                    $query = $query->orWhereHas('modul.mataPelajaran.tingkat.jenjang', function($query2) use ( $search ){
-                        $query2->where('name', 'LIKE', '%'.$search.'%');
-                    });
+                    $query->where(function($query) use ($search){
+                        $query->where('name', 'LIKE', '%'.$search.'%');
+                        
+                        $query = $query->orWhereHas('modul.mataPelajaran.tingkat.jenjang', function($query2) use ( $search ){
+                            $query2->where('name', 'LIKE', '%'.$search.'%');
+                        });
 
-                    $query = $query->orWhereHas('modul.mataPelajaran.tingkat', function($query2) use ( $search ){
-                        $query2->where('name', 'LIKE', '%'.$search.'%');
-                    });
+                        $query = $query->orWhereHas('modul.mataPelajaran.tingkat', function($query2) use ( $search ){
+                            $query2->where('name', 'LIKE', '%'.$search.'%');
+                        });
 
-                    $query = $query->orWhereHas('modul.mataPelajaran', function($query2) use ( $search ){
-                        $query2->where('name', 'LIKE', '%'.$search.'%');
-                    });
+                        $query = $query->orWhereHas('modul.mataPelajaran', function($query2) use ( $search ){
+                            $query2->where('name', 'LIKE', '%'.$search.'%');
+                        });
 
-                    $query = $query->orWhereHas('mataPelajaran', function($query2) use ( $search ){
-                        $query2->where('name', 'LIKE', '%'.$search.'%');
-                    });
+                        $query = $query->orWhereHas('mataPelajaran', function($query2) use ( $search ){
+                            $query2->where('name', 'LIKE', '%'.$search.'%');
+                        });
 
-                    $query = $query->orWhereHas('modul', function($query2) use ( $search ){
-                        $query2->where('name', 'LIKE', '%'.$search.'%');
+                        $query = $query->orWhereHas('modul', function($query2) use ( $search ){
+                            $query2->where('name', 'LIKE', '%'.$search.'%');
+                        });
                     });
                 }
 
@@ -113,6 +124,9 @@ class VideoController extends Controller{
 
                 return $createdAt->format("d-m-Y H:i:s");
             })
+            ->addColumn("created_by", function ($data) {
+                return @$data->uploader->name ?? "-";
+            })
             ->addColumn("action", function ($data) {
                 $relModul = @$data->modul->slug ? "?rel=modul/".@$data->modul->slug.".html" : "";
                 return view("components.datatable.actions", [
@@ -130,6 +144,14 @@ class VideoController extends Controller{
             ->toJson();
     }
 
+    private function getMapelIdsUser(){
+        $userId = @\Auth::user()->id;
+        $mapelIdsUser = UploaderMataPelajaran::where('guru_uploader_id', $userId)->pluck('mata_pelajaran_id')->all();
+        $mapelIdsUser = count($mapelIdsUser) > 0 ? $mapelIdsUser : [];
+        
+        return $mapelIdsUser;
+    }
+
     public function index(Request $request){
         if ($request->ajax()) {
             return $this->datatable($request);
@@ -143,9 +165,16 @@ class VideoController extends Controller{
      */
     private function getMataPelajaran(){
         // get list mapel
-        $mapels = MataPelajaran::with('tingkat')->get();
+        $mapels = MataPelajaran::with('tingkat');
 
-        // filter kalo rolenya guru uploader (khusus mapel di tingkatnya aja)
+        // filter kalo rolenya guru uploader (khusus mapel aja)
+        // kalo bukan superadmin, tambahin filter by mapel na
+        if(!@\Auth::user()->hasRole('Superadmin')){
+            $mapelIdsUser = $this->getMapelIdsUser();
+            $mapels = $mapels->whereIn('id', $mapelIdsUser);
+        }
+
+        $mapels = $mapels->get();
 
         $mapelList = [];
         $mapelList[""] = "Pilih mata pelajaran";
@@ -162,7 +191,16 @@ class VideoController extends Controller{
      */
     private function getModul(){
         // get list modul
-        $moduls = Modul::with('mataPelajaran.tingkat')->get();
+        $moduls = Modul::with('mataPelajaran.tingkat');
+
+        // filter kalo rolenya guru uploader (khusus mapel aja)
+        // kalo bukan superadmin, tambahin filter by mapel na
+        if(!@\Auth::user()->hasRole('Superadmin')){
+            $mapelIdsUser = $this->getMapelIdsUser();
+            $moduls = $moduls->whereIn('mata_pelajaran_id', $mapelIdsUser);
+        }
+
+        $moduls = $moduls->get();
 
         $modulList = [];
         $modulList[""] = "Pilih modul";

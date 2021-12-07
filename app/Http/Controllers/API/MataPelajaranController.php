@@ -32,6 +32,10 @@ class MataPelajaranController extends BaseController
         $datas = $datas->with('tingkat.jenjang');
         // sort by active mapel
         $datas = $datas->get();
+        // // sort by name
+        // $datas = $datas->sortBy('name');
+        // sort by created at descending
+        $datas = $datas->sortByDesc('created_at');
         // ->sortBy('disabled')->sortBy('kelas.tingkat_id')->sortBy('kelas_id');
 
         return $this->sendResponse(MataPelajaranResource::collection($datas), 'Mata Pelajaran retrieved successfully.');
@@ -51,6 +55,10 @@ class MataPelajaranController extends BaseController
         });
         // sort by active mapel
         $datas = $datas->get();
+        // // sort by name
+        // $aktif = $aktif->sortBy('name');
+        // sort by created at descending
+        $datas = $datas->sortByDesc('created_at');
         
         return $this->sendResponse(MataPelajaranResource::collection($datas), 'Mata Pelajaran retrieved successfully.');
     }
@@ -98,6 +106,8 @@ class MataPelajaranController extends BaseController
                 $datas = $datas->merge($yangAkanDatangNextJenjang)->all();
             }
         }
+        // sort by created at descending
+        $datas = collect($datas)->sortByDesc('created_at');
         //end
 
         return $this->sendResponse(MataPelajaranResource::collection($datas), 'Mata Pelajaran retrieved successfully.');
@@ -125,7 +135,9 @@ class MataPelajaranController extends BaseController
             if(!$user->is_pengunjung) $query->where('name', '<', @Auth::user()->kelas->tingkat->name);
         });
         // get
-        $datas = $user->is_pengunjung ? [] : $datas->get();
+        $datas = $user->is_pengunjung ? collect([]) : $datas->get();
+        // sort by tingkat
+        $datas = $datas->sortBy('tingkat');
 
         return $this->sendResponse(MataPelajaranResource::collection($datas), 'Mata Pelajaran retrieved successfully.');
     }
@@ -147,7 +159,11 @@ class MataPelajaranController extends BaseController
             $query->where('guest_id', $user->id);
         });
         // sort by active mapel
-        $aktif = $aktif->get()->sortBy('name');
+        $aktif = $aktif->get();
+        // // sort by active mapel
+        // $aktif = $aktif->sortBy('name');
+        // sort by created at descending
+        $aktif = $aktif->sortByDesc('created_at');
 
         // kalo user belum aktif (kosongin aja list mapelna)
         if($user->status!=="AKTIF") $aktif = [];
@@ -177,6 +193,8 @@ class MataPelajaranController extends BaseController
         }
         // sort by active mapel
         $datas = $tidakAktif->get()->sortBy('tingkat');
+        // sort by created at descending
+        $datas = $datas->sortByDesc('created_at');
    
         return $this->sendResponse(MataPelajaranResource::collection($datas), 'Mata Pelajaran retrieved successfully.');
     }

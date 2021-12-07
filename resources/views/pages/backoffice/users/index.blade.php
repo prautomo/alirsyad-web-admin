@@ -41,9 +41,13 @@
                     <th data-data="name" data-orderable="true" data-searchable="true">@lang("Name")</th>
                     <th data-data="roles" data-orderable="false" data-searchable="false">@lang("Roles")</th>
                     <!-- <th data-data="uploader">@lang("Uploader")</th> -->
-                    <!-- <th data-data="mapel">@lang("Guru Mata Pelajaran")</th> -->
-                    <th data-data="created_at" data-searchable="false">@lang("Created At")</th>
+                    @if(\Request::get('role') === 'Guru')
+                    <th data-data="mapel">@lang("Mata Pelajaran")</th>
+                    @endif
+                    <!-- <th data-data="created_at" data-searchable="false">@lang("Created At")</th> -->\
+                    @if(\Request::get('role') === 'Superadmin')
                     <th data-data="action" data-orderable="false" data-searchable="false">@lang("Action")</th>
+                    @endif
                 </x-datatable>
             </div>
             <!-- endtable -->

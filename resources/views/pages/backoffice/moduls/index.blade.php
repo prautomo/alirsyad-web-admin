@@ -44,6 +44,7 @@
                 <th data-data="jenjang">@lang("Jenjang")</th>
                 <th data-data="tingkat">@lang("Tingkat")</th>
                 <th data-data="semester">@lang("Semester")</th>
+                <th data-data="created_by">@lang("Created By")</th>
                 <!-- <th data-data="created_at">@lang("Created At")</th> -->
                 <th data-data="action" data-orderable="false" data-searchable="false">@lang("Action")</th>
             </x-datatable>

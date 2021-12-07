@@ -23,11 +23,15 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
 ->group(function() {
     Route::get('/', 'DashboardController@index')->name('dashboard');
     Route::get('dashboard', 'DashboardController@index')->name('dashboard');
+
+    Route::get('/profile', "ProfileController@profile")->name('akun-saya');
+    Route::get('/profile/password-edit', "ProfileController@passwordEdit")->name('akun-saya.password-edit');
+    Route::post('/profile/password-edit', "ProfileController@passwordUpdate")->name('akun-saya.password-update');
+
     Route::resource('jenjangs', 'JenjangController');
     Route::resource('tingkats', 'TingkatController');
     Route::get('kelas/listJson', 'KelasController@listJson')->name('kelas.listJson');
     Route::resource('kelas', 'KelasController');
-    
 
     Route::resource('moduls', 'ModulController');
     Route::resource('videos', 'VideoController');
