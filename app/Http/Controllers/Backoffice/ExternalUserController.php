@@ -9,6 +9,7 @@ namespace App\Http\Controllers\Backoffice;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Models\ExternalUser;
 use App\Models\MataPelajaran;
 use App\Models\Jenjang;
@@ -217,9 +218,9 @@ class ExternalUserController extends Controller{
     {
         $this->validate($request, [
             'username' => 'required|unique:external_users,username',
-            'nis' => 'required|unique:external_users,nis',
+            'nis' => 'required|unique:external_users,nis|unique:users,username',
             'name' => 'required',
-            'email' => 'required|email|unique:external_users,email',
+            'email' => 'required|email|unique:external_users,email|unique:users,email',
             // 'phone' => 'required|unique:external_users,phone',
             'password' => 'required',
         ]);
@@ -251,8 +252,21 @@ class ExternalUserController extends Controller{
         $user = ExternalUser::create($input);
 
         if(@$request->role === "GURU"){
+
+            // insert ke table user jadi guru uploader
+            $inputUploader['name'] = $input['name'];
+            $inputUploader['username'] = $input['nis'];
+            $inputUploader['email'] = $input['email'];
+            $inputUploader['password'] = $input['password'];
+    
+            $guruUploader = User::create($inputUploader);
+            $guruUploader->assignRole("Guru Uploader");
+
             if(@$request->mapel && count($request->mapel) > 0){
+                // guru
                 $user->mataPelajarans()->sync($request->mapel);
+                // giuru uplaoder
+                $guruUploader->mataPelajarans()->sync($request->mapel);
             }
         }
 
@@ -318,13 +332,36 @@ class ExternalUserController extends Controller{
         }
 
         $user = ExternalUser::find($id);
-        $user->update($input);
 
         if(@$request->role === "GURU"){
-            if(@$request->mapel){
-                if(count(@$request->mapel) > 0){
-                    $user->mataPelajarans()->sync($request->mapel);
+            // insert ke table user jadi guru uploader
+            $inputUploader['name'] = $input['name'];
+            $inputUploader['username'] = $input['nis'];
+            $inputUploader['email'] = $input['email'];
+
+            if(!empty($input['password'])){
+                $inputUploader['password'] = $input['password'];
+            }
+    
+            $gu = User::where('username', $user->nis)->first();
+            $guruUploader = User::find(@$gu->id);
+            if($guruUploader){
+                $guruUploader->update($inputUploader);
+                if(@$request->mapel){
+                    if(count(@$request->mapel) > 0){
+                        // giuru uplaoder
+                        $guruUploader->mataPelajarans()->sync($request->mapel);
+                    }
                 }
+            }
+        }
+
+        $user->update($input);
+        
+        if(@$request->mapel){
+            if(count(@$request->mapel) > 0){
+                // guru
+                $user->mataPelajarans()->sync($request->mapel);
             }
         }
 
@@ -364,12 +401,18 @@ class ExternalUserController extends Controller{
     // }
     public function destroy(Request $request, $id){
         $d = ExternalUser::findOrFail($id);
+        $dU1 = User::where('username', $d->nis)->first();
         $d->nis = "DEL_".date('Ymdhis');
         $d->username = "DEL_".date('Ymdhis')."_".$d->username;
         $d->email = "DEL_".date('Ymdhis')."@sample.id";
         $d->save();
-
         $d->delete();
+
+        $dU = User::findOrFail(@$dU1->id);
+        $dU->username = "DEL_".date('Ymdhis')."_".$d->username;
+        $dU->email = "DEL_".date('Ymdhis')."@sample.id";
+        $dU->save();
+        $dU->delete();
     }
 
     /**
