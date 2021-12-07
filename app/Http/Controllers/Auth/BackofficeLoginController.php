@@ -49,12 +49,18 @@ class BackofficeLoginController extends Controller
 
     public function login(Request $request)
     {
+        
+        $input = $request->all();
+
         $this->validate($request, [
-            'email' => 'required|email',
+            'email' => 'required',
             'password' => 'required|min:5'
         ]);
 
-        if (auth()->guard('backoffice')->attempt($request->only('email', 'password'))) {
+        $fieldType = filter_var($request->email, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
+        // if (auth()->guard('backoffice')->attempt($request->only('email', 'password'))) {
+        if (auth()->guard('backoffice')->attempt(array($fieldType => $input['email'], 'password' => $input['password']))) {
             $request->session()->regenerate();
             $this->clearLoginAttempts($request);
             return redirect()->intended(route('backoffice::dashboard'));
