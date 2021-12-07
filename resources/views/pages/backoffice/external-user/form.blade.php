@@ -66,6 +66,24 @@
             @endif
         </div>
     </div>
+
+    <div class="col-md-12">
+        <div class="form-group">
+            <label class="form-control-label" for="input-is_uploader">Guru Uploader</label>
+
+            <select{{ ((int)1==(int) @$data['is_uploader']) ? ' disabled' : '' }} id="is_uploader" name="is_uploader" class="form-control {{($errors->has('is_uploader') ? ' is-invalid' : '')}}">
+                @foreach(@$isUploader as $val => $label)
+                <option value="{{ $val }}" {{ ((int)$val==(int) @$data['is_uploader']) ? ' selected' : '' }}>{{ $label }}</option>
+                @endforeach
+            </select>
+
+            @if($errors->has('is_uploader'))
+            <div class="invalid-feedback">
+                <i class="fa fa-exclamation-circle fa-fw"></i> {{ $errors->first('is_uploader') }}
+            </div>
+            @endif
+        </div>
+    </div>
     @endif
     <x-input.text :label="__('Phone')" name="phone" :data="$data" />
     <x-input.textarea :label="__('Address')" name="address" :data="$data" />

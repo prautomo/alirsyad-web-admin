@@ -204,8 +204,12 @@ class ExternalUserController extends Controller{
         $tingkatList = $this->getTingkat();
         $mapelList = $this->getMataPelajaran();
         $mapelIDS = [];
+        $isUploader = [
+            1 => 'Ya',
+            0 => 'Tidak',
+        ];
 
-        return view($this->prefix.'.create', ['tingkatList' => $tingkatList, 'mapelList' => $mapelList, 'mapelIDS' => $mapelIDS]);
+        return view($this->prefix.'.create', ['tingkatList' => $tingkatList, 'mapelList' => $mapelList, 'mapelIDS' => $mapelIDS, 'isUploader' => $isUploader]);
     }
 
     /**
@@ -253,20 +257,24 @@ class ExternalUserController extends Controller{
 
         if(@$request->role === "GURU"){
 
-            // insert ke table user jadi guru uploader
-            $inputUploader['name'] = $input['name'];
-            $inputUploader['username'] = $input['nis'];
-            $inputUploader['email'] = $input['email'];
-            $inputUploader['password'] = $input['password'];
-    
-            $guruUploader = User::create($inputUploader);
-            $guruUploader->assignRole("Guru Uploader");
+            if($request->is_uploader){
+                // insert ke table user jadi guru uploader
+                $inputUploader['name'] = $input['name'];
+                $inputUploader['username'] = $input['nis'];
+                $inputUploader['email'] = $input['email'];
+                $inputUploader['password'] = $input['password'];
 
+                $guruUploader = User::create($inputUploader);
+                $guruUploader->assignRole("Guru Uploader");
+            }
+            
             if(@$request->mapel && count($request->mapel) > 0){
                 // guru
                 $user->mataPelajarans()->sync($request->mapel);
                 // giuru uplaoder
-                $guruUploader->mataPelajarans()->sync($request->mapel);
+                if($request->is_uploader){
+                    $guruUploader->mataPelajarans()->sync($request->mapel);
+                }
             }
         }
 
@@ -293,7 +301,12 @@ class ExternalUserController extends Controller{
             $mapelIDS[] = $mapel->id;
         }  
 
-        return view($this->prefix.'.edit', ['data' => $dt, 'tingkatList' => $tingkatList, 'mapelList' => $mapelList, 'mapelIDS' => $mapelIDS]);
+        $isUploader = [
+            1 => 'Ya',
+            0 => 'Tidak',
+        ];
+
+        return view($this->prefix.'.edit', ['data' => $dt, 'tingkatList' => $tingkatList, 'mapelList' => $mapelList, 'mapelIDS' => $mapelIDS, 'isUploader' => $isUploader]);
     }
 
     /**
@@ -334,23 +347,33 @@ class ExternalUserController extends Controller{
         $user = ExternalUser::find($id);
 
         if(@$request->role === "GURU"){
-            // insert ke table user jadi guru uploader
-            $inputUploader['name'] = $input['name'];
-            $inputUploader['username'] = $input['nis'];
-            $inputUploader['email'] = $input['email'];
+            // update ke table user jadi guru uploader
+            if($request->is_uploader){
+                $inputUploader['name'] = $input['name'];
+                $inputUploader['username'] = $input['nis'];
+                $inputUploader['email'] = $input['email'];
 
-            if(!empty($input['password'])){
-                $inputUploader['password'] = $input['password'];
-            }
-    
-            $gu = User::where('username', $user->nis)->first();
-            $guruUploader = User::find(@$gu->id);
-            if($guruUploader){
-                $guruUploader->update($inputUploader);
-                if(@$request->mapel){
-                    if(count(@$request->mapel) > 0){
-                        // giuru uplaoder
-                        $guruUploader->mataPelajarans()->sync($request->mapel);
+                if(!empty($input['password'])){
+                    $inputUploader['password'] = $input['password'];
+                }
+        
+                $gu = User::where('username', $user->nis)->first();
+                $guruUploader = User::find(@$gu->id);
+                if($guruUploader || $input['is_uploader']){
+                    // update or create
+                    if($user->is_uploader != $input['is_uploader']){ // create
+                        $inputUploader['password'] = $user->password;
+                        $guruUploader = User::create($inputUploader);
+                        $guruUploader->assignRole("Guru Uploader");
+                    }else { // update
+                        $guruUploader->update($inputUploader);
+                    }
+                    
+                    if(@$request->mapel){
+                        if(count(@$request->mapel) > 0){
+                            // giuru uplaoder
+                            $guruUploader->mataPelajarans()->sync($request->mapel);
+                        }
                     }
                 }
             }
@@ -358,10 +381,12 @@ class ExternalUserController extends Controller{
 
         $user->update($input);
         
-        if(@$request->mapel){
-            if(count(@$request->mapel) > 0){
-                // guru
-                $user->mataPelajarans()->sync($request->mapel);
+        if(@$request->role === "GURU"){
+            if(@$request->mapel){
+                if(count(@$request->mapel) > 0){
+                    // guru
+                    $user->mataPelajarans()->sync($request->mapel);
+                }
             }
         }
 
