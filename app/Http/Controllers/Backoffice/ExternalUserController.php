@@ -320,6 +320,7 @@ class ExternalUserController extends Controller{
     {
         $this->validate($request, [
             'username' => 'required|unique:external_users,username,'.$id,
+            'nis' => 'required|unique:external_users,nis|unique:users,username,'.$id,
             'name' => 'required',
             'email' => 'required|email|unique:external_users,email,'.$id,
             // 'phone' => 'required|unique:external_users,phone,'.$id,
@@ -348,7 +349,16 @@ class ExternalUserController extends Controller{
 
         if(@$request->role === "GURU"){
             // update ke table user jadi guru uploader
-            if($request->is_uploader){
+            if($request->is_uploader || @$user->is_uploader){
+                $gu = User::where('username', $user->nis)->first();
+
+                $this->validate($request, [
+                    'nis' => 'required|unique:users,username,'.$gu->id,
+                    'name' => 'required',
+                    'email' => 'required|email|unique:users,email,'.$gu->id,
+                    // 'phone' => 'required|unique:external_users,phone,'.$gu->id,
+                ]);
+
                 $inputUploader['name'] = $input['name'];
                 $inputUploader['username'] = $input['nis'];
                 $inputUploader['email'] = $input['email'];
@@ -357,23 +367,19 @@ class ExternalUserController extends Controller{
                     $inputUploader['password'] = $input['password'];
                 }
         
-                $gu = User::where('username', $user->nis)->first();
                 $guruUploader = User::find(@$gu->id);
-                if($guruUploader || $input['is_uploader']){
-                    // update or create
-                    if($user->is_uploader != $input['is_uploader']){ // create
-                        $inputUploader['password'] = $user->password;
-                        $guruUploader = User::create($inputUploader);
-                        $guruUploader->assignRole("Guru Uploader");
-                    }else { // update
-                        $guruUploader->update($inputUploader);
-                    }
-                    
-                    if(@$request->mapel){
-                        if(count(@$request->mapel) > 0){
-                            // giuru uplaoder
-                            $guruUploader->mataPelajarans()->sync($request->mapel);
-                        }
+                if($guruUploader){
+                    $guruUploader->update($inputUploader);
+                }else{
+                    $inputUploader['password'] = $user->password;
+                    $guruUploader = User::create($inputUploader);
+                    $guruUploader->assignRole("Guru Uploader");
+                }
+
+                if(@$request->mapel){
+                    if(count(@$request->mapel) > 0){
+                        // giuru uplaoder
+                        $guruUploader->mataPelajarans()->sync($request->mapel);
                     }
                 }
             }

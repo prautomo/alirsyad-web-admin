@@ -97,8 +97,6 @@
     $('select#role').on('change', function() {
         var value = this.value;
 
-        console.log("dika guru", value)
-
         if(value.toLowerCase()==="guru uploader"){
             $("#uploader").show();
             @if(@$data->uploader_jenjang_id)

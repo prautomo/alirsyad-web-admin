@@ -47,7 +47,17 @@ class UserController extends Controller
             'password' => 'required|confirmed',
             'password_confirmation' => 'required',
         ]);
-        Auth::user()->update(["password" => Hash::make($validatedData['password'])]);
+        $pass = Hash::make($validatedData['password']);
+
+        Auth::user()->update(["password" => $pass]);
+
+        // update user guru password
+        if(Auth::user()->is_uploader){
+            $u = User::where('email', Auth::user()->email)->first();
+            $usr = User::find($u->id);
+            $input['password'] = $pass;
+            $usr->update($input);
+        }
 
         return redirect()->route('guru::akun-saya')->with(
             $this->success(__("Password Berhasil Di Ubah"), $validatedData)
