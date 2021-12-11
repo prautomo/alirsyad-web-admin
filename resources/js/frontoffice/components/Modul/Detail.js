@@ -16,6 +16,7 @@ import "react-color-palette/lib/css/styles.css";
 import { PhotoshopPicker, SketchPicker } from 'react-color';
 import reactCSS from 'reactcss'
 import "./Detail.css";
+import ViewSDKClient from '../../../components/pdf/ViewSDKClient';
 
 const styles = {
     border: "0.0625rem solid #9c9c9c",
@@ -29,6 +30,7 @@ function ModulDetail({
     linkModul,
     linkVideo,
     linkSimulasi,
+    adobeKey,
 }) {
 
     const canvas = useRef();
@@ -47,12 +49,30 @@ function ModulDetail({
 
     const toggle = () => setDropdownOpen(prevState => !prevState);
 
+    // useEffect(() => {
+    //     console.log("dika idModul", idModul)
+    // }, [])
+
+    // display from data
     useEffect(() => {
-        console.log("dika idModul", idModul)
-    }, [])
+        if(data?.data){
+            displayPDF(data?.data)
+        }
+    }, [data])
+
+    function displayPDF(data) {
+        const viewSDKClient = new ViewSDKClient();
+        viewSDKClient.ready().then(() => {
+            viewSDKClient.previewFile(
+                adobeKey, 
+                "pdf-view-desktop", 
+                {showAnnotationTools: true, showLeftHandPanel: true, showPageControls: true, showDownloadPDF: false, showPrintPDF: true}, 
+                data?.pdf_url
+            );
+        });
+    }
 
     async function finishModul(nextUrl){
-        console.log("dika nextUrl", nextUrl)
         // update history
         await postFlag(idModul)
 
@@ -229,7 +249,7 @@ function ModulDetail({
             </>
             }
             
-            <div style={{overflowX:'auto', height:'100%', marginTop: (showCanvas ? "50px" : "0px")}}>
+            <div style={{overflowX:'auto', height:'100%', marginTop: (showCanvas ? "50px" : "0px")}} className="pdf-viewer-mobile">
                 {/* <iframe src={"/frontoffice/plugins/pdfviewer/#"+data?.data?.pdf_url} width='100%' height='800px' allowfullscreen webkitallowfullscreen></iframe>  */}
                 {/* <object data={data?.data?.pdf_url} type="text/html" width="100%" height="800px"></object> */}
 
@@ -243,6 +263,10 @@ function ModulDetail({
                 */}
                 <iframe src={"https://docs.google.com/gview?url="+data?.data?.pdf_url+"?hsLang=en&embedded=true"} style={{ width: "100%", height: "800px" }} frameBorder="0"></iframe>
 
+            </div>
+
+            <div style={{width: "100%", height: "800px"}} className="pdf-viewer-desktop" id="pdf-view-desktop">
+                Viewer Desktop Cuy
             </div>
 
             {/* <div style={{overflowX:'auto', height:'100%', maxHeight:'800px'}}>
@@ -375,6 +399,7 @@ const RootVideoDetail = (props) => {
             linkModul={props?.linkModul}
             linkVideo={props?.linkVideo}
             linkSimulasi={props?.linkSimulasi}
+            adobeKey={props?.adobeKey}
         />
     </AlertProvider>
     )
@@ -387,11 +412,13 @@ if (container) {
     var linkModul = container.getAttribute("link-modul");
     var linkVideo = container.getAttribute("link-video");
     var linkSimulasi = container.getAttribute("link-simulasi");
+    var adobeKey = container.getAttribute("adobe-key");
 
     ReactDOM.render(<RootVideoDetail 
         idModul={idModul} 
         linkModul={linkModul} 
         linkVideo={linkVideo} 
         linkSimulasi={linkSimulasi} 
+        adobeKey={adobeKey} 
     />, container);
 }

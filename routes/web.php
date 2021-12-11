@@ -25,6 +25,9 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
     Route::get('dashboard', 'DashboardController@index')->name('dashboard');
 
     Route::get('/profile', "ProfileController@profile")->name('akun-saya');
+    Route::get('/profile/edit', "ProfileController@profileEdit")->name('akun-saya.profile-edit');
+    Route::post('/profile/edit', "ProfileController@profileUpdate")->name('akun-saya.profile-update');
+    Route::post('/profile/photo', "ProfileController@profilePhoto")->name('akun-saya.photo');
     Route::get('/profile/password-edit', "ProfileController@passwordEdit")->name('akun-saya.password-edit');
     Route::post('/profile/password-edit', "ProfileController@passwordUpdate")->name('akun-saya.password-update');
 
