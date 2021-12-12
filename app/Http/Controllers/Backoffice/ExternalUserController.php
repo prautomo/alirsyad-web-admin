@@ -320,7 +320,7 @@ class ExternalUserController extends Controller{
     {
         $this->validate($request, [
             'username' => 'required|unique:external_users,username,'.$id,
-            'nis' => 'required|unique:external_users,nis|unique:users,username,'.$id,
+            'nis' => 'required|unique:external_users,nis,'.$id,
             'name' => 'required',
             'email' => 'required|email|unique:external_users,email,'.$id,
             // 'phone' => 'required|unique:external_users,phone,'.$id,

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\SearchableTrait;
 
@@ -23,7 +24,17 @@ class MataPelajaran extends Model
         'icon',
         'slug',
         'tingkat_id',
+        'urutan',
     ];
+
+    protected static function boot(){
+        parent::boot();
+     
+        // Order by urutan ASC
+        static::addGlobalScope('order', function (Builder $builder) {
+            $builder->orderBy('urutan', 'asc');
+        });
+    }
 
     public static function search($request)
     {
@@ -32,6 +43,7 @@ class MataPelajaran extends Model
             "name" => "LIKE",
             "slug" => "=",
             "tingkat_id" => "=",
+            "urutan" => "=",
         ]);
 
         return $data;

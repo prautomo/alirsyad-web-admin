@@ -1,6 +1,6 @@
 @extends('layouts.backoffice')
 
-@section('title', \Request::get('role') ?? __("Pengguna"))
+@section('title', \Request::get('role')=="Guru" ? __("Guru Uploader") : __("Superadmin"))
 
 @section('header')
     @parent

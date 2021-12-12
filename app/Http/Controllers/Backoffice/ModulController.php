@@ -114,6 +114,7 @@ class ModulController extends Controller{
                     "class" => $data->class,
                     "deleteRoute" => route($this->routePath.".destroy", $data->id),
                     "editRoute" => route($this->routePath.".edit", $data->id),
+                    "viewPdfRoute" => asset($data->pdf_path),
                 ]);
             })
             ->order(function ($query) {

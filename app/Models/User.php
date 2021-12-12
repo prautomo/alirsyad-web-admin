@@ -9,10 +9,11 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use App\Traits\SearchableTrait;
 use Laravel\Passport\HasApiTokens;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, SearchableTrait;
+    use SoftDeletes, HasApiTokens, HasFactory, Notifiable, HasRoles, SearchableTrait;
 
     protected $guard_name = 'backoffice';
 
