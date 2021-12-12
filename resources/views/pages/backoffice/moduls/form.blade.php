@@ -18,7 +18,7 @@
             @endif
 
             @if(@$data->pdf_path)
-            <a href="{{ asset($data->pdf_path) }}" target="_blank">Lihat Modul</a>
+            <object data="{{ asset($data->pdf_path) }}" type="text/html" width="100%" height="400px"></object>
             @endif
         </div>
     </div>
