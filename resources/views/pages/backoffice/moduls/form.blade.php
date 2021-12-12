@@ -16,12 +16,8 @@
                 <i class="fa fa-exclamation-circle fa-fw"></i> {{ $errors->first('modul') }}
             </div>
             @endif
-
-            @if(@$data->pdf_path)
-            <object data="{{ asset($data->pdf_path) }}" type="application/pdf" width="100%" height="400px"></object>
-            @else
+            
             <div id="pdf-viewer-modul"></div>
-            @endif
         </div>
     </div>
 
@@ -44,6 +40,12 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $('#mata_pelajaran_id').select2();
+
+        @if(@$data->pdf_path)
+            let template = "<object type='application/pdf' width='100%' height='400px' data= '{{ asset($data->pdf_path) }}'>";
+            
+            $('#pdf-viewer-modul').html(template);
+        @endif
     });
 
     $('#modul').on('change', function(e){ 
