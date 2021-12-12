@@ -22,6 +22,7 @@
 
     <!-- <x-input.text :label="__('Slug')" name="slug" :data="$data" /> -->
     <x-input.text :label="__('Name')" name="name" :data="$data" required />
+    <x-input.text type="number" :label="__('Urutan')" name="urutan" :data="$data" required />
     <x-input.images :label="__('Cover Image')" name="icon" :data="$data" />
 
     <div class="col-xs-12 col-sm-12 col-md-12 text-right">

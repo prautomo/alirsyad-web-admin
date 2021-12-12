@@ -134,7 +134,7 @@ class MataPelajaranController extends Controller{
         // default image
         $url = "images/placeholder.png";
         // temp request
-        $dataReq = $request->only(['class', 'name', 'icon', 'slug', 'tingkat_id']);
+        $dataReq = $request->only(['class', 'name', 'icon', 'slug', 'tingkat_id', 'urutan']);
 
         if ($request->hasFile('icon')) {
 
@@ -179,7 +179,7 @@ class MataPelajaranController extends Controller{
             }),
         ]);
 
-        $dataReq = $request->only(['class', 'name', 'icon', 'slug', 'tingkat_id']);
+        $dataReq = $request->only(['class', 'name', 'icon', 'slug', 'tingkat_id', 'urutan']);
 
         if ($request->hasFile('icon')) {
             $validated = $request->validate([
