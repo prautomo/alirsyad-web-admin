@@ -1,6 +1,6 @@
 @extends('layouts.backoffice')
 
-@section('title', __("External Users"))
+@section('title', \Request::get('role')=="GURU" ? __("Guru") : (\Request::get('is_pengunjung')==1 ? __("Pengunjung") : __("Siswa")))
 
 @section('header')
   @parent

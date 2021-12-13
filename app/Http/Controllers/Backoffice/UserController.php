@@ -59,11 +59,11 @@ class UserController extends Controller{
                 }
 
                 if($search){
-                    $query = $query->orWhereHas('uploaderTingkat', function($query2) use ( $search ){
-                        $query2->where('name', 'LIKE', '%'.$search.'%');
-                    });
+                    // $query = $query->orWhereHas('uploaderTingkat', function($query2) use ( $search ){
+                    //     $query2->where('name', 'LIKE', '%'.$search.'%');
+                    // });
 
-                    $query = $query->orWhereHas('mataPelajaran', function($query2) use ( $search ){
+                    $query = $query->orWhereHas('mataPelajarans', function($query2) use ( $search ){
                         $query2->where('name', 'LIKE', '%'.$search.'%');
                     });
                 }

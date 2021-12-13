@@ -12,9 +12,14 @@
                     link-modul="{{ route('app.mapel.modul', $mapelId) }}"    
                     link-video="{{ route('app.mapel.video', $mapelId) }}"
                     link-simulasi="{{ route('app.mapel.simulasi', $mapelId) }}"
+                    adobe-key="{{ env('ADOBE_KEY', '') }}"
                 >Loading...</div>
             </div>
         </div>
     </div>
 </section>
 @endsection
+
+@push('script')
+<script src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
+@endpush

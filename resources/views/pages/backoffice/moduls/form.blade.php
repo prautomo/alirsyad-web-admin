@@ -9,17 +9,15 @@
             @else
             <label class="form-control-label" for="input-modul">File Modul (*)</label>
             @endif
-            <input id="modul" type="file" name="modul" placeholder="File Modul" value="{{old('modul') ?? $data['modul'] ?? '' ?? ''}}" class="form-control {{($errors->has('modul') ? ' is-invalid' : '')}}" }}>
+            <input id="modul" type="file" accept="application/pdf" name="modul" placeholder="File Modul" value="{{old('modul') ?? $data['modul'] ?? '' ?? ''}}" class="form-control {{($errors->has('modul') ? ' is-invalid' : '')}}" }}>
 
             @if($errors->has('modul'))
             <div class="invalid-feedback">
                 <i class="fa fa-exclamation-circle fa-fw"></i> {{ $errors->first('modul') }}
             </div>
             @endif
-
-            @if(@$data->pdf_path)
-            <a href="{{ asset($data->pdf_path) }}" target="_blank">Lihat Modul</a>
-            @endif
+            
+            <div id="pdf-viewer-modul"></div>
         </div>
     </div>
 
@@ -42,6 +40,23 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $('#mata_pelajaran_id').select2();
+
+        @if(@$data->pdf_path)
+            let template = "<object type='application/pdf' width='100%' height='400px' data= '{{ asset($data->pdf_path) }}'>";
+            
+            $('#pdf-viewer-modul').html(template);
+        @endif
+    });
+
+    $('#modul').on('change', function(e){ 
+        let files = e.target?.files ?? [];
+        
+        if (files.length >= 1) {
+            let fileUrl = URL.createObjectURL(files[0]);
+            let template = "<object type='application/pdf' width='100%' height='400px' data= '" + fileUrl + "'>";
+            
+            $('#pdf-viewer-modul').html(template);
+        }
     });
 </script>
 @endpush

@@ -7,6 +7,15 @@
     @endif
 @endcan
 
+@can(@$permissionName.'-show')
+    @if(@$viewPdfRoute)
+    <a href="{{ $viewPdfRoute }}" target="_blank" class="btn btn-sm btn-icon btn-success datatable-viewPdf-btn" data-url="{{$viewPdfRoute ?? ""}}" >
+        <i class="fa fa-eye"></i>
+        {{__("View PDF")}}
+    </a>
+    @endif
+@endcan
+
 @if(isset($subRoute))
 <a href="{{ $subRoute }}" class="btn btn-sm btn-icon btn-success">
     <i class="fa fa-eye"></i>

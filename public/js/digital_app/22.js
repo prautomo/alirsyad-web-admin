@@ -31,10 +31,127 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, ".layer-toolbox {\r\n    padding: 30px 30px 10px 30px;\r\n    width: 66.66666667%;\r\n    background-color: #d2f1f0 ;\r\n    position: fixed;\r\n    left: 17%;\r\n    bottom: 0;\r\n    z-index: 999999;\r\n}\r\n\r\n.rcp-dark {\r\n    width: 100% !important;\r\n}", ""]);
+exports.push([module.i, ".layer-toolbox {\r\n    padding: 30px 30px 10px 30px;\r\n    width: 66.66666667%;\r\n    background-color: #d2f1f0 ;\r\n    position: fixed;\r\n    left: 17%;\r\n    bottom: 0;\r\n    z-index: 999999;\r\n}\r\n\r\n.rcp-dark {\r\n    width: 100% !important;\r\n}\r\n\r\n/* for desktop / tablet style */\r\n@media only screen and (min-device-width: 768px) {\r\n    .toggle-switch {\r\n        display: none;\r\n    }\r\n\r\n    .pdf-viewer-mobile {\r\n        display: none;\r\n    }\r\n}\r\n\r\n@media only screen and (max-device-width: 768px) {\r\n    .pdf-viewer-desktop {\r\n        display: none;\r\n    }\r\n}\r\n", ""]);
 
 // exports
 
+
+/***/ }),
+
+/***/ "./resources/js/components/pdf/ViewSDKClient.js":
+/*!******************************************************!*\
+  !*** ./resources/js/components/pdf/ViewSDKClient.js ***!
+  \******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var ViewSDKClient = /*#__PURE__*/function () {
+  function ViewSDKClient() {
+    _classCallCheck(this, ViewSDKClient);
+
+    this.readyPromise = new Promise(function (resolve) {
+      if (window.AdobeDC) {
+        resolve();
+      } else {
+        document.addEventListener("adobe_dc_view_sdk.ready", function () {
+          resolve();
+        });
+      }
+    });
+    this.adobeDCView = undefined;
+  }
+
+  _createClass(ViewSDKClient, [{
+    key: "ready",
+    value: function ready() {
+      return this.readyPromise;
+    }
+  }, {
+    key: "previewFile",
+    value: function previewFile(clientId, divId, viewerConfig, url) {
+      var config = {
+        clientId: clientId
+      };
+
+      if (divId) {
+        config.divId = divId;
+      }
+
+      this.adobeDCView = new window.AdobeDC.View(config);
+      var previewFilePromise = this.adobeDCView.previewFile({
+        content: {
+          location: {
+            url: url
+          }
+        },
+        metaData: {
+          fileName: "Viewer.pdf",
+          id: "6d07d124-ac85-43b3-a867-36930f502ac6"
+        }
+      }, viewerConfig);
+      return previewFilePromise;
+    }
+  }, {
+    key: "previewFileUsingFilePromise",
+    value: function previewFileUsingFilePromise(clientId, divId, filePromise, fileName) {
+      this.adobeDCView = new window.AdobeDC.View({
+        clientId: clientId,
+        divId: divId
+      });
+      this.adobeDCView.previewFile({
+        content: {
+          promise: filePromise
+        },
+        metaData: {
+          fileName: fileName
+        }
+      }, {});
+    }
+  }, {
+    key: "registerSaveApiHandler",
+    value: function registerSaveApiHandler() {
+      var saveApiHandler = function saveApiHandler(metaData, content, options) {
+        console.log(metaData, content, options);
+        return new Promise(function (resolve) {
+          setTimeout(function () {
+            var response = {
+              code: window.AdobeDC.View.Enum.ApiResponseCode.SUCCESS,
+              data: {
+                metaData: Object.assign(metaData, {
+                  updatedAt: new Date().getTime()
+                })
+              }
+            };
+            resolve(response);
+          }, 2000);
+        });
+      };
+
+      this.adobeDCView.registerCallback(window.AdobeDC.View.Enum.CallbackType.SAVE_API, saveApiHandler, {});
+    }
+  }, {
+    key: "registerEventsHandler",
+    value: function registerEventsHandler() {
+      this.adobeDCView.registerCallback(window.AdobeDC.View.Enum.CallbackType.EVENT_LISTENER, function (event) {
+        console.log(event);
+      }, {
+        enablePDFAnalytics: true
+      });
+    }
+  }]);
+
+  return ViewSDKClient;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (ViewSDKClient);
 
 /***/ }),
 
@@ -103,6 +220,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var reactcss__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(reactcss__WEBPACK_IMPORTED_MODULE_16__);
 /* harmony import */ var _Detail_css__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./Detail.css */ "./resources/js/frontoffice/components/Modul/Detail.css");
 /* harmony import */ var _Detail_css__WEBPACK_IMPORTED_MODULE_17___default = /*#__PURE__*/__webpack_require__.n(_Detail_css__WEBPACK_IMPORTED_MODULE_17__);
+/* harmony import */ var _components_pdf_ViewSDKClient__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../../../components/pdf/ViewSDKClient */ "./resources/js/components/pdf/ViewSDKClient.js");
 
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
@@ -141,6 +259,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 var styles = {
   border: "0.0625rem solid #9c9c9c",
   borderRadius: "0.25rem",
@@ -154,7 +273,8 @@ function ModulDetail(_ref) {
   var idModul = _ref.idModul,
       linkModul = _ref.linkModul,
       linkVideo = _ref.linkVideo,
-      linkSimulasi = _ref.linkSimulasi;
+      linkSimulasi = _ref.linkSimulasi,
+      adobeKey = _ref.adobeKey;
   var canvas = Object(react__WEBPACK_IMPORTED_MODULE_1__["useRef"])();
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(false),
@@ -208,11 +328,30 @@ function ModulDetail(_ref) {
     return setDropdownOpen(function (prevState) {
       return !prevState;
     });
-  };
+  }; // useEffect(() => {
+  //     console.log("dika idModul", idModul)
+  // }, [])
+  // display from data
+
 
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
-    console.log("dika idModul", idModul);
-  }, []);
+    if (data === null || data === void 0 ? void 0 : data.data) {
+      displayPDF(data === null || data === void 0 ? void 0 : data.data);
+    }
+  }, [data]);
+
+  function displayPDF(data) {
+    var viewSDKClient = new _components_pdf_ViewSDKClient__WEBPACK_IMPORTED_MODULE_18__["default"]();
+    viewSDKClient.ready().then(function () {
+      viewSDKClient.previewFile(adobeKey, "pdf-view-desktop", {
+        showAnnotationTools: true,
+        showLeftHandPanel: true,
+        showPageControls: true,
+        showDownloadPDF: false,
+        showPrintPDF: true
+      }, data === null || data === void 0 ? void 0 : data.pdf_url);
+    });
+  }
 
   function finishModul(_x) {
     return _finishModul.apply(this, arguments);
@@ -224,12 +363,10 @@ function ModulDetail(_ref) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              console.log("dika nextUrl", nextUrl); // update history
-
-              _context.next = 3;
+              _context.next = 2;
               return postFlag(idModul);
 
-            case 3:
+            case 2:
               // direct to next url
               if (nextUrl) {
                 setTimeout(function () {
@@ -237,7 +374,7 @@ function ModulDetail(_ref) {
                 }, 3000);
               }
 
-            case 4:
+            case 3:
             case "end":
               return _context.stop();
           }
@@ -426,7 +563,8 @@ function ModulDetail(_ref) {
       overflowX: 'auto',
       height: '100%',
       marginTop: showCanvas ? "50px" : "0px"
-    }
+    },
+    className: "pdf-viewer-mobile"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("iframe", {
     src: "https://docs.google.com/gview?url=" + (data === null || data === void 0 ? void 0 : (_data$data2 = data.data) === null || _data$data2 === void 0 ? void 0 : _data$data2.pdf_url) + "?hsLang=en&embedded=true",
     style: {
@@ -434,7 +572,14 @@ function ModulDetail(_ref) {
       height: "800px"
     },
     frameBorder: "0"
-  })), (data === null || data === void 0 ? void 0 : (_data$data3 = data.data) === null || _data$data3 === void 0 ? void 0 : (_data$data3$previous = _data$data3.previous) === null || _data$data3$previous === void 0 ? void 0 : _data$data3$previous.url) && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+    style: {
+      width: "100%",
+      height: "800px"
+    },
+    className: "pdf-viewer-desktop",
+    id: "pdf-view-desktop"
+  }, "Viewer Desktop Cuy"), (data === null || data === void 0 ? void 0 : (_data$data3 = data.data) === null || _data$data3 === void 0 ? void 0 : (_data$data3$previous = _data$data3.previous) === null || _data$data3$previous === void 0 ? void 0 : _data$data3$previous.url) && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
     className: "mt-1 btn-main btn-small mr-4",
     href: data === null || data === void 0 ? void 0 : (_data$data4 = data.data) === null || _data$data4 === void 0 ? void 0 : (_data$data4$previous = _data$data4.previous) === null || _data$data4$previous === void 0 ? void 0 : _data$data4$previous.slug_url
   }, "Modul Sebelumnya"), (data === null || data === void 0 ? void 0 : (_data$data5 = data.data) === null || _data$data5 === void 0 ? void 0 : (_data$data5$next = _data$data5.next) === null || _data$data5$next === void 0 ? void 0 : _data$data5$next.url) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
@@ -512,7 +657,8 @@ var RootVideoDetail = function RootVideoDetail(props) {
     idModul: props === null || props === void 0 ? void 0 : props.idModul,
     linkModul: props === null || props === void 0 ? void 0 : props.linkModul,
     linkVideo: props === null || props === void 0 ? void 0 : props.linkVideo,
-    linkSimulasi: props === null || props === void 0 ? void 0 : props.linkSimulasi
+    linkSimulasi: props === null || props === void 0 ? void 0 : props.linkSimulasi,
+    adobeKey: props === null || props === void 0 ? void 0 : props.adobeKey
   }));
 };
 
@@ -523,11 +669,13 @@ if (container) {
   var linkModul = container.getAttribute("link-modul");
   var linkVideo = container.getAttribute("link-video");
   var linkSimulasi = container.getAttribute("link-simulasi");
+  var adobeKey = container.getAttribute("adobe-key");
   react_dom__WEBPACK_IMPORTED_MODULE_2___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(RootVideoDetail, {
     idModul: idModul,
     linkModul: linkModul,
     linkVideo: linkVideo,
-    linkSimulasi: linkSimulasi
+    linkSimulasi: linkSimulasi,
+    adobeKey: adobeKey
   }), container);
 }
 
