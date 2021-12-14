@@ -1,4 +1,4 @@
-@can(@$permissionName.'-show')
+@can(@$permissionName.'-list')
     @if(@$showRoute)
     <a href="{{ $showRoute }}" class="btn btn-sm btn-icon btn-success">
         <i class="fa fa-eye"></i>
@@ -7,9 +7,9 @@
     @endif
 @endcan
 
-@can(@$permissionName.'-show')
+@can(@$permissionName.'-list')
     @if(@$viewPdfRoute)
-    <a href="{{ $viewPdfRoute }}" target="_blank" class="btn btn-sm btn-icon btn-success datatable-viewPdf-btn" data-url="{{$viewPdfRoute ?? ""}}" >
+    <a href="#" data-toggle="modal" data-target="#viewPdfModal" class="btn btn-sm btn-icon btn-success datatable-viewPdf-btn" data-url="{{$viewPdfRoute ?? ""}}" >
         <i class="fa fa-eye"></i>
         {{__("View PDF")}}
     </a>

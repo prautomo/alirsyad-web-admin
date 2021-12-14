@@ -105,6 +105,14 @@
             }
         });
 
+        $(document).on('click', '.datatable-viewPdf-btn', function(event) {
+            event.preventDefault();
+            const url = $(this).data("url");
+
+            let template = "<object type='application/pdf' width='100%' height='400px' data= '"+ url +"'>";
+            
+            $('#previewContent').html(template);
+        });
 
         $(document).on('click', '.datatable-status-dana-btn', function(event) {
             event.preventDefault();
@@ -242,4 +250,23 @@
         })
     }
 </script>
+
+<div class="modal fade" id="viewPdfModal" tabindex="-1" role="dialog" aria-labelledby="viewPdfModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewPdfModalLabel">Preview</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body pt-0">
+        <div id="previewContent"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 @endpush
