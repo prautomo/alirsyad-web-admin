@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Routes backoffice
-Route::get('backoffice/login','Auth\BackofficeLoginController@showLoginForm');
+Route::get('backoffice/login','Auth\BackofficeLoginController@showLoginForm')->name('backoffice.login');
 Route::post('backoffice/login', ['as' => 'backoffice-login', 'uses' => 'Auth\BackofficeLoginController@login']);
 Route::post('backoffice/logout', ['as' => 'backoffice-logout', 'uses' => 'Auth\BackofficeLoginController@logout']);
 

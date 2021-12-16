@@ -89,7 +89,7 @@
 
                             @if(@\Auth::user()->hasRole('Guru Uploader'))
                             <div class="form-group">
-                                <label>Mengajar</label>
+                                <label>Uploader di Mata Pelajaran</label>
                                 <input type="text" disabled 
                                     value="{{ @$mengajar!=='' ? @$mengajar : '-' }}" 
                                     class="form-control" 
