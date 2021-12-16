@@ -9,6 +9,7 @@ use App\Models\MataPelajaran;
 use App\Services\UploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -208,9 +209,15 @@ class ProfileController extends Controller
             $externalUser->update($input);
         }
 
-        return redirect()->route('backoffice::akun-saya')->with(
-            $this->success(__("Password Berhasil Di Ubah"), $validatedData)
-        );
+        Session::flush();
+        
+        Auth::logout();
+
+        return redirect()->route('backoffice.login');
+
+        // return redirect()->route('backoffice::akun-saya')->with(
+        //     $this->success(__("Password Berhasil Di Ubah"), $validatedData)
+        // );
     }
 
     public function profilePhoto(Request $request){
