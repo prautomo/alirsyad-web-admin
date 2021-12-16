@@ -1,5 +1,5 @@
 <x-page.form :title="__('Edit Profile')">
-    {!! Form::open(array('route' => 'backoffice::akun-saya.profile-update','method'=>'POST', 'enctype' => 'multipart/form-data')) !!}
+    {!! Form::open(array('route' => 'guru::akun-saya.profile-update','method'=>'POST', 'enctype' => 'multipart/form-data')) !!}
         @csrf
         <div class="row">
             @php
@@ -15,7 +15,7 @@
             @if(@$mapelIDS)
             <div class="col-md-12">
                 <div class="form-group">
-                    <label class="form-control-label" for="input-mapel">Mata Pelajaran Uploader</label>
+                    <label class="form-control-label" for="input-mapel">Ngajar Mata Pelajaran</label>
 
                     <select id="chooseMapel" multiple="multiple" name="mapel[]" class="form-control {{($errors->has('mapel') ? ' is-invalid' : '')}}">
                         @foreach(@$mapelList as $idx => $mapel)

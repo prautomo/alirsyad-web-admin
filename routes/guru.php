@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Routes guru
-Route::get('guru/login','Auth\GuruLoginController@showLoginForm');
+Route::get('guru/login','Auth\GuruLoginController@showLoginForm')->name('guru.login');
 Route::post('guru/login', ['as' => 'guru-login', 'uses' => 'Auth\GuruLoginController@login']);
 Route::post('guru/logout', ['as' => 'guru-logout', 'uses' => 'Auth\GuruLoginController@logout']);
 

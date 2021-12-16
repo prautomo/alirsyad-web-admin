@@ -7,6 +7,7 @@ use App\Models\ExternalUser;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -77,7 +78,13 @@ class UserController extends Controller
         ]);
         Auth::user()->update(["password" => Hash::make($validatedData['password'])]);
 
-        return redirect("/profile")->with('success', "Password Berhasil Di Ubah");;
+        Session::flush();
+        
+        Auth::logout();
+
+        return redirect("/login")->with('success', "Password Berhasil Di Ubah");
+
+        // return redirect("/profile")->with('success', "Password Berhasil Di Ubah");
     }
 
     public function profilePhoto(Request $request){

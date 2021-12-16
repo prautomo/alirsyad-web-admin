@@ -7,6 +7,7 @@ use App\Models\ExternalUser;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -59,8 +60,14 @@ class UserController extends Controller
             $usr->update($input);
         }
 
-        return redirect()->route('guru::akun-saya')->with(
-            $this->success(__("Password Berhasil Di Ubah"), $validatedData)
-        );
+        Session::flush();
+        
+        Auth::logout();
+
+        return redirect("/guru/login")->with('success', "Password Berhasil Di Ubah");
+
+        // return redirect()->route('guru::akun-saya')->with(
+        //     $this->success(__("Password Berhasil Di Ubah"), $validatedData)
+        // );
     }
 }
