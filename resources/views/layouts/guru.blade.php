@@ -236,7 +236,10 @@
                 aria-expanded="false">
                 <div class="media align-items-center">
                   <span class="avatar avatar-sm rounded-circle">
-                    <img alt="{{ Auth::user()->name }}" src="{{ asset('images/user-logo.png') }}">
+                    @php
+                    $userDetail = @Auth::user();
+                    @endphp
+                    <img alt="{{ Auth::user()->name }}" src="{{ @$userDetail->photo ? asset(@$userDetail->photo) : asset('images/user-logo.png') }}">
                   </span>
                   <div class="media-body  ml-2  d-none d-lg-block">
                     <span class="mb-0 text-sm  font-weight-bold">{{ Auth::user()->name }}</span>
