@@ -30,7 +30,7 @@ class HomeController extends Controller
             $query->where('id', @$user->kelas_id);
         });
         // sort by active mapel
-        $sedangDipelajari = $sedangDipelajari->limit(2)->get();
+        $sedangDipelajari = $sedangDipelajari->limit(6)->get();
         // // sorting by name
         // $sedangDipelajari = $sedangDipelajari->sortBy('name');
 
@@ -112,11 +112,19 @@ class HomeController extends Controller
         // sorting by created at descending
         $tidakAktif = $tidakAktif->sortByDesc('created_at');
 
+        // list kelas
+        $kelasList = [];
+        if(!@$user->is_pengunjung){
+            $jenjangUser = @Auth::user()->kelas->tingkat->jenjang_id;
+            $kelasList = Tingkat::where('jenjang_id', $jenjangUser)->get();
+        }
+
         $parseData = [
             'sedangDipelajari' => $sedangDipelajari,
             'yangAkanDatang' => $yangAkanDatang,
             'aktif' => $aktif,
             'tidakAktif' => $tidakAktif,
+            'kelasList' => $kelasList,
         ];
 
         return view('pages/frontoffice/home', $parseData);
