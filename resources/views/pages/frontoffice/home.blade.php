@@ -20,17 +20,23 @@
                         </ol>
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="https://via.placeholder.com/1000x250?text=Slide+1+1000x250" class="d-block w-100" alt="Slide">
-                                <div class="carousel-caption d-none d-md-block">
+                                <div style="cursor: pointer;" data-toggle="modal" data-target="#exampleModal">
+                                    <img src="https://via.placeholder.com/1000x250?text=Slide+2+1000x250" class="d-block w-100" alt="Slide">
+                                </div>
+                                <!-- <div class="carousel-caption d-none d-md-block">
                                     <h5 class="text-white">Lorem ipsum dolor sit amet</h5>
                                     <p class="text-white">Lorem ipsum dolor sit amet</p>
+                                </div> -->
+                            </div>
+                            <div class="carousel-item">
+                                <div style="cursor: pointer;" data-toggle="modal" data-target="#exampleModal">
+                                    <img src="https://via.placeholder.com/1000x250?text=Slide+2+1000x250" class="d-block w-100" alt="Slide">
                                 </div>
                             </div>
                             <div class="carousel-item">
-                                <img src="https://via.placeholder.com/1000x250?text=Slide+2+1000x250" class="d-block w-100" alt="Slide">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="https://via.placeholder.com/1000x250?text=Slide+3+1000x250" class="d-block w-100" alt="Slide">
+                                <div style="cursor: pointer;" data-toggle="modal" data-target="#exampleModal">
+                                    <img src="https://via.placeholder.com/1000x250?text=Slide+2+1000x250" class="d-block w-100" alt="Slide">
+                                </div>
                             </div>
                         </div>
                         <!-- <a class="carousel-control-prev" href="#top-banner" role="button" data-slide="prev">
@@ -215,17 +221,24 @@
                             <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
                         </ol>
                         <div class="carousel-inner">
-                            <div class="carousel-item active">
+                            <div class="carousel-item mb-3 active">
                                 <div class="card">
                                     <div class="card-body">
                                         Lorem ipsum dolor sit amet
                                     </div>
                                 </div>
                             </div>
-                            <div class="carousel-item">
+                            <div class="carousel-item mb-3">
                                 <div class="card">
                                     <div class="card-body">
                                         Lorem ipsum dolor sit amet 2
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-item mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        Lorem ipsum dolor sit amet 3
                                     </div>
                                 </div>
                             </div>
@@ -236,8 +249,9 @@
             <!-- End update terbaru -->
 
             <!-- Semua Mata Pelajaran -->
+            @if(count($kelasList) > 0)
             <div class="row">
-                <!-- <div class="col-md-12 mb-1">
+                <div class="col-md-12 mb-1">
                     <div class="card-title mb-0 form-inline">
                         <i class="ni ni-books icon-title"></i>
                         <div class="font-weight-bolder" style="color: #0E594D;">Semua Mata Pelajaran</div>
@@ -245,17 +259,20 @@
                     <hr/>
                 </div>
                 
-                <div class="col-md-2">
+                @foreach($kelasList as $kelas)
+                <div class="col-md-2 mb-2">
                     <div class="card">
                         <div class="card-body mx-auto my-auto">
                             <span class="font-weight-500">
-                                Kelas 1
+                                Kelas {{ @$kelas->name ?? '-' }}
                             </span>
                         </div>
                     </div>
-                </div> -->
+                </div>
+                @endforeach
                 
             </div>
+            @endif
             <!-- End Semua Mata Pelajaran -->
             @endif
         </div>
@@ -271,18 +288,36 @@
 @endpush
 
 @push('script')
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Preview</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        PDF Here
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-main btn-small" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script type="text/javascript">
-    $(function() {
-        $(".carousel-items").each(function() {
-            var i = $(this).next();
-            console.log("dika i", i)
-            i.length || (i = $(this).siblings(":first")),
-                i.children(":first-child").clone().appendTo($(this));
+    // $(function() {
+    //     $(".carousel-items").each(function() {
+    //         var i = $(this).next();
+    //         console.log("dika i", i)
+    //         i.length || (i = $(this).siblings(":first")),
+    //             i.children(":first-child").clone().appendTo($(this));
             
-            for (var n = 0; n < 4; n++)(i = i.next()).length ||
-                (i = $(this).siblings(":first")),
-                i.children(":first-child").clone().appendTo($(this))
-        })
-    });
+    //         for (var n = 0; n < 4; n++)(i = i.next()).length ||
+    //             (i = $(this).siblings(":first")),
+    //             i.children(":first-child").clone().appendTo($(this))
+    //     })
+    // });
 </script>
 @endpush

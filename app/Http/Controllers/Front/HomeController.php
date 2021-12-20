@@ -112,11 +112,19 @@ class HomeController extends Controller
         // sorting by created at descending
         $tidakAktif = $tidakAktif->sortByDesc('created_at');
 
+        // list kelas
+        $kelasList = [];
+        if(!@$user->is_pengunjung){
+            $jenjangUser = @Auth::user()->kelas->tingkat->jenjang_id;
+            $kelasList = Tingkat::where('jenjang_id', $jenjangUser)->get();
+        }
+
         $parseData = [
             'sedangDipelajari' => $sedangDipelajari,
             'yangAkanDatang' => $yangAkanDatang,
             'aktif' => $aktif,
             'tidakAktif' => $tidakAktif,
+            'kelasList' => $kelasList,
         ];
 
         return view('pages/frontoffice/home', $parseData);
