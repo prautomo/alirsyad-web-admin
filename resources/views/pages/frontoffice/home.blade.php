@@ -64,7 +64,7 @@
 
                 <!-- sedang dipelajari -->
                 @forelse($sedangDipelajari as $sedangDipelajari)
-                <div class="col-md-2 mb-4">
+                <div class="col-md-2 col-sm-4 mb-4">
                     <a href="{{ route('app.mapel.detail', @$sedangDipelajari->id) }}">
                         <img src="{{ @$sedangDipelajari->icon ? asset($sedangDipelajari->icon) : asset('images/image-placeholder.jpg') }}" alt="{{ @$sedangDipelajari->name ?? "-" }}" width="100%" class="mb-3 rounded" />
 
