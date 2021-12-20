@@ -21,10 +21,10 @@
                         <div class="carousel-inner">
                             <div class="carousel-item active">
                                 <img src="https://via.placeholder.com/1000x250?text=Slide+1+1000x250" class="d-block w-100" alt="Slide">
-                                <!-- <div class="carousel-caption d-none d-md-block">
+                                <div class="carousel-caption d-none d-md-block">
                                     <h5 class="text-white">Lorem ipsum dolor sit amet</h5>
                                     <p class="text-white">Lorem ipsum dolor sit amet</p>
-                                </div> -->
+                                </div>
                             </div>
                             <div class="carousel-item">
                                 <img src="https://via.placeholder.com/1000x250?text=Slide+2+1000x250" class="d-block w-100" alt="Slide">
