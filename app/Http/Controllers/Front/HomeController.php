@@ -30,7 +30,7 @@ class HomeController extends Controller
             $query->where('id', @$user->kelas_id);
         });
         // sort by active mapel
-        $sedangDipelajari = $sedangDipelajari->limit(2)->get();
+        $sedangDipelajari = $sedangDipelajari->limit(6)->get();
         // // sorting by name
         // $sedangDipelajari = $sedangDipelajari->sortBy('name');
 

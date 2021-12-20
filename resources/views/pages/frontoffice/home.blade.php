@@ -21,47 +21,41 @@
     <section class="mt-5">
         <div class="container">
             <div class="row">
+                <!-- Buat siswa -->
                 @if(!@\Auth::user()->is_pengunjung)
+                <div class="col-md-12 mb-1">
+                    <div class="card-title mb-0 form-inline">
+                        <i class="ni ni-books icon-title"></i>
+                        <div>Mata Pelajaran yang Sedang Dipelajari</div>
+                    </div>
+                    <hr/>
+                </div>
+
                 <!-- sedang dipelajari -->
-                <div class="col-md-6 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="card-title mb-0 form-inline">
-                                <i class="ni ni-books icon-title"></i>
-                                <div>Mata Pelajaran yang Sedang Dipelajari</div>
-                            </div>
-                            <hr/>
+                @forelse($sedangDipelajari as $sedangDipelajari)
+                <div class="col-md-2 mb-4">
+                    <a href="{{ route('app.mapel.detail', @$sedangDipelajari->id) }}">
+                        <img src="{{ @$sedangDipelajari->icon ? asset($sedangDipelajari->icon) : asset('images/image-placeholder.jpg') }}" alt="{{ @$sedangDipelajari->name ?? "-" }}" width="100%" class="mb-3 rounded" />
 
-                            @forelse($sedangDipelajari as $sedangDipelajari)
-                            <div class="wrap-kelas form-inline mt-3">
-                                <div style="max-width: 270px;">
-                                    <span class="kelas-title">Kelas {{ $sedangDipelajari->tingkat->name ?? "-" }} {{ @$sedangDipelajari->tingkat->jenjang->name }}</span>
-                                    <h4 class="font-weight-bold">
-                                        {{ @$sedangDipelajari->name ?? "-" }}
-                                    </h4>
-                                </div>
-                                <div class="ml-auto">
-                                    <a href="{{ route('app.mapel.detail', @$sedangDipelajari->id) }}" class="btn btn-main btn-small">
-                                        <i class="btn-icon fa fa-play ml-2"></i> Lanjut Belajar
-                                    </a>
-                                </div>
-                            </div>
-                            @empty
-                            <div class="wrap-kelas form-inline mt-3">
-                                <h4 class="font-weight-bold">Belum ada mata pelajaran.</h4>
-                            </div>
-                            @endforelse
-
-                            @if(!empty($sedangDipelajari))
-                            <div class="mt-2 text-right">
-                                <a href="{{ route('app.mapel.list') }}">Selengkapnya</a>
-                            </div>
-                            @endif
-                        </div>
+                        <p class="font-weight-bold mb-0" style="font-size: 16px; line-height: 10px;">
+                            {{ @$sedangDipelajari->name ?? "-" }}
+                        </p>
+                    </a>
+                    <span style="font-size: 14px;">
+                        {{ $sedangDipelajari->tingkat->name ?? "-" }} {{ @$sedangDipelajari->tingkat->jenjang->name }}
+                    </span>
+                </div>
+                @empty
+                <div class="col-md-12 mb-4">
+                    <div class="wrap-kelas form-inline mt-3">
+                        <h4 class="font-weight-bold">Belum ada mata pelajaran.</h4>
                     </div>
                 </div>
+                @endforelse
+                <!-- end sedang dipelajari -->
+
                 <!-- akan datang -->
-                <div class="col-md-6">
+                <!-- <div class="col-md-6">
                     <div class="card">
                         <div class="card-body">
                             <div class="card-title mb-0 form-inline">
@@ -96,7 +90,8 @@
                             @endif
                         </div>
                     </div>
-                </div>
+                </div> -->
+                <!-- End Buat siswa -->
                 @else
                 <!-- mapel aktif -->
                 <div class="col-md-6 mb-4">
