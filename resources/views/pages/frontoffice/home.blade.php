@@ -70,7 +70,7 @@
 
                 <!-- sedang dipelajari -->
                 @forelse($sedangDipelajari as $sedangDipelajari)
-                <div class="col-md-2 col-sm-4 mb-4">
+                <div class="col-md-2 col-6 col-sm-4 mb-4">
                     <a href="{{ route('app.mapel.detail', @$sedangDipelajari->id) }}">
                         <img src="{{ @$sedangDipelajari->icon ? asset($sedangDipelajari->icon) : asset('images/image-placeholder.jpg') }}" alt="{{ @$sedangDipelajari->name ?? "-" }}" width="100%" class="mb-3 rounded" />
 
@@ -261,13 +261,15 @@
                 
                 @foreach($kelasList as $kelas)
                 <div class="col-md-2 mb-2">
-                    <div class="card">
-                        <div class="card-body mx-auto my-auto">
-                            <span class="font-weight-500">
-                                Kelas {{ @$kelas->name ?? '-' }}
-                            </span>
+                    <a href="{{ route('app.mapel.byTingkat', ['id' => @$kelas->id ?? 0]) }}">
+                        <div class="card">
+                            <div class="card-body mx-auto my-auto">
+                                <span class="font-weight-500" style="font-size: 14px;">
+                                    Kelas {{ @$kelas->name ?? '-' }}
+                                </span>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
                 @endforeach
                 
