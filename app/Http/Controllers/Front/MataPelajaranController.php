@@ -124,6 +124,38 @@ class MataPelajaranController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
+    public function indexByTingkat(Request $request, $tingkatId)
+    {
+        $userInfo = Auth::user();
+        $tingkatInfo = Tingkat::findOrFail($tingkatId);
+        $mapels = [];
+
+        $jenjangUser = @$userInfo->kelas->tingkat->jenjang_id;
+
+        // cek jenjang user sama jenjang tingkatna harus sama
+        if($tingkatInfo->jenjang_id === $jenjangUser){
+            $mapels = MataPelajaran::where('tingkat_id', $tingkatId);
+            $mapels = $mapels->with('tingkat');
+            $mapels = $mapels->orderBy('name');
+            $mapels = $mapels->get();
+        }else{
+            // jangan kasih info tingkat
+            abort(404);
+        }
+
+        $parseData = [
+            'mapels' => $mapels,
+            'tingkatInfo' => $tingkatInfo,
+        ];
+
+        return view('pages/frontoffice/mapel/list_by_tingkat', $parseData);
+    }
+
+    /**
+     * Show the mapel list.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
     public function indexUpcoming(Request $request)
     {
         $yangAkanDatang = $this->mapelByTingkat($request, '>');
