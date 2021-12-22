@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\MataPelajaran;
 use App\Models\GuestMataPelajaran;
 use App\Models\Tingkat;
+use App\Models\Banner;
 use App\Services\UploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -119,12 +120,16 @@ class HomeController extends Controller
             $kelasList = Tingkat::where('jenjang_id', $jenjangUser)->get();
         }
 
+        // Banner
+        $banners = Banner::where(['activeStatus' => true])->orderBy('urutan', 'asc')->get();
+
         $parseData = [
             'sedangDipelajari' => $sedangDipelajari,
             'yangAkanDatang' => $yangAkanDatang,
             'aktif' => $aktif,
             'tidakAktif' => $tidakAktif,
             'kelasList' => $kelasList,
+            'banners' => $banners,
         ];
 
         return view('pages/frontoffice/home', $parseData);
