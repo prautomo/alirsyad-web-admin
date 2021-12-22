@@ -7,7 +7,7 @@ $default = (@$data[$name]) ? asset($data[$name]) : $default;
 <div class="col-md-12">
     <div class="form-group">
         <label class="form-control-label" for="input-{{$name}}">{{$label}} {{@$required ? "(*)" : ""}}</label>
-        <input id="{{$name}}" type="file" name="{{$name}}" placeholder="{{$label}}" value="{{old($name) ?? $data[$name] ?? $value ?? ''}}" {{ $attributes->merge(['class' => " form-control ". ($errors->has($name) ? ' is-invalid' : '')]) }}>
+        <input id="{{$name}}" type="file" name="{{$name}}" placeholder="{{$label}}" value="{{old($name) ?? $data[$name] ?? $value ?? ''}}" {{ $attributes->merge(['class' => " form-control ". ($errors->has($name) ? ' is-invalid' : '')]) }} accept="image/bmp, image/jpeg, image/x-png, image/png, image/gif" >
 
         @if(@$errors->has($name))
         <div class="invalid-feedback">

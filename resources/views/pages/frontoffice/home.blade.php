@@ -4,6 +4,7 @@
 
 @section('content')
 <!-- Slider Start -->
+    @if(count($banners) > 0)
     <section class="slider">
         <div class="">
             <div class="row">
@@ -14,30 +15,22 @@
 
                         <div id="top-banner" class="carousel slide" data-ride="carousel">
                         <ol class="carousel-indicators">
-                            <li data-target="#top-banner" data-slide-to="0" class="active"></li>
-                            <li data-target="#top-banner" data-slide-to="1"></li>
-                            <li data-target="#top-banner" data-slide-to="2"></li>
+                            @foreach($banners as $idx => $banner)
+                            <li data-target="#top-banner" data-slide-to="{{ $idx }}" class="{{ $idx == 0 ? ' active': '' }}"></li>
+                            @endforeach
                         </ol>
                         <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <div style="cursor: pointer;" data-toggle="modal" data-target="#exampleModal">
-                                    <img src="https://via.placeholder.com/1000x250?text=Slide+2+1000x250" class="d-block w-100" alt="Slide">
+                            @foreach($banners as $idx => $banner)
+                            <div class="carousel-item{{ $idx == 0 ? ' active': '' }}">
+                                <div style="cursor: pointer;" data-toggle="modal" data-target="#exampleModal" data-file="{{ asset(@$banner->file) }}">
+                                    <img src="{{ asset(@$banner->image) }}" class="d-block w-100" alt="{{ @$banner->title }}">
                                 </div>
                                 <!-- <div class="carousel-caption d-none d-md-block">
                                     <h5 class="text-white">Lorem ipsum dolor sit amet</h5>
                                     <p class="text-white">Lorem ipsum dolor sit amet</p>
                                 </div> -->
                             </div>
-                            <div class="carousel-item">
-                                <div style="cursor: pointer;" data-toggle="modal" data-target="#exampleModal">
-                                    <img src="https://via.placeholder.com/1000x250?text=Slide+2+1000x250" class="d-block w-100" alt="Slide">
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <div style="cursor: pointer;" data-toggle="modal" data-target="#exampleModal">
-                                    <img src="https://via.placeholder.com/1000x250?text=Slide+2+1000x250" class="d-block w-100" alt="Slide">
-                                </div>
-                            </div>
+                            @endforeach
                         </div>
                         <!-- <a class="carousel-control-prev" href="#top-banner" role="button" data-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -53,6 +46,7 @@
             </div>
         </div>
     </section>
+    @endif
     <!-- Section Intro Start -->
 
     <section class="mt-5">
@@ -300,11 +294,11 @@
         </button>
       </div>
       <div class="modal-body">
-        PDF Here
+        <div id="pdf-viewer-file"></div>
       </div>
-      <div class="modal-footer">
+      <!-- <div class="modal-footer">
         <button type="button" class="btn btn-main btn-small" data-dismiss="modal">Close</button>
-      </div>
+      </div> -->
     </div>
   </div>
 </div>
@@ -321,5 +315,13 @@
     //             i.children(":first-child").clone().appendTo($(this))
     //     })
     // });
+
+    $('#exampleModal').on('show.bs.modal', function (event) {
+        var container = $(event.relatedTarget) 
+        var fileUrl = container.data('file') 
+        var modal = $(this);
+        let template = "<object type='application/pdf' width='100%' height='430px' data= '" + fileUrl + "'>";
+        modal.find('#pdf-viewer-file').html(template)
+    })
 </script>
 @endpush
