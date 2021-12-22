@@ -4,6 +4,7 @@
 
 @section('content')
 <!-- Slider Start -->
+    @if(count($banners) > 0)
     <section class="slider">
         <div class="">
             <div class="row">
@@ -45,6 +46,7 @@
             </div>
         </div>
     </section>
+    @endif
     <!-- Section Intro Start -->
 
     <section class="mt-5">
