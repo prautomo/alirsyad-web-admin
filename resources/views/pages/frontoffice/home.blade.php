@@ -5,7 +5,8 @@
 @section('content')
 <!-- Slider Start -->
     @if(count($banners) > 0)
-    <section class="slider">
+    <!-- <section class="slider"> -->
+    <section class="">
         <div class="">
             <div class="row">
                 <div class="col-lg-12 col-md-12">
@@ -210,32 +211,35 @@
                 <div class="col-md-10">
                     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                         <ol class="carousel-indicators indicator-custom">
+                            @forelse($updates as $idx => $update)
+                            <li data-target="#carouselExampleIndicators" data-slide-to="{{ $idx }}" class="{{ $idx == 0 ? ' active': '' }}"></li>
+                            @empty
                             <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                            <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                            <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                            @endforelse
                         </ol>
                         <div class="carousel-inner">
-                            <div class="carousel-item mb-3 active">
+                            @forelse($updates as $idx => $update)
+                            <div class="carousel-item{{ $idx == 0 ? ' active': '' }}">
                                 <div class="card">
-                                    <div class="card-body">
-                                        Lorem ipsum dolor sit amet
+                                    <div class="card-body mb-3">
+                                        <a href="{{ route('app.'.(@$update->trigger ?? 'video').'.detail', @$update->trigger_id) }}">
+                                            <i>{{@$update->trigger_name}}</i>
+                                        </a> baru saja di-{{ @$update->trigger_event == 'create' ? 'upload' : 'update' }} di mata pelajaran 
+                                        <a href="{{ route('app.mapel.detail', @$update->triggerRel->mata_pelajaran_id ?? 0) }}">
+                                            <i>{{ @$update->mata_pelajaran }}</i>
+                                        </a>.
                                     </div>
                                 </div>
                             </div>
-                            <div class="carousel-item mb-3">
+                            @empty
+                            <div class="carousel-item active">
                                 <div class="card">
-                                    <div class="card-body">
-                                        Lorem ipsum dolor sit amet 2
+                                    <div class="card-body mb-3">
+                                        Belum ada update terbaru.
                                     </div>
                                 </div>
                             </div>
-                            <div class="carousel-item mb-3">
-                                <div class="card">
-                                    <div class="card-body">
-                                        Lorem ipsum dolor sit amet 3
-                                    </div>
-                                </div>
-                            </div>
+                            @endforelse
                         </div>
                     </div>
                 </div>
