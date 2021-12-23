@@ -228,6 +228,9 @@
                                         <a href="{{ route('app.mapel.detail', @$update->triggerRel->mata_pelajaran_id ?? 0) }}">
                                             <i>{{ @$update->mata_pelajaran }}</i>
                                         </a>.
+
+                                        {{@$update->triggerRel->mataPelajaran->tingkat->name}}
+                                        {{@$update->triggerRel->mataPelajaran->tingkat->jenjang->name}}
                                     </div>
                                 </div>
                             </div>

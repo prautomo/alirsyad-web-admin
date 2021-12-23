@@ -32,10 +32,8 @@ class Update extends Model
     {
         if($this->trigger == 'video'){
             return $this->belongsTo("App\Models\Video",  "trigger_id", "id")->withTrashed();
-        }else if($this->trigger == 'modul'){
+        }else{
             return $this->belongsTo("App\Models\Modul",  "trigger_id", "id")->withTrashed();
         }
-
-        return null;
     }
 }
