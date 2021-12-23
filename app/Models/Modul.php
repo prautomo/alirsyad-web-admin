@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\SearchableTrait;
+use App\Observers\ModulObserver;
 
 class Modul extends Model
 {
@@ -54,20 +55,8 @@ class Modul extends Model
      */
     protected static function boot() {
         parent::boot();
-
-        static::updated(function($model) {
-            // update video mapel_id
-            foreach ($model->videos()->get() as $video) {
-                $video->mata_pelajaran_id = $model->mata_pelajaran_id;
-                $video->save();
-            }
-
-            // update simulasi mapel_id
-            foreach ($model->simulasis()->get() as $simulasi) {
-                $simulasi->mata_pelajaran_id = $model->mata_pelajaran_id;
-                $simulasi->save();
-            }
-        });
+        
+        Modul::observe(ModulObserver::class);
     }
 
     public function getReadAttribute()

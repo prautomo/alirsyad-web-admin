@@ -7,6 +7,7 @@ use App\Models\MataPelajaran;
 use App\Models\GuestMataPelajaran;
 use App\Models\Tingkat;
 use App\Models\Banner;
+use App\Models\Update;
 use App\Services\UploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -123,6 +124,9 @@ class HomeController extends Controller
         // Banner
         $banners = Banner::where(['activeStatus' => true])->orderBy('urutan', 'asc')->get();
 
+        // Update
+        $updates = Update::orderBy('created_at', 'desc')->limit(3)->get();
+
         $parseData = [
             'sedangDipelajari' => $sedangDipelajari,
             'yangAkanDatang' => $yangAkanDatang,
@@ -130,6 +134,7 @@ class HomeController extends Controller
             'tidakAktif' => $tidakAktif,
             'kelasList' => $kelasList,
             'banners' => $banners,
+            'updates' => $updates,
         ];
 
         return view('pages/frontoffice/home', $parseData);
