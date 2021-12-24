@@ -24,8 +24,8 @@
   <!-- Argon CSS -->
   <link rel="stylesheet" href="{{ asset('backoffice/assets/css/argon.css?v=1.2.0') }}" type="text/css">
   <!-- Page plugins -->
-  @stack('plugin_css')
   <link rel="stylesheet" href="{{ asset('backoffice/assets/css/gaya.css') }}" type="text/css">
+  @stack('plugin_css')
 </head>
 
 <body>

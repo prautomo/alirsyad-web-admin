@@ -28840,20 +28840,20 @@ html:not([dir='rtl']) .noUi-horizontal .noUi-handle
     height: 3px;
 }
 
-.select2-selection__arrow
+.select3-selection__arrow
 {
     display: none;
 }
 
-.select2.select2-container
+.select3.select3-container
 {
     width: 100% !important;
 }
 
-.select2-container .select2-selection--single,
-.select2-container--default.select2-container--focus .select2-selection--multiple,
-.select2-container--default .select2-selection--multiple,
-.select2-container--default .select2-search--dropdown .select2-search__field
+.select3-container .select3-selection--single,
+.select3-container--default.select3-container--focus .select3-selection--multiple,
+.select3-container--default .select3-selection--multiple,
+.select3-container--default .select3-search--dropdown .select3-search__field
 {
     font-size: 1rem;
     line-height: 1.5;
@@ -28875,26 +28875,26 @@ html:not([dir='rtl']) .noUi-horizontal .noUi-handle
 }
 @media (prefers-reduced-motion: reduce)
 {
-    .select2-container .select2-selection--single,
-    .select2-container--default.select2-container--focus .select2-selection--multiple,
-    .select2-container--default .select2-selection--multiple,
-    .select2-container--default .select2-search--dropdown .select2-search__field
+    .select3-container .select3-selection--single,
+    .select3-container--default.select3-container--focus .select3-selection--multiple,
+    .select3-container--default .select3-selection--multiple,
+    .select3-container--default .select3-search--dropdown .select3-search__field
     {
         transition: none;
     }
 }
-.select2-container .select2-selection--single::-ms-expand,
-.select2-container--default.select2-container--focus .select2-selection--multiple::-ms-expand,
-.select2-container--default .select2-selection--multiple::-ms-expand,
-.select2-container--default .select2-search--dropdown .select2-search__field::-ms-expand
+.select3-container .select3-selection--single::-ms-expand,
+.select3-container--default.select3-container--focus .select3-selection--multiple::-ms-expand,
+.select3-container--default .select3-selection--multiple::-ms-expand,
+.select3-container--default .select3-search--dropdown .select3-search__field::-ms-expand
 {
     border: 0; 
     background-color: transparent;
 }
-.select2-container .select2-selection--single:focus,
-.select2-container--default.select2-container--focus .select2-selection--multiple:focus,
-.select2-container--default .select2-selection--multiple:focus,
-.select2-container--default .select2-search--dropdown .select2-search__field:focus
+.select3-container .select3-selection--single:focus,
+.select3-container--default.select3-container--focus .select3-selection--multiple:focus,
+.select3-container--default .select3-selection--multiple:focus,
+.select3-container--default .select3-search--dropdown .select3-search__field:focus
 {
     color: #8898aa;
     border-color: #5e72e4;
@@ -28902,36 +28902,36 @@ html:not([dir='rtl']) .noUi-horizontal .noUi-handle
     background-color: #fff;
     box-shadow: 0 3px 9px rgba(50, 50, 9, 0), 3px 4px 8px rgba(94, 114, 228, .1);
 }
-.select2-container .select2-selection--single::-ms-input-placeholder,
-.select2-container--default.select2-container--focus .select2-selection--multiple::-ms-input-placeholder,
-.select2-container--default .select2-selection--multiple::-ms-input-placeholder,
-.select2-container--default .select2-search--dropdown .select2-search__field::-ms-input-placeholder
+.select3-container .select3-selection--single::-ms-input-placeholder,
+.select3-container--default.select3-container--focus .select3-selection--multiple::-ms-input-placeholder,
+.select3-container--default .select3-selection--multiple::-ms-input-placeholder,
+.select3-container--default .select3-search--dropdown .select3-search__field::-ms-input-placeholder
 {
     opacity: 1; 
     color: #adb5bd;
 }
-.select2-container .select2-selection--single::placeholder,
-.select2-container--default.select2-container--focus .select2-selection--multiple::placeholder,
-.select2-container--default .select2-selection--multiple::placeholder,
-.select2-container--default .select2-search--dropdown .select2-search__field::placeholder
+.select3-container .select3-selection--single::placeholder,
+.select3-container--default.select3-container--focus .select3-selection--multiple::placeholder,
+.select3-container--default .select3-selection--multiple::placeholder,
+.select3-container--default .select3-search--dropdown .select3-search__field::placeholder
 {
     opacity: 1; 
     color: #adb5bd;
 }
-.select2-container .select2-selection--single:disabled,
-.select2-container .select2-selection--single[readonly],
-.select2-container--default.select2-container--focus .select2-selection--multiple:disabled,
-.select2-container--default.select2-container--focus .select2-selection--multiple[readonly],
-.select2-container--default .select2-selection--multiple:disabled,
-.select2-container--default .select2-selection--multiple[readonly],
-.select2-container--default .select2-search--dropdown .select2-search__field:disabled,
-.select2-container--default .select2-search--dropdown .select2-search__field[readonly]
+.select3-container .select3-selection--single:disabled,
+.select3-container .select3-selection--single[readonly],
+.select3-container--default.select3-container--focus .select3-selection--multiple:disabled,
+.select3-container--default.select3-container--focus .select3-selection--multiple[readonly],
+.select3-container--default .select3-selection--multiple:disabled,
+.select3-container--default .select3-selection--multiple[readonly],
+.select3-container--default .select3-search--dropdown .select3-search__field:disabled,
+.select3-container--default .select3-search--dropdown .select3-search__field[readonly]
 {
     opacity: 1; 
     background-color: #e9ecef;
 }
 
-.select2-container .select2-selection--single .select2-selection__rendered
+.select3-container .select3-selection--single .select3-selection__rendered
 {
     overflow: inherit;
 
@@ -28941,14 +28941,14 @@ html:not([dir='rtl']) .noUi-horizontal .noUi-handle
     text-overflow: inherit;
 }
 
-.select2-container--default .select2-selection--single .select2-selection__rendered
+.select3-container--default .select3-selection--single .select3-selection__rendered
 {
     line-height: inherit; 
 
     color: inherit;
 }
 
-.select2-dropdown
+.select3-dropdown
 {
     padding: .5rem 0;
 
@@ -28957,7 +28957,7 @@ html:not([dir='rtl']) .noUi-horizontal .noUi-handle
     background-color: #fff;
 }
 
-.select2-results__option
+.select3-results__option
 {
     font-size: .875rem; 
 
@@ -28966,8 +28966,8 @@ html:not([dir='rtl']) .noUi-horizontal .noUi-handle
     color: #212529;
     background-color: #fff;
 }
-.select2-results__option:hover,
-.select2-results__option:focus
+.select3-results__option:hover,
+.select3-results__option:focus
 {
     text-decoration: none;
 
@@ -28975,26 +28975,26 @@ html:not([dir='rtl']) .noUi-horizontal .noUi-handle
     background-color: #f6f9fc;
 }
 
-.select2-container--default .select2-results__option--highlighted[aria-selected],
-.select2-container--default .select2-results__option[aria-selected='true']
+.select3-container--default .select3-results__option--highlighted[aria-selected],
+.select3-container--default .select3-results__option[aria-selected='true']
 {
     color: #16181b; 
     background-color: transparent;
 }
 
-.select2-container--default .select2-results__option[aria-disabled=true]
+.select3-container--default .select3-results__option[aria-disabled=true]
 {
     color: #8898aa;
 }
 
-.select2-container--default.select2-container--focus .select2-selection--multiple,
-.select2-container--default .select2-selection--multiple
+.select3-container--default.select3-container--focus .select3-selection--multiple,
+.select3-container--default .select3-selection--multiple
 {
     height: auto;
     min-height: calc(1.5em + 1.25rem + 2px);
 }
 
-.select2-container--default .select2-selection--multiple .select2-selection__rendered
+.select3-container--default .select3-selection--multiple .select3-selection__rendered
 {
     display: block;
 
@@ -29002,7 +29002,7 @@ html:not([dir='rtl']) .noUi-horizontal .noUi-handle
     padding: 0;
 }
 
-.select2-container--default .select2-selection--multiple .select2-selection__choice
+.select3-container--default .select3-selection--multiple .select3-selection__choice
 {
     font-size: .875rem;
     line-height: 1.5rem;
@@ -29018,7 +29018,7 @@ html:not([dir='rtl']) .noUi-horizontal .noUi-handle
     background-color: #adb5bd;
 }
 
-.select2-container--default .select2-selection--multiple .select2-selection__choice__remove
+.select3-container--default .select3-selection--multiple .select3-selection__choice__remove
 {
     margin-left: .5rem;
 
@@ -29026,28 +29026,28 @@ html:not([dir='rtl']) .noUi-horizontal .noUi-handle
 
     order: 2;
 }
-.select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover
+.select3-container--default .select3-selection--multiple .select3-selection__choice__remove:hover
 {
     color: #525f7f;
 }
 
-.select2-container .select2-search--inline
+.select3-container .select3-search--inline
 {
     display: none;
 }
 
-.select2-selection[aria-expanded='true']
+.select3-selection[aria-expanded='true']
 {
     border-bottom-right-radius: 0 !important; 
     border-bottom-left-radius: 0 !important;
 }
 
-.select2-search--dropdown
+.select3-search--dropdown
 {
     padding: .5rem .75rem;
 }
 
-.select2-container--default .select2-search--dropdown .select2-search__field
+.select3-container--default .select3-search--dropdown .select3-search__field
 {
     font-size: .875rem;
     line-height: 1.5;
@@ -29057,9 +29057,9 @@ html:not([dir='rtl']) .noUi-horizontal .noUi-handle
     border-radius: .25rem;
 }
 
-.form-control-sm + .select2-container .select2-selection--single,
-.form-control-sm + .select2-container--default.select2-container--focus .select2-selection--multiple,
-.form-control-sm + .select2-container--default .select2-selection--multiple
+.form-control-sm + .select3-container .select3-selection--single,
+.form-control-sm + .select3-container--default.select3-container--focus .select3-selection--multiple,
+.form-control-sm + .select3-container--default .select3-selection--multiple
 {
     font-size: .875rem;
     line-height: 1.5;
@@ -29070,20 +29070,20 @@ html:not([dir='rtl']) .noUi-horizontal .noUi-handle
     border-radius: .25rem;
 }
 
-.form-control-sm + .select2-container--default.select2-container--focus .select2-selection--multiple,
-.form-control-sm + .select2-container--default .select2-selection--multiple
+.form-control-sm + .select3-container--default.select3-container--focus .select3-selection--multiple,
+.form-control-sm + .select3-container--default .select3-selection--multiple
 {
     min-height: calc(1.5em + .5rem + 2px);
 }
 
-.form-control-sm + .select2-container--default .select2-selection--multiple .select2-selection__choice
+.form-control-sm + .select3-container--default .select3-selection--multiple .select3-selection__choice
 {
     line-height: 1.3125rem;
 }
 
-.form-control-lg + .select2-container .select2-selection--single,
-.form-control-lg + .select2-container--default.select2-container--focus .select2-selection--multiple,
-.form-control-lg + .select2-container--default .select2-selection--multiple
+.form-control-lg + .select3-container .select3-selection--single,
+.form-control-lg + .select3-container--default.select3-container--focus .select3-selection--multiple,
+.form-control-lg + .select3-container--default .select3-selection--multiple
 {
     font-size: 1.25rem;
     line-height: 1.5;
@@ -29094,13 +29094,13 @@ html:not([dir='rtl']) .noUi-horizontal .noUi-handle
     border-radius: .4375rem;
 }
 
-.form-control-lg + .select2-container--default.select2-container--focus .select2-selection--multiple,
-.form-control-lg + .select2-container--default .select2-selection--multiple
+.form-control-lg + .select3-container--default.select3-container--focus .select3-selection--multiple,
+.form-control-lg + .select3-container--default .select3-selection--multiple
 {
     min-height: calc(1.5em + 1.75rem + 2px);
 }
 
-.form-control-lg + .select2-container--default .select2-selection--multiple .select2-selection__choice
+.form-control-lg + .select3-container--default .select3-selection--multiple .select3-selection__choice
 {
     line-height: 1.875rem;
 }
