@@ -11,7 +11,7 @@ class Update extends Model
     use HasFactory, SearchableTrait;
 
     protected $fillable = [
-        'trigger_event', 'trigger', 'trigger_id', 'trigger_name', 'mata_pelajaran', 
+        'trigger_event', 'trigger', 'trigger_id', 'trigger_name', 'mata_pelajaran', 'tingkat_id', 
     ];
 
     public static function search($request)
@@ -23,6 +23,7 @@ class Update extends Model
             "trigger_id" => "=",
             "trigger_name" => "LIKE",
             "mata_pelajaran" => "LIKE",
+            "tingkat_id" => "=",
         ]);
 
         return $data;
@@ -35,5 +36,10 @@ class Update extends Model
         }else{
             return $this->belongsTo("App\Models\Modul",  "trigger_id", "id")->withTrashed();
         }
+    }
+
+    public function tingkat()
+    {
+        return $this->belongsTo("App\Models\Tingkat",  "tingkat_id", "id")->withTrashed();
     }
 }

@@ -129,12 +129,12 @@ class HomeController extends Controller
         if(!@$user->is_pengunjung){
             $updates = Update::with('triggerRel');
             // filter se jenjang
-            $updates = $updates->whereHas('triggerRel.mataPelajaran.tingkat.jenjang', function($query) use ($user) {
+            $updates = $updates->whereHas('tingkat.jenjang', function($query) use ($user) {
                 $jenjangId = @$user->kelas->tingkat->jenjang_id;
                 $query->where('id', $jenjangId);
             });
             // filter by tingkat bawahnya
-            $updates = $updates->whereHas('triggerRel.mataPelajaran.tingkat', function($query) use ($user) {
+            $updates = $updates->whereHas('tingkat', function($query) use ($user) {
                 $query->where('name', '<=', @$user->kelas->tingkat->name);
             });
             $updates = $updates->orderBy('created_at', 'desc')->limit(3)->get();
