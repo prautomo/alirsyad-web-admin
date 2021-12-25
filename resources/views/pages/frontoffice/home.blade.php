@@ -204,11 +204,11 @@
             @if(!@\Auth::user()->is_pengunjung)
             <!-- Update terbaru -->
             <div class="row my-5">
-                <div class="col-md-2 my-auto">
+                <div class="col-md-4 my-auto text-center">
                     <h4 class="font-weight-bolder" style="color: #0E594D;">Update Terbaru</h4>
                 </div>
 
-                <div class="col-md-10">
+                <div class="col-md-8">
                     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                         <ol class="carousel-indicators indicator-custom">
                             @forelse($updates as $idx => $update)
@@ -222,15 +222,13 @@
                             <div class="carousel-item{{ $idx == 0 ? ' active': '' }}">
                                 <div class="card">
                                     <div class="card-body mb-3">
+                                        <img height="75px" width="75px" align="left" src="{{ asset('images/image-placeholder.jpg') }}" class="mr-2" />
                                         <a href="{{ route('app.'.(@$update->trigger ?? 'video').'.detail', @$update->trigger_id) }}">
                                             <i>{{@$update->trigger_name}}</i>
                                         </a> baru saja di-{{ @$update->trigger_event == 'create' ? 'upload' : 'update' }} di mata pelajaran 
                                         <a href="{{ route('app.mapel.detail', @$update->triggerRel->mata_pelajaran_id ?? 0) }}">
                                             <i>{{ @$update->mata_pelajaran }}</i>
                                         </a>.
-
-                                        {{@$update->triggerRel->mataPelajaran->tingkat->name}}
-                                        {{@$update->triggerRel->mataPelajaran->tingkat->jenjang->name}}
                                     </div>
                                 </div>
                             </div>
@@ -261,11 +259,16 @@
                 </div>
                 
                 @foreach($kelasList as $kelas)
-                <div class="col-md-2 mb-2">
+                <div class="col-md-2 mb-2" style="max-width: 150px !important;">
                     <a href="{{ route('app.mapel.byTingkat', ['id' => @$kelas->id ?? 0]) }}">
-                        <div class="card">
-                            <div class="card-body mx-auto my-auto">
-                                <span class="font-weight-500" style="font-size: 14px;">
+                        <div class="card card-kelas">
+                            <div class="pl-2 pt-1">
+                                <span class="badge badge-warning" style="border-radius: 100%;">
+                                    {{ @$kelas->jenjang->name ?? '-' }}
+                                </span>
+                            </div>
+                            <div class="card-body mx-auto my-auto pt-1">
+                                <span class="text-main font-weight-500" style="font-size: 14px;">
                                     Kelas {{ @$kelas->name ?? '-' }}
                                 </span>
                             </div>
@@ -286,6 +289,16 @@
 <style>
     .indicator-custom li {
         background-color: #000;
+    }
+
+    .card-kelas {
+        color: #0E594D;
+        background-image: url('{{ asset('images/image-placeholder.jpg') }}');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        border-radius: 15px;
+        font-weight: bolder;
     }
 </style>
 @endpush
