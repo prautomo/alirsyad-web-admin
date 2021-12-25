@@ -301,7 +301,7 @@
         font-weight: bolder;
     }
 
-    @media (min-width: 576px) {
+    @media (min-width: 992px) {
         .wrap-card-kelas {
             max-width: 150px !important;
         }
