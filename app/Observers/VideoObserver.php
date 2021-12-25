@@ -76,6 +76,7 @@ class VideoObserver
             'trigger_id' => @$video->id, 
             'trigger_name' => @$video->name, 
             'mata_pelajaran' => @$video->mataPelajaran->name, 
+            'tingkat_id' => @$video->mataPelajaran->tingkat_id,
         ];
 
         Update::create($data);

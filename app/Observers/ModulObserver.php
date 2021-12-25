@@ -88,6 +88,7 @@ class ModulObserver
             'trigger_id' => @$modul->id, 
             'trigger_name' => @$modul->name, 
             'mata_pelajaran' => @$modul->mataPelajaran->name, 
+            'tingkat_id' => @$modul->mataPelajaran->tingkat_id,
         ];
 
         Update::create($data);
