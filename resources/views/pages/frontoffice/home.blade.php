@@ -259,7 +259,7 @@
                 </div>
                 
                 @foreach($kelasList as $kelas)
-                <div class="col-md-2 mb-2" style="max-width: 150px !important;">
+                <div class="col-md-2 mb-2 wrap-card-kelas">
                     <a href="{{ route('app.mapel.byTingkat', ['id' => @$kelas->id ?? 0]) }}">
                         <div class="card card-kelas">
                             <div class="pl-2 pt-1">
@@ -299,6 +299,12 @@
         background-size: cover;
         border-radius: 15px;
         font-weight: bolder;
+    }
+
+    @media (min-width: 576px) {
+        .wrap-card-kelas {
+            max-width: 150px !important;
+        }
     }
 </style>
 @endpush
