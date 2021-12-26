@@ -353,9 +353,9 @@ class ExternalUserController extends Controller{
                 $gu = User::where('username', $user->nis)->first();
 
                 $this->validate($request, [
-                    'nis' => 'required|unique:users,username,'.$gu->id,
+                    'nis' => 'required|unique:users,username,'.@$gu->id,
                     'name' => 'required',
-                    'email' => 'required|email|unique:users,email,'.$gu->id,
+                    'email' => 'required|email|unique:users,email,'.@$gu->id,
                     // 'phone' => 'required|unique:external_users,phone,'.$gu->id,
                 ]);
 
@@ -439,11 +439,13 @@ class ExternalUserController extends Controller{
         $d->save();
         $d->delete();
 
-        $dU = User::findOrFail(@$dU1->id);
-        $dU->username = "DEL_".date('Ymdhis')."_".$d->username;
-        $dU->email = "DEL_".date('Ymdhis')."@sample.id";
-        $dU->save();
-        $dU->delete();
+        $dU = User::find(@$dU1->id);
+        if($dU){
+            $dU->username = "DEL_".date('Ymdhis')."_".$d->username;
+            $dU->email = "DEL_".date('Ymdhis')."@sample.id";
+            $dU->save();
+            $dU->delete();   
+        }
     }
 
     /**

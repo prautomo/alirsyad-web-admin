@@ -157,6 +157,15 @@
             </li>
             @endcanany
 
+            @can('banner-list')
+            <li class="nav-item">
+              <a class="nav-link{{ request()->is('banners*') ? ' active' : '' }}" href="{{ route('backoffice::banners.index') }}">
+                <i class="ni ni-image text-dark-green"></i>
+                <span class="nav-link-text">Kelola Banner</span>
+              </a>
+            </li>
+            @endcan
+
             @can('role-list')
             <li class="nav-item">
               <a class="nav-link{{ request()->is('roles*') ? ' active' : '' }}" href="{{ route('backoffice::roles.index') }}">

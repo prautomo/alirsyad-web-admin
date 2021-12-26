@@ -151,10 +151,10 @@
         $('#tingkat_id').select2();
 
         @if(\Request::get('role') === 'GURU' || @$mapelIDS)
-            // $('#chooseMapel').select2({
-            //     theme: "classic",
-            //     width: 'resolve',
-            // });
+            $('#chooseMapel').select2({
+                theme: "classic",
+                width: 'resolve',
+            });
         @endif
     });
 </script>

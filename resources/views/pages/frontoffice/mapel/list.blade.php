@@ -49,8 +49,8 @@
 			
 		</div>
 
-        <div class="row mt-4">
-			<!-- sedang dipelajari -->
+        <!-- sudah dipelajari -->
+        <!-- <div class="row mt-4">
 			<div class="col-md-12">
 				<div class="card">
 					<div class="card-body">
@@ -89,10 +89,11 @@
 				</div>
 			</div>
 			
-		</div>
+		</div> -->
+        <!-- end sudah dipelajari -->
 
-        <div class="row mt-4">
-			<!-- sedang dipelajari -->
+        <!-- yg akan dipelajari -->
+        <!-- <div class="row mt-4">
 			<div class="col-md-12">
 				<div class="card">
 					<div class="card-body">
@@ -126,7 +127,8 @@
 				</div>
 			</div>
 			
-		</div>
+		</div> -->
+        <!-- end yg akan dipelajari -->
         @else
 
         <div class="row mt-4">

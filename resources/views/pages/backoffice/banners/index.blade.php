@@ -38,9 +38,9 @@
                     https://datatables.net/reference/option/columns
                 --}}
                 <th data-data="show-img">@lang("Image")</th>
-                <th data-data="caption">@lang("Caption")</th>
+                <th data-data="title">@lang("Title")</th>
+                <th data-data="status">@lang("Status")</th>
                 <th data-data="created_at">@lang("Created At")</th>
-                <th data-data="updated_at">@lang("Updated At")</th>
                 <th data-data="action" data-orderable="false" data-searchable="false">@lang("Action")</th>
             </x-datatable>
         </div>

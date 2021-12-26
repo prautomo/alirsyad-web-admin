@@ -35,6 +35,7 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
     Route::resource('tingkats', 'TingkatController');
     Route::get('kelas/listJson', 'KelasController@listJson')->name('kelas.listJson');
     Route::resource('kelas', 'KelasController');
+    Route::resource('banners', 'BannerController');
 
     Route::resource('moduls', 'ModulController');
     Route::resource('videos', 'VideoController');

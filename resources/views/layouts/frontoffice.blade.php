@@ -29,6 +29,10 @@
   @stack('plugin_css')
 
   @stack('style')
+
+  <style>
+    body { padding-right: 0 !important }
+  </style>
 </head>
 
 <body>

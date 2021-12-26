@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\MataPelajaran;
 use App\Models\GuestMataPelajaran;
 use App\Models\Tingkat;
+use App\Models\Banner;
+use App\Models\Update;
 use App\Services\UploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -30,7 +32,7 @@ class HomeController extends Controller
             $query->where('id', @$user->kelas_id);
         });
         // sort by active mapel
-        $sedangDipelajari = $sedangDipelajari->limit(2)->get();
+        $sedangDipelajari = $sedangDipelajari->limit(6)->get();
         // // sorting by name
         // $sedangDipelajari = $sedangDipelajari->sortBy('name');
 
@@ -112,11 +114,40 @@ class HomeController extends Controller
         // sorting by created at descending
         $tidakAktif = $tidakAktif->sortByDesc('created_at');
 
+        // list kelas
+        $kelasList = [];
+        if(!@$user->is_pengunjung){
+            $jenjangUser = @Auth::user()->kelas->tingkat->jenjang_id;
+            $kelasList = Tingkat::where('jenjang_id', $jenjangUser)->get();
+        }
+
+        // Banner
+        $banners = Banner::where(['activeStatus' => true])->orderBy('urutan', 'asc')->get();
+
+        // Update
+        $updates = [];
+        if(!@$user->is_pengunjung){
+            $updates = Update::with('triggerRel');
+            // filter se jenjang
+            $updates = $updates->whereHas('tingkat.jenjang', function($query) use ($user) {
+                $jenjangId = @$user->kelas->tingkat->jenjang_id;
+                $query->where('id', $jenjangId);
+            });
+            // filter by tingkat bawahnya
+            $updates = $updates->whereHas('tingkat', function($query) use ($user) {
+                $query->where('name', '<=', @$user->kelas->tingkat->name);
+            });
+            $updates = $updates->orderBy('created_at', 'desc')->limit(3)->get();
+        }
+
         $parseData = [
             'sedangDipelajari' => $sedangDipelajari,
             'yangAkanDatang' => $yangAkanDatang,
             'aktif' => $aktif,
             'tidakAktif' => $tidakAktif,
+            'kelasList' => $kelasList,
+            'banners' => $banners,
+            'updates' => $updates,
         ];
 
         return view('pages/frontoffice/home', $parseData);

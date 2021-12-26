@@ -55,15 +55,11 @@ class VideoController extends Controller{
                     $query->where(function($query) use ($search){
                         $query->where('name', 'LIKE', '%'.$search.'%');
                         
-                        $query = $query->orWhereHas('modul.mataPelajaran.tingkat.jenjang', function($query2) use ( $search ){
+                        $query = $query->orWhereHas('mataPelajaran.tingkat.jenjang', function($query2) use ( $search ){
                             $query2->where('name', 'LIKE', '%'.$search.'%');
                         });
 
-                        $query = $query->orWhereHas('modul.mataPelajaran.tingkat', function($query2) use ( $search ){
-                            $query2->where('name', 'LIKE', '%'.$search.'%');
-                        });
-
-                        $query = $query->orWhereHas('modul.mataPelajaran', function($query2) use ( $search ){
+                        $query = $query->orWhereHas('mataPelajaran.tingkat', function($query2) use ( $search ){
                             $query2->where('name', 'LIKE', '%'.$search.'%');
                         });
 
@@ -79,6 +75,9 @@ class VideoController extends Controller{
 
                 // query param mapel id
                 if(@$request->mata_pelajaran_id) $query->where('mata_pelajaran_id', @$request->mata_pelajaran_id);
+
+                // query param modul id
+                if(@$request->modul_id) $query->where('modul_id', @$request->modul_id);
             })
             ->addIndexColumn()
             ->addColumn('show-img', function($data) {
@@ -91,10 +90,10 @@ class VideoController extends Controller{
                 }
             })
             ->addColumn("jenjang", function ($data) {
-                return @$data->modul->mataPelajaran->tingkat->jenjang ? $data->modul->mataPelajaran->tingkat->jenjang->name : '-';
+                return @$data->mataPelajaran->tingkat->jenjang ? $data->mataPelajaran->tingkat->jenjang->name : '-';
             })
             ->addColumn("tingkat", function ($data) {
-                return @$data->modul->mataPelajaran->tingkat ? $data->modul->mataPelajaran->tingkat->name : '-';
+                return @$data->mataPelajaran->tingkat ? $data->mataPelajaran->tingkat->name : '-';
             })
             ->addColumn("mapel", function ($data) {
                 if(@$data->modul->mataPelajaran){

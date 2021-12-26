@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\SearchableTrait;
 use App\Models\HistoryVideo;
+use App\Observers\VideoObserver;
 
 class Video extends Model
 {
@@ -31,6 +32,17 @@ class Video extends Model
         'modul_id',
         'visible',
     ];
+
+    /**
+     * Register any events for your application.
+     *
+     * @return void
+     */
+    protected static function boot(){
+        parent::boot();
+
+        Video::observe(VideoObserver::class);
+    }
 
     public static function search($request)
     {
