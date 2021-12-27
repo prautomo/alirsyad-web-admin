@@ -9,10 +9,12 @@
             <h6 class="h2 text-white d-inline-block mb-0">@yield('title')</h6>
         </div>
         @can('user-create')
+        @if(@strtolower(\Request::get('role')) !== 'guru')
         <div class="col-lg-6 col-5 text-right">
             <a href="{{ route('backoffice::users.create') }}" class="btn btn-sm btn-neutral">New</a>
             <!-- <a href="#" class="btn btn-sm btn-neutral">Filters</a> -->
         </div>
+        @endif
         @endcan
     </div>
 @endsection
