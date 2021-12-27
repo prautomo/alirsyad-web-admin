@@ -230,6 +230,34 @@ class MataPelajaranController extends BaseController
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function showByTingkat($tingkatId)
+    {
+        $userInfo = Auth::user();
+        $tingkatInfo = Tingkat::findOrFail($tingkatId);
+        $mapels = [];
+
+        $jenjangUser = @$userInfo->kelas->tingkat->jenjang_id;
+
+        // cek jenjang user sama jenjang tingkatna harus sama
+        if(@$tingkatInfo->jenjang_id === $jenjangUser){
+            $mapels = MataPelajaran::where('tingkat_id', $tingkatId);
+            $mapels = $mapels->with('tingkat');
+            $mapels = $mapels->orderBy('name');
+            $mapels = $mapels->get();
+        }else{
+            // jangan kasih info tingkat
+            abort(404);
+        }
+
+        return $this->sendResponse(MataPelajaranResource::collection($mapels), 'MataPelajaran retrieved successfully.');
+    }
+
+    /**
      * Display summary the specified resource.
      *
      * @param  int  $id

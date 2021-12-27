@@ -39,4 +39,20 @@ class TingkatController extends BaseController
    
         return $this->sendResponse(new TingkatResource($data), 'Tingkat retrieved successfully.');
     }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function userTingkat(Request $request)
+    {
+        $datas = [];
+        if(!@$user->is_pengunjung){
+            $jenjangUser = @Auth::user()->kelas->tingkat->jenjang_id;
+            $datas = Tingkat::where('jenjang_id', $jenjangUser)->get();
+        }
+    
+        return $this->sendResponse(TingkatResource::collection($datas), 'Tingkat retrieved successfully.');
+    }
 }
