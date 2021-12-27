@@ -64,6 +64,9 @@ Route::middleware('auth:api')->group( function () {
 
     Route::get("/nilai-simulasi", "API\ScoreController@index");
 
+    Route::get("/banners", "API\BannerController@index");
+    Route::get("/banners/{id}", "API\BannerController@show");
+
     Route::prefix('guru')->group(function() {
         Route::get("/dashboard", "API\DashboardController@index");
         Route::get("/dashboard/detail", "API\DashboardController@detail");
