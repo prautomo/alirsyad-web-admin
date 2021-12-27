@@ -30,6 +30,8 @@ class MataPelajaranController extends BaseController
     {
         $datas = MataPelajaran::search($request);
         $datas = $datas->with('tingkat.jenjang');
+        // limit data
+        if (@$request->limit) $datas = $datas->limit($request->limit);
         // sort by active mapel
         $datas = $datas->get();
         // // sort by name
@@ -53,6 +55,8 @@ class MataPelajaranController extends BaseController
         $datas = $datas->whereHas('tingkat.kelas', function($query) {
             $query->where('id', @Auth::user()->kelas_id);
         });
+        // limit data
+        if (@$request->limit) $datas = $datas->limit($request->limit);
         // sort by active mapel
         $datas = $datas->get();
         // // sort by name
@@ -110,6 +114,9 @@ class MataPelajaranController extends BaseController
         $datas = collect($datas)->sortByDesc('created_at');
         //end
 
+        // limit data
+        if (@$request->limit) $datas = $datas->take($request->limit);
+
         return $this->sendResponse(MataPelajaranResource::collection($datas), 'Mata Pelajaran retrieved successfully.');
     }
 
@@ -134,6 +141,8 @@ class MataPelajaranController extends BaseController
         $datas = $datas->whereHas('tingkat', function($query) use ($user) {
             if(!$user->is_pengunjung) $query->where('name', '<', @Auth::user()->kelas->tingkat->name);
         });
+        // limit data
+        if (@$request->limit) $datas = $datas->limit($request->limit);
         // get
         $datas = $user->is_pengunjung ? collect([]) : $datas->get();
         // sort by tingkat
@@ -158,6 +167,8 @@ class MataPelajaranController extends BaseController
         $aktif = $aktif->whereHas('guests', function($query) use ($user) {
             $query->where('guest_id', $user->id);
         });
+        // limit data
+        if (@$request->limit) $aktif = $aktif->limit($request->limit);
         // sort by active mapel
         $aktif = $aktif->get();
         // // sort by active mapel
@@ -191,6 +202,8 @@ class MataPelajaranController extends BaseController
             $selectedMapel = GuestMataPelajaran::where('guest_id', $user->id)->get()->pluck('mata_pelajaran_id');
             $tidakAktif = $tidakAktif->whereNotIn('id', $selectedMapel);
         }
+        // limit data
+        if (@$request->limit) $tidakAktif = $tidakAktif->limit($request->limit);
         // sort by active mapel
         $datas = $tidakAktif->get()->sortBy('tingkat');
         // sort by created at descending
