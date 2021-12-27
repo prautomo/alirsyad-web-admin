@@ -105,8 +105,6 @@ class MataPelajaran extends Model
     // 
     public function getDisabledAttribute()
     {
-        // drop logic here
-        // return $this->tingkat_id !== \Auth::user()->kelas_id;
-        return false;
+        return @$this->tingkat->name > @\Auth::user()->kelas->tingkat->name;
     }
 }

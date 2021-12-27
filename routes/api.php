@@ -64,6 +64,13 @@ Route::middleware('auth:api')->group( function () {
 
     Route::get("/nilai-simulasi", "API\ScoreController@index");
 
+    Route::get("/home/banners", "API\BannerController@index");
+    Route::get("/home/banners/{id}", "API\BannerController@show");
+
+    Route::get("/home/updates", "API\UpdateController@index");
+    Route::get("/home/tingkats", "API\TingkatController@userTingkat");
+    Route::get("/home/tingkats/{id}", "API\MataPelajaranController@showByTingkat");
+
     Route::prefix('guru')->group(function() {
         Route::get("/dashboard", "API\DashboardController@index");
         Route::get("/dashboard/detail", "API\DashboardController@detail");
