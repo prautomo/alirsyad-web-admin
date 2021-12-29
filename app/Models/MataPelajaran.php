@@ -29,7 +29,7 @@ class MataPelajaran extends Model
 
     protected static function boot(){
         parent::boot();
-     
+
         // Order by urutan ASC
         static::addGlobalScope('order', function (Builder $builder) {
             $builder->orderBy('urutan', 'asc');
@@ -102,9 +102,16 @@ class MataPelajaran extends Model
         return $this->belongsToMany('App\Models\ExternalUser', 'guest_mata_pelajarans', 'mata_pelajaran_id' , 'guest_id');
     }
 
-    // 
+    //
     public function getDisabledAttribute()
     {
-        return @$this->tingkat->name > @\Auth::user()->kelas->tingkat->name;
+        $user = @\Auth::user();
+
+        if($user->is_pengunjung){
+            $mapelGuest = GuestMataPelajaran::where(['guest_id'=> @$user->id, 'mata_pelajaran_id' => @$this->id])->first();
+            return @$mapelGuest->mata_pelajaran_id ? false : true;
+        }
+
+        return @$this->tingkat->name > @$user->kelas->tingkat->name;
     }
 }

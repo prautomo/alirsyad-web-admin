@@ -70,7 +70,7 @@ class HomeController extends Controller
                     $tingkatnya = @Auth::user()->kelas->tingkat->name;
                     // kalo tk b, assign aja akhirnya jadi tingkat 1
                     $tingkatnya = $tingkatnya==="B" ? 1 : ((int) $tingkatnya)+1;
-                    
+
                     $query->where('name', '=', $tingkatnya ?? '-');
                 });
                 $yangAkanDatangNextJenjang = $yangAkanDatangNextJenjang->get();
@@ -79,54 +79,77 @@ class HomeController extends Controller
         }
         //end
 
-        /**
-         * Mapel Aktif buat Pengunjung
-         */
-        $aktif = MataPelajaran::search($request);
-        $aktif = $aktif->with('tingkat');
-        // mapel pilihan admin
-        $aktif = $aktif->whereHas('guests', function($query) use ($user) {
-            $query->where('guest_id', $user->id);
-        });
-        // sort by active mapel
-        $aktif = $aktif->limit(2)->get()->sortBy('name');
-        // kalo user belum aktif (kosongin aja list mapelna)
-        if($user->status!=="AKTIF") $aktif = [];
+        // pengunjung
+        $aktif = [];
+        $tidakAktif = [];
+        if(@$user->is_pengunjung){
+            /**
+             * Mapel Aktif buat Pengunjung
+             */
+            $aktif = MataPelajaran::search($request);
+            $aktif = $aktif->with('tingkat');
+            // mapel pilihan admin
+            $aktif = $aktif->whereHas('guests', function($query) use ($user) {
+                $query->where('guest_id', $user->id);
+            });
+            // sort by active mapel
+            $aktif = $aktif->limit(6)->get()->sortBy('name');
+            // kalo user belum aktif (kosongin aja list mapelna)
+            if($user->status!=="AKTIF") $aktif = [];
 
-        /**
-         * Mapel Tidak Aktif buat Pengunjung
-         */
-        $tidakAktif = MataPelajaran::search($request);
-        $tidakAktif = $tidakAktif->with('tingkat');
-        // by tingkat
-        $tidakAktif = $tidakAktif->whereHas('tingkat', function($q2) use ($user){
-            $q2->where('jenjang_id', $user->jenjang_id);
-        });
-        // mapel bukan pilihan admin
-        if($user->status==="AKTIF"){   
-            $selectedMapel = GuestMataPelajaran::where('guest_id', $user->id)->get()->pluck('mata_pelajaran_id');
-            $tidakAktif = $tidakAktif->whereNotIn('id', $selectedMapel);   
+            /**
+             * Mapel Tidak Aktif buat Pengunjung
+             */
+            $tidakAktif = MataPelajaran::search($request);
+            $tidakAktif = $tidakAktif->with('tingkat');
+            // by tingkat
+            $tidakAktif = $tidakAktif->whereHas('tingkat', function($q2) use ($user){
+                $q2->where('jenjang_id', $user->jenjang_id);
+            });
+            // mapel bukan pilihan admin
+            if($user->status==="AKTIF"){
+                $selectedMapel = GuestMataPelajaran::where('guest_id', $user->id)->get()->pluck('mata_pelajaran_id');
+                $tidakAktif = $tidakAktif->whereNotIn('id', $selectedMapel);
+            }
+            // sort by active mapel
+            $tidakAktif = $tidakAktif->limit(6)->get();
+            // // sorting by name
+            // $tidakAktif = $tidakAktif->sortBy('name')
+            // sorting by created at descending
+            $tidakAktif = $tidakAktif->sortByDesc('created_at');
         }
-        // sort by active mapel
-        $tidakAktif = $tidakAktif->limit(2)->get();
-        // // sorting by name
-        // $tidakAktif = $tidakAktif->sortBy('name')
-        // sorting by created at descending
-        $tidakAktif = $tidakAktif->sortByDesc('created_at');
 
         // list kelas
-        $kelasList = [];
-        if(!@$user->is_pengunjung){
+        if(@$user->is_pengunjung){
+            $jenjangUser = @Auth::user()->jenjang_id;
+        }else{
             $jenjangUser = @Auth::user()->kelas->tingkat->jenjang_id;
-            $kelasList = Tingkat::where('jenjang_id', $jenjangUser)->get();
         }
+        $kelasList = Tingkat::where('jenjang_id', $jenjangUser)->get();
 
         // Banner
         $banners = Banner::where(['activeStatus' => true])->orderBy('urutan', 'asc')->get();
 
         // Update
         $updates = [];
-        if(!@$user->is_pengunjung){
+        // pengunjung
+        if(@$user->is_pengunjung){
+            $updates = Update::with('triggerRel');
+            // filter se jenjang
+            $updates = $updates->whereHas('tingkat.jenjang', function($query) use ($user) {
+                $jenjangId = @$user->jenjang_id;
+                $query->where('id', $jenjangId);
+            });
+            // filter by active mapelnya
+            // mapel pilihan admin
+            $updates = $updates->whereHas('triggerRel.mataPelajaran.guests', function($query) use ($user) {
+                $query->where('guest_id', @$user->id);
+            });
+
+            $updates = $updates->orderBy('created_at', 'desc')->limit(3)->get();
+        }
+        // siswa
+        else{
             $updates = Update::with('triggerRel');
             // filter se jenjang
             $updates = $updates->whereHas('tingkat.jenjang', function($query) use ($user) {

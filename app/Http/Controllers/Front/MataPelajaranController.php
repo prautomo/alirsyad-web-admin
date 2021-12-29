@@ -54,7 +54,7 @@ class MataPelajaranController extends Controller
                     $tingkatnya = @Auth::user()->kelas->tingkat->name;
                     // kalo tk b, assign aja akhirnya jadi tingkat 1
                     $tingkatnya = $tingkatnya==="B" ? 1 : ((int) $tingkatnya)+1;
-                    
+
                     $query->where('name', '=', $tingkatnya ?? '-');
                 });
                 $yangAkanDatangNextJenjang = $yangAkanDatangNextJenjang->get();
@@ -88,24 +88,24 @@ class MataPelajaranController extends Controller
         // kalo user belum aktif (kosongin aja list mapelna)
         if($user->status!=="AKTIF") $aktif = [];
 
-        /**
-         * Mapel Tidak Aktif buat Pengunjung
-         */
-        $tidakAktif = MataPelajaran::search($request);
-        $tidakAktif = $tidakAktif->with('tingkat');
-        // by tingkat
-        $tidakAktif = $tidakAktif->whereHas('tingkat', function($q2) use ($user){
-            $q2->where('jenjang_id', $user->jenjang_id);
-        });
-        // mapel bukan pilihan admin
-        if($user->status==="AKTIF"){ 
-            $selectedMapel = GuestMataPelajaran::where('guest_id', $user->id)->get()->pluck('mata_pelajaran_id');
-            $tidakAktif = $tidakAktif->whereNotIn('id', $selectedMapel);
-        }
-        // sort by active mapel
-        $tidakAktif = $tidakAktif->get()->sortBy('tingkat');
-        // sort by created at descending
-        $tidakAktif = $tidakAktif->sortByDesc('created_at');
+        // /**
+        //  * Mapel Tidak Aktif buat Pengunjung
+        //  */
+        // $tidakAktif = MataPelajaran::search($request);
+        // $tidakAktif = $tidakAktif->with('tingkat');
+        // // by tingkat
+        // $tidakAktif = $tidakAktif->whereHas('tingkat', function($q2) use ($user){
+        //     $q2->where('jenjang_id', $user->jenjang_id);
+        // });
+        // // mapel bukan pilihan admin
+        // if($user->status==="AKTIF"){
+        //     $selectedMapel = GuestMataPelajaran::where('guest_id', $user->id)->get()->pluck('mata_pelajaran_id');
+        //     $tidakAktif = $tidakAktif->whereNotIn('id', $selectedMapel);
+        // }
+        // // sort by active mapel
+        // $tidakAktif = $tidakAktif->get()->sortBy('tingkat');
+        // // sort by created at descending
+        // $tidakAktif = $tidakAktif->sortByDesc('created_at');
 
         $parseData = [
             'sedangDipelajari' => $sedangDipelajari,
@@ -113,7 +113,7 @@ class MataPelajaranController extends Controller
             'sebelumnya' => $sebelumnya,
 
             'aktif' => $aktif,
-            'tidakAktif' => $tidakAktif,
+            'tidakAktif' => @$tidakAktif ?? [],
         ];
 
         return view('pages/frontoffice/mapel/list', $parseData);
@@ -130,7 +130,11 @@ class MataPelajaranController extends Controller
         $tingkatInfo = Tingkat::findOrFail($tingkatId);
         $mapels = [];
 
-        $jenjangUser = @$userInfo->kelas->tingkat->jenjang_id;
+        if(@$userInfo->is_pengunjung){
+            $jenjangUser = @$userInfo->jenjang_id;
+        }else{
+            $jenjangUser = @$userInfo->kelas->tingkat->jenjang_id;
+        }
 
         // cek jenjang user sama jenjang tingkatna harus sama
         if($tingkatInfo->jenjang_id === $jenjangUser){
@@ -171,7 +175,7 @@ class MataPelajaranController extends Controller
                 $tingkatnya = @Auth::user()->kelas->tingkat->name;
                 // kalo tk b, assign aja akhirnya jadi tingkat 1
                 $tingkatnya = $tingkatnya==="B" ? 1 : ((int) $tingkatnya)+1;
-                
+
                 $query->where('name', '=', $tingkatnya ?? '-');
             });
             $yangAkanDatangNextJenjang = $yangAkanDatangNextJenjang->get();
@@ -216,7 +220,7 @@ class MataPelajaranController extends Controller
             // if($isTk) $query->where('name', '!=','TK');
             // cek tingkat terakhir di jenjang
             // 1. order by desc tngkat by jenjang
-            // 2. bandingin sama tingkat user sekarang 
+            // 2. bandingin sama tingkat user sekarang
         });
         // filter by tingkat condition
         $mapels = $mapels->whereHas('tingkat', function($query) use ($condition) {
@@ -251,8 +255,9 @@ class MataPelajaranController extends Controller
         // });
         // filter by tingkat bawahnya
         if (!$user->is_pengunjung) $mapel = $mapel->whereHas('tingkat', function($query) {
-            $query->where('name', '<=', Auth::user()->kelas->tingkat->name);
+            $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
         });
+        // kalo pengunjung, filter by mapel aktif nya
         $mapel = $mapel->findOrFail($id);
 
         // percentage
