@@ -142,7 +142,7 @@ class HomeController extends Controller
             });
             // filter by active mapelnya
             // mapel pilihan admin
-            $updates = $updates->whereHas('triggerRel.mataPelajaran.guests', function($query) use ($user) {
+            $updates = $updates->whereHas('mataPelajaran.guests', function($query) use ($user) {
                 $query->where('guest_id', @$user->id);
             });
 
