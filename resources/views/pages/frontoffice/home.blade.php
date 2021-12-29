@@ -126,82 +126,37 @@
                 <!-- End Buat siswa -->
                 @else
                 <!-- mapel aktif -->
-                <div class="col-md-6 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="card-title mb-0 form-inline">
-                                <i class="ni ni-books icon-title"></i>
-                                <div>Mata Pelajaran Aktif</div>
-                            </div>
-                            <hr/>
-
-                            @forelse($aktif as $mpa)
-                            <div class="wrap-kelas form-inline mt-3">
-                                <div style="max-width: 270px;">
-                                    <span class="kelas-title">Kelas {{ $mpa->tingkat->name ?? "-" }} {{ @$mpa->tingkat->jenjang->name }}</span>
-                                    <h4 class="font-weight-bold">
-                                        {{ @$mpa->name ?? "-" }}
-                                    </h4>
-                                </div>
-                                <div class="ml-auto">
-                                    <a href="{{ route('app.mapel.detail', @$mpa->id) }}" class="btn btn-main btn-small">
-                                        <i class="btn-icon fa fa-play ml-2"></i> Lanjut Belajar
-                                    </a>
-                                </div>
-                            </div>
-                            @empty
-                            <div class="wrap-kelas form-inline mt-3">
-                                <h4 class="font-weight-bold">Belum ada mata pelajaran.</h4>
-                            </div>
-                            @endforelse
-
-                            @if(!empty($mpa))
-                            <div class="mt-2 text-right">
-                                <a href="{{ route('app.mapel.list') }}">Selengkapnya</a>
-                            </div>
-                            @endif
-                        </div>
+                <div class="col-md-12 mb-1">
+                    <div class="card-title mb-0 form-inline">
+                        <i class="ni ni-books icon-title"></i>
+                        <div class="font-weight-bolder" style="color: #0E594D;">Mata Pelajaran Aktif</div>
                     </div>
+                    <hr/>
                 </div>
 
-                <!-- mapel tidak aktif -->
-                <div class="col-md-6 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="card-title mb-0 form-inline">
-                                <i class="ni ni-books icon-title"></i>
-                                <div>Mata Pelajaran Tidak Aktif</div>
-                            </div>
-                            <hr/>
+                    @forelse($aktif as $mpa)
+                    <div class="col-md-2 col-6 col-sm-4 mb-4">
+                        <a href="{{ route('app.mapel.detail', @$mpa->id) }}">
+                            <img src="{{ @$mpa->icon ? asset($mpa->icon) : asset('images/image-placeholder.jpg') }}" alt="{{ @$mpa->name ?? "-" }}" width="100%" class="mb-3 rounded" />
 
-                            @forelse($tidakAktif as $mpta)
-                            <div class="wrap-kelas form-inline mt-3">
-                                <div style="max-width: 270px;">
-                                    <span class="kelas-title disable">Kelas {{ $mpta->tingkat->name ?? "-" }} {{ @$mpta->tingkat->jenjang->name }}</span>
-                                    <h4 class="font-weight-bold disable">
-                                        {{ @$mpta->name ?? "-" }}
-                                    </h4>
-                                </div>
-                            </div>
-                            @empty
-                            <div class="wrap-kelas form-inline mt-3">
-                                <h4 class="font-weight-bold">Belum ada mata pelajaran.</h4>
-                            </div>
-                            @endforelse
-
-                            @if(!empty($mpta))
-                            <div class="mt-2 text-right">
-                                <a href="{{ route('app.mapel.list') }}">Selengkapnya</a>
-                            </div>
-                            @endif
+                            <p class="font-weight-bold mb-0" style="font-size: 16px; line-height: 14px;">
+                                {{ @$mpa->name ?? "-" }}
+                            </p>
+                        </a>
+                        <span style="font-size: 14px;">
+                            {{ @$mpa->tingkat->name ?? "-" }} {{ @$mpa->tingkat->jenjang->name }}
+                        </span>
+                    </div>
+                    @empty
+                    <div class="col-md-12 mb-4">
+                        <div class="wrap-kelas form-inline mt-3">
+                            <h4 class="font-weight-bold">Belum ada mata pelajaran.</h4>
                         </div>
                     </div>
-                </div>
+                    @endforelse
                 @endif
             </div>
 
-            <!-- khusus siswa -->
-            @if(!@\Auth::user()->is_pengunjung)
             <!-- Update terbaru -->
             <div class="row my-5">
                 <div class="col-md-4 my-auto text-center">
@@ -225,8 +180,8 @@
                                         <img height="75px" width="75px" align="left" src="{{ asset('images/image-placeholder.jpg') }}" class="mr-2" />
                                         <a href="{{ route('app.'.(@$update->trigger ?? 'video').'.detail', @$update->trigger_id) }}">
                                             <i>{{@$update->trigger_name}}</i>
-                                        </a> baru saja di-{{ @$update->trigger_event == 'create' ? 'upload' : 'update' }} di mata pelajaran 
-                                        <a href="{{ route('app.mapel.detail', @$update->triggerRel->mata_pelajaran_id ?? 0) }}">
+                                        </a> baru saja di-{{ @$update->trigger_event == 'create' ? 'upload' : 'update' }} di mata pelajaran
+                                        <a href="{{ route('app.mapel.detail', @$update->{@$update->trigger ?? 'video'}->mata_pelajaran_id ?? 0) }}">
                                             <i>{{ @$update->mata_pelajaran }}</i>
                                         </a>.
                                     </div>
@@ -257,7 +212,7 @@
                     </div>
                     <hr/>
                 </div>
-                
+
                 @foreach($kelasList as $kelas)
                 <div class="col-md-2 mb-2 wrap-card-kelas">
                     <a href="{{ route('app.mapel.byTingkat', ['id' => @$kelas->id ?? 0]) }}">
@@ -276,11 +231,10 @@
                     </a>
                 </div>
                 @endforeach
-                
+
             </div>
             @endif
             <!-- End Semua Mata Pelajaran -->
-            @endif
         </div>
 </section>
 @endsection
@@ -335,7 +289,7 @@
     //         console.log("dika i", i)
     //         i.length || (i = $(this).siblings(":first")),
     //             i.children(":first-child").clone().appendTo($(this));
-            
+
     //         for (var n = 0; n < 4; n++)(i = i.next()).length ||
     //             (i = $(this).siblings(":first")),
     //             i.children(":first-child").clone().appendTo($(this))
@@ -343,8 +297,8 @@
     // });
 
     $('#exampleModal').on('show.bs.modal', function (event) {
-        var container = $(event.relatedTarget) 
-        var fileUrl = container.data('file') 
+        var container = $(event.relatedTarget)
+        var fileUrl = container.data('file')
         var modal = $(this);
         let template = "<object type='application/pdf' width='100%' height='430px' data= '" + fileUrl + "'>";
         modal.find('#pdf-viewer-file').html(template)
