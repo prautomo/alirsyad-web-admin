@@ -38,7 +38,7 @@ class MataPelajaranController extends Controller
         $sedangDipelajari = $sedangDipelajari;
 
         // sorting by urutan
-        $sedangDipelajari = $sedangDipelajari->sortBy('urutan');
+        $sedangDipelajari = $sedangDipelajari->orderBy('urutan', 'asc');
 
         // get data
         $sedangDipelajari = $sedangDipelajari->get();
