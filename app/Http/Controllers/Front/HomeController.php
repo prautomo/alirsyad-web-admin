@@ -87,14 +87,17 @@ class HomeController extends Controller
             /**
              * Mapel Aktif buat Pengunjung
              */
-            $aktif = MataPelajaran::search($request);
-            $aktif = $aktif->with('tingkat');
+            // $aktif = MataPelajaran::search($request);
+            // $aktif = $aktif->with('tingkat');
+            $aktif = MataPelajaran::with('tingkat');
             // mapel pilihan admin
             $aktif = $aktif->whereHas('guests', function($query) use ($user) {
                 $query->where('guest_id', $user->id);
             });
+            // sort by urutan
+            $datas = $datas->orderBy('urutan', 'asc');
             // sort by active mapel
-            $aktif = $aktif->limit(6)->get()->sortBy('name');
+            $aktif = $aktif->limit(6)->get();
             // kalo user belum aktif (kosongin aja list mapelna)
             if($user->status!=="AKTIF") $aktif = [];
 
