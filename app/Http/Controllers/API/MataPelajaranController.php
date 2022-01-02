@@ -172,21 +172,24 @@ class MataPelajaranController extends BaseController
     {
         $user = @Auth::user();
 
-        // active mapel by admin
-        $aktif = MataPelajaran::search($request);
-        $aktif = $aktif->with('tingkat.jenjang');
+        // // active mapel by admin
+        // $aktif = MataPelajaran::search($request);
+        // $aktif = $aktif->with('tingkat.jenjang');
+        $aktif = MataPelajaran::with('tingkat.jenjang');
         // mapel pilihan admin
         $aktif = $aktif->whereHas('guests', function($query) use ($user) {
             $query->where('guest_id', $user->id);
         });
         // limit data
         if (@$request->limit) $aktif = $aktif->limit($request->limit);
+        // sort by urutan
+        $datas = $datas->orderBy('urutan', 'asc');
         // sort by active mapel
         $aktif = $aktif->get();
         // // sort by active mapel
         // $aktif = $aktif->sortBy('name');
         // sort by created at descending
-        $aktif = $aktif->sortByDesc('created_at');
+        // $aktif = $aktif->sortByDesc('created_at');
 
         // kalo user belum aktif (kosongin aja list mapelna)
         if($user->status!=="AKTIF") $aktif = [];
