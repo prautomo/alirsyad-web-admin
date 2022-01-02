@@ -25,6 +25,10 @@ class ModulController extends BaseController
         // $datas = Modul::search($request);
         // $datas = $datas->with('mataPelajaran');
         $datas = Modul::with('mataPelajaran');
+
+        if(@$request->q_mata_pelajaran_id){
+            $datas = $datas->where('mata_pelajaran_id', $request->q_mata_pelajaran_id);
+        }
         // // handle hak akses mapel
         // $datas = $datas->whereHas('mataPelajaran.tingkat', function($query) use ($user){
         //     if(@Auth::user()->role==="SISWA"){
