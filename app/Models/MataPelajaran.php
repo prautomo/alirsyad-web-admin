@@ -30,10 +30,10 @@ class MataPelajaran extends Model
     protected static function boot(){
         parent::boot();
 
-        // Order by urutan ASC
-        static::addGlobalScope('order', function (Builder $builder) {
-            $builder->orderBy('urutan', 'asc');
-        });
+        // // Order by urutan ASC
+        // static::addGlobalScope('order', function (Builder $builder) {
+        //     $builder->orderBy('urutan', 'asc');
+        // });
     }
 
     public static function search($request)

@@ -28,23 +28,17 @@ class HomeController extends Controller
         $sedangDipelajari = MataPelajaran::search($request);
         $sedangDipelajari = $sedangDipelajari->with('tingkat');
         // user is siswa and not visitor
-        if(!@$user->is_pengunjung) $sedangDipelajari = $sedangDipelajari->whereHas('tingkat.kelas', function($query) use ($user) {
-            $query->where('id', @$user->kelas_id);
-        });
-        // sort by active mapel
-        $sedangDipelajari = $sedangDipelajari->limit(6);
+        if(!@$user->is_pengunjung) $sedangDipelajari = $sedangDipelajari->where('tingkat_id', @$user->kelas->tingkat_id);
 
         // sorting by urutan
         $sedangDipelajari = $sedangDipelajari->orderBy('urutan', 'asc');
 
+        // limit
+        // $sedangDipelajari = $sedangDipelajari->limit(6);
+
         $sedangDipelajari = $sedangDipelajari->get();
-
-        // // sorting by name
-        // $sedangDipelajari = $sedangDipelajari->sortBy('name');
-
-        // // sorting by created at descending
-        // $sedangDipelajari = $sedangDipelajari->sortByDesc('created_at');
-
+        $sedangDipelajari = $sedangDipelajari->sortBy('urutan');
+        $sedangDipelajari = $sedangDipelajari->take(6);
 
         // upcoming mapel
         $yangAkanDatang = MataPelajaran::search($request);

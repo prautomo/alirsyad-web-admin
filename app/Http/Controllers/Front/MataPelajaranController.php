@@ -29,22 +29,14 @@ class MataPelajaranController extends Controller
         $user = @Auth::user();
 
         // sedang di pelajari
-        $sedangDipelajari = MataPelajaran::search($request);
+        $sedangDipelajari = MataPelajaran::where('tingkat_id', @$user->kelas->tingkat_id);
         $sedangDipelajari = $sedangDipelajari->with('tingkat');
-        $sedangDipelajari = $sedangDipelajari->whereHas('tingkat.kelas', function($query) {
-            $query->where('id', Auth::user()->kelas_id);
-        });
-        // sort by active mapel
-        $sedangDipelajari = $sedangDipelajari;
-
-        // sorting by urutan
         $sedangDipelajari = $sedangDipelajari->orderBy('urutan', 'asc');
-
-        // get data
         $sedangDipelajari = $sedangDipelajari->get();
 
         // // sort by created at descending
         // $sedangDipelajari = $sedangDipelajari->sortByDesc('created_at');
+        // $sedangDipelajari = $sedangDipelajari->sortBy('urutan');
 
 
         // mapel yang akan datang
@@ -148,8 +140,9 @@ class MataPelajaranController extends Controller
         if($tingkatInfo->jenjang_id === $jenjangUser){
             $mapels = MataPelajaran::where('tingkat_id', $tingkatId);
             $mapels = $mapels->with('tingkat');
-            $mapels = $mapels->orderBy('name');
+            $mapels = $mapels->orderBy('urutan', 'asc');
             $mapels = $mapels->get();
+            // $mapels = $mapels->sortBy('urutan');
         }else{
             // jangan kasih info tingkat
             abort(404);
