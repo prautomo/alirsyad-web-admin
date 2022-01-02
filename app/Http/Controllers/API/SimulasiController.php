@@ -1,7 +1,7 @@
 <?php
-   
+
 namespace App\Http\Controllers\API;
-   
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\Simulasi;
@@ -28,20 +28,20 @@ class SimulasiController extends BaseController
 
         $datas = Simulasi::with('uploader', 'mataPelajaran');
 
-        // handle hak akses mapel
-        $user = Auth::user();
-        if($user->role !== "GURU"){
-            if (!$user->is_pengunjung) $datas = $datas->whereHas('mataPelajaran.tingkat', function($query) use($user) {
-                $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
-            });
-        }
+        // // handle hak akses mapel
+        // $user = Auth::user();
+        // if($user->role !== "GURU"){
+        //     if (!$user->is_pengunjung) $datas = $datas->whereHas('mataPelajaran.tingkat', function($query) use($user) {
+        //         $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
+        //     });
+        // }
 
         $idMapel = @$request->q_mata_pelajaran_id;
 
         if($idMapel){
             $datas = $datas->where('mata_pelajaran_id', $idMapel);
         }
-        
+
         // sorting by urutan
         $datas = $datas->orderBy('urutan', 'asc')->orderBy('level', 'asc');
 
@@ -64,7 +64,7 @@ class SimulasiController extends BaseController
         $user = @Auth::user();
 
         $data = Simulasi::with('mataPelajaran.tingkat.jenjang');
-  
+
         // handle hak akses mapel
         $data = $data->whereHas('mataPelajaran.tingkat', function($query) use ($user){
             if(@Auth::user()->role==="SISWA"){
@@ -77,7 +77,7 @@ class SimulasiController extends BaseController
         if (is_null($data)) {
             return $this->sendError('Simulasi not found.');
         }
-   
+
         return $this->sendResponse(new SimulasiResource($data), 'Simulasi retrieved successfully.');
     }
 
@@ -88,11 +88,11 @@ class SimulasiController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function createHistory(Request $request, $id) 
+    public function createHistory(Request $request, $id)
     {
         $data = Simulasi::with('mataPelajaran');
         $user = Auth::user();
-  
+
         // handle hak akses mapel
         $data = $data->whereHas('mataPelajaran.tingkat', function($query) use ($user){
             if (!$user->is_pengunjung) $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
@@ -118,23 +118,23 @@ class SimulasiController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function createScore(Request $request, $id) 
+    public function createScore(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'score' => 'required|numeric|max:100',
         ]);
 
         if ($validator->fails()) {
-            return $this->returnStatus(400, $validator->errors());     
+            return $this->returnStatus(400, $validator->errors());
         }
 
         $data = Simulasi::with('mataPelajaran');
         $user = Auth::user();
 
         if ($user->is_pengunjung){
-            return $this->returnStatus(400, "Score not saved. You\'re not a student.");   
+            return $this->returnStatus(400, "Score not saved. You\'re not a student.");
         }
-  
+
         // handle hak akses mapel
         $data = $data->whereHas('mataPelajaran', function($query) use ($user){
             if (!$user->is_pengunjung) $query->where('tingkat_id', @$user->kelas->tingkat_id ?? 0);
@@ -164,7 +164,7 @@ class SimulasiController extends BaseController
         $lastScore = Score::where(['simulasi_id' => $id, 'siswa_id' => $user->id])
             ->latest('percobaan_ke')
             ->first();
-        
+
         // from request/payload data
         $saveData = $request->only(['score', 'semester']);
 
@@ -193,7 +193,7 @@ class SimulasiController extends BaseController
 
         $sendResponse = $request->only(['score', 'semester']);
         $sendResponse['percobaan_ke'] = @$saveData['percobaan_ke'] ?? 1;
-        
+
         // create history simulasi
         $historySimulasi = HistorySimulasi::updateOrCreate(
             ['simulasi_id' => $id, 'siswa_id' => $user->id],

@@ -36,8 +36,11 @@ class HomeController extends Controller
         // // sorting by name
         // $sedangDipelajari = $sedangDipelajari->sortBy('name');
 
-        // sorting by created at descending
-        $sedangDipelajari = $sedangDipelajari->sortByDesc('created_at');
+        // // sorting by created at descending
+        // $sedangDipelajari = $sedangDipelajari->sortByDesc('created_at');
+
+        // sorting by urutan
+        $sedangDipelajari = $sedangDipelajari->sortBy('urutan');
 
         // upcoming mapel
         $yangAkanDatang = MataPelajaran::search($request);

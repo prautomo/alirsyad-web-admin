@@ -28,22 +28,22 @@ class SimulasiController extends Controller
             $jenjangId = $user->is_pengunjung ? $user->jenjang_id : $user->kelas->tingkat->jenjang_id;
             $query->where('id', $jenjangId);
         });
-        // filter by tingkat bawahnya
-        if (!$user->is_pengunjung) $mapel = $mapel->whereHas('tingkat', function($query) {
-            $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
-        });
+        // // filter by tingkat bawahnya
+        // if (!$user->is_pengunjung) $mapel = $mapel->whereHas('tingkat', function($query) {
+        //     $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
+        // });
         $mapel = $mapel->findOrFail($idMapel);
 
         // simulasis
         $simulasis = Simulasi::with('uploader', 'mataPelajaran', 'scores');
-        // handle hak akses mapel
-        $user = Auth::user();
-        if($user->role !== "GURU"){
-            if (!$user->is_pengunjung) $simulasis = $simulasis->whereHas('mataPelajaran.tingkat', function($query) use($user) {
-                $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
-            });
-        }
-        
+        // // handle hak akses mapel
+        // $user = Auth::user();
+        // if($user->role !== "GURU"){
+        //     if (!$user->is_pengunjung) $simulasis = $simulasis->whereHas('mataPelajaran.tingkat', function($query) use($user) {
+        //         $query->where('name', '<=', @$user->kelas->tingkat->name);
+        //     });
+        // }
+
         $simulasis = $simulasis->where('mata_pelajaran_id', $idMapel);
 
         // sorting by urutan
