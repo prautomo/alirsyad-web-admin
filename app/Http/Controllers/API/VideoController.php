@@ -54,12 +54,12 @@ class VideoController extends BaseController
 
         $data = Video::with('mataPelajaran.tingkat.jenjang');
 
-        // handle hak akses mapel
-        $data = $data->whereHas('mataPelajaran.tingkat', function($query) use($user){
-            if(@Auth::user()->role==="SISWA"){
-                if (!$user->is_pengunjung) $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
-            }
-        });
+        // // handle hak akses mapel
+        // $data = $data->whereHas('mataPelajaran.tingkat', function($query) use($user){
+        //     if(@Auth::user()->role==="SISWA"){
+        //         if (!$user->is_pengunjung) $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
+        //     }
+        // });
 
         $data = $data->find($id);
 
@@ -82,10 +82,10 @@ class VideoController extends BaseController
         $data = Video::with('mataPelajaran');
         $user = Auth::user();
 
-        // handle hak akses mapel
-        $data = $data->whereHas('mataPelajaran.tingkat', function($query) use ($user){
-            if(!@$user->is_pengunjung) $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
-        });
+        // // handle hak akses mapel
+        // $data = $data->whereHas('mataPelajaran.tingkat', function($query) use ($user){
+        //     if(!@$user->is_pengunjung) $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
+        // });
 
         $data = $data->find($id);
 
