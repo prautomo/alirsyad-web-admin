@@ -105,13 +105,15 @@ class MataPelajaran extends Model
     //
     public function getDisabledAttribute()
     {
-        $user = @\Auth::user();
+        // $user = @\Auth::user();
 
-        if($user->is_pengunjung){
-            $mapelGuest = GuestMataPelajaran::where(['guest_id'=> @$user->id, 'mata_pelajaran_id' => @$this->id])->first();
-            return @$mapelGuest->mata_pelajaran_id ? false : true;
-        }
+        // if($user->is_pengunjung){
+        //     $mapelGuest = GuestMataPelajaran::where(['guest_id'=> @$user->id, 'mata_pelajaran_id' => @$this->id])->first();
+        //     return @$mapelGuest->mata_pelajaran_id ? false : true;
+        // }
 
-        return @$this->tingkat->name > @$user->kelas->tingkat->name;
+        // return @$this->tingkat->name > @$user->kelas->tingkat->name;
+
+        return false;
     }
 }

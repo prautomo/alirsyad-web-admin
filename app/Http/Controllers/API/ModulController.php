@@ -1,7 +1,7 @@
 <?php
-   
+
 namespace App\Http\Controllers\API;
-   
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\Modul;
@@ -9,7 +9,7 @@ use App\Models\HistoryModul;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\Modul as ModulResource;
 use App\Http\Resources\HistoryModul as HistoryModulResource;
-   
+
 class ModulController extends BaseController
 {
 
@@ -50,26 +50,26 @@ class ModulController extends BaseController
         $data = Modul::with('mataPelajaran.tingkat.jenjang');
 
         $user = @Auth::user();
-  
-        // handle hak akses mapel
-        $data = $data->whereHas('mataPelajaran.tingkat', function($query) use ($user){
-            if(@Auth::user()->role==="SISWA"){
-                if (!$user->is_pengunjung) $query->where('name', '<=', $user->kelas->tingkat->name);
-            }
-            // if(@Auth::user()->role==="GURU"){
-            //     // filter by guru
-            //     $query = $query->whereHas('gurus', function($queryGuru){
-            //         $queryGuru->where('guru_id', @Auth::user()->id);
-            //     });
-            // }
-        });
+
+        // // handle hak akses mapel
+        // $data = $data->whereHas('mataPelajaran.tingkat', function($query) use ($user){
+        //     if(@Auth::user()->role==="SISWA"){
+        //         if (!$user->is_pengunjung) $query->where('name', '<=', $user->kelas->tingkat->name);
+        //     }
+        //     // if(@Auth::user()->role==="GURU"){
+        //     //     // filter by guru
+        //     //     $query = $query->whereHas('gurus', function($queryGuru){
+        //     //         $queryGuru->where('guru_id', @Auth::user()->id);
+        //     //     });
+        //     // }
+        // });
 
         $data = $data->find($id);
 
         if (is_null($data)) {
             return $this->sendError('Modul not found.');
         }
-   
+
         return $this->sendResponse(new ModulResource($data), 'Modul retrieved successfully.');
     }
 
@@ -80,11 +80,11 @@ class ModulController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function createHistory(Request $request, $id) 
+    public function createHistory(Request $request, $id)
     {
         $data = Modul::with('mataPelajaran');
         $user = Auth::user();
-  
+
         // handle hak akses mapel
         $data = $data->whereHas('mataPelajaran.tingkat', function($query) use ($user){
             // $query->where('id', @$user->kelas->tingkat_id ?? 0);

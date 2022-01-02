@@ -28,22 +28,22 @@ class ModulController extends Controller
             $jenjangId = $user->is_pengunjung ? $user->jenjang_id : $user->kelas->tingkat->jenjang_id;
             $query->where('id', $jenjangId);
         });
-        // filter by tingkat bawahnya
-        if (!$user->is_pengunjung) $mapel = $mapel->whereHas('tingkat', function($query) {
-            $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
-        });
+        // // filter by tingkat bawahnya
+        // if (!$user->is_pengunjung) $mapel = $mapel->whereHas('tingkat', function($query) {
+        //     $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
+        // });
         $mapel = $mapel->findOrFail($idMapel);
 
         // moduls
         $moduls = Modul::with('uploader', 'mataPelajaran');
-        // handle hak akses mapel
-        $user = Auth::user();
-        if($user->role !== "GURU"){
-            if (!$user->is_pengunjung) $moduls = $moduls->whereHas('mataPelajaran.tingkat', function($query) use($user) {
-                $query->where('name', '<=', $user->kelas->tingkat->name);
-            });
-        }
-        
+        // // handle hak akses mapel
+        // $user = Auth::user();
+        // if($user->role !== "GURU"){
+        //     if (!$user->is_pengunjung) $moduls = $moduls->whereHas('mataPelajaran.tingkat', function($query) use($user) {
+        //         $query->where('name', '<=', $user->kelas->tingkat->name);
+        //     });
+        // }
+
         $moduls = $moduls->where('mata_pelajaran_id', $idMapel);
         // sorting by urutan
         $moduls = $moduls->orderBy('urutan', 'asc');
