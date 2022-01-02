@@ -16,7 +16,7 @@
 							Mata Pelajaran yang Sedang Dipelajari
 						</div>
 						<hr/>
-						
+
                         <div style="max-height: 500px; overflow: auto;">
 
                             @forelse($sedangDipelajari as $sedangDipelajari)
@@ -40,13 +40,13 @@
                                 <h4 class="font-weight-bold">Belum ada mata pelajaran.</h4>
                             </div>
                             @endforelse
-    
+
                         </div>
 
 					</div>
 				</div>
 			</div>
-			
+
 		</div>
 
         <!-- sudah dipelajari -->
@@ -58,7 +58,7 @@
 							Mata Pelajaran yang Sudah Dipelajari
 						</div>
 						<hr/>
-						
+
                         <div style="max-height: 500px; overflow: auto;">
 
                             @forelse($sebelumnya as $sebelumnya)
@@ -82,13 +82,13 @@
                                 <h4 class="font-weight-bold">Belum ada mata pelajaran.</h4>
                             </div>
                             @endforelse
-    
+
                         </div>
 
 					</div>
 				</div>
 			</div>
-			
+
 		</div> -->
         <!-- end sudah dipelajari -->
 
@@ -101,7 +101,7 @@
 							Mata Pelajaran yang Akan Datang
 						</div>
 						<hr/>
-						
+
                         <div style="max-height: 500px; overflow: auto;">
 
                             @forelse($yangAkanDatang as $yangAkanDatang)
@@ -120,13 +120,13 @@
                                 <h4 class="font-weight-bold">Belum ada mata pelajaran.</h4>
                             </div>
                             @endforelse
-    
+
                         </div>
 
 					</div>
 				</div>
 			</div>
-			
+
 		</div> -->
         <!-- end yg akan dipelajari -->
         @else
@@ -140,7 +140,7 @@
 							Mata Pelajaran Aktif
 						</div>
 						<hr/>
-						
+
                         <div style="max-height: 500px; overflow: auto;">
 
                             @forelse($aktif as $mpa)
@@ -165,15 +165,16 @@
                                 <h4 class="font-weight-bold">Belum ada mata pelajaran.</h4>
                             </div>
                             @endforelse
-    
+
                         </div>
 
 					</div>
 				</div>
 			</div>
-			
+
 		</div>
 
+        @if(false)
         <div class="row mt-4">
 			<!-- mapel yang tidak dipilih admin -->
 			<div class="col-md-12">
@@ -183,7 +184,7 @@
 							Mata Pelajaran Tidak Aktif
 						</div>
 						<hr/>
-						
+
                         <div style="max-height: 500px; overflow: auto;">
 
                             @forelse($tidakAktif as $mpta)
@@ -202,14 +203,16 @@
                                 <h4 class="font-weight-bold">Belum ada mata pelajaran.</h4>
                             </div>
                             @endforelse
-    
+
                         </div>
 
 					</div>
 				</div>
 			</div>
-			
+
 		</div>
+        @endif
+
         @endif
 	</div>
 </section>

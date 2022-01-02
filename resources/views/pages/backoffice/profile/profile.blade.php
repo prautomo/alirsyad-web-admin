@@ -19,7 +19,7 @@
             <div class="col-lg-4">
                 <div class="card text-center col-lg-12 mb-4">
                     <div class="card-body">
-                        <img id="profileImage" src="{{$user_data->photo != '' ? asset($user_data->photo) : '/images/placeholder.png'}}" width="200px" height="200px" class="img-fluid rounded-circle" alt="" style="background-color: #eee;height: 200px;">
+                        <img id="profileImage" src="{{@$user_data->photo != '' ? asset($user_data->photo) : '/images/placeholder.png'}}" width="200px" height="200px" class="img-fluid rounded-circle" alt="" style="background-color: #eee;height: 200px;">
                         
                         <form id="change-photo-form" action="{{ route('backoffice::akun-saya.photo') }}" method="POST" enctype="multipart/form-data" class="d-none">
                             @csrf

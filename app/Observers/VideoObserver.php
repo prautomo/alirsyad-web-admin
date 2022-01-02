@@ -64,19 +64,20 @@ class VideoObserver
 
     /**
      * Insert to update log
-     * 
+     *
      * @param  \App\Models\Video  $video
      * @param  String  $type
      * @return void
      */
     private function insertToUpdateLog(Video $video, $type){
         $data = [
-            'trigger_event' => @$type ?? 'other', 
-            'trigger' => 'video', 
-            'trigger_id' => @$video->id, 
-            'trigger_name' => @$video->name, 
-            'mata_pelajaran' => @$video->mataPelajaran->name, 
+            'trigger_event' => @$type ?? 'other',
+            'trigger' => 'video',
+            'trigger_id' => @$video->id,
+            'trigger_name' => @$video->name,
+            'mata_pelajaran' => @$video->mataPelajaran->name,
             'tingkat_id' => @$video->mataPelajaran->tingkat_id,
+            'mata_pelajaran_id' => @$video->mataPelajaran->id,
         ];
 
         Update::create($data);

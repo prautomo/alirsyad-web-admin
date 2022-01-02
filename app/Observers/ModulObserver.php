@@ -76,19 +76,20 @@ class ModulObserver
 
     /**
      * Insert to update log
-     * 
+     *
      * @param  \App\Models\Modul  $modul
      * @param  String  $type
      * @return void
      */
     private function insertToUpdateLog(Modul $modul, $type){
         $data = [
-            'trigger_event' => @$type ?? 'other', 
-            'trigger' => 'modul', 
-            'trigger_id' => @$modul->id, 
-            'trigger_name' => @$modul->name, 
-            'mata_pelajaran' => @$modul->mataPelajaran->name, 
+            'trigger_event' => @$type ?? 'other',
+            'trigger' => 'modul',
+            'trigger_id' => @$modul->id,
+            'trigger_name' => @$modul->name,
+            'mata_pelajaran' => @$modul->mataPelajaran->name,
             'tingkat_id' => @$modul->mataPelajaran->tingkat_id,
+            'mata_pelajaran_id' => @$modul->mataPelajaran->id,
         ];
 
         Update::create($data);

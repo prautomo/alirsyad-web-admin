@@ -6,7 +6,6 @@
 <section class="mt-4">
 	<div class="container">
 
-        @if(!@\Auth::user()->is_pengunjung)
 		<div class="row mt-4">
 			<!-- sedang dipelajari -->
 			<div class="col-md-12">
@@ -16,19 +15,19 @@
 							Mata Pelajaran Kelas {{ @$tingkatInfo->name ?? "-" }}
 						</div>
 						<hr/>
-						
+
                         <div style="max-height: 500px; overflow: auto;">
                             @forelse($mapels as $mapel)
                             <div class="wrap-kelas form-inline mt-3">
                                 <div>
-                                    <span class="kelas-title{{ @$mapel->tingkat->name > \Auth::user()->kelas->tingkat->name ? ' disable' : ''}}">
+                                    <span class="kelas-title{{ @$mapel->disabled ? ' disable' : ''}}">
                                         Kelas {{ @$mapel->tingkat->name ?? '-' }} {{ @$mapel->tingkat->jenjang->name }}
                                     </span>
-                                    <h4 class="font-weight-bold{{ (@$mapel->tingkat->name > \Auth::user()->kelas->tingkat->name) ? ' disable' : ''}}">
+                                    <h4 class="font-weight-bold{{ (@$mapel->disabled) ? ' disable' : ''}}">
                                         {{ @$mapel->name ?? "-" }}
                                     </h4>
                                 </div>
-                                @if(!(@$mapel->tingkat->name > \Auth::user()->kelas->tingkat->name))
+                                @if(!(@$mapel->disabled))
                                 <div class="ml-auto">
                                     <a href="{{ route('app.mapel.detail', @$mapel->id) }}" class="btn btn-small btn-main">
                                         <i class="btn-icon fa fa-play ml-2"></i> Lanjut Belajar
@@ -47,7 +46,7 @@
 				</div>
 			</div>
 		</div>
-        @endif
+
 	</div>
 </section>
 @endsection
