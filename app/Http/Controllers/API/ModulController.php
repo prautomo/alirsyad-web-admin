@@ -31,10 +31,10 @@ class ModulController extends BaseController
         //     }
         // });
         // get list
-        $datas = $datas->get();
+        $datas = $datas->orderBy('urutan', 'asc')->get();
 
         // sorting by urutan
-        $datas = $datas->sortBy('urutan');
+        // $datas = $datas->sortBy('urutan');
 
         return $this->sendResponse(ModulResource::collection($datas), 'Modul retrieved successfully.');
     }
