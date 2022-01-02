@@ -35,12 +35,17 @@ class MataPelajaranController extends Controller
             $query->where('id', Auth::user()->kelas_id);
         });
         // sort by active mapel
-        $sedangDipelajari = $sedangDipelajari->get();
-        // // sort by created at descending
-        // $sedangDipelajari = $sedangDipelajari->sortByDesc('created_at');
+        $sedangDipelajari = $sedangDipelajari;
 
         // sorting by urutan
         $sedangDipelajari = $sedangDipelajari->sortBy('urutan');
+
+        // get data
+        $sedangDipelajari = $sedangDipelajari->get();
+
+        // // sort by created at descending
+        // $sedangDipelajari = $sedangDipelajari->sortByDesc('created_at');
+
 
         // mapel yang akan datang
         $yangAkanDatang = $this->mapelByTingkat($request, '>');
@@ -229,11 +234,15 @@ class MataPelajaranController extends Controller
         $mapels = $mapels->whereHas('tingkat', function($query) use ($condition) {
             $query->where('name', $condition, @Auth::user()->kelas->tingkat->name ?? '-');
         });
+
+        // sorting by urutan
+        $mapels = $mapels->orderBy('urutan', 'asc');
+
         // get
         $mapels = $mapels->get();
 
         // sorting by tingkat
-        $mapels = $mapels->sortBy('tingkat.name');
+        // $mapels = $mapels->sortBy('tingkat.name');
 
         return $mapels;
     }

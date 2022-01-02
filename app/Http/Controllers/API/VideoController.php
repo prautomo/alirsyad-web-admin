@@ -35,9 +35,9 @@ class VideoController extends BaseController
             $datas = $datas->where('visible', 1);
         }
         // get list
-        $datas = $datas->get();
+        $datas = $datas->orderBy('urutan', 'asc')->get();
         // sorting by urutan
-        $datas = $datas->sortBy('urutan');
+        // $datas = $datas->sortBy('urutan');
 
         return $this->sendResponse(VideoResource::collection($datas), 'Video retrieved successfully.');
     }
