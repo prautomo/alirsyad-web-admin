@@ -95,7 +95,7 @@ class HomeController extends Controller
                 $query->where('guest_id', $user->id);
             });
             // sort by urutan
-            $datas = $datas->orderBy('urutan', 'asc');
+            $aktif = $aktif->orderBy('urutan', 'asc');
             // sort by active mapel
             $aktif = $aktif->limit(6)->get();
             // kalo user belum aktif (kosongin aja list mapelna)
