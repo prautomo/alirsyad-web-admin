@@ -28,22 +28,22 @@ class VideoController extends Controller
             $jenjangId = $user->is_pengunjung ? $user->jenjang_id : $user->kelas->tingkat->jenjang_id;
             $query->where('id', $jenjangId);
         });
-        // filter by tingkat bawahnya
-        if (!$user->is_pengunjung) $mapel = $mapel->whereHas('tingkat', function($query) {
-            $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
-        });
+        // // filter by tingkat bawahnya
+        // if (!$user->is_pengunjung) $mapel = $mapel->whereHas('tingkat', function($query) {
+        //     $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
+        // });
         $mapel = $mapel->findOrFail($idMapel);
 
         // videos
         $videos = Video::with('uploader', 'mataPelajaran');
         // handle hak akses mapel
-        $user = Auth::user();
-        if($user->role !== "GURU"){
-            if (!$user->is_pengunjung) $videos = $videos->whereHas('mataPelajaran.tingkat', function($query) use($user) {
-                $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
-            });
-        }
-        
+        // $user = Auth::user();
+        // if($user->role !== "GURU"){
+        //     if (!$user->is_pengunjung) $videos = $videos->whereHas('mataPelajaran.tingkat', function($query) use($user) {
+        //         $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
+        //     });
+        // }
+
         // visible for siswa/guest
         $videos = $videos->where('visible', 1);
 

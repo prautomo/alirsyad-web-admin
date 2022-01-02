@@ -1,7 +1,7 @@
 <?php
-   
+
 namespace App\Http\Controllers\API;
-   
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\Video;
@@ -9,7 +9,7 @@ use App\Models\HistoryVideo;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\Video as VideoResource;
 use App\Http\Resources\HistoryVideo as HistoryVideoResource;
-   
+
 class VideoController extends BaseController
 {
 
@@ -24,20 +24,20 @@ class VideoController extends BaseController
 
         $datas = Video::search($request);
         $datas = $datas->with('uploader', 'mataPelajaran');
-        // handle hak akses mapel
-        $datas = $datas->whereHas('mataPelajaran.tingkat', function($query) use ($user){
-            if(@Auth::user()->role==="SISWA"){
-                if (!$user->is_pengunjung) $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
-            }
-        });
+        // // handle hak akses mapel
+        // $datas = $datas->whereHas('mataPelajaran.tingkat', function($query) use ($user){
+        //     if(@Auth::user()->role==="SISWA"){
+        //         if (!$user->is_pengunjung) $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
+        //     }
+        // });
         // visible for siswa/guest
         if(@Auth::user()->role==="SISWA"){
             $datas = $datas->where('visible', 1);
         }
         // get list
-        $datas = $datas->get();
+        $datas = $datas->orderBy('urutan', 'asc')->get();
         // sorting by urutan
-        $datas = $datas->sortBy('urutan');
+        // $datas = $datas->sortBy('urutan');
 
         return $this->sendResponse(VideoResource::collection($datas), 'Video retrieved successfully.');
     }
@@ -53,20 +53,20 @@ class VideoController extends BaseController
         $user = @Auth::user();
 
         $data = Video::with('mataPelajaran.tingkat.jenjang');
-  
-        // handle hak akses mapel
-        $data = $data->whereHas('mataPelajaran.tingkat', function($query) use($user){
-            if(@Auth::user()->role==="SISWA"){
-                if (!$user->is_pengunjung) $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
-            }
-        });
+
+        // // handle hak akses mapel
+        // $data = $data->whereHas('mataPelajaran.tingkat', function($query) use($user){
+        //     if(@Auth::user()->role==="SISWA"){
+        //         if (!$user->is_pengunjung) $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
+        //     }
+        // });
 
         $data = $data->find($id);
 
         if (is_null($data)) {
             return $this->sendError('Video not found.');
         }
-   
+
         return $this->sendResponse(new VideoResource($data), 'Video retrieved successfully.');
     }
 
@@ -77,15 +77,15 @@ class VideoController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function createHistory(Request $request, $id) 
+    public function createHistory(Request $request, $id)
     {
         $data = Video::with('mataPelajaran');
         $user = Auth::user();
-  
-        // handle hak akses mapel
-        $data = $data->whereHas('mataPelajaran.tingkat', function($query) use ($user){
-            if(!@$user->is_pengunjung) $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
-        });
+
+        // // handle hak akses mapel
+        // $data = $data->whereHas('mataPelajaran.tingkat', function($query) use ($user){
+        //     if(!@$user->is_pengunjung) $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
+        // });
 
         $data = $data->find($id);
 
