@@ -183,7 +183,7 @@ class MataPelajaranController extends BaseController
         // limit data
         if (@$request->limit) $aktif = $aktif->limit($request->limit);
         // sort by urutan
-        $datas = $datas->orderBy('urutan', 'asc');
+        $aktif = $aktif->orderBy('urutan', 'asc');
         // sort by active mapel
         $aktif = $aktif->get();
         // // sort by active mapel
