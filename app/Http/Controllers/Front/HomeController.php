@@ -121,11 +121,15 @@ class HomeController extends Controller
 
         // list kelas
         if(@$user->is_pengunjung){
-            $jenjangUser = @Auth::user()->jenjang_id;
+            // // tingkat selected mapel list
+            // $selectedTingkat = GuestMataPelajaran::where('guest_id', $user->id)->get()->pluck('mataPelajaran.tingkat_id');
+            // $selectedUniqueTingkat = $selectedTingkat->unique();
+            // $kelasList = Tingkat::whereIn('id', $selectedUniqueTingkat)->get();
+            $kelasList = [];
         }else{
             $jenjangUser = @Auth::user()->kelas->tingkat->jenjang_id;
+            $kelasList = Tingkat::where('jenjang_id', $jenjangUser)->get();
         }
-        $kelasList = Tingkat::where('jenjang_id', $jenjangUser)->get();
 
         // Banner
         $banners = Banner::where(['activeStatus' => true])->orderBy('urutan', 'asc')->get();
