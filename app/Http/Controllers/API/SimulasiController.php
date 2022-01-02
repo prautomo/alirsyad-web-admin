@@ -65,12 +65,12 @@ class SimulasiController extends BaseController
 
         $data = Simulasi::with('mataPelajaran.tingkat.jenjang');
 
-        // handle hak akses mapel
-        $data = $data->whereHas('mataPelajaran.tingkat', function($query) use ($user){
-            if(@Auth::user()->role==="SISWA"){
-                if (!$user->is_pengunjung) $query->where('name', '<=', @$user->kelas->tingkat->name);
-            }
-        });
+        // // handle hak akses mapel
+        // $data = $data->whereHas('mataPelajaran.tingkat', function($query) use ($user){
+        //     if(@Auth::user()->role==="SISWA"){
+        //         if (!$user->is_pengunjung) $query->where('name', '<=', @$user->kelas->tingkat->name);
+        //     }
+        // });
 
         $data = $data->find($id);
 
@@ -93,10 +93,10 @@ class SimulasiController extends BaseController
         $data = Simulasi::with('mataPelajaran');
         $user = Auth::user();
 
-        // handle hak akses mapel
-        $data = $data->whereHas('mataPelajaran.tingkat', function($query) use ($user){
-            if (!$user->is_pengunjung) $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
-        });
+        // // handle hak akses mapel
+        // $data = $data->whereHas('mataPelajaran.tingkat', function($query) use ($user){
+        //     if (!$user->is_pengunjung) $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
+        // });
 
         $data = $data->find($id);
 
@@ -135,10 +135,10 @@ class SimulasiController extends BaseController
             return $this->returnStatus(400, "Score not saved. You\'re not a student.");
         }
 
-        // handle hak akses mapel
-        $data = $data->whereHas('mataPelajaran', function($query) use ($user){
-            if (!$user->is_pengunjung) $query->where('tingkat_id', @$user->kelas->tingkat_id ?? 0);
-        });
+        // // handle hak akses mapel
+        // $data = $data->whereHas('mataPelajaran', function($query) use ($user){
+        //     if (!$user->is_pengunjung) $query->where('tingkat_id', @$user->kelas->tingkat_id ?? 0);
+        // });
 
         $data = $data->find($id);
 

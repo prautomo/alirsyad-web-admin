@@ -24,12 +24,12 @@ class ModulController extends BaseController
 
         $datas = Modul::search($request);
         $datas = $datas->with('mataPelajaran');
-        // handle hak akses mapel
-        $datas = $datas->whereHas('mataPelajaran.tingkat', function($query) use ($user){
-            if(@Auth::user()->role==="SISWA"){
-                if (!$user->is_pengunjung) $query->where('name', '<=', @$user->kelas->tingkat->name);
-            }
-        });
+        // // handle hak akses mapel
+        // $datas = $datas->whereHas('mataPelajaran.tingkat', function($query) use ($user){
+        //     if(@Auth::user()->role==="SISWA"){
+        //         if (!$user->is_pengunjung) $query->where('name', '<=', @$user->kelas->tingkat->name);
+        //     }
+        // });
         // get list
         $datas = $datas->get();
 
@@ -85,11 +85,11 @@ class ModulController extends BaseController
         $data = Modul::with('mataPelajaran');
         $user = Auth::user();
 
-        // handle hak akses mapel
-        $data = $data->whereHas('mataPelajaran.tingkat', function($query) use ($user){
-            // $query->where('id', @$user->kelas->tingkat_id ?? 0);
-            if(!@$user->is_pengunjung) $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
-        });
+        // // handle hak akses mapel
+        // $data = $data->whereHas('mataPelajaran.tingkat', function($query) use ($user){
+        //     // $query->where('id', @$user->kelas->tingkat_id ?? 0);
+        //     if(!@$user->is_pengunjung) $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
+        // });
 
         $data = $data->find($id);
 
