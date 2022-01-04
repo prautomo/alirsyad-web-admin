@@ -38,6 +38,10 @@ class MataPelajaranController extends BaseController
             $datas = $datas->where('kelas_id', $request->q_kelas_id);
         }
 
+        if(@$request->q_tingkat_id){
+            $datas = $datas->where('tingkat_id', $request->q_tingkat_id);
+        }
+
         // sort by urutan
         $datas = $datas->orderBy('urutan', 'asc');
 
