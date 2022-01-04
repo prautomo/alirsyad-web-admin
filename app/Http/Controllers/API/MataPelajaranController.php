@@ -38,6 +38,10 @@ class MataPelajaranController extends BaseController
             $datas = $datas->where('kelas_id', $request->q_kelas_id);
         }
 
+        if(@$request->q_tingkat_id){
+            $datas = $datas->where('tingkat_id', $request->q_tingkat_id);
+        }
+
         // sort by urutan
         $datas = $datas->orderBy('urutan', 'asc');
 
@@ -262,7 +266,7 @@ class MataPelajaranController extends BaseController
         if(@$tingkatInfo->jenjang_id === $jenjangUser){
             $mapels = MataPelajaran::where('tingkat_id', $tingkatId);
             $mapels = $mapels->with('tingkat');
-            $mapels = $mapels->orderBy('name');
+            $mapels = $mapels->orderBy('urutan', 'asc');
             $mapels = $mapels->get();
         }else{
             // jangan kasih info tingkat
