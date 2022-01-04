@@ -266,7 +266,7 @@ class MataPelajaranController extends BaseController
         if(@$tingkatInfo->jenjang_id === $jenjangUser){
             $mapels = MataPelajaran::where('tingkat_id', $tingkatId);
             $mapels = $mapels->with('tingkat');
-            $mapels = $mapels->orderBy('name');
+            $mapels = $mapels->orderBy('urutan', 'asc');
             $mapels = $mapels->get();
         }else{
             // jangan kasih info tingkat
