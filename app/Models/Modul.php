@@ -55,8 +55,8 @@ class Modul extends Model
      */
     protected static function boot() {
         parent::boot();
-        
-        Modul::observe(ModulObserver::class);
+
+        // Modul::observe(ModulObserver::class);
     }
 
     public function getReadAttribute()
@@ -88,7 +88,7 @@ class Modul extends Model
                 'endpoint' => route('api.modul.detail', @$nextModul->id),
             ];
         }
-        
+
         return $returnNext;
     }
 
@@ -98,7 +98,7 @@ class Modul extends Model
             ->where('urutan', '<', $this->urutan)
             ->where('mata_pelajaran_id', $this->mata_pelajaran_id)
             ->orderBy('urutan','desc')->first();
-        
+
         $returnPrevious = null;
 
         if($previousModul){
@@ -110,7 +110,7 @@ class Modul extends Model
                 'endpoint' => route('api.modul.detail', @$previousModul->id),
             ];
         }
-        
+
         return $returnPrevious;
     }
 

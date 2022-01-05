@@ -36,7 +36,7 @@ class UpdateController extends BaseController
                 $query->where('guest_id', @$user->id);
             });
 
-            $updates = $updates->orderBy('created_at', 'desc')->limit(@$request->limit ?? 3)->get();
+            $updates = $updates->orderBy('created_at', 'desc')->limit(@$request->limit ?? 5)->get();
         }
         // siswa
         else{
@@ -46,11 +46,13 @@ class UpdateController extends BaseController
                 $jenjangId = @$user->kelas->tingkat->jenjang_id;
                 $query->where('id', $jenjangId);
             });
-            // filter by tingkat bawahnya
-            $updates = $updates->whereHas('tingkat', function($query) use ($user) {
-                $query->where('name', '<=', @$user->kelas->tingkat->name);
-            });
-            $updates = $updates->orderBy('created_at', 'desc')->limit(@$request->limit ?? 3)->get();
+            // // filter by tingkat bawahnya
+            // $updates = $updates->whereHas('tingkat', function($query) use ($user) {
+            //     $query->where('name', '<=', @$user->kelas->tingkat->name);
+            // });
+            // filter tingkat nya sendiri
+            $updates = $updates->where('tingkat_id', @$user->kelas->tingkat_id);
+            $updates = $updates->orderBy('created_at', 'desc')->limit(@$request->limit ?? 5)->get();
         }
 
         return $this->sendResponse(UpdateResource::collection($updates), 'Update retrieved successfully.');

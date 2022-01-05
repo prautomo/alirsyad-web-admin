@@ -177,7 +177,7 @@
                             <div class="carousel-item{{ $idx == 0 ? ' active': '' }}">
                                 <div class="card">
                                     <div class="card-body mb-3">
-                                        <img height="75px" width="75px" align="left" src="{{ asset('images/image-placeholder.jpg') }}" class="mr-2" />
+                                        <img height="75px" width="75px" align="left" src="{{ asset((@$update->logo === '' || @$update->logo === null) ? 'images/image-placeholder.jpg' : $update->logo) }}" class="mr-2" />
                                         <a href="{{ route('app.'.(@$update->trigger ?? 'video').'.detail', @$update->trigger_id) }}">
                                             <i>{{@$update->trigger_name}}</i>
                                         </a> baru saja di-{{ @$update->trigger_event == 'create' ? 'upload' : 'update' }} di mata pelajaran
