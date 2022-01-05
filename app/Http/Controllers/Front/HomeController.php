@@ -154,7 +154,7 @@ class HomeController extends Controller
                 $query->where('guest_id', @$user->id);
             });
 
-            $updates = $updates->orderBy('created_at', 'desc')->limit(3)->get();
+            $updates = $updates->orderBy('created_at', 'desc')->limit(5)->get();
         }
         // siswa
         else{
@@ -168,7 +168,7 @@ class HomeController extends Controller
             $updates = $updates->whereHas('tingkat', function($query) use ($user) {
                 $query->where('name', '<=', @$user->kelas->tingkat->name);
             });
-            $updates = $updates->orderBy('created_at', 'desc')->limit(3)->get();
+            $updates = $updates->orderBy('created_at', 'desc')->limit(5)->get();
         }
 
         $parseData = [
