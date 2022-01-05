@@ -177,7 +177,7 @@
                             <div class="carousel-item{{ $idx == 0 ? ' active': '' }}">
                                 <div class="card">
                                     <div class="card-body mb-3">
-                                        <img height="75px" width="75px" align="left" src="{{ asset('images/image-placeholder.jpg') }}" class="mr-2" />
+                                        <img height="75px" width="75px" align="left" src="{{ asset((@$update->logo === '' || @$update->logo === null) ? 'images/image-placeholder.jpg' : $update->logo) }}" class="mr-2" />
                                         <a href="{{ route('app.'.(@$update->trigger ?? 'video').'.detail', @$update->trigger_id) }}">
                                             <i>{{@$update->trigger_name}}</i>
                                         </a> baru saja di-{{ @$update->trigger_event == 'create' ? 'upload' : 'update' }} di mata pelajaran
@@ -216,7 +216,7 @@
                 @foreach($kelasList as $kelas)
                 <div class="col-md-2 mb-2 wrap-card-kelas">
                     <a href="{{ route('app.mapel.byTingkat', ['id' => @$kelas->id ?? 0]) }}">
-                        <div class="card card-kelas">
+                        <div class="card card-kelas" style="background-image: url('{{ asset(@$kelas->logo!=='' ? $kelas->logo : 'images/image-placeholder.jpg') }}')">
                             <div class="pl-2 pt-1">
                                 <span class="badge badge-warning" style="border-radius: 100%;">
                                     {{ @$kelas->jenjang->name ?? '-' }}
@@ -247,7 +247,6 @@
 
     .card-kelas {
         color: #0E594D;
-        background-image: url('{{ asset('images/image-placeholder.jpg') }}');
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;

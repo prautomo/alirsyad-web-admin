@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use App\Services\UploadService;
 use App\Models\Modul;
+use App\Models\Update;
 use App\Models\UploaderMataPelajaran;
 use App\Models\MataPelajaran;
 use App\Models\Video;
@@ -54,7 +55,7 @@ class VideoController extends Controller{
                 if($search){
                     $query->where(function($query) use ($search){
                         $query->where('name', 'LIKE', '%'.$search.'%');
-                        
+
                         $query = $query->orWhereHas('mataPelajaran.tingkat.jenjang', function($query2) use ( $search ){
                             $query2->where('name', 'LIKE', '%'.$search.'%');
                         });
@@ -103,7 +104,7 @@ class VideoController extends Controller{
                     $mapel = @$data->mataPelajaran->name ?? 'none';
                     $mapelID = @$data->mataPelajaran->id ?? '';
                 }
-                
+
                 return view("components.datatable.link", [
                     "link" => route($this->routePath.".index")."?mata_pelajaran_id=".$mapelID,
                     "text" => $mapel,
@@ -147,7 +148,7 @@ class VideoController extends Controller{
         $userId = @\Auth::user()->id;
         $mapelIdsUser = UploaderMataPelajaran::where('guru_uploader_id', $userId)->pluck('mata_pelajaran_id')->all();
         $mapelIdsUser = count($mapelIdsUser) > 0 ? $mapelIdsUser : [];
-        
+
         return $mapelIdsUser;
     }
 
@@ -225,8 +226,12 @@ class VideoController extends Controller{
         $mapelList = $this->getMataPelajaran();
         $modulList = $this->getModul();
         $semesterList = $this->getSemester();
+        $show = [
+            1 => 'Ya',
+            0 => 'Tidak',
+        ];
 
-        return view($this->prefix.'.create', ['mapelList' => $mapelList, 'semesterList' => $semesterList, 'modulList' => $modulList]);
+        return view($this->prefix.'.create', ['mapelList' => $mapelList, 'semesterList' => $semesterList, 'modulList' => $modulList, 'showUpdate' => $show]);
     }
 
     public function store(Request $request){
@@ -250,7 +255,7 @@ class VideoController extends Controller{
         $dataReq = $request->only(['name', 'video_url', 'icon', 'description', 'modul_id', 'mata_pelajaran_id', 'semester', 'urutan', 'visible']);
 
         $dataReq['visible'] = @$request->visible=="ya" ? 1 : 0;
-        
+
         $dataReq['uploader_id'] = \Auth::user()->id;
 
         if ($request->hasFile('icon')) {
@@ -274,6 +279,23 @@ class VideoController extends Controller{
 
         $data = Video::create($dataReq);
 
+        // insert to log update
+        if(@$request->showUpdate){
+            $coverUpdate = "";
+            if ($request->hasFile('cover_update')) {
+                $validated = $request->validate([
+                    'cover_update' => 'mimes:jpeg,png|max:2028',
+                ]);
+
+                $image = $request->file('cover_update');
+                $extension = $image->extension();
+                $url = UploadService::uploadImage($image, 'icon/cover_update');
+
+                $coverUpdate = $url;
+            }
+            $this->insertToUpdateLog($dt, $coverUpdate, 'create');
+        }
+
         return redirect()->route($this->routePath.'.index')->with(
             $this->success(__("Success to create Video"), $data)
         );
@@ -284,8 +306,12 @@ class VideoController extends Controller{
         $mapelList = $this->getMataPelajaran();
         $modulList = $this->getModul();
         $semesterList = $this->getSemester();
+        $show = [
+            1 => 'Ya',
+            0 => 'Tidak',
+        ];
 
-        return view($this->prefix.'.edit', ['data' => $dt, 'mapelList' => $mapelList, 'semesterList' => $semesterList, 'modulList' => $modulList]);
+        return view($this->prefix.'.edit', ['data' => $dt, 'mapelList' => $mapelList, 'semesterList' => $semesterList, 'modulList' => $modulList, 'showUpdate' => $show]);
     }
 
     public function update(Request $request, $id){
@@ -329,6 +355,23 @@ class VideoController extends Controller{
         $dt = Video::findOrFail($id);
         $dt->update($dataReq);
 
+        // insert to log update
+        if(@$request->showUpdate){
+            $coverUpdate = "";
+            if ($request->hasFile('cover_update')) {
+                $validated = $request->validate([
+                    'cover_update' => 'mimes:jpeg,png|max:2028',
+                ]);
+
+                $image = $request->file('cover_update');
+                $extension = $image->extension();
+                $url = UploadService::uploadImage($image, 'icon/cover_update');
+
+                $coverUpdate = $url;
+            }
+            $this->insertToUpdateLog($dt, $coverUpdate, 'update');
+        }
+
         return redirect()->route($this->routePath.'.index')->with(
             $this->success(__("Success to update Video"), $dt)
         );
@@ -340,4 +383,25 @@ class VideoController extends Controller{
         $d->delete();
     }
 
+    /**
+     * Insert to update log
+     *
+     * @param  \App\Models\Video  $video
+     * @param  String  $type
+     * @return void
+     */
+    private function insertToUpdateLog(Video $video, $cover, $type){
+        $data = [
+            'trigger_event' => @$type ?? 'other',
+            'trigger' => 'video',
+            'trigger_id' => @$video->id,
+            'trigger_name' => @$video->name,
+            'mata_pelajaran' => @$video->mataPelajaran->name,
+            'tingkat_id' => @$video->mataPelajaran->tingkat_id,
+            'mata_pelajaran_id' => @$video->mataPelajaran->id,
+            'logo' => $cover,
+        ];
+
+        Update::create($data);
+    }
 }

@@ -20,6 +20,7 @@ class Tingkat extends JsonResource
             'name' => $this->name,
             'jenjang' => new Jenjang($this->jenjang),
             'description' => $this->description,
+            'logo' => $this->logo,
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y'),
         ];

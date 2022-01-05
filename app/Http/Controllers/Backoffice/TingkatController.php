@@ -8,6 +8,7 @@ use Auth;
 use DB;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use App\Services\UploadService;
 use App\Models\User;
 use App\Models\Jenjang;
 use App\Models\Tingkat;
@@ -40,7 +41,7 @@ class TingkatController extends Controller{
 
                 if($search){
                     $query->where('name', 'LIKE', '%'.$search.'%');
-                    
+
                     $query = $query->orWhereHas('jenjang', function($query2) use ( $search ){
                         $query2->where('name', 'LIKE', '%'.$search.'%');
                     });
@@ -82,7 +83,7 @@ class TingkatController extends Controller{
      */
     private function getJenjang(){
         // get list jenjang
-        $jenjangs = Jenjang::get();        
+        $jenjangs = Jenjang::get();
         $jenjangList = [];
         $jenjangList[""] = "Pilih jenjang pendidikan";
         foreach($jenjangs as $jenjang){
@@ -91,7 +92,7 @@ class TingkatController extends Controller{
 
         return $jenjangList;
     }
-    
+
     public function create(){
         $jenjangList = $this->getJenjang();
 
@@ -105,7 +106,23 @@ class TingkatController extends Controller{
             'name' => 'required|string',
         ]);
 
-        $data = Tingkat::create($request->only(['description', 'name', 'jenjang_id']));
+        // default image
+        $url = "images/placeholder.png";
+        // temp request
+        $dataReq = $request->only(['description', 'name', 'jenjang_id', 'logo']);
+        $dataReq['uploader_id'] = \Auth::user()->id;
+
+        if ($request->hasFile('logo')) {
+            $validated = $request->validate([
+                'logo' => 'mimes:jpeg,png|max:2028',
+            ]);
+            $image = $request->file('logo');
+            $extension = $image->extension();
+            $url = UploadService::uploadImage($image, 'icon/tingkat');
+            $dataReq['logo'] = $url;
+        }
+
+        $data = Tingkat::create($dataReq);
 
         return redirect()->route($this->routePath.'.index')->with(
             $this->success(__("Success to create Tingkat"), $data)
@@ -125,9 +142,22 @@ class TingkatController extends Controller{
             'name' => 'required|string',
             'jenjang_id' => 'required',
         ]);
-        
+
         $dt = Tingkat::findOrFail($id);
-        $dt->update($request->only(['description', 'name', 'jenjang_id']));
+
+        $dataReq = $request->only(['description', 'name', 'jenjang_id', 'logo']);
+
+        if ($request->hasFile('logo')) {
+            $validated = $request->validate([
+                'logo' => 'mimes:jpeg,png|max:2028',
+            ]);
+            $image = $request->file('logo');
+            $extension = $image->extension();
+            $url = UploadService::uploadImage($image, 'icon/tingkat');
+            $dataReq['logo'] = $url;
+        }
+
+        $dt->update($dataReq);
 
         return redirect()->route($this->routePath.'.index')->with(
             $this->success(__("Success to update Tingkat"), $dt)
