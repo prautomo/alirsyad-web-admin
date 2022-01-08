@@ -140,6 +140,7 @@ class HomeController extends Controller
 
         // Update
         $updates = [];
+        $countUpdates = 0;
         // pengunjung
         if(@$user->is_pengunjung){
             $updates = Update::with('triggerRel');
@@ -154,7 +155,10 @@ class HomeController extends Controller
                 $query->where('guest_id', @$user->id);
             });
 
-            $updates = $updates->orderBy('created_at', 'desc')->limit(5)->get();
+            $updates = $updates->orderBy('created_at', 'desc');
+            $countUpdates = count($updates->get());
+
+            $updates = $updates->limit(5)->get();
         }
         // siswa
         else{
@@ -171,7 +175,10 @@ class HomeController extends Controller
             // filter tingkat nya sendiri
             $updates = $updates->where('tingkat_id', @$user->kelas->tingkat_id);
             // sort, limit, and get data
-            $updates = $updates->orderBy('created_at', 'desc')->limit(5)->get();
+            $updates = $updates->orderBy('created_at', 'desc');
+            $countUpdates = count($updates->get());
+
+            $updates = $updates->limit(5)->get();
         }
 
         $parseData = [
@@ -182,6 +189,7 @@ class HomeController extends Controller
             'kelasList' => $kelasList,
             'banners' => $banners,
             'updates' => $updates,
+            'countUpdates' => $countUpdates,
         ];
 
         return view('pages/frontoffice/home', $parseData);

@@ -36,7 +36,7 @@ Route::get("/kelas/json", "API\KelasController@index")->name('app.kelas.json');
 
 // route front office keur nu login (siswa/guru)
 Route::middleware(['auth'])->group(function () {
-    
+
     Route::get('/', "Front\HomeController@index")->name('app.home');
     Route::get('/mata-pelajaran', "Front\MataPelajaranController@index")->name('app.mapel.list');
     Route::get('/mata-pelajaran/upcoming', 'Front\MataPelajaranController@indexUpcoming')->name('app.mapel.upcoming');
@@ -46,6 +46,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/mata-pelajaran/{id}/modul', "Front\ModulController@indexByMapel")->name('app.mapel.modul');
     Route::get('/mata-pelajaran/{id}/video', "Front\VideoController@indexByMapel")->name('app.mapel.video');
     Route::get('/mata-pelajaran/{id}/simulasi', "Front\SimulasiController@indexByMapel")->name('app.mapel.simulasi');
+
+    Route::get('/updates', "Front\UpdateController@index")->name('app.update');
 
     Route::get('/modul/{id}', "Front\ModulController@show")->name('app.modul.detail');
     Route::get('/video/{id}', "Front\VideoController@show")->name('app.video.detail');
