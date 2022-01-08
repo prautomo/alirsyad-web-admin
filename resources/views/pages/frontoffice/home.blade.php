@@ -57,7 +57,7 @@
                 @if(!@\Auth::user()->is_pengunjung)
                 <div class="col-md-12 mb-1">
                     <div class="card-title mb-0 form-inline">
-                        <i class="ni ni-books icon-title"></i>
+                        <!-- <i class="ni ni-books icon-title"></i> -->
                         <div class="font-weight-bolder" style="color: #0E594D;">Mata Pelajaran yang Sedang Dipelajari</div>
                     </div>
                     <hr/>
@@ -128,7 +128,7 @@
                 <!-- mapel aktif -->
                 <div class="col-md-12 mb-1">
                     <div class="card-title mb-0 form-inline">
-                        <i class="ni ni-books icon-title"></i>
+                        <!-- <i class="ni ni-books icon-title"></i> -->
                         <div class="font-weight-bolder" style="color: #0E594D;">Mata Pelajaran Aktif</div>
                     </div>
                     <hr/>
@@ -159,11 +159,45 @@
 
             <!-- Update terbaru -->
             <div class="row my-5">
-                <div class="col-md-4 my-auto text-center">
-                    <h4 class="font-weight-bolder" style="color: #0E594D;">Update Terbaru</h4>
+                <div class="col-md-12 mb-1">
+                    <div class="card-title mb-0 form-inline">
+                        <!-- <i class="ni ni-books icon-title"></i> -->
+                        <div class="font-weight-bolder" style="color: #0E594D;">Update Terbaru</div>
+
+                        <!-- <div class="font-weight-300 ml-auto">
+                            <a href="{{ route('app.update') }}" style="color: #0E594D !important;">Selengkapnya...</a>
+                        </div> -->
+                    </div>
+                    <hr/>
                 </div>
 
-                <div class="col-md-8">
+                @forelse($updates as $update)
+                <div class="col-md-2 col-6 col-sm-4">
+                    <a href="{{ route('app.'.(@$update->trigger ?? 'video').'.detail', @$update->trigger_id) }}">
+                        <img src="{{ asset((@$update->logo === '' || @$update->logo === null) ? 'images/image-placeholder.jpg' : $update->logo) }}" alt="{{ @$update->trigger_name ?? "-" }}" title="{{ @$update->trigger_name ?? "-" }}" width="100%" class="mb-3 rounded" />
+                    </a>
+                </div>
+                @empty
+                <div class="col-md-12 mb-4">
+                    <div class="wrap-kelas form-inline mt-3">
+                        <h4 class="font-weight-bold">Belum ada mata update terbaru.</h4>
+                    </div>
+                </div>
+                @endforelse
+
+                @if($countUpdates > 5)
+                <div class="col-md-2 col-6 col-sm-4 my-auto">
+                    <div class="font-weight-300 ">
+                        <a href="{{ route('app.update') }}" style="color: #0E594D !important;">Selengkapnya...</a>
+                    </div>
+                </div>
+                @endif
+
+                <!-- <div class="col-md-4 my-auto text-center">
+                    <h4 class="font-weight-bolder" style="color: #0E594D;">Update Terbaru</h4>
+                </div> -->
+
+                <!-- <div class="col-md-8">
                     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                         <ol class="carousel-indicators indicator-custom">
                             @forelse($updates as $idx => $update)
@@ -198,7 +232,7 @@
                             @endforelse
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
             <!-- End update terbaru -->
 
@@ -207,7 +241,7 @@
             <div class="row">
                 <div class="col-md-12 mb-1">
                     <div class="card-title mb-0 form-inline">
-                        <i class="ni ni-books icon-title"></i>
+                        <!-- <i class="ni ni-books icon-title"></i> -->
                         <div class="font-weight-bolder" style="color: #0E594D;">Semua Mata Pelajaran</div>
                     </div>
                     <hr/>
@@ -216,7 +250,8 @@
                 @foreach($kelasList as $kelas)
                 <div class="col-md-2 mb-2 wrap-card-kelas">
                     <a href="{{ route('app.mapel.byTingkat', ['id' => @$kelas->id ?? 0]) }}">
-                        <div class="card card-kelas" style="background-image: url('{{ asset(@$kelas->logo!=='' ? $kelas->logo : 'images/image-placeholder.jpg') }}')">
+                        <img src="{{ asset(@$kelas->logo!=='' ? $kelas->logo : 'images/image-placeholder.jpg') }}" width="100%" />
+                        <!-- <div class="card card-kelas" style="background-image: url('{{ asset(@$kelas->logo!=='' ? $kelas->logo : 'images/image-placeholder.jpg') }}')">
                             <div class="pl-2 pt-1">
                                 <span class="badge badge-warning" style="border-radius: 100%;">
                                     {{ @$kelas->jenjang->name ?? '-' }}
@@ -227,7 +262,7 @@
                                     Kelas {{ @$kelas->name ?? '-' }}
                                 </span>
                             </div>
-                        </div>
+                        </div> -->
                     </a>
                 </div>
                 @endforeach
@@ -255,9 +290,9 @@
     }
 
     @media (min-width: 992px) {
-        .wrap-card-kelas {
+        /* .wrap-card-kelas {
             max-width: 150px !important;
-        }
+        } */
     }
 </style>
 @endpush
