@@ -51,7 +51,7 @@ class UpdateController extends Controller
             // filter tingkat nya sendiri
             $updates = $updates->where('tingkat_id', @$user->kelas->tingkat_id);
             // sort, limit, and get data
-            $updates = $updates->orderBy('created_at', 'desc')->limit(5)->get();
+            $updates = $updates->orderBy('created_at', 'desc')->get();
         }
 
         $parseData = [
