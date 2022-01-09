@@ -23,10 +23,10 @@ $default = (@$data[$name]) ? asset($data[$name]) : $default;
 @push('script')
 <script type="text/javascript">
 $("#{{$name}}").change(function (event) {
-    readURL(this);
+    readURL{{$name}}(this);
 });
 
-function readURL(input) {
+function readURL{{$name}}(input) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
         reader.onload = function (e) {

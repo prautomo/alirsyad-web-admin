@@ -47,7 +47,7 @@
         </div>
     </div>
 
-    <x-input.images :label="__('Upload Cover Update')" wrapId="cover_update" name="cover_update" :data="$data" required />
+    <x-input.images :label="__('Upload Cover Update')" wrapId="coverUpdate" name="cover_update" :data="$data" required />
 
     <div class="col-xs-12 col-sm-12 col-md-12 text-right">
         <button type="submit" class="btn btn-sm btn-primary">@lang("Save")</button>
@@ -67,7 +67,7 @@
             $('#pdf-viewer-modul').html(template);
         @endif
 
-        var coverUpdate = $("#cover_update");
+        var coverUpdate = $("#coverUpdate");
         coverUpdate.hide();
     });
 
@@ -83,7 +83,7 @@
     });
 
     $('select#showUpdate').on('change', function() {
-        var coverUpdate = $("#cover_update");
+        var coverUpdate = $("#coverUpdate");
         if(this.value){
             // show upload cover update
             coverUpdate.show();
