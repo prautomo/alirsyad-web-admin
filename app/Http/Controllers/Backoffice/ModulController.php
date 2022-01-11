@@ -257,7 +257,10 @@ class ModulController extends Controller{
             0 => 'Tidak',
         ];
 
-        return view($this->prefix.'.edit', ['data' => $dt, 'mapelList' => $mapelList, 'semesterList' => $semesterList, 'showUpdate' => $show]);
+        // last update data
+        $update = Update::where(['trigger' => 'modul', 'trigger_id' => $id])->orderBy('created_at', 'desc')->first();
+
+        return view($this->prefix.'.edit', ['data' => $dt, 'mapelList' => $mapelList, 'semesterList' => $semesterList, 'showUpdate' => $show, 'update' => $update]);
     }
 
     public function update(Request $request, $id){
@@ -310,6 +313,11 @@ class ModulController extends Controller{
                 $url = UploadService::uploadImage($image, 'icon/cover_update');
 
                 $coverUpdate = $url;
+            }else {
+                // last update data
+                $update = Update::where(['trigger' => 'modul', 'trigger_id' => $id])->orderBy('created_at', 'desc')->first();
+
+                $coverUpdate = @$update->logo;
             }
             $this->insertToUpdateLog($dt, $coverUpdate, 'update');
         }

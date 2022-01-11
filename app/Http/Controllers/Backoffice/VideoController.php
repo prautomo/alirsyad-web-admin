@@ -311,7 +311,10 @@ class VideoController extends Controller{
             0 => 'Tidak',
         ];
 
-        return view($this->prefix.'.edit', ['data' => $dt, 'mapelList' => $mapelList, 'semesterList' => $semesterList, 'modulList' => $modulList, 'showUpdate' => $show]);
+        // last update data
+        $update = Update::where(['trigger' => 'video', 'trigger_id' => $id])->orderBy('created_at', 'desc')->first();
+
+        return view($this->prefix.'.edit', ['data' => $dt, 'mapelList' => $mapelList, 'semesterList' => $semesterList, 'modulList' => $modulList, 'showUpdate' => $show, 'update' => $update]);
     }
 
     public function update(Request $request, $id){
@@ -368,6 +371,11 @@ class VideoController extends Controller{
                 $url = UploadService::uploadImage($image, 'icon/cover_update');
 
                 $coverUpdate = $url;
+            }else {
+                // last update data
+                $update = Update::where(['trigger' => 'video', 'trigger_id' => $id])->orderBy('created_at', 'desc')->first();
+
+                $coverUpdate = @$update->logo;
             }
             $this->insertToUpdateLog($dt, $coverUpdate, 'update');
         }
