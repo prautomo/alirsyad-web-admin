@@ -1,7 +1,7 @@
 <?php
-   
+
 namespace App\Http\Controllers\API;
-   
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\ExternalUser;
@@ -10,7 +10,7 @@ use App\Services\CloudinaryFileManager;
 use App\Services\UploadService;
 use Illuminate\Support\Facades\Hash;
 use Validator;
-   
+
 class ExternalUserController extends BaseController
 {
     /**
@@ -20,9 +20,9 @@ class ExternalUserController extends BaseController
      */
     public function profile(Request $request)
     {
-        $user = Auth::user(); 
-        
-        $success['nis'] = @$user->nis; 
+        $user = Auth::user();
+
+        $success['nis'] = @$user->nis;
         $success['name'] = @$user->name;
         $success['photo'] = @$user->photo ? asset($user->photo) : '';
         $success['email'] = @$user->email;
@@ -31,20 +31,21 @@ class ExternalUserController extends BaseController
         $success['tingkat'] = @$user->kelas->tingkat->name;
         $success['jenjang'] = @$user->kelas->tingkat->jenjang->name ?? @$user->jenjang->name;
         $success['is_pengunjung'] = @$user->is_pengunjung;
+        $success['status'] = @$user->status;
 
         return $this->sendResponse($success, 'User retrieved successfully.');
     }
 
     public function profileUpdate(Request $request){
-        $user = Auth::user(); 
+        $user = Auth::user();
 
         if(@$request->email){
             $validator = Validator::make($request->all(), [
                 'email' => 'required|email|unique:external_users,email,'.$user->id,
             ]);
-    
+
             if ($validator->fails()) {
-                return $this->returnStatus(400, $validator->errors());  
+                return $this->returnStatus(400, $validator->errors());
             }
 
             $user->email = $request->email;
@@ -56,7 +57,7 @@ class ExternalUserController extends BaseController
 
         $user->save();
 
-        $success['nis'] = @$user->nis; 
+        $success['nis'] = @$user->nis;
         $success['name'] = @$user->name;
         $success['email'] = @$user->email;
         $success['photo'] = @$user->photo ? asset($user->photo) : '/images/placeholder.png';
@@ -65,6 +66,7 @@ class ExternalUserController extends BaseController
         $success['tingkat'] = @$user->kelas->tingkat->name;
         $success['jenjang'] = @$user->kelas->tingkat->jenjang->name ?? @$user->jenjang->name;
         $success['is_pengunjung'] = @$user->is_pengunjung;
+        $success['status'] = @$user->status;
 
         return $this->sendResponse($success, 'User updated successfully.');
     }
@@ -77,17 +79,17 @@ class ExternalUserController extends BaseController
         ]);
 
         if ($validator->fails()) {
-            return $this->returnStatus(400, $validator->errors());  
+            return $this->returnStatus(400, $validator->errors());
         }
 
-        $user = Auth::user(); 
+        $user = Auth::user();
 
         if(Hash::check($request->old_password, $user->password)){
             $user->password = Hash::make($request->new_password);
 
             $user->save();
 
-            $success['nis'] = @$user->nis; 
+            $success['nis'] = @$user->nis;
             $success['name'] = @$user->name;
             $success['email'] = @$user->email;
             $success['photo'] = @$user->photo ? asset($user->photo) : '/images/placeholder.png';
@@ -96,6 +98,7 @@ class ExternalUserController extends BaseController
             $success['tingkat'] = @$user->kelas->tingkat->name;
             $success['jenjang'] = @$user->kelas->tingkat->jenjang->name ?? @$user->jenjang->name;
             $success['is_pengunjung'] = @$user->is_pengunjung;
+            $success['status'] = @$user->status;
 
             return $this->sendResponse($success, 'User password updated successfully.');
         }else{
@@ -113,7 +116,7 @@ class ExternalUserController extends BaseController
         ]);
 
         if ($validator->fails()) {
-            return $this->returnStatus(400, $validator->errors());  
+            return $this->returnStatus(400, $validator->errors());
         }
 
         $success = [
@@ -133,7 +136,7 @@ class ExternalUserController extends BaseController
         ]);
 
         if ($validator->fails()) {
-            return $this->returnStatus(400, $validator->errors());     
+            return $this->returnStatus(400, $validator->errors());
         }
 
         $image = $request->file('file');

@@ -1,7 +1,7 @@
 <?php
-   
+
 namespace App\Http\Controllers\API;
-   
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\ExternalUser;
@@ -10,10 +10,10 @@ use App\Http\Requests\ResetPasswordRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Validator;
-   
+
 class AuthController extends BaseController
 {
-   
+
     /**
      * Login api
      *
@@ -25,13 +25,13 @@ class AuthController extends BaseController
         $login_type = filter_var( $request->nis, FILTER_VALIDATE_EMAIL ) ? 'email' : 'nis';
 
         if(Auth::attempt([$login_type => $request->nis, 'password' => $request->password])){
-            $user = Auth::user(); 
+            $user = Auth::user();
             // handle status belum aktif
             // if($user->status === 'AKTIF'){
                 $generateToken = $user->createToken('MyAppDigiBook308');
-                $success['token'] = @$generateToken->accessToken; 
-                $success['expires_at'] = @$generateToken->token->expires_at; 
-                $success['nis'] = @$user->nis; 
+                $success['token'] = @$generateToken->accessToken;
+                $success['expires_at'] = @$generateToken->token->expires_at;
+                $success['nis'] = @$user->nis;
                 $success['name'] = @$user->name;
                 $success['photo'] = @$user->photo ? asset($user->photo) : '';
                 $success['email'] = @$user->email;
@@ -40,15 +40,16 @@ class AuthController extends BaseController
                 $success['is_pengunjung'] = @$user->is_pengunjung;
                 $success['tingkat'] = @$user->kelas->tingkat->name;
                 $success['jenjang'] = @$user->kelas->tingkat->jenjang->name ?? @$user->jenjang->name;
+                $success['status'] = @$user->status;
 
                 return $this->sendResponse($success, 'User login successfully.');
             // }else {
             //     return $this->sendError('Maaf, status akun kamu : '.(str_replace('_', ' ', @$user->status)).'. Silahkan kontak administrator/guru.', ['error'=>'Unauthorised']);
             // }
-        } 
-        else{ 
+        }
+        else{
             return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
-        } 
+        }
     }
 
     public function register(Request $request) {
@@ -63,7 +64,7 @@ class AuthController extends BaseController
         ]);
 
         if ($validator->fails()) {
-            return $this->returnStatus(400, $validator->errors());  
+            return $this->returnStatus(400, $validator->errors());
         }
 
         $data = $request;
@@ -89,7 +90,7 @@ class AuthController extends BaseController
         ]);
 
         if ($validator->fails()) {
-            return $this->returnStatus(400, $validator->errors());  
+            return $this->returnStatus(400, $validator->errors());
         }
 
         $credentials = $request->only(['email']);
@@ -117,7 +118,7 @@ class AuthController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function logout(Request $request) 
+    public function logout(Request $request)
     {
         if (Auth::check()) {
             Auth::user()->AauthAcessToken()->delete();
