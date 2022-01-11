@@ -72,7 +72,7 @@
         </div>
     </div>
 
-    <x-input.images :label="__('Upload Cover Update')" wrapId="coverUpdate" name="cover_update" :data="$data" required />
+    <x-input.images :label="__('Upload Cover Update')" wrapId="coverUpdate" name="cover_update" :data="$data" :default="@$update->logo ? asset(@$update->logo) : asset('images/placeholder.png')" required />
 
     <div class="col-xs-12 col-sm-12 col-md-12 text-right">
         <button type="submit" class="btn btn-sm btn-primary">@lang("Save")</button>
@@ -88,11 +88,16 @@
 
         var coverUpdate = $("#coverUpdate");
         coverUpdate.hide();
+
+        @if(@$update->logo)
+            $("#showUpdate option[value='1']").prop('selected',true);
+            coverUpdate.show();
+        @endif
     });
 
     $('select#showUpdate').on('change', function() {
         var coverUpdate = $("#coverUpdate");
-        if(this.value){
+        if(this.value==1){
             // show upload cover update
             coverUpdate.show();
         }else{
@@ -103,8 +108,8 @@
 
     $('select#modul_id').on('change', function() {
         var mapel = $("#mapel");
-        if(this.value){
-            console.log( this.value );
+        if(this.value==1){
+            // console.log( this.value );
             autoFillMapel(this.value);
             $('#mapel').select2();
             $("#mapel").select2('destroy');

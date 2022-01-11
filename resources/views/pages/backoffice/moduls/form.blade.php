@@ -47,7 +47,7 @@
         </div>
     </div>
 
-    <x-input.images :label="__('Upload Cover Update')" wrapId="coverUpdate" name="cover_update" :data="$data" required />
+    <x-input.images :label="__('Upload Cover Update')" wrapId="coverUpdate" name="cover_update" :data="@$update" :default="@$update->logo ? asset(@$update->logo) : asset('images/placeholder.png')" required />
 
     <div class="col-xs-12 col-sm-12 col-md-12 text-right">
         <button type="submit" class="btn btn-sm btn-primary">@lang("Save")</button>
@@ -69,6 +69,11 @@
 
         var coverUpdate = $("#coverUpdate");
         coverUpdate.hide();
+
+        @if(@$update->logo)
+            $("#showUpdate option[value='1']").prop('selected',true);
+            coverUpdate.show();
+        @endif
     });
 
     $('#modul').on('change', function(e){
@@ -84,7 +89,7 @@
 
     $('select#showUpdate').on('change', function() {
         var coverUpdate = $("#coverUpdate");
-        if(this.value){
+        if(this.value==1){
             // show upload cover update
             coverUpdate.show();
         }else{

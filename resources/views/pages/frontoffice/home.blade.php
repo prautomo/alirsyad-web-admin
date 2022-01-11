@@ -129,13 +129,28 @@
                 <div class="col-md-12 mb-1">
                     <div class="card-title mb-0 form-inline">
                         <!-- <i class="ni ni-books icon-title"></i> -->
+                        @if(@\Auth::user()->status !== "AKTIF")
+                        <div class="font-weight-bolder" style="color: #0E594D;">Mata Pelajaran</div>
+                        @else
                         <div class="font-weight-bolder" style="color: #0E594D;">Mata Pelajaran Aktif</div>
+                        @endif
                     </div>
                     <hr/>
                 </div>
 
                     @forelse($aktif as $mpa)
                     <div class="col-md-2 col-6 col-sm-4 mb-4">
+                        @if(@\Auth::user()->status !== "AKTIF")
+                            <img src="{{ @$mpa->icon ? asset($mpa->icon) : asset('images/image-placeholder.jpg') }}" alt="{{ @$mpa->name ?? "-" }}" width="100%" class="mb-3 rounded" />
+
+                            <p class="font-weight-bold mb-0" style="font-size: 16px; line-height: 14px;">
+                                {{ @$mpa->name ?? "-" }}
+                            </p>
+
+                        <span style="font-size: 14px;">
+                            {{ @$mpa->tingkat->name ?? "-" }} {{ @$mpa->tingkat->jenjang->name }}
+                        </span>
+                        @else
                         <a href="{{ route('app.mapel.detail', @$mpa->id) }}">
                             <img src="{{ @$mpa->icon ? asset($mpa->icon) : asset('images/image-placeholder.jpg') }}" alt="{{ @$mpa->name ?? "-" }}" width="100%" class="mb-3 rounded" />
 
@@ -146,6 +161,7 @@
                         <span style="font-size: 14px;">
                             {{ @$mpa->tingkat->name ?? "-" }} {{ @$mpa->tingkat->jenjang->name }}
                         </span>
+                        @endif
                     </div>
                     @empty
                     <div class="col-md-12 mb-4">
@@ -173,9 +189,13 @@
 
                 @forelse($updates as $update)
                 <div class="col-md-2 col-6 col-sm-4">
+                    @if(@\Auth::user()->status !== "AKTIF")
+                    <img src="{{ asset((@$update->logo === '' || @$update->logo === null) ? 'images/image-placeholder.jpg' : $update->logo) }}" alt="{{ @$update->trigger_name ?? "-" }}" title="{{ @$update->trigger_name ?? "-" }}" width="100%" class="mb-3 rounded" />
+                    @else
                     <a href="{{ route('app.'.(@$update->trigger ?? 'video').'.detail', @$update->trigger_id) }}">
                         <img src="{{ asset((@$update->logo === '' || @$update->logo === null) ? 'images/image-placeholder.jpg' : $update->logo) }}" alt="{{ @$update->trigger_name ?? "-" }}" title="{{ @$update->trigger_name ?? "-" }}" width="100%" class="mb-3 rounded" />
                     </a>
+                    @endif
                 </div>
                 @empty
                 <div class="col-md-12 mb-4">
