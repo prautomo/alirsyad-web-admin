@@ -146,19 +146,21 @@
                             @forelse($aktif as $mpa)
                             <div class="wrap-kelas form-inline mt-3">
                                 <div>
-                                    <span class="kelas-title">
+                                    <span class="kelas-title{{@\Auth::user()->status!=='AKTIF' ? ' disable' : ''}}">
                                         Kelas {{ @$mpa->tingkat->name ?? '-' }} {{ @$mpa->tingkat->jenjang->name }}
                                     </span>
-                                    <h4 class="font-weight-bold">
+                                    <h4 class="font-weight-bold{{@\Auth::user()->status!=='AKTIF' ? ' disable' : ''}}">
                                         {{ @$mpa->name ?? "-" }}
                                     </h4>
                                 </div>
 
+                                @if(@\Auth::user()->status=='AKTIF')
                                 <div class="ml-auto">
                                     <a href="{{ route('app.mapel.detail', @$mpa->id) }}" class="btn btn-main btn-small">
                                         <i class="btn-icon fa fa-play ml-2"></i> Lanjut Belajar
                                     </a>
                                 </div>
+                                @endif
                             </div>
                             @empty
                             <div class="wrap-kelas form-inline mt-3">
