@@ -177,26 +177,37 @@ class MataPelajaranController extends BaseController
         $user = @Auth::user();
 
         // // active mapel by admin
-        // $aktif = MataPelajaran::search($request);
-        // $aktif = $aktif->with('tingkat.jenjang');
-        $aktif = MataPelajaran::with('tingkat.jenjang');
-        // mapel pilihan admin
-        $aktif = $aktif->whereHas('guests', function($query) use ($user) {
-            $query->where('guest_id', $user->id);
-        });
-        // limit data
-        if (@$request->limit) $aktif = $aktif->limit($request->limit);
-        // sort by urutan
-        $aktif = $aktif->orderBy('urutan', 'asc');
-        // sort by active mapel
-        $aktif = $aktif->get();
-        // // sort by active mapel
-        // $aktif = $aktif->sortBy('name');
-        // sort by created at descending
-        // $aktif = $aktif->sortByDesc('created_at');
-
         // kalo user belum aktif (kosongin aja list mapelna)
-        if($user->status!=="AKTIF") $aktif = [];
+        if($user->status!=="AKTIF") {
+            $aktif = MataPelajaran::with('tingkat');
+
+            // mapel jenjang
+            $aktif = $aktif->whereHas('tingkat', function($query) use ($user) {
+                $query->where('jenjang_id', @$user->jenjang_id);
+            });
+
+            if($request->limit) $aktif = $aktif->limit($request->limit);
+
+            $aktif = $aktif->get()->sortBy('tingkat.name');
+        }else {
+            // $aktif = MataPelajaran::search($request);
+            // $aktif = $aktif->with('tingkat.jenjang');
+            $aktif = MataPelajaran::with('tingkat.jenjang');
+            // mapel pilihan admin
+            $aktif = $aktif->whereHas('guests', function($query) use ($user) {
+                $query->where('guest_id', $user->id);
+            });
+            // limit data
+            if (@$request->limit) $aktif = $aktif->limit($request->limit);
+            // sort by urutan
+            $aktif = $aktif->orderBy('urutan', 'asc');
+            // sort by active mapel
+            $aktif = $aktif->get();
+            // // sort by active mapel
+            // $aktif = $aktif->sortBy('name');
+            // sort by created at descending
+            // $aktif = $aktif->sortByDesc('created_at');
+        }
 
         return $this->sendResponse(MataPelajaranResource::collection($aktif), 'Mata Pelajaran retrieved successfully.');
     }

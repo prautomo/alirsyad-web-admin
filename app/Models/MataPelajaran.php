@@ -105,7 +105,7 @@ class MataPelajaran extends Model
     //
     public function getDisabledAttribute()
     {
-        // $user = @\Auth::user();
+        $user = @\Auth::user();
 
         // if($user->is_pengunjung){
         //     $mapelGuest = GuestMataPelajaran::where(['guest_id'=> @$user->id, 'mata_pelajaran_id' => @$this->id])->first();
@@ -113,6 +113,10 @@ class MataPelajaran extends Model
         // }
 
         // return @$this->tingkat->name > @$user->kelas->tingkat->name;
+
+        if($user->is_pengunjung && $user->status != "AKTIF"){
+            return true;
+        }
 
         return false;
     }
