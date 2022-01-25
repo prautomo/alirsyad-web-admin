@@ -1,20 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\Front;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\API\BaseController as BaseController;
+use App\Http\Controllers\Controller;
 use App\Models\Update;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Resources\Update as UpdateResource;
+use Illuminate\Http\Request;
+use Auth;
 
-class UpdateController extends BaseController
+class UpdateController extends Controller
 {
-
     /**
-     * Display a listing of the resource.
+     * Show the list.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index(Request $request)
     {
@@ -36,9 +34,7 @@ class UpdateController extends BaseController
                 $query->where('guest_id', @$user->id);
             });
 
-            $updates = $updates->orderBy('created_at', 'desc');
-            if(@$request->limit) $updates = $updates->limit(@$request->limit);
-            $updates = $updates->get();
+            $updates = $updates->orderBy('created_at', 'desc')->limit(5)->get();
         }
         // siswa
         else{
@@ -54,12 +50,15 @@ class UpdateController extends BaseController
             // });
             // filter tingkat nya sendiri
             $updates = $updates->where('tingkat_id', @$user->kelas->tingkat_id);
-            $updates = $updates->orderBy('created_at', 'desc');
-            if(@$request->limit) $updates = $updates->limit(@$request->limit);
-            $updates = $updates->get();
+            // sort, limit, and get data
+            $updates = $updates->orderBy('created_at', 'desc')->get();
         }
 
-        return $this->sendResponse(UpdateResource::collection($updates), 'Update retrieved successfully.');
+        $parseData = [
+            'updates' => $updates,
+        ];
+
+        return view('pages/frontoffice/update', $parseData);
     }
 
 }
