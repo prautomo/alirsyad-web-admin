@@ -12,7 +12,7 @@ class Modul extends Model
 {
     use HasFactory, SearchableTrait, SoftDeletes;
 
-    protected $appends = ['read', 'pdf_url', 'next', 'previous'];
+    protected $appends = ['read', 'pdf_url', 'next', 'previous', 'pdf_viewer'];
 
     /**
      * The attributes that are mass assignable.
@@ -68,6 +68,11 @@ class Modul extends Model
     public function getPDFUrlAttribute()
     {
         return asset($this->pdf_path);
+    }
+
+    public function getPDFViewerAttribute()
+    {
+        return "https://pdfdraw.dika.web.id/?url=".asset($this->pdf_path);
     }
 
     public function getNextAttribute(){
