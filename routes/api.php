@@ -85,3 +85,6 @@ Route::middleware('auth:api')->group( function () {
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post("/moduls/upload", 'API\ModulController@upload');
+Route::get("/moduls/anotasi/{id}", 'API\ModulController@getModulAnotasi');

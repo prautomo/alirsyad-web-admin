@@ -65,6 +65,11 @@ return [
             'endpoint' => env('AWS_ENDPOINT'),
         ],
 
+        'anotasi' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/uploads/anotasi'),
+        ],
+
     ],
 
     /*
