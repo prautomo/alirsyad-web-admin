@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\SearchableTrait;
 use App\Observers\ModulObserver;
+use Illuminate\Support\Facades\Auth;
 
 class Modul extends Model
 {
@@ -72,7 +73,13 @@ class Modul extends Model
 
     public function getPDFViewerAttribute()
     {
-        return "https://pdfdraw.dika.web.id/?url=".asset($this->pdf_path);
+        $modulAnotasi = ModulAnotasi::where(['user_id' => Auth::user()->id, 'modul_id' => $this->id])->orderBy('updated_at', 'desc')->first();
+        $pdfPath = @$modulAnotasi->pdf_path ?? $this->pdf_path;
+        
+        return "http://localhost:5000/?url=".asset($pdfPath).
+                "&user_id=".Auth::user()->id.
+                "&modul_id=".$this->id.
+                "&pdf_path=".$pdfPath;
     }
 
     public function getNextAttribute(){
