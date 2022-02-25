@@ -75,8 +75,8 @@ class Modul extends Model
     {
         $modulAnotasi = ModulAnotasi::where(['user_id' => Auth::user()->id, 'modul_id' => $this->id])->orderBy('updated_at', 'desc')->first();
         $pdfPath = @$modulAnotasi->pdf_path ?? $this->pdf_path;
-        
-        return "http://localhost:5000/?url=".asset($pdfPath).
+
+        return "https://pdfdraw.dika.web.id/?url=".asset($pdfPath).
                 "&user_id=".Auth::user()->id.
                 "&modul_id=".$this->id.
                 "&pdf_path=".$pdfPath;
