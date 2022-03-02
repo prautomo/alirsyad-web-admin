@@ -53,7 +53,7 @@ class UploadService
             $storagePath;
         }
         $folder = "{$storagePath}";
-        $new_name = 'DIGIBOOK_FILE_' . gmdate('d_m_Y_h_i_s') . '.pdf';
+        $new_name = 'DIGIBOOK_ANOTASI_FILE_' . gmdate('d_m_Y_h_i_s') . '.pdf';
         $file->move(public_path($folder), $new_name);
 
         return $folder . "/" . $new_name;
