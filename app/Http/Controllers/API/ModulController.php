@@ -114,7 +114,7 @@ class ModulController extends BaseController
 
     public function upload(Request $request){
         $fileAnotasi = $request->file('modul');
-        $newName = UploadService::uploadPDF($fileAnotasi, 'uploads\anotasi');
+        $newName = UploadService::uploadPDF($fileAnotasi, 'uploads\modul', @$request->modul_id.'_'.@$request->user_id.'_DIGIBOOK_ANOTASI_FILE_' . gmdate('d_m_Y_h_i_s'));
 
         $modul = ModulAnotasi::create([
             'modul_id' => $request->modul_id,
