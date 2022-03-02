@@ -7,12 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\SearchableTrait;
 use App\Observers\ModulObserver;
+use Illuminate\Support\Facades\Auth;
 
 class Modul extends Model
 {
     use HasFactory, SearchableTrait, SoftDeletes;
 
-    protected $appends = ['read', 'pdf_url', 'next', 'previous'];
+    protected $appends = ['read', 'pdf_url', 'next', 'previous', 'pdf_viewer'];
 
     /**
      * The attributes that are mass assignable.
@@ -55,8 +56,8 @@ class Modul extends Model
      */
     protected static function boot() {
         parent::boot();
-        
-        Modul::observe(ModulObserver::class);
+
+        // Modul::observe(ModulObserver::class);
     }
 
     public function getReadAttribute()
@@ -68,6 +69,17 @@ class Modul extends Model
     public function getPDFUrlAttribute()
     {
         return asset($this->pdf_path);
+    }
+
+    public function getPDFViewerAttribute()
+    {
+        $modulAnotasi = ModulAnotasi::where(['user_id' => Auth::user()->id, 'modul_id' => $this->id])->orderBy('updated_at', 'desc')->first();
+        $pdfPath = @$modulAnotasi->pdf_path ?? $this->pdf_path;
+
+        return asset('pdf.html')."?url=".asset($pdfPath).
+                "&user_id=".Auth::user()->id.
+                "&modul_id=".$this->id.
+                "&pdf_path=".$pdfPath;
     }
 
     public function getNextAttribute(){
@@ -88,7 +100,7 @@ class Modul extends Model
                 'endpoint' => route('api.modul.detail', @$nextModul->id),
             ];
         }
-        
+
         return $returnNext;
     }
 
@@ -98,7 +110,7 @@ class Modul extends Model
             ->where('urutan', '<', $this->urutan)
             ->where('mata_pelajaran_id', $this->mata_pelajaran_id)
             ->orderBy('urutan','desc')->first();
-        
+
         $returnPrevious = null;
 
         if($previousModul){
@@ -110,7 +122,7 @@ class Modul extends Model
                 'endpoint' => route('api.modul.detail', @$previousModul->id),
             ];
         }
-        
+
         return $returnPrevious;
     }
 

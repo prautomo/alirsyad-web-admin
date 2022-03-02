@@ -41,7 +41,7 @@ class Video extends Model
     protected static function boot(){
         parent::boot();
 
-        Video::observe(VideoObserver::class);
+        // Video::observe(VideoObserver::class);
     }
 
     public static function search($request)
@@ -77,7 +77,7 @@ class Video extends Model
                 'endpoint' => route('api.video.detail', @$nextVideo->id),
             ];
         }
-        
+
         return $returnNext;
     }
 
@@ -87,7 +87,7 @@ class Video extends Model
             ->where('urutan', '<', $this->urutan)
             ->where('mata_pelajaran_id', $this->mata_pelajaran_id)
             ->orderBy('urutan', 'desc')->first();
-        
+
         $returnPrevious = null;
 
         if($previousVideo){
@@ -98,7 +98,7 @@ class Video extends Model
                 'endpoint' => route('api.video.detail', @$previousVideo->id),
             ];
         }
-        
+
         return $returnPrevious;
     }
 
@@ -112,7 +112,7 @@ class Video extends Model
     public function getYoutubeIdAttribute()
     {
         $url = $this->video_url;
-        
+
         parse_str( parse_url( $url, PHP_URL_QUERY ), $my_array_of_vars );
         return @$my_array_of_vars['v'];
     }

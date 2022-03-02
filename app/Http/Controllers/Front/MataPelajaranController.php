@@ -74,22 +74,32 @@ class MataPelajaranController extends Controller
         /**
          * Mapel Aktif buat Pengunjung
          */
-        // $aktif = MataPelajaran::search($request);
-        // $aktif = $aktif->with('tingkat');
-        $aktif = MataPelajaran::with('tingkat');
-        // mapel pilihan admin
-        $aktif = $aktif->whereHas('guests', function($query) use ($user) {
-            $query->where('guest_id', $user->id);
-        });
-        // sort by urutan
-        $aktif = $aktif->orderBy('urutan', 'asc');
-        $aktif = $aktif->get();
-        // // sort by active mapel
-        // $aktif = $aktif->sortBy('name');
-        // sort by created at descending
-        // $aktif = $aktif->sortByDesc('created_at');
         // kalo user belum aktif (kosongin aja list mapelna)
-        if($user->status!=="AKTIF") $aktif = [];
+        if($user->status!=="AKTIF") {
+            $aktif = MataPelajaran::with('tingkat');
+
+            // mapel jenjang
+            $aktif = $aktif->whereHas('tingkat', function($query) use ($user) {
+                $query->where('jenjang_id', @$user->jenjang_id);
+            });
+
+            $aktif = $aktif->get()->sortBy('tingkat.name');
+        }else {
+            // $aktif = MataPelajaran::search($request);
+            // $aktif = $aktif->with('tingkat');
+            $aktif = MataPelajaran::with('tingkat');
+            // mapel pilihan admin
+            $aktif = $aktif->whereHas('guests', function($query) use ($user) {
+                $query->where('guest_id', $user->id);
+            });
+            // sort by urutan
+            $aktif = $aktif->orderBy('urutan', 'asc');
+            $aktif = $aktif->get();
+            // // sort by active mapel
+            // $aktif = $aktif->sortBy('name');
+            // sort by created at descending
+            // $aktif = $aktif->sortByDesc('created_at');
+        }
 
         // /**
         //  * Mapel Tidak Aktif buat Pengunjung

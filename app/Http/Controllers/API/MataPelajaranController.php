@@ -38,6 +38,10 @@ class MataPelajaranController extends BaseController
             $datas = $datas->where('kelas_id', $request->q_kelas_id);
         }
 
+        if(@$request->q_tingkat_id){
+            $datas = $datas->where('tingkat_id', $request->q_tingkat_id);
+        }
+
         // sort by urutan
         $datas = $datas->orderBy('urutan', 'asc');
 
@@ -173,26 +177,37 @@ class MataPelajaranController extends BaseController
         $user = @Auth::user();
 
         // // active mapel by admin
-        // $aktif = MataPelajaran::search($request);
-        // $aktif = $aktif->with('tingkat.jenjang');
-        $aktif = MataPelajaran::with('tingkat.jenjang');
-        // mapel pilihan admin
-        $aktif = $aktif->whereHas('guests', function($query) use ($user) {
-            $query->where('guest_id', $user->id);
-        });
-        // limit data
-        if (@$request->limit) $aktif = $aktif->limit($request->limit);
-        // sort by urutan
-        $aktif = $aktif->orderBy('urutan', 'asc');
-        // sort by active mapel
-        $aktif = $aktif->get();
-        // // sort by active mapel
-        // $aktif = $aktif->sortBy('name');
-        // sort by created at descending
-        // $aktif = $aktif->sortByDesc('created_at');
-
         // kalo user belum aktif (kosongin aja list mapelna)
-        if($user->status!=="AKTIF") $aktif = [];
+        if($user->status!=="AKTIF") {
+            $aktif = MataPelajaran::with('tingkat');
+
+            // mapel jenjang
+            $aktif = $aktif->whereHas('tingkat', function($query) use ($user) {
+                $query->where('jenjang_id', @$user->jenjang_id);
+            });
+
+            if($request->limit) $aktif = $aktif->limit($request->limit);
+
+            $aktif = $aktif->get()->sortBy('tingkat.name');
+        }else {
+            // $aktif = MataPelajaran::search($request);
+            // $aktif = $aktif->with('tingkat.jenjang');
+            $aktif = MataPelajaran::with('tingkat.jenjang');
+            // mapel pilihan admin
+            $aktif = $aktif->whereHas('guests', function($query) use ($user) {
+                $query->where('guest_id', $user->id);
+            });
+            // limit data
+            if (@$request->limit) $aktif = $aktif->limit($request->limit);
+            // sort by urutan
+            $aktif = $aktif->orderBy('urutan', 'asc');
+            // sort by active mapel
+            $aktif = $aktif->get();
+            // // sort by active mapel
+            // $aktif = $aktif->sortBy('name');
+            // sort by created at descending
+            // $aktif = $aktif->sortByDesc('created_at');
+        }
 
         return $this->sendResponse(MataPelajaranResource::collection($aktif), 'Mata Pelajaran retrieved successfully.');
     }
@@ -262,7 +277,7 @@ class MataPelajaranController extends BaseController
         if(@$tingkatInfo->jenjang_id === $jenjangUser){
             $mapels = MataPelajaran::where('tingkat_id', $tingkatId);
             $mapels = $mapels->with('tingkat');
-            $mapels = $mapels->orderBy('name');
+            $mapels = $mapels->orderBy('urutan', 'asc');
             $mapels = $mapels->get();
         }else{
             // jangan kasih info tingkat

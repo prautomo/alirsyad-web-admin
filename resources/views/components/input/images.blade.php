@@ -1,10 +1,10 @@
-@props(['name', 'label', 'value' => '', 'helper', 'data' => null, 'width' => '100%', 'height' => '100%', 'default' => asset('images/placeholder.png'), 'required'])
+@props(['name', 'label', 'value' => '', 'helper', 'data' => null, 'wrapId' => null, 'width' => '100%', 'height' => '100%', 'default' => asset('images/placeholder.png'), 'required'])
 
 @php
 $default = (@$data[$name]) ? asset($data[$name]) : $default;
 @endphp
 
-<div class="col-md-12">
+<div class="col-md-12" id="{{@$wrapId}}">
     <div class="form-group">
         <label class="form-control-label" for="input-{{$name}}">{{$label}} {{@$required ? "(*)" : ""}}</label>
         <input id="{{$name}}" type="file" name="{{$name}}" placeholder="{{$label}}" value="{{old($name) ?? $data[$name] ?? $value ?? ''}}" {{ $attributes->merge(['class' => " form-control ". ($errors->has($name) ? ' is-invalid' : '')]) }} accept="image/bmp, image/jpeg, image/x-png, image/png, image/gif" >
@@ -23,10 +23,10 @@ $default = (@$data[$name]) ? asset($data[$name]) : $default;
 @push('script')
 <script type="text/javascript">
 $("#{{$name}}").change(function (event) {
-    readURL(this);
+    readURL{{$name}}(this);
 });
 
-function readURL(input) {
+function readURL{{$name}}(input) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
         reader.onload = function (e) {

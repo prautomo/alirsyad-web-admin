@@ -46,7 +46,7 @@ class MataPelajaranController extends Controller{
 
                 if($search){
                     $query->where('name', 'LIKE', '%'.$search.'%');
-                    
+
                     $query = $query->orWhereHas('tingkat.jenjang', function($query2) use ( $search ){
                         $query2->where('name', 'LIKE', '%'.$search.'%');
                     });
@@ -126,10 +126,10 @@ class MataPelajaranController extends Controller{
         $this->validate($request, [
             // 'name' => 'required|string',
             'tingkat_id' => 'required',
-            'name' => Rule::unique('mata_pelajarans')->where(function ($query) use ($request) {
-                return $query->where('name', $request->name)
-                   ->where('tingkat_id', $request->tingkat_id);
-            }),
+            // 'name' => Rule::unique('mata_pelajarans')->where(function ($query) use ($request) {
+            //     return $query->where('name', $request->name)
+            //        ->where('tingkat_id', $request->tingkat_id);
+            // }),
         ]);
         // default image
         $url = "images/placeholder.png";
@@ -173,10 +173,10 @@ class MataPelajaranController extends Controller{
             'slug' => 'unique:mata_pelajarans,slug,'.$id,
             // 'name' => 'required|string',
             'tingkat_id' => 'required',
-            'name' => Rule::unique('mata_pelajarans')->ignore($id)->where(function ($query) use ($request) {
-                return $query->where('name', $request->name)
-                   ->where('tingkat_id', $request->tingkat_id);
-            }),
+            // 'name' => Rule::unique('mata_pelajarans')->ignore($id)->where(function ($query) use ($request) {
+            //     return $query->where('name', $request->name)
+            //        ->where('tingkat_id', $request->tingkat_id);
+            // }),
         ]);
 
         $dataReq = $request->only(['class', 'name', 'icon', 'slug', 'tingkat_id', 'urutan']);

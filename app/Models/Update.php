@@ -11,7 +11,7 @@ class Update extends Model
     use HasFactory, SearchableTrait;
 
     protected $fillable = [
-        'trigger_event', 'trigger', 'trigger_id', 'trigger_name', 'mata_pelajaran', 'tingkat_id', 'mata_pelajaran_id',
+        'trigger_event', 'trigger', 'trigger_id', 'trigger_name', 'mata_pelajaran', 'tingkat_id', 'mata_pelajaran_id', 'logo',
     ];
 
     public static function search($request)
