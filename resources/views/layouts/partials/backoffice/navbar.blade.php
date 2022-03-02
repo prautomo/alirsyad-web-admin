@@ -155,6 +155,32 @@
                 </ul>
               </div>
             </li>
+
+            <li class="nav-item">
+              <a class="nav-link{{ request()->is('backoffice/manage-external-users*') ? ' active' : ' collapsed' }}" href="#navbar-manage-exus" data-toggle="collapse" role="button" aria-expanded="{{ request()->is('backoffice/manage-external-users*') ? 'true' : 'false' }}" aria-controls="navbar-manage-exus">
+                <i class="ni ni-single-02 text-dark-green"></i>
+                <span class="nav-link-text">Kelola Pengunjung</span>
+              </a>
+              <div class="collapse{{ request()->is('backoffice/manage-external-users*') ? ' show' : '' }}" id="navbar-manage-exus" style="">
+                <ul class="nav nav-sm flex-column">
+                  <li class="nav-item">
+                    <a href="{{ route('backoffice::manage-external-users.index', ['content'=>'modul']) }}" class="nav-link">
+                      <span class="sidenav-normal"> Akses Modul Pengunjung </span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{{ route('backoffice::users.index', ['role'=>'Guru']) }}" class="nav-link">
+                      <span class="sidenav-normal"> Akses Video Pengunjung </span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{{ route('backoffice::external-users.index', ['role'=>'GURU']) }}" class="nav-link">
+                      <span class="sidenav-normal"> Akses Simulasi Pengunjung </span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
             @endcanany
 
             @can('banner-list')
