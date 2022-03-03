@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-  
+
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\ExternalUserController;
 
@@ -63,6 +63,8 @@ Route::middleware('auth:api')->group( function () {
     Route::post("/simulasis/{id}/score", "API\SimulasiController@createScore");
 
     Route::get("/nilai-simulasi", "API\ScoreController@index");
+    Route::get("/nilai-simulasi/mapels", "API\ScoreController@mapels");
+    Route::get("/nilai-simulasi/mapels/{idMapel}", "API\ScoreController@progress");
 
     Route::get("/home/banners", "API\BannerController@index");
     Route::get("/home/banners/{id}", "API\BannerController@show");
@@ -75,11 +77,11 @@ Route::middleware('auth:api')->group( function () {
         Route::get("/dashboard", "API\DashboardController@index");
         Route::get("/dashboard/detail", "API\DashboardController@detail");
         Route::get("/ngajar", "API\DashboardController@guruNgajar");\
-        
+
         Route::get('/simulasi/{id}/siswa', 'API\ScoreController@listNilaiSiswa');
         Route::get('/simulasi/{id}/nilai', 'API\ScoreController@nilaiSiswa');
     });
-    
+
 });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
