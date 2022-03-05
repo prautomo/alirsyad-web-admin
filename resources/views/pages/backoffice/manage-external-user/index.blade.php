@@ -1,6 +1,6 @@
 @extends('layouts.backoffice')
 
-@section('title', __("Modul"))
+@section('title', $title)
 
 @section('header')
   @parent
@@ -10,7 +10,7 @@
         </div>
         @can('modul-create')
         <div class="col-lg-6 col-5 text-right">
-            <a href="{{ route('backoffice::manage-external-users.create') }}" class="btn btn-sm btn-neutral">New</a>
+            <a href="{{ route('backoffice::manage-external-users.create', ['content' => $content]) }}" class="btn btn-sm btn-neutral">New</a>
             <!-- <a href="#" class="btn btn-sm btn-neutral">Filters</a> -->
         </div>
         @endcan

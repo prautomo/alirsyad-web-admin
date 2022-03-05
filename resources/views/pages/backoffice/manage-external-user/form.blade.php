@@ -1,19 +1,22 @@
 @csrf
 <div class="row">
-    <x-input.select :label="__('Mata Pelajaran')" id="mata_pelajaran_id" name="mata_pelajaran_id" :sources="$mapelList" :data="$data" onchange="clickMapel(this)" required />
+    
+    <input type="text" value="{{ $content }}" name="contentType" class="form-control" hidden />
+
+    <x-input.select :label="__('Mata Pelajaran')" id="id" name="id" :sources="$mapelList" :data="$data" onchange="clickMapel(this)" required />
 
     <div class="col-md-12">
         <div class="form-group">
-            <label class="form-control-label" for="input-modul">Bab Aktif</label>
+            <label class="form-control-label" for="input-content">Bab Aktif</label>
 
-            <select id="modul" multiple="multiple" name="modul[]" class="form-control {{($errors->has('modul') ? ' is-invalid' : '')}}" disabled>
+            <select id="content" multiple="multiple" name="content[]" class="form-control {{($errors->has('content') ? ' is-invalid' : '')}}"  {{($form_mode == 'create' ? ' disabled' : '')}}>
                 
             </select>
 
 
-            @if($errors->has('modul'))
+            @if($errors->has('content'))
             <div class="invalid-feedback">
-                <i class="fa fa-exclamation-circle fa-fw"></i> {{ $errors->first('modul') }}
+                <i class="fa fa-exclamation-circle fa-fw"></i> {{ $errors->first('content') }}
             </div>
             @endif
         </div>
@@ -29,7 +32,7 @@
 @push('plugin_script')
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#mata_pelajaran_id').select2();
+        $('#id').select2();
 
         @if(@$data->pdf_path)
             let template = "<object type='application/pdf' width='100%' height='400px' data= '{{ asset($data->pdf_path) }}'>";
@@ -44,32 +47,31 @@
             $("#showUpdate option[value='1']").prop('selected',true);
             coverUpdate.show();
         @endif
+
+
     });
 
     function clickMapel(e){
-        var moduls = <?php echo json_encode($groupModulList); ?>;
-        $('#modul').prop('disabled', false);
+        var contents = <?php echo json_encode($groupContentList); ?>;
+        $('#content').prop('disabled', false);
 
-        var mata_pelajaran = $( "#mata_pelajaran_id option:selected" ).text();
-        var tingkat = mata_pelajaran.substring(
-            mata_pelajaran.indexOf("(") + 9, 
-            mata_pelajaran.lastIndexOf(")")
-        );
+        var mata_pelajaran = $( "#id option:selected" ).text();
+        console.log(mata_pelajaran)
 
-        var moduls_show = moduls.filter(function (modul) {
-            return modul.text == tingkat;
+        var contents_show = contents.filter(function (content) {
+            return content.text == mata_pelajaran;
         });
 
-        $('#modul').empty();
+        $('#content').empty();
 
-        var s2 = $('#modul').select2({
-            placeholder: "Please select modul",
+        var s2 = $('#content').select2({
+            placeholder: "Please select content",
             allowClear: true,
             width: '100%',
-            data: moduls_show,
+            data: contents_show,
             theme: "classic",
         });
-        // console.log( $('#modul').data)
+        // console.log( $('#content').data)
     }
 
     $('select#showUpdate').on('change', function() {
@@ -84,19 +86,27 @@
     });
 
     $(document).ready(function() {
-        console.log('sekali')
-        // $('.js-example-basic-multiple').select2();
-        var moduls = <?php echo json_encode($groupModulList); ?>
+        var contents = <?php echo json_encode($groupContentList); ?>
 
-        var s2 = $('#modul').select2({
-            placeholder: "Please select modul",
+        $('#content').prop('disabled', false);
+
+        var mata_pelajaran = $( "#id option:selected" ).text();
+
+        var contents_show = contents.filter(function (content) {
+            return content.text == mata_pelajaran;
+        });
+
+        $('#content').empty();
+
+        var s2 = $('#content').select2({
+            placeholder: "Please select content",
             allowClear: true,
             width: '100%',
-            data: moduls,
+            data: contents_show,
             theme: "classic",
         });
 
-        var vals = <?php echo json_encode($modulIDS); ?>;
+        var vals = <?php echo json_encode($contentIDS); ?>;
 
         vals.forEach(function(e){
             if(!s2.find('option:contains(' + e + ')').length) 
@@ -105,9 +115,9 @@
 
         s2.val(vals).trigger("change"); 
 
-        $('#modul').on('select2:open', function(e) {
+        $('#content').on('select2:open', function(e) {
 
-        $('#select2-modul-results').on('click', function(event) {
+        $('#select2-content-results').on('click', function(event) {
 
             event.stopPropagation();
             var data = $(event.target).html();
@@ -115,16 +125,16 @@
 
             var groupchildren = [];
 
-            for (var i = 0; i < moduls.length; i++) {
-                if (selectedOptionGroup.toString() === moduls[i].text.toString()) {
-                    for (var j = 0; j < moduls[i].children.length; j++) {
-                        groupchildren.push(moduls[i].children[j].id);
+            for (var i = 0; i < contents.length; i++) {
+                if (selectedOptionGroup.toString() === contents[i].text.toString()) {
+                    for (var j = 0; j < contents[i].children.length; j++) {
+                        groupchildren.push(contents[i].children[j].id);
                     }
                 }
             }
 
             var options = [];
-            options = $('#modul').val();
+            options = $('#content').val();
 
             if (options === null || options === '') {
 
@@ -148,9 +158,9 @@
                 }
             }
 
-            $('#modul').val(options);
-            $('#modul').trigger('change'); // Notify any JS components that the value changed
-            $('#modul').select2('close');    
+            $('#content').val(options);
+            $('#content').trigger('change'); // Notify any JS components that the value changed
+            $('#content').select2('close');    
 
         });
         });

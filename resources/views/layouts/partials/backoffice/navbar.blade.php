@@ -169,12 +169,12 @@
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="{{ route('backoffice::users.index', ['role'=>'Guru']) }}" class="nav-link">
+                    <a href="{{ route('backoffice::manage-external-users.index', ['content'=>'video']) }}" class="nav-link">
                       <span class="sidenav-normal"> Akses Video Pengunjung </span>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="{{ route('backoffice::external-users.index', ['role'=>'GURU']) }}" class="nav-link">
+                    <a href="{{ route('backoffice::manage-external-users.index', ['content'=>'simulasi']) }}" class="nav-link">
                       <span class="sidenav-normal"> Akses Simulasi Pengunjung </span>
                     </a>
                   </li>

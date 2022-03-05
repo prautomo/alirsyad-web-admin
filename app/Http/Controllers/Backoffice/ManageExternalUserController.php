@@ -19,6 +19,8 @@ use App\Helpers\ExtractArchive;
 use App\Helpers\GenerateSlug;
 use App\Models\ExternalUser;
 use App\Models\Jenjang;
+use App\Models\Simulasi;
+use App\Models\Video;
 
 class ManageExternalUserController extends Controller
 {
@@ -35,17 +37,24 @@ class ManageExternalUserController extends Controller
 
     public function datatable(Request $request)
     {
-        $query = Modul::query();
+        $query = MataPelajaran::query();
 
-        // kalo bukan superadmin, tambahin filter by mapel na
-        // if (!@\Auth::user()->hasRole('Superadmin')) {
-        //     $mapelIdsUser = $this->getMapelIdsUser();
-        //     $query = $query->whereIn('mata_pelajaran_id', $mapelIdsUser);
-        // }
+        $content = $request->query('content');
 
-        $query = $query->with('mataPelajaran.tingkat.jenjang');
-
-        $datas = $query->select('*');
+        switch ($content) {
+            case 'modul':
+                $query = $query->with('tingkat.jenjang', 'modul');
+                $datas = $query->select('*')->where('is_public_modul', 1);
+                break;
+            case 'video':
+                $query = $query->with('tingkat.jenjang', 'video');
+                $datas = $query->select('*')->where('is_public_video', 1);
+                break;
+            case 'simulasi':
+                $query = $query->with('tingkat.jenjang', 'simulasi');
+                $datas = $query->select('*')->where('is_public_simulasi', 1);
+                break;
+        }
 
         return datatables()
             ->of($datas)
@@ -57,15 +66,15 @@ class ManageExternalUserController extends Controller
                     $query->where(function ($query) use ($search) {
                         $query->where('name', 'LIKE', '%' . $search . '%');
 
-                        $query = $query->orWhereHas('mataPelajaran.tingkat.jenjang', function ($query2) use ($search) {
+                        $query = $query->orWhereHas('tingkat.jenjang', function ($query2) use ($search) {
                             $query2->where('name', 'LIKE', '%' . $search . '%');
                         });
 
-                        $query = $query->orWhereHas('mataPelajaran.tingkat', function ($query2) use ($search) {
+                        $query = $query->orWhereHas('tingkat', function ($query2) use ($search) {
                             $query2->where('name', 'LIKE', '%' . $search . '%');
                         });
 
-                        $query = $query->orWhereHas('mataPelajaran', function ($query2) use ($search) {
+                        $query = $query->orWhereHas('modul', function ($query2) use ($search) {
                             $query2->where('name', 'LIKE', '%' . $search . '%');
                         });
                     });
@@ -75,24 +84,15 @@ class ManageExternalUserController extends Controller
                 if (@$request->mata_pelajaran_id) $query->where('mata_pelajaran_id', @$request->mata_pelajaran_id);
             })
             ->addIndexColumn()
-            ->addColumn('show-img', function ($data) {
-                if (empty($data->icon)) {
-                    return "not available";
-                } else {
-                    return view("components.datatable.image", [
-                        "url" => asset($data->icon)
-                    ]);
-                }
-            })
             ->addColumn("jenjang", function ($data) {
-                return @$data->mataPelajaran->tingkat->jenjang ? $data->mataPelajaran->tingkat->jenjang->name : '-';
+                return @$data->tingkat->jenjang ? $data->tingkat->jenjang->name : '-';
             })
             ->addColumn("tingkat", function ($data) {
-                return @$data->mataPelajaran->tingkat ? $data->mataPelajaran->tingkat->name : '-';
+                return @$data->tingkat ? $data->tingkat->name : '-';
             })
             ->addColumn("mapel", function ($data) {
-                $mapel = @$data->mataPelajaran->name ? $data->mataPelajaran->name : 'none';
-                $mapelID = @$data->mataPelajaran->id ? $data->mataPelajaran->id : '';
+                $mapel = @$data->name ? $data->name : 'none';
+                $mapelID = @$data->id ? $data->id : '';
 
                 return view("components.datatable.link", [
                     "link" => route($this->routePath . ".index") . "?mata_pelajaran_id=" . $mapelID,
@@ -100,17 +100,40 @@ class ManageExternalUserController extends Controller
                 ]);
                 return $mapel;
             })
-            ->addColumn("konten_aktif", function ($data) {
-                return '-';
+            ->addColumn("konten_aktif", function ($data) use ($request) {
+                // return  @$data ? $data->name : '-';
+                $content = $request->query('content');
+                switch ($content) {
+                    case 'modul':
+                        $listContentActive = $data->modul;
+                        break;
+                    case 'video':
+                        $listContentActive = $data->video;
+                        break;
+                    case 'simulasi':
+                        $listContentActive = $data->simulasi;
+                        break;
+                }
+
+                $m = [];
+                foreach ($listContentActive as $contentActive) {
+                    if ($contentActive->is_public == 1) {
+                        $m[] = $contentActive->name;
+                    }
+                }
+
+                return view("components.datatable.wrapTextBadge", [
+                    "text" => $m,
+                ]);
             })
-            ->addColumn("action", function ($data) {
+            ->addColumn("action", function ($data) use ($request) {
+                $content = $request->query('content');
                 return view("components.datatable.actions", [
                     "name" => $data->name,
                     "permissionName" => 'modul',
                     "class" => $data->class,
-                    "deleteRoute" => route($this->routePath . ".destroy", $data->id),
-                    "editRoute" => route($this->routePath . ".edit", $data->id),
-                    // "viewPdfRoute" => asset($data->pdf_path),
+                    "editRoute" => route($this->routePath . ".edit", $data->id) . "?content=" . $content,
+                    "deleteRoute" => route($this->routePath . ".destroy", $data->id) . "?content=" . $content
                 ]);
             })
             ->order(function ($query) {
@@ -121,12 +144,11 @@ class ManageExternalUserController extends Controller
 
     public function index(Request $request)
     {
-        // dd($request->query('content'));
         if ($request->ajax()) {
             return $this->datatable($request);
         }
 
-        return view($this->prefix . '.index');
+        return view($this->prefix . '.index', ['title' => 'Akses ' . ucfirst($request->query('content')), 'content' => $request->query('content')]);
     }
 
     /**
@@ -156,97 +178,241 @@ class ManageExternalUserController extends Controller
         return $mapelList;
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $mapelList = $this->getMataPelajaran();
         $show = [
             1 => 'Ya',
             0 => 'Tidak',
         ];
-        $modulIDS = [];
+        $contentIDS = [];
 
-        $moduls = Modul::get();
-        $groupModulList = [];
-        foreach ($moduls as $modul) {
-            // dd($modul->mataPelajaran->tingkat);
-            $textTingkat = @$modul->mataPelajaran->tingkat->name . " " . @$modul->mataPelajaran->tingkat->jenjang->name;
+        $listContent = [];
+        switch ($request->query('content')) {
+            case 'modul':
+                $listContent = Modul::get();
+                break;
+            case 'video':
+                $listContent = Video::get();
+                break;
+            case 'simulasi':
+                $listContent = Simulasi::get();
+                break;
+        }
 
-            $idxSearch = array_search(@$textTingkat, array_column($groupModulList, 'text'));
+        $groupContentList = [];
+        foreach ($listContent as $content) {
+            $textMapel = @$content->mataPelajaran->name . " (Tingkat " .  @$content->mataPelajaran->tingkat->name . " " . @$content->mataPelajaran->tingkat->jenjang->name . ")";
+
+            $idxSearch = array_search(@$textMapel, array_column($groupContentList, 'text'));
 
             // belum ada
             if ($idxSearch === false) {
-                array_push($groupModulList, [
-                    'id' => $modul->mataPelajaran->tingkat_id,
-                    'text' => @$textTingkat,
+                array_push($groupContentList, [
+                    'id' => $content->mataPelajaran->tingkat_id,
+                    'text' => $textMapel,
                     'children' => [[
-                        'id' => $modul->id,
-                        'text' => @$modul->name,
+                        'id' => $content->id,
+                        'text' => @$content->name,
                     ]],
                 ]);
             } else {
                 // udah ada
-                array_push($groupModulList[$idxSearch]['children'], [
-                    'id' => $modul->id,
-                    'text' => @$modul->name
+                array_push($groupContentList[$idxSearch]['children'], [
+                    'id' => $content->id,
+                    'text' => @$content->name
                 ]);
             }
         }
 
-        return view($this->prefix . '.create', ['mapelList' => $mapelList, 'groupModulList' => $groupModulList, 'modulIDS' => $modulIDS, 'showUpdate' => $show]);
+        return view($this->prefix . '.create', ['title' => 'Create Akses ' . ucfirst($request->query('content')), 'mapelList' => $mapelList, 'groupContentList' => $groupContentList, 'contentIDS' => $contentIDS, 'form_mode' => 'create', 'content' => $request->query('content')]);
     }
 
-    public function store()
+    public function store(Request $request)
     {
-        return 'hhel';
+        $mataPelajaranId = $request->id;
+        $contentList = $request->content;
+        switch ($request->contentType) {
+            case 'modul':
+                $updateMapel = MataPelajaran::where('id', $mataPelajaranId)->update(['is_public_modul' => 1]);
+                $updateContent = Modul::whereIn('id', $contentList)->update(['is_public' => 1]);
+                break;
+            case 'video':
+                $updateMapel = MataPelajaran::where('id', $mataPelajaranId)->update(['is_public_video' => 1]);
+                $updateContent = Video::whereIn('id', $contentList)->update(['is_public' => 1]);
+                break;
+            case 'simulasi':
+                $updateMapel = MataPelajaran::where('id', $mataPelajaranId)->update(['is_public_simulasi' => 1]);
+                $updateContent = Simulasi::whereIn('id', $contentList)->update(['is_public' => 1]);
+                break;
+        }
+
+        if ($updateMapel) {
+            if ($updateContent) {
+                return redirect()->route($this->routePath . '.index', ['content' => $request->contentType])->with(
+                    $this->success(__("Success to create Akses "  . ucfirst($request->contentType)), $updateContent)
+                );
+            }
+        }
     }
 
     public function edit(Request $request, $id)
     {
-        $dt = ExternalUser::with('kelas')->findOrFail($id);
+        $mapelList = $this->getMataPelajaran();
+        $show = [
+            1 => 'Ya',
+            0 => 'Tidak',
+        ];
 
-        $jenjangId = @$dt->jenjang->id;
-
-        // get list group mapel 
-        $mapels = MataPelajaran::with('tingkat');
-
-        if ($jenjangId) {
-            $mapels = $mapels->whereHas('tingkat', function ($q2) use ($jenjangId) {
-                $q2->where('jenjang_id', $jenjangId);
-            });
+        $listContent = [];
+        $dtContent = [];
+        switch ($request->query('content')) {
+            case 'modul':
+                $dt = MataPelajaran::with('tingkat.jenjang', 'modul')->findOrFail($id);
+                $dtContent = $dt->modul;
+                $listContent = Modul::get();
+                break;
+            case 'video':
+                $dt = MataPelajaran::with('tingkat.jenjang', 'video')->findOrFail($id);
+                $dtContent = $dt->video;
+                $listContent = Video::get();
+                break;
+            case 'simulasi':
+                $dt = MataPelajaran::with('tingkat.jenjang', 'simulasi')->findOrFail($id);
+                $dtContent = $dt->simulasi;
+                $listContent = Simulasi::get();
+                break;
         }
 
-        $mapels = $mapels->get();
+        $contentIDS = [];
+        foreach ($dtContent as $content) {
+            if ($content->is_public == 1) {
+                $contentIDS[] = $content->id;
+            }
+        }
 
-        $groupMapelList = [];
-        foreach ($mapels as $mapel) {
+        $groupContentList = [];
+        foreach ($listContent as $content) {
+            $textMapel = @$content->mataPelajaran->name . " (Tingkat " .  @$content->mataPelajaran->tingkat->name . " " . @$content->mataPelajaran->tingkat->jenjang->name . ")";
 
-            $textTingkat = "Tingkat " . @$mapel->tingkat->name . " " . @$mapel->tingkat->jenjang->name;
-            $idxSearch = array_search("Semua " . @$textTingkat, array_column($groupMapelList, 'text'));
+            $idxSearch = array_search(@$textMapel, array_column($groupContentList, 'text'));
 
             // belum ada
             if ($idxSearch === false) {
-                array_push($groupMapelList, [
-                    'id' => $mapel->tingkat_id,
-                    'text' => "Semua " . @$textTingkat,
+                array_push($groupContentList, [
+                    'id' => $content->mataPelajaran->tingkat_id,
+                    'text' => $textMapel,
                     'children' => [[
-                        'id' => $mapel->id,
-                        'text' => @$mapel->name . " (" . $textTingkat . ")",
+                        'id' => $content->id,
+                        'text' => @$content->name,
                     ]],
                 ]);
             } else {
                 // udah ada
-                array_push($groupMapelList[$idxSearch]['children'], [
-                    'id' => $mapel->id,
-                    'text' => @$mapel->name . " (" . $textTingkat . ")",
+                array_push($groupContentList[$idxSearch]['children'], [
+                    'id' => $content->id,
+                    'text' => @$content->name
                 ]);
             }
         }
 
-        $mapelIDS = [];
-        foreach ($dt->mataPelajaranGuests as $mapel) {
-            $mapelIDS[] = $mapel->id;
-        }
 
-        return view($this->prefix . '.edit', ['data' => $dt, 'mapelList' => $groupMapelList, 'mapelIDS' => $mapelIDS]);
+
+        return view($this->prefix . '.edit', ['data' => $dt, 'mapelList' => $mapelList, 'groupContentList' => $groupContentList, 'contentIDS' => $contentIDS, 'form_mode' => 'edit', 'content' => $request->query('content')]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        if ($request->content == null) {
+            switch ($request->contentType) {
+                case 'modul':
+                    MataPelajaran::where('id', $id)->update(['is_public_modul' => 0]);
+                    $modulList = Modul::where(['is_public' => 1, 'mata_pelajaran_id' => $id])->pluck('id')->toArray();
+                    Modul::whereIn('id', $modulList)->update(['is_public' => 0]);
+                    break;
+                case 'video':
+                    MataPelajaran::where('id', $id)->update(['is_public_video' => 0]);
+                    $videoList = Video::where(['is_public' => 1, 'mata_pelajaran_id' => $id])->pluck('id')->toArray();
+                    Video::whereIn('id', $videoList)->update(['is_public' => 0]);
+                    break;
+                case 'simulasi':
+                    MataPelajaran::where('id', $id)->update(['is_public_simulasi' => 0]);
+                    $simulasiList = Simulasi::where(['is_public' => 1, 'mata_pelajaran_id' => $id])->pluck('id')->toArray();
+                    Simulasi::whereIn('id', $simulasiList)->update(['is_public' => 0]);
+                    break;
+            }
+            return redirect()->route($this->routePath . '.index', ['content' => $request->contentType])->with(
+                $this->success(__("Akses " . ucfirst($request->contentType) . " deleted because no content that assigned"))
+            );
+        } else {
+            $activeContentList = [];
+            $contentList = (array) $request->content;
+            switch ($request->contentType) {
+                case 'modul':
+                    $activeContentList = Modul::where(['is_public' => 1, 'mata_pelajaran_id' => $id])->pluck('id')->toArray();
+                    break;
+                case 'video':
+                    $activeContentList = Video::where(['is_public' => 1, 'mata_pelajaran_id' => $id])->pluck('id')->toArray();
+                    break;
+                case 'video':
+                    $activeContentList = Simulasi::where(['is_public' => 1, 'mata_pelajaran_id' => $id])->pluck('id')->toArray();
+                    break;
+            }
+
+            foreach ($activeContentList as $activeContent) {
+                if (!in_array($activeContent, $contentList)) {
+                    switch ($request->contentType) {
+                        case 'modul':
+                            $updateModul = Modul::where('id', $activeContent)->update(['is_public' => 0]);
+                            break;
+                        case 'video':
+                            $updateModul = Video::where('id', $activeContent)->update(['is_public' => 0]);
+                            break;
+                        case 'simulasi':
+                            $updateModul = Simulasi::where('id', $activeContent)->update(['is_public' => 0]);
+                            break;
+                    }
+                }
+            }
+
+            switch ($request->contentType) {
+                case 'modul':
+                    $updateModul = Modul::whereIn('id', $contentList)->update(['is_public' => 1]);
+                    break;
+                case 'video':
+                    $updateModul = Video::whereIn('id', $contentList)->update(['is_public' => 1]);
+                    break;
+                case 'simulasi':
+                    $updateModul = Simulasi::whereIn('id', $contentList)->update(['is_public' => 1]);
+                    break;
+            }
+
+            if ($updateModul) {
+                return redirect()->route($this->routePath . '.index', ['content' => $request->contentType])->with(
+                    $this->success(__("Akses " . ucfirst($request->contentType) . " updated successfully"))
+                );
+            }
+        }
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        switch ($request->query('content')) {
+            case 'modul':
+                MataPelajaran::where('id', $id)->update(['is_public_modul' => 0]);
+                $modulList = Modul::where(['is_public' => 1, 'mata_pelajaran_id' => $id])->pluck('id')->toArray();
+                Modul::whereIn('id', $modulList)->update(['is_public' => 0]);
+                break;
+            case 'video':
+                MataPelajaran::where('id', $id)->update(['is_public_video' => 0]);
+                $videoList = Video::where(['is_public' => 1, 'mata_pelajaran_id' => $id])->pluck('id')->toArray();
+                Video::whereIn('id', $videoList)->update(['is_public' => 0]);
+                break;
+            case 'simulasi':
+                MataPelajaran::where('id', $id)->update(['is_public_simulasi' => 0]);
+                $simulasiList = Simulasi::where(['is_public' => 1, 'mata_pelajaran_id' => $id])->pluck('id')->toArray();
+                Simulasi::whereIn('id', $simulasiList)->update(['is_public' => 0]);
+                break;
+        }
     }
 }
