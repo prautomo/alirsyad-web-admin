@@ -46,4 +46,21 @@ class UploadService
 
         return $folder . "/" . $new_name;
     }
+
+    public static function uploadPDF($file, $storagePath, $filename)
+    {
+        if (!Storage::exists($storagePath)) {
+            $storagePath;
+        }
+        $folder = "{$storagePath}";
+        if (@$filename) {
+            $new_name = @$filename.".pdf";
+        }else{
+            $new_name = 'DIGIBOOK_ANOTASI_FILE_' . gmdate('d_m_Y_h_i_s') . '.pdf';
+        }
+
+        $file->move(public_path($folder), $new_name);
+
+        return $folder . "/" . $new_name;
+    }
 }
