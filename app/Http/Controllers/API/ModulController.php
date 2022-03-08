@@ -6,9 +6,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\Modul;
 use App\Models\HistoryModul;
+use App\Models\ModulAnotasi;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\Modul as ModulResource;
 use App\Http\Resources\HistoryModul as HistoryModulResource;
+use App\Services\UploadService;
 
 class ModulController extends BaseController
 {
@@ -108,5 +110,28 @@ class ModulController extends BaseController
         );
 
         return $this->sendResponse(new HistoryModulResource($historyModul), 'History Modul created successfully.');
+    }
+
+    public function upload(Request $request){
+        $fileAnotasi = $request->file('modul');
+        $newName = UploadService::uploadPDF($fileAnotasi, 'uploads\modul', @$request->modul_id.'_'.@$request->user_id.'_DIGIBOOK_ANOTASI_FILE_' . gmdate('d_m_Y_h_i_s'));
+
+        $modul = ModulAnotasi::create([
+            'modul_id' => $request->modul_id,
+            'user_id' => $request->user_id,
+            'pdf_path' => $newName
+        ]);
+
+        return ["result" => $modul];
+    }
+
+    public function getModulAnotasi($id){
+        $data = ModulAnotasi::find($id);
+
+        if (is_null($data)) {
+            return $this->sendError('Modul not found.');
+        }
+
+        return $data;
     }
 }
