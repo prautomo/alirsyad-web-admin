@@ -24,7 +24,7 @@ class VideoController extends Controller
         // mapel data
         $mapel = MataPelajaran::with('tingkat');
         // filter by jenjang yg sama
-        $mapel = $mapel->whereHas('tingkat.jenjang', function($query) use ($user){
+        $mapel = $mapel->whereHas('tingkat.jenjang', function ($query) use ($user) {
             $jenjangId = $user->is_pengunjung ? $user->jenjang_id : $user->kelas->tingkat->jenjang_id;
             $query->where('id', $jenjangId);
         });
@@ -47,7 +47,13 @@ class VideoController extends Controller
         // visible for siswa/guest
         $videos = $videos->where('visible', 1);
 
-        $videos = $videos->where('mata_pelajaran_id', $idMapel);
+        if ($user->status === "AKTIF") {
+            $videos = $videos->where('mata_pelajaran_id', $idMapel);
+        } else {
+            // untuk pengunjung yang belum dikonfirmasi
+            $videos = $videos->where(['is_public' => 1, 'mata_pelajaran_id' => $idMapel]);
+        }
+
         // sorting by urutan
         $videos = $videos->orderBy('urutan', 'asc');
         // get list
@@ -81,5 +87,4 @@ class VideoController extends Controller
 
         return view('pages/frontoffice/video/detail', $parseData);
     }
-
 }
