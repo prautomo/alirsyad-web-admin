@@ -140,17 +140,7 @@
 
                     @forelse($aktif as $mpa)
                     <div class="col-md-2 col-6 col-sm-4 mb-4">
-                        @if(@\Auth::user()->status !== "AKTIF")
-                            <img src="{{ @$mpa->icon ? asset($mpa->icon) : asset('images/image-placeholder.jpg') }}" alt="{{ @$mpa->name ?? "-" }}" width="100%" class="mb-3 rounded" />
-
-                            <p class="font-weight-bold mb-0" style="font-size: 16px; line-height: 14px;">
-                                {{ @$mpa->name ?? "-" }}
-                            </p>
-
-                        <span style="font-size: 14px;">
-                            {{ @$mpa->tingkat->name ?? "-" }} {{ @$mpa->tingkat->jenjang->name }}
-                        </span>
-                        @else
+                        {{-- even user are not yet confirmed, matpel button is always clickable (beda di kontennya) --}}
                         <a href="{{ route('app.mapel.detail', @$mpa->id) }}">
                             <img src="{{ @$mpa->icon ? asset($mpa->icon) : asset('images/image-placeholder.jpg') }}" alt="{{ @$mpa->name ?? "-" }}" width="100%" class="mb-3 rounded" />
 
@@ -161,7 +151,6 @@
                         <span style="font-size: 14px;">
                             {{ @$mpa->tingkat->name ?? "-" }} {{ @$mpa->tingkat->jenjang->name }}
                         </span>
-                        @endif
                     </div>
                     @empty
                     <div class="col-md-12 mb-4">

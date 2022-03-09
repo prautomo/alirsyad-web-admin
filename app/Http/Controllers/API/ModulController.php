@@ -114,22 +114,22 @@ class ModulController extends BaseController
 
     public function upload(Request $request){
         $fileAnotasi = $request->file('modul');
-        $newName = UploadService::uploadPDF($fileAnotasi, 'uploads\anotasi');
-        
+        $newName = UploadService::uploadPDF($fileAnotasi, 'uploads\modul', @$request->modul_id.'_'.@$request->user_id.'_DIGIBOOK_ANOTASI_FILE_' . gmdate('d_m_Y_h_i_s'));
+
         $modul = ModulAnotasi::create([
             'modul_id' => $request->modul_id,
-            'user_id' => $request->user_id, 
+            'user_id' => $request->user_id,
             'pdf_path' => $newName
         ]);
 
-        return ["result" => $fileAnotasi];
+        return ["result" => $modul];
     }
 
     public function getModulAnotasi($id){
         $data = ModulAnotasi::find($id);
-  
+
         if (is_null($data)) {
-            return $this->sendError('Kelas not found.');
+            return $this->sendError('Modul not found.');
         }
 
         return $data;

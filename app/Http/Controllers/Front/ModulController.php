@@ -24,7 +24,7 @@ class ModulController extends Controller
         // mapel data
         $mapel = MataPelajaran::with('tingkat');
         // filter by jenjang yg sama
-        $mapel = $mapel->whereHas('tingkat.jenjang', function($query) use ($user) {
+        $mapel = $mapel->whereHas('tingkat.jenjang', function ($query) use ($user) {
             $jenjangId = $user->is_pengunjung ? $user->jenjang_id : $user->kelas->tingkat->jenjang_id;
             $query->where('id', $jenjangId);
         });
@@ -44,7 +44,12 @@ class ModulController extends Controller
         //     });
         // }
 
-        $moduls = $moduls->where('mata_pelajaran_id', $idMapel);
+        if ($user->status === "AKTIF") {
+            $moduls = $moduls->where('mata_pelajaran_id', $idMapel);
+        } else {
+            // untuk pengunjung yang belum dikonfirmasi
+            $moduls = $moduls->where(['is_public' => 1, 'mata_pelajaran_id' => $idMapel]);
+        }
         // sorting by urutan
         $moduls = $moduls->orderBy('urutan', 'asc');
         // get list
@@ -80,5 +85,4 @@ class ModulController extends Controller
 
         return view('pages/frontoffice/modul/detail', $parseData);
     }
-
 }
