@@ -24,7 +24,7 @@ class SimulasiController extends Controller
         // mapel data
         $mapel = MataPelajaran::with('tingkat');
         // filter by jenjang yg sama
-        $mapel = $mapel->whereHas('tingkat.jenjang', function($query) use ($user){
+        $mapel = $mapel->whereHas('tingkat.jenjang', function ($query) use ($user) {
             $jenjangId = $user->is_pengunjung ? $user->jenjang_id : $user->kelas->tingkat->jenjang_id;
             $query->where('id', $jenjangId);
         });
@@ -44,8 +44,12 @@ class SimulasiController extends Controller
         //     });
         // }
 
-        $simulasis = $simulasis->where('mata_pelajaran_id', $idMapel);
-
+        if ($user->status === "AKTIF") {
+            $simulasis = $simulasis->where('mata_pelajaran_id', $idMapel);
+        } else {
+            // untuk pengunjung yang belum dikonfirmasi
+            $simulasis = $simulasis->where(['is_public' => 1, 'mata_pelajaran_id' => $idMapel]);
+        }
         // sorting by urutan
         $simulasis = $simulasis->orderBy('urutan', 'asc')->orderBy('level', 'asc');
         // get list
@@ -82,5 +86,4 @@ class SimulasiController extends Controller
 
         return view('pages/frontoffice/simulasi/detail', $parseData);
     }
-
 }
