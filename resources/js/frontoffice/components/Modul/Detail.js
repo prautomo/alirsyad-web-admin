@@ -266,14 +266,14 @@ function ModulDetail({
             </div>
 
             <div style={{width: "100%", height: "800px"}} className="pdf-viewer-desktop" id="pdf-view-desktop">
-                Viewer Desktop Cuy
+                Viewer Desktop
             </div>
 
             {/* <div style={{overflowX:'auto', height:'100%', maxHeight:'800px'}}>
                 <PDFReader url={data?.data?.pdf_url} width={770} showAllPage={true} isShowHeader={true} isShowFooter={true} hideNavbar={false} />
             </div> */}
 
-            {(data?.data?.previous?.url) &&
+            {/* {(data?.data?.previous?.url) &&
             <Button className="mt-1 btn-main btn-small mr-4" href={data?.data?.previous?.slug_url}>Modul Sebelumnya</Button>
             }
 
@@ -283,8 +283,7 @@ function ModulDetail({
             <Button className="mt-1 btn-main btn-small" 
                 disabled={data?.data?.read || disabledBtnDone}
                 onClick={() => finishModul()}>Selesai Membaca</Button>
-            }
-
+            } */}
             </Col>
             </Row>
         </>
