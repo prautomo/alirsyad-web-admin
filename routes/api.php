@@ -74,20 +74,14 @@ Route::middleware('auth:api')->group(function () {
     Route::get("/home/tingkats", "API\TingkatController@userTingkat");
     Route::get("/home/tingkats/{id}", "API\MataPelajaranController@showByTingkat");
 
-    Route::get("/home/public_modul", "API\ManageExternalUserController@public_modul");
-    Route::get("/home/public_video", "API\ManageExternalUserController@public_video");
-    Route::get("/home/public_simulasi", "API\ManageExternalUserController@public_simulasi");
-
 
     Route::prefix('guru')->group(function () {
         Route::get("/dashboard", "API\DashboardController@index");
         Route::get("/dashboard/detail", "API\DashboardController@detail");
-        Route::get("/ngajar", "API\DashboardController@guruNgajar");\
-
-        Route::get('/simulasi/{id}/siswa', 'API\ScoreController@listNilaiSiswa');
+        Route::get("/ngajar", "API\DashboardController@guruNgajar");
+        \Route::get('/simulasi/{id}/siswa', 'API\ScoreController@listNilaiSiswa');
         Route::get('/simulasi/{id}/nilai', 'API\ScoreController@nilaiSiswa');
     });
-
 });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
