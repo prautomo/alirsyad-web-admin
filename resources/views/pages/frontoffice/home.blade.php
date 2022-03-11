@@ -176,6 +176,7 @@
                     <hr/>
                 </div>
 
+                
                 @forelse($updates as $update)
                 <div class="col-md-2 col-6 col-sm-4">
                     @if(@\Auth::user()->status !== "AKTIF")
@@ -188,9 +189,16 @@
                 </div>
                 @empty
                 <div class="col-md-12 mb-4">
-                    <div class="wrap-kelas form-inline mt-3">
-                        <h4 class="font-weight-bold">Belum ada mata update terbaru.</h4>
-                    </div>
+                    @if(@\Auth::user()->status !== "AKTIF")
+                        <div class="wrap-kelas form-inline mt-3">
+                            <h4 class="font-weight-bold">Update terbaru hanya untuk pengunjung khusus.</h4>
+                        </div>
+                    @else
+                        <div class="wrap-kelas form-inline mt-3">
+                            <h4 class="font-weight-bold">Belum ada mata update terbaru.</h4>
+                        </div>
+                    @endif
+                    
                 </div>
                 @endforelse
 

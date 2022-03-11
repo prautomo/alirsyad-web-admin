@@ -9,8 +9,8 @@
             <div class="col-md-12 text-center">
                 <div id="modul-detail-fe" 
                     modul-id="{{ $modulId }}"
-                    link-modul="{{ route('app.mapel.modul', $mapelId) }}"    
-                    link-video="{{ route('app.mapel.video', $mapelId) }}"
+                    link-modul="{{ route('app.mapel.modul', $mapelId) }}"
+                    link-video="{{ route('app.mapel.video', $mapelId) }}"   
                     link-simulasi="{{ route('app.mapel.simulasi', $mapelId) }}"
                     adobe-key="{{ env('ADOBE_KEY', '') }}"
                 >Loading...</div>

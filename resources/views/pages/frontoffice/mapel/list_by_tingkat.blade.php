@@ -20,20 +20,18 @@
                             @forelse($mapels as $mapel)
                             <div class="wrap-kelas form-inline mt-3">
                                 <div>
-                                    <span class="kelas-title{{ @$mapel->disabled ? ' disable' : ''}}">
+                                    <span class="kelas-title">
                                         Kelas {{ @$mapel->tingkat->name ?? '-' }} {{ @$mapel->tingkat->jenjang->name }}
                                     </span>
-                                    <h4 class="font-weight-bold{{ (@$mapel->disabled) ? ' disable' : ''}}">
+                                    <h4 class="font-weight-bold">
                                         {{ @$mapel->name ?? "-" }}
                                     </h4>
                                 </div>
-                                @if(!(@$mapel->disabled))
                                 <div class="ml-auto">
                                     <a href="{{ route('app.mapel.detail', @$mapel->id) }}" class="btn btn-small btn-main">
                                         <i class="btn-icon fa fa-play ml-2"></i> Lanjut Belajar
                                     </a>
                                 </div>
-                                @endif
                             </div>
                             @empty
                             <div class="wrap-kelas form-inline mt-3">
