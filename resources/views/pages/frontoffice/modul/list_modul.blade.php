@@ -45,7 +45,7 @@
 				<div class="card">
 					<div class="card-body" style="height: 500px; overflow: auto;">
                         @forelse($moduls as $modul)
-                            <div class="wrap-kelas row mt-3 ml-1 mr-1" style="padding: 15px 15px 15px 15px !important; cursor: pointer;{{ @\Auth::user()->status !== "AKTIF" && !$modul->is_public ? 'pointer-events:none;' : '' }} " onclick="location.href='{{ route('app.modul.detail', @$modul->slug) }}.html';">
+                            <div class="wrap-kelas row mt-3 ml-1 mr-1" style="padding: 15px 15px 15px 15px !important; cursor: pointer;{{ (@\Auth::user()->status !== "AKTIF" && !$modul->is_public && @\Auth::user()->is_pengunjung) || (!$mapel->mapel_assigned && !$modul->is_public && @\Auth::user()->is_pengunjung) ? 'pointer-events:none;' : '' }} " onclick="location.href='{{ route('app.modul.detail', @$modul->slug) }}.html';">
                                 
                                 <div class="col-md-2 mb-md-1 mb-3 pl-0 pr-0">
                                     <span class="image-cover mr-auto ml-auto">
@@ -54,7 +54,7 @@
                                 </div>
                                 <div class="col-md-10 mt-auto mb-auto">
                                     <h6 class="font-weight-bold text-sm-left text-center">
-                                        <a href="{{ route('app.modul.detail', @$modul->slug) }}.html" style="text-decoration: none; {{ @\Auth::user()->status !== "AKTIF" && !$modul->is_public ? 'color:Gray;' : '' }}">
+                                        <a href="{{ route('app.modul.detail', @$modul->slug) }}.html" style="text-decoration: none; {{ (@\Auth::user()->status !== "AKTIF" && !$modul->is_public && @\Auth::user()->is_pengunjung) || (!$mapel->mapel_assigned && !$modul->is_public && @\Auth::user()->is_pengunjung) ? 'color:Gray;' : '' }}">
                                             {{ @$modul->name ?? "-" }}
                                         </a>
                                     </h6>

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\Simulasi as SimulasiResource;
 use App\Http\Resources\HistorySimulasi as HistorySimulasiResource;
 use App\Http\Resources\Score as ScoreResource;
+use App\Models\GuestMataPelajaran;
 use Validator;
 
 class SimulasiController extends BaseController
@@ -38,7 +39,7 @@ class SimulasiController extends BaseController
 
         $idMapel = @$request->q_mata_pelajaran_id;
 
-        if($idMapel){
+        if ($idMapel) {
             $datas = $datas->where('mata_pelajaran_id', $idMapel);
         }
 
@@ -47,6 +48,17 @@ class SimulasiController extends BaseController
 
         // get list
         $datas = $datas->get();
+
+        $selectedMapel = GuestMataPelajaran::where('guest_id', $user->id)->get()->pluck('mata_pelajaran_id')->toArray();
+        if (in_array(@$request->q_mata_pelajaran_id, $selectedMapel)) {
+            foreach ($datas as $simulasi) {
+                $simulasi->mapel_assigned = 1;
+            }
+        } else {
+            foreach ($datas as $simulasi) {
+                $simulasi->mapel_assigned = 0;
+            }
+        }
         // sorting by urutan
         // $datas = $datas->sortBy('urutan')->sortBy('level');
 
@@ -131,7 +143,7 @@ class SimulasiController extends BaseController
         $data = Simulasi::with('mataPelajaran');
         $user = Auth::user();
 
-        if ($user->is_pengunjung){
+        if ($user->is_pengunjung) {
             return $this->returnStatus(400, "Score not saved. You\'re not a student.");
         }
 
@@ -148,13 +160,13 @@ class SimulasiController extends BaseController
 
         $pengajar = @$data->mataPelajaran->gurus;
 
-        if($user->role!=='SISWA'){
+        if ($user->role !== 'SISWA') {
             $sendResponse = $request->only(['score', 'semester']);
 
             return $this->sendResponse(new ScoreResource($sendResponse), 'Score not saved. You\'re not a student.');
         }
 
-        if($user->is_pengunjung){
+        if ($user->is_pengunjung) {
             $sendResponse = $request->only(['score', 'semester']);
 
             return $this->sendResponse(new ScoreResource($sendResponse), 'Score not saved. You\'re a visitor.');
@@ -169,7 +181,7 @@ class SimulasiController extends BaseController
         $saveData = $request->only(['score', 'semester']);
 
         // if last score not empty, increment percobaan ke
-        if($lastScore){
+        if ($lastScore) {
             $saveData['percobaan_ke'] = $lastScore->percobaan_ke + 1;
         }
         $saveData['simulasi_id'] = (int) $id;
