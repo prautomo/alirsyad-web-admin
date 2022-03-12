@@ -9,6 +9,7 @@ use App\Models\HistoryVideo;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\Video as VideoResource;
 use App\Http\Resources\HistoryVideo as HistoryVideoResource;
+use App\Models\GuestMataPelajaran;
 
 class VideoController extends BaseController
 {
@@ -32,16 +33,27 @@ class VideoController extends BaseController
         //     }
         // });
         // visible for siswa/guest
-        if(@Auth::user()->role==="SISWA"){
+        if (@Auth::user()->role === "SISWA") {
             $datas = $datas->where('visible', 1);
         }
 
-        if(@$request->q_mata_pelajaran_id){
+        if (@$request->q_mata_pelajaran_id) {
             $datas = $datas->where('mata_pelajaran_id', $request->q_mata_pelajaran_id);
         }
 
         // get list
         $datas = $datas->orderBy('urutan', 'asc')->get();
+
+        $selectedMapel = GuestMataPelajaran::where('guest_id', $user->id)->get()->pluck('mata_pelajaran_id')->toArray();
+        if (in_array(@$request->q_mata_pelajaran_id, $selectedMapel)) {
+            foreach ($datas as $video) {
+                $video->mapel_assigned = 1;
+            }
+        } else {
+            foreach ($datas as $video) {
+                $video->mapel_assigned = 0;
+            }
+        }
         // sorting by urutan
         // $datas = $datas->sortBy('urutan');
 
