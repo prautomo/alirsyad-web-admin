@@ -10,6 +10,7 @@ use App\Models\ModulAnotasi;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\Modul as ModulResource;
 use App\Http\Resources\HistoryModul as HistoryModulResource;
+use App\Models\GuestMataPelajaran;
 use App\Services\UploadService;
 
 class ModulController extends BaseController
@@ -28,17 +29,30 @@ class ModulController extends BaseController
         // $datas = $datas->with('mataPelajaran');
         $datas = Modul::with('mataPelajaran');
 
-        if(@$request->q_mata_pelajaran_id){
+        if (@$request->q_mata_pelajaran_id) {
             $datas = $datas->where('mata_pelajaran_id', $request->q_mata_pelajaran_id);
         }
+
+        // get list
+        $datas = $datas->orderBy('urutan', 'asc')->get();
         // // handle hak akses mapel
         // $datas = $datas->whereHas('mataPelajaran.tingkat', function($query) use ($user){
         //     if(@Auth::user()->role==="SISWA"){
         //         if (!$user->is_pengunjung) $query->where('name', '<=', @$user->kelas->tingkat->name);
         //     }
         // });
-        // get list
-        $datas = $datas->orderBy('urutan', 'asc')->get();
+        $selectedMapel = GuestMataPelajaran::where('guest_id', $user->id)->get()->pluck('mata_pelajaran_id')->toArray();
+        if (in_array(@$request->q_mata_pelajaran_id, $selectedMapel)) {
+            foreach ($datas as $modul) {
+                $modul->mapel_assigned = 1;
+            }
+        } else {
+            foreach ($datas as $modul) {
+                $modul->mapel_assigned = 0;
+            }
+        }
+
+
 
         // sorting by urutan
         // $datas = $datas->sortBy('urutan');
@@ -112,9 +126,10 @@ class ModulController extends BaseController
         return $this->sendResponse(new HistoryModulResource($historyModul), 'History Modul created successfully.');
     }
 
-    public function upload(Request $request){
+    public function upload(Request $request)
+    {
         $fileAnotasi = $request->file('modul');
-        $newName = UploadService::uploadPDF($fileAnotasi, 'uploads\modul', @$request->modul_id.'_'.@$request->user_id.'_DIGIBOOK_ANOTASI_FILE_' . gmdate('d_m_Y_h_i_s'));
+        $newName = UploadService::uploadPDF($fileAnotasi, 'uploads\modul', @$request->modul_id . '_' . @$request->user_id . '_DIGIBOOK_ANOTASI_FILE_' . gmdate('d_m_Y_h_i_s'));
 
         $modul = ModulAnotasi::create([
             'modul_id' => $request->modul_id,
@@ -125,7 +140,8 @@ class ModulController extends BaseController
         return ["result" => $modul];
     }
 
-    public function getModulAnotasi($id){
+    public function getModulAnotasi($id)
+    {
         $data = ModulAnotasi::find($id);
 
         if (is_null($data)) {
