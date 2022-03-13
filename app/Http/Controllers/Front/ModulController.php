@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Models\GuestMataPelajaran;
 use App\Models\MataPelajaran;
 use App\Models\Modul;
 use App\Services\UploadService;
@@ -33,6 +34,13 @@ class ModulController extends Controller
         //     $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
         // });
         $mapel = $mapel->findOrFail($idMapel);
+        //for check if mapel is assigned
+        $selectedMapel = GuestMataPelajaran::where('guest_id', $user->id)->get()->pluck('mata_pelajaran_id')->toArray();
+        if (in_array($mapel->id, $selectedMapel)) {
+            $mapel->mapel_assigned = 1;
+        } else {
+            $mapel->mapel_assigned = 0;
+        }
 
         // moduls
         $moduls = Modul::with('uploader', 'mataPelajaran');
@@ -44,12 +52,13 @@ class ModulController extends Controller
         //     });
         // }
 
-        if ($user->status === "AKTIF") {
-            $moduls = $moduls->where('mata_pelajaran_id', $idMapel);
-        } else {
-            // untuk pengunjung yang belum dikonfirmasi
-            $moduls = $moduls->where(['is_public' => 1, 'mata_pelajaran_id' => $idMapel]);
-        }
+        // if ($user->status === "AKTIF" && $mapel->mapel_assigned) {
+        //     $moduls = $moduls->where('mata_pelajaran_id', $idMapel);
+        // } else {
+        //     // untuk pengunjung yang belum dikonfirmasi
+        //     $moduls = $moduls->where(['is_public' => 1, 'mata_pelajaran_id' => $idMapel]);
+        // }
+        $moduls = $moduls->where('mata_pelajaran_id', $idMapel);
         // sorting by urutan
         $moduls = $moduls->orderBy('urutan', 'asc');
         // get list

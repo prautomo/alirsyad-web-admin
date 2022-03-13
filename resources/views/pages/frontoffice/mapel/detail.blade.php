@@ -15,7 +15,7 @@
         </div>
 		<div class="row mt-4">
 			<!-- sedang dipelajari -->
-			@if(@\Auth::user()->status === "AKTIF")
+			@if(@\Auth::user()->status === "AKTIF" && $mapel->mapel_assigned == 1 || @\Auth::user()->is_pengunjung === 0)
 				<div class="col-md-6 mb-4">
 					<div class="card">
 						<div class="card-body">
@@ -77,7 +77,7 @@
 			@endif
 			
 			<!-- akan datang -->
-			<div class="{{ @\Auth::user()->status === "AKTIF" ? 'col-md-6' : 'col-md-12' }}">
+			<div class="{{ @\Auth::user()->status === "AKTIF" && $mapel->mapel_assigned == 1  || @\Auth::user()->is_pengunjung === 0 ? 'col-md-6' : 'col-md-12' }}">
 				<div class="card">
 					<div class="card-body">
 						<div class="card-title mb-0 form-inline">

@@ -43,17 +43,17 @@ class MataPelajaranController extends Controller
         $yangAkanDatang = $this->mapelByTingkat($request, '>');
 
         // yg akan datang kalo tingkat akhir & bukan pengunjung
-        if(!@$user->is_pengunjung){
+        if (!@$user->is_pengunjung) {
             // 1. get tingkat akhir
             $getTingkatAkhir = Tingkat::where('jenjang_id', @Auth::user()->kelas->tingkat->jenjang_id)->orderBy('name', 'desc')->first();
             // 2. cek tingkat akhir
-            if($getTingkatAkhir->name===@Auth::user()->kelas->tingkat->name){
+            if ($getTingkatAkhir->name === @Auth::user()->kelas->tingkat->name) {
                 $yangAkanDatangNextJenjang = MataPelajaran::search($request);
                 $yangAkanDatangNextJenjang = $yangAkanDatangNextJenjang->with('tingkat');
-                $yangAkanDatangNextJenjang = $yangAkanDatangNextJenjang->whereHas('tingkat', function($query) {
+                $yangAkanDatangNextJenjang = $yangAkanDatangNextJenjang->whereHas('tingkat', function ($query) {
                     $tingkatnya = @Auth::user()->kelas->tingkat->name;
                     // kalo tk b, assign aja akhirnya jadi tingkat 1
-                    $tingkatnya = $tingkatnya==="B" ? 1 : ((int) $tingkatnya)+1;
+                    $tingkatnya = $tingkatnya === "B" ? 1 : ((int) $tingkatnya) + 1;
 
                     $query->where('name', '=', $tingkatnya ?? '-');
                 });
@@ -75,21 +75,21 @@ class MataPelajaranController extends Controller
          * Mapel Aktif buat Pengunjung
          */
         // kalo user belum aktif (kosongin aja list mapelna)
-        if($user->status!=="AKTIF") {
+        if ($user->status !== "AKTIF") {
             $aktif = MataPelajaran::with('tingkat');
 
             // mapel jenjang
-            $aktif = $aktif->whereHas('tingkat', function($query) use ($user) {
+            $aktif = $aktif->whereHas('tingkat', function ($query) use ($user) {
                 $query->where('jenjang_id', @$user->jenjang_id);
             });
 
             $aktif = $aktif->get()->sortBy('tingkat.name');
-        }else {
+        } else {
             // $aktif = MataPelajaran::search($request);
             // $aktif = $aktif->with('tingkat');
             $aktif = MataPelajaran::with('tingkat');
             // mapel pilihan admin
-            $aktif = $aktif->whereHas('guests', function($query) use ($user) {
+            $aktif = $aktif->whereHas('guests', function ($query) use ($user) {
                 $query->where('guest_id', $user->id);
             });
             // sort by urutan
@@ -143,20 +143,20 @@ class MataPelajaranController extends Controller
         $tingkatInfo = Tingkat::findOrFail($tingkatId);
         $mapels = [];
 
-        if(@$userInfo->is_pengunjung){
+        if (@$userInfo->is_pengunjung) {
             $jenjangUser = @$userInfo->jenjang_id;
-        }else{
+        } else {
             $jenjangUser = @$userInfo->kelas->tingkat->jenjang_id;
         }
 
         // cek jenjang user sama jenjang tingkatna harus sama
-        if($tingkatInfo->jenjang_id === $jenjangUser){
+        if ($tingkatInfo->jenjang_id === $jenjangUser) {
             $mapels = MataPelajaran::where('tingkat_id', $tingkatId);
             $mapels = $mapels->with('tingkat');
             $mapels = $mapels->orderBy('urutan', 'asc');
             $mapels = $mapels->get();
             // $mapels = $mapels->sortBy('urutan');
-        }else{
+        } else {
             // jangan kasih info tingkat
             abort(404);
         }
@@ -182,13 +182,13 @@ class MataPelajaranController extends Controller
         // 1. get tingkat akhir
         $getTingkatAkhir = Tingkat::where('jenjang_id', @Auth::user()->kelas->tingkat->jenjang_id)->orderBy('name', 'desc')->first();
         // 2. cek tingkat akhir
-        if($getTingkatAkhir->name===@Auth::user()->kelas->tingkat->name){
+        if ($getTingkatAkhir->name === @Auth::user()->kelas->tingkat->name) {
             $yangAkanDatangNextJenjang = MataPelajaran::search($request);
             $yangAkanDatangNextJenjang = $yangAkanDatangNextJenjang->with('tingkat');
-            $yangAkanDatangNextJenjang = $yangAkanDatangNextJenjang->whereHas('tingkat', function($query) {
+            $yangAkanDatangNextJenjang = $yangAkanDatangNextJenjang->whereHas('tingkat', function ($query) {
                 $tingkatnya = @Auth::user()->kelas->tingkat->name;
                 // kalo tk b, assign aja akhirnya jadi tingkat 1
-                $tingkatnya = $tingkatnya==="B" ? 1 : ((int) $tingkatnya)+1;
+                $tingkatnya = $tingkatnya === "B" ? 1 : ((int) $tingkatnya) + 1;
 
                 $query->where('name', '=', $tingkatnya ?? '-');
             });
@@ -220,14 +220,15 @@ class MataPelajaranController extends Controller
         return view('pages/frontoffice/mapel/list_passed', $parseData);
     }
 
-    private function mapelByTingkat($request, $condition='>'){
+    private function mapelByTingkat($request, $condition = '>')
+    {
         $user = @Auth::user();
 
         // upcoming mapel
         $mapels = MataPelajaran::search($request);
         $mapels = $mapels->with('tingkat');
         // filter by jenjang yg sama
-        $mapels = $mapels->whereHas('tingkat.jenjang', function($query) use ($user) {
+        $mapels = $mapels->whereHas('tingkat.jenjang', function ($query) use ($user) {
             // disable, terus ganti ama yg bawah buat kelas 6 sd bsa liat mapel smp sma kalo $condition nya >
             $query->where('id', @$user->kelas->tingkat->jenjang_id ?? 0);
             // $isTk = @$user->kelas->jenjang->name ?? false;
@@ -237,7 +238,7 @@ class MataPelajaranController extends Controller
             // 2. bandingin sama tingkat user sekarang
         });
         // filter by tingkat condition
-        $mapels = $mapels->whereHas('tingkat', function($query) use ($condition) {
+        $mapels = $mapels->whereHas('tingkat', function ($query) use ($condition) {
             $query->where('name', $condition, @Auth::user()->kelas->tingkat->name ?? '-');
         });
 
@@ -264,10 +265,11 @@ class MataPelajaranController extends Controller
         // mapel
         $mapel = MataPelajaran::with('tingkat');
         // filter by jenjang yg sama
-        $mapel = $mapel->whereHas('tingkat.jenjang', function($query) use ($user) {
+        $mapel = $mapel->whereHas('tingkat.jenjang', function ($query) use ($user) {
             $jenjangId = $user->is_pengunjung ? $user->jenjang_id : $user->kelas->tingkat->jenjang_id;
             $query->where('id', $jenjangId);
         });
+
         // $mapel = $mapel->whereHas('tingkat.kelas', function($query) {
         //     $query->where('id', Auth::user()->kelas_id);
         // });
@@ -278,14 +280,23 @@ class MataPelajaranController extends Controller
         // kalo pengunjung, filter by mapel aktif nya
         $mapel = $mapel->findOrFail($id);
 
+        //for check if mapel is assigned
+        $selectedMapel = GuestMataPelajaran::where('guest_id', $user->id)->get()->pluck('mata_pelajaran_id')->toArray();
+        if (in_array($mapel->id, $selectedMapel)) {
+            $mapel->mapel_assigned = 1;
+        } else {
+            $mapel->mapel_assigned = 0;
+        }
+
         // percentage
         // counting modul by mapel
         $moduls = Modul::where('mata_pelajaran_id', $id)->get();
+
         $totalModul = count($moduls);
         // modul done by siswa
         $modulHistory = HistoryModul::where('siswa_id', Auth::user()->id);
         // modul history by mapel
-        $modulHistory = $modulHistory->whereHas('modul', function($query) use ($id) {
+        $modulHistory = $modulHistory->whereHas('modul', function ($query) use ($id) {
             $query->where('mata_pelajaran_id', $id);
         });
         $modulHistory = $modulHistory->get();
@@ -297,7 +308,7 @@ class MataPelajaranController extends Controller
         // video watched by siswa
         $videoHistory = HistoryVideo::where('siswa_id', Auth::user()->id);
         // video history by mapel
-        $videoHistory = $videoHistory->whereHas('video', function($query) use ($id) {
+        $videoHistory = $videoHistory->whereHas('video', function ($query) use ($id) {
             $query->where('mata_pelajaran_id', $id);
         });
         $videoHistory = $videoHistory->get();
@@ -309,7 +320,7 @@ class MataPelajaranController extends Controller
         // simulasi done by siswa
         $simulasiHistory = HistorySimulasi::where('siswa_id', Auth::user()->id);
         // simulasi history by mapel
-        $simulasiHistory = $simulasiHistory->whereHas('simulasi', function($query) use ($id) {
+        $simulasiHistory = $simulasiHistory->whereHas('simulasi', function ($query) use ($id) {
             $query->where('mata_pelajaran_id', $id);
         });
         $simulasiHistory = $simulasiHistory->get();
@@ -342,7 +353,8 @@ class MataPelajaranController extends Controller
         return view('pages/frontoffice/mapel/detail', $parseData);
     }
 
-    private function calculatePercentage($total, $done){
-        return ($done === 0 || $total === 0) ? 0 : ($done/$total) * 100;
+    private function calculatePercentage($total, $done)
+    {
+        return ($done === 0 || $total === 0) ? 0 : ($done / $total) * 100;
     }
 }

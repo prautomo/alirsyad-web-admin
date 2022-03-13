@@ -268,7 +268,7 @@ var styles = {
 };
 
 function ModulDetail(_ref) {
-  var _data$data$name, _data$data, _data$data2, _data$data3, _data$data3$previous, _data$data4, _data$data4$previous, _data$data5, _data$data5$next, _data$data7;
+  var _data$data$name, _data$data, _data$data2;
 
   var idModul = _ref.idModul,
       linkModul = _ref.linkModul,
@@ -579,23 +579,7 @@ function ModulDetail(_ref) {
     },
     className: "pdf-viewer-desktop",
     id: "pdf-view-desktop"
-  }, "Viewer Desktop Cuy"), (data === null || data === void 0 ? void 0 : (_data$data3 = data.data) === null || _data$data3 === void 0 ? void 0 : (_data$data3$previous = _data$data3.previous) === null || _data$data3$previous === void 0 ? void 0 : _data$data3$previous.url) && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
-    className: "mt-1 btn-main btn-small mr-4",
-    href: data === null || data === void 0 ? void 0 : (_data$data4 = data.data) === null || _data$data4 === void 0 ? void 0 : (_data$data4$previous = _data$data4.previous) === null || _data$data4$previous === void 0 ? void 0 : _data$data4$previous.slug_url
-  }, "Modul Sebelumnya"), (data === null || data === void 0 ? void 0 : (_data$data5 = data.data) === null || _data$data5 === void 0 ? void 0 : (_data$data5$next = _data$data5.next) === null || _data$data5$next === void 0 ? void 0 : _data$data5$next.url) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
-    className: "mt-1 btn-main btn-small",
-    onClick: function onClick() {
-      var _data$data6, _data$data6$next;
-
-      return finishModul(data === null || data === void 0 ? void 0 : (_data$data6 = data.data) === null || _data$data6 === void 0 ? void 0 : (_data$data6$next = _data$data6.next) === null || _data$data6$next === void 0 ? void 0 : _data$data6$next.slug_url);
-    }
-  }, "Modul Berikutnya") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
-    className: "mt-1 btn-main btn-small",
-    disabled: (data === null || data === void 0 ? void 0 : (_data$data7 = data.data) === null || _data$data7 === void 0 ? void 0 : _data$data7.read) || disabledBtnDone,
-    onClick: function onClick() {
-      return finishModul();
-    }
-  }, "Selesai Membaca")))), showCanvas && false && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+  }, "Viewer Desktop")))), showCanvas && false && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
     className: "layer-toolbox"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
     onClick: function onClick() {
