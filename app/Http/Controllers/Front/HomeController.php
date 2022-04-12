@@ -157,6 +157,7 @@ class HomeController extends Controller
                 $updates = [];
             } else {
                 $updates = Update::with('triggerRel');
+
                 // filter se jenjang
                 $updates = $updates->whereHas('tingkat.jenjang', function ($query) use ($user) {
                     $jenjangId = @$user->jenjang_id;
@@ -177,6 +178,19 @@ class HomeController extends Controller
         // siswa
         else {
             $updates = Update::with('triggerRel');
+
+            $updates = $updates->with(['video', 'modul'])
+            ->where(function ($query) {
+                $query ->whereHas('video', function($query) {
+                            $query->where('show_update', '=', 1);
+                        })
+                        ->orWhereHas('modul', function($query) {
+                            $query->where('show_update', '=', 1);
+                        });
+            });
+           
+
+
             // filter se jenjang
             $updates = $updates->whereHas('tingkat.jenjang', function ($query) use ($user) {
                 $jenjangId = @$user->kelas->tingkat->jenjang_id;
@@ -186,10 +200,33 @@ class HomeController extends Controller
             // $updates = $updates->whereHas('tingkat', function($query) use ($user) {
             //     $query->where('name', '<=', @$user->kelas->tingkat->name);
             // });
+
+            
+
             // filter tingkat nya sendiri
             $updates = $updates->where('tingkat_id', @$user->kelas->tingkat_id);
+            // dd($updates->get());
+
+            
+            //filter if show update is true
+            // $updates = $updates->whereHas('video', function ($query) use ($user) {
+            //     $query->where('show_update', 1);
+            // })->orWhereHas('modul', function ($query) use ($user) {
+            //     $query->where('show_update', 1);
+            // });
+
+            // $updates = $updates->where('trigger', 'modul')->whereHas('modul', function ($query) use ($user) {
+            //     $query->where('show_update', 1);
+            // })->orWhere('trigger', 'video')->whereHas('video', function ($query) use ($user) {
+            //     $query->where('show_update', 1);
+            // });
+            
+
             // sort, limit, and get data
             $updates = $updates->orderBy('created_at', 'desc');
+
+            // dd($updates->get());
+
             $countUpdates = count($updates->get());
 
             $updates = $updates->limit(5)->get();

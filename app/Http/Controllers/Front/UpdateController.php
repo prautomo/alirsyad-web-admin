@@ -39,6 +39,17 @@ class UpdateController extends Controller
         // siswa
         else{
             $updates = Update::with('triggerRel');
+
+            $updates = $updates->with(['video', 'modul'])
+            ->where(function ($query) {
+                $query ->whereHas('video', function($query) {
+                            $query->where('show_update', '=', 1);
+                        })
+                        ->orWhereHas('modul', function($query) {
+                            $query->where('show_update', '=', 1);
+                        });
+            });
+            
             // filter se jenjang
             $updates = $updates->whereHas('tingkat.jenjang', function($query) use ($user) {
                 $jenjangId = @$user->kelas->tingkat->jenjang_id;

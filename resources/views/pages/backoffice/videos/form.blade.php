@@ -89,7 +89,7 @@
         var coverUpdate = $("#coverUpdate");
         coverUpdate.hide();
 
-        @if(@$update->logo)
+        @if(@$update->logo && @$data->show_update)
             $("#showUpdate option[value='1']").prop('selected',true);
             coverUpdate.show();
         @endif
