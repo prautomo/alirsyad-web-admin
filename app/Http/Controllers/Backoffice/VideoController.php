@@ -420,6 +420,10 @@ class VideoController extends Controller{
             'logo' => $cover,
         ];
 
+        if(Update::where('trigger_id', @$video->id)){
+            Update::where('trigger_id', @$video->id)->delete();
+        }
+        
         Update::create($data);
     }
 }

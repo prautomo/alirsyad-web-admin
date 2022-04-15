@@ -94,6 +94,8 @@ class HomeController extends Controller
                 $lowTingkat = Tingkat::where('jenjang_id', @$user->jenjang_id)->orderBy('name', 'asc')->first();
                 $aktif = $aktif->where('tingkat_id', @$lowTingkat->id ?? 0);
 
+                $aktif = $aktif->orderBy('urutan', 'asc');
+                
                 $aktif = $aktif->limit(6)->get();
             } else {
                 // $aktif = MataPelajaran::search($request);

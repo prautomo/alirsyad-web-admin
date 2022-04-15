@@ -362,6 +362,10 @@ class ModulController extends Controller{
             'logo' => $cover,
         ];
 
+        if(Update::where('trigger_id', @$modul->id)){
+            Update::where('trigger_id', @$modul->id)->delete();
+        }
+
         Update::create($data);
     }
 }
