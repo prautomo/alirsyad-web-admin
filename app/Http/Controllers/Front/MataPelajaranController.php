@@ -82,7 +82,7 @@ class MataPelajaranController extends Controller
             $aktif = $aktif->whereHas('tingkat', function ($query) use ($user) {
                 $query->where('jenjang_id', @$user->jenjang_id);
             });
-
+            $aktif = $aktif->orderBy('urutan', 'asc');
             $aktif = $aktif->get()->sortBy('tingkat.name');
         } else {
             // $aktif = MataPelajaran::search($request);
@@ -126,7 +126,7 @@ class MataPelajaranController extends Controller
             'sebelumnya' => $sebelumnya,
 
             'aktif' => $aktif,
-            'tidakAktif' => @$tidakAktif ?? [],
+            // 'tidakAktif' => @$tidakAktif ?? [],
         ];
 
         return view('pages/frontoffice/mapel/list', $parseData);

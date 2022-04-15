@@ -25,6 +25,17 @@ class UpdateController extends BaseController
         // pengunjung
         if(@$user->is_pengunjung){
             $updates = Update::with('triggerRel');
+            
+            //filter if show update is true
+            $updates = $updates
+            ->where(function ($query) {
+                $query ->whereHas('video', function($query) {
+                            $query->where('show_update', '=', 1);
+                        })
+                        ->orWhereHas('modul', function($query) {
+                            $query->where('show_update', '=', 1);
+                        });
+            });
             // filter se jenjang
             $updates = $updates->whereHas('tingkat.jenjang', function($query) use ($user) {
                 $jenjangId = @$user->jenjang_id;
@@ -43,6 +54,17 @@ class UpdateController extends BaseController
         // siswa
         else{
             $updates = Update::with('triggerRel');
+
+            //filter if show update is true
+            $updates = $updates
+            ->where(function ($query) {
+                $query ->whereHas('video', function($query) {
+                            $query->where('show_update', '=', 1);
+                        })
+                        ->orWhereHas('modul', function($query) {
+                            $query->where('show_update', '=', 1);
+                        });
+            });
             // filter se jenjang
             $updates = $updates->whereHas('tingkat.jenjang', function($query) use ($user) {
                 $jenjangId = @$user->kelas->tingkat->jenjang_id;

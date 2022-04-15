@@ -94,6 +94,8 @@ class HomeController extends Controller
                 $lowTingkat = Tingkat::where('jenjang_id', @$user->jenjang_id)->orderBy('name', 'asc')->first();
                 $aktif = $aktif->where('tingkat_id', @$lowTingkat->id ?? 0);
 
+                $aktif = $aktif->orderBy('urutan', 'asc');
+                
                 $aktif = $aktif->limit(6)->get();
             } else {
                 // $aktif = MataPelajaran::search($request);
@@ -157,6 +159,18 @@ class HomeController extends Controller
                 $updates = [];
             } else {
                 $updates = Update::with('triggerRel');
+
+                //filter if show update is true
+                $updates = $updates->with(['video', 'modul'])
+                ->where(function ($query) {
+                    $query ->whereHas('video', function($query) {
+                                $query->where('show_update', '=', 1);
+                            })
+                            ->orWhereHas('modul', function($query) {
+                                $query->where('show_update', '=', 1);
+                            });
+                });
+
                 // filter se jenjang
                 $updates = $updates->whereHas('tingkat.jenjang', function ($query) use ($user) {
                     $jenjangId = @$user->jenjang_id;
@@ -170,26 +184,45 @@ class HomeController extends Controller
 
                 $updates = $updates->orderBy('created_at', 'desc');
                 $countUpdates = count($updates->get());
-
+                // dd($updates->get());
                 $updates = $updates->limit(5)->get();
             }
         }
         // siswa
         else {
             $updates = Update::with('triggerRel');
+
+            //filter if show update is true
+            $updates = $updates->with(['video', 'modul'])
+            ->where(function ($query) {
+                $query ->whereHas('video', function($query) {
+                            $query->where('show_update', '=', 1);
+                        })
+                        ->orWhereHas('modul', function($query) {
+                            $query->where('show_update', '=', 1);
+                        });
+            });
+           
+
             // filter se jenjang
             $updates = $updates->whereHas('tingkat.jenjang', function ($query) use ($user) {
                 $jenjangId = @$user->kelas->tingkat->jenjang_id;
                 $query->where('id', $jenjangId);
             });
+
             // // filter by tingkat bawahnya
             // $updates = $updates->whereHas('tingkat', function($query) use ($user) {
             //     $query->where('name', '<=', @$user->kelas->tingkat->name);
             // });
+
             // filter tingkat nya sendiri
             $updates = $updates->where('tingkat_id', @$user->kelas->tingkat_id);
+            
             // sort, limit, and get data
             $updates = $updates->orderBy('created_at', 'desc');
+
+            // dd($updates->get());
+
             $countUpdates = count($updates->get());
 
             $updates = $updates->limit(5)->get();

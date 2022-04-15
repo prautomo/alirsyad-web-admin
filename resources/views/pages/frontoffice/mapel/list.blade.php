@@ -174,7 +174,7 @@
 
 		</div>
 
-        @if(false)
+        {{-- @if(false)
         <div class="row mt-4">
 			<!-- mapel yang tidak dipilih admin -->
 			<div class="col-md-12">
@@ -211,7 +211,7 @@
 			</div>
 
 		</div>
-        @endif
+        @endif --}}
 
         @endif
 	</div>

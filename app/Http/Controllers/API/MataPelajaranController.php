@@ -188,6 +188,8 @@ class MataPelajaranController extends BaseController
 
             if($request->limit) $aktif = $aktif->limit($request->limit);
 
+            $aktif = $aktif->orderBy('urutan', 'asc');
+
             $aktif = $aktif->get()->sortBy('tingkat.name');
         }else {
             // $aktif = MataPelajaran::search($request);
