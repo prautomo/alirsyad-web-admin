@@ -177,6 +177,7 @@ class ModulController extends Controller{
     }
 
     public function create(){
+
         $mapelList = $this->getMataPelajaran();
         $semesterList = $this->getSemester();
         $show = [
@@ -228,6 +229,9 @@ class ModulController extends Controller{
         }
 
         if(@$request->showUpdate){
+
+            Modul::where('id', $data->id)->update(['show_update' => 1]);
+
             $coverUpdate = "";
             if ($request->hasFile('cover_update')) {
                 $validated = $request->validate([
@@ -240,7 +244,8 @@ class ModulController extends Controller{
 
                 $coverUpdate = $url;
             }
-            $this->insertToUpdateLog($dt, $coverUpdate, 'create');
+            // asalnya error $dt (var not found, diubah jadi $data)
+            $this->insertToUpdateLog($data, $coverUpdate, 'create');
         }
 
         return redirect()->route($this->routePath.'.index')->with(
@@ -302,6 +307,9 @@ class ModulController extends Controller{
         $dt->update($dataReq);
 
         if(@$request->showUpdate){
+
+            $dt = Modul::where('id', $id)->update(['show_update' => 1]);
+
             $coverUpdate = "";
             if ($request->hasFile('cover_update')) {
                 $validated = $request->validate([
@@ -319,7 +327,9 @@ class ModulController extends Controller{
 
                 $coverUpdate = @$update->logo;
             }
-            $this->insertToUpdateLog($dt, $coverUpdate, 'update');
+            $this->insertToUpdateLog(Modul::findOrFail($id), $coverUpdate, 'update');
+        }else{
+            $dt = Modul::where('id', $id)->update(['show_update' => 0]);
         }
 
         return redirect()->route($this->routePath.'.index')->with(
@@ -351,6 +361,10 @@ class ModulController extends Controller{
             'mata_pelajaran_id' => @$modul->mataPelajaran->id,
             'logo' => $cover,
         ];
+
+        if(Update::where('trigger_id', @$modul->id)){
+            Update::where('trigger_id', @$modul->id)->delete();
+        }
 
         Update::create($data);
     }
