@@ -16,6 +16,7 @@ use App\Services\UploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Auth;
+use Illuminate\Database\Eloquent\Collection;
 
 class MataPelajaranController extends Controller
 {
@@ -76,14 +77,22 @@ class MataPelajaranController extends Controller
          */
         // kalo user belum aktif (kosongin aja list mapelna)
         if ($user->status !== "AKTIF") {
-            $aktif = MataPelajaran::with('tingkat');
+            $get_mapel = MataPelajaran::with('tingkat');
 
             // mapel jenjang
-            $aktif = $aktif->whereHas('tingkat', function ($query) use ($user) {
+            $get_mapel = $get_mapel->whereHas('tingkat', function ($query) use ($user) {
                 $query->where('jenjang_id', @$user->jenjang_id);
             });
-            $aktif = $aktif->orderBy('urutan', 'asc');
-            $aktif = $aktif->get()->sortBy('tingkat.name');
+            // $get_mapel = $get_mapel->orderBy('urutan', 'asc');
+            // $get_mapel = $get_mapel->get()->sortBy('tingkat.name');
+            $get_mapel = $get_mapel->get()->groupBy('tingkat.name');
+
+            $aktif = new Collection();
+            foreach($get_mapel as $key => $value){
+                $get_mapel[$key] = $value->sortBy('urutan');
+                $aktif = $aktif->merge($value->sortBy('urutan'));
+            }
+
         } else {
             // $aktif = MataPelajaran::search($request);
             // $aktif = $aktif->with('tingkat');
