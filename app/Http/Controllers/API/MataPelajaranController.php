@@ -17,6 +17,7 @@ use App\Models\HistoryVideo;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\MataPelajaran as MataPelajaranResource;
 use App\Http\Resources\Summary as SummaryResource;
+use Illuminate\Database\Eloquent\Collection;
 
 class MataPelajaranController extends BaseController
 {
@@ -179,16 +180,26 @@ class MataPelajaranController extends BaseController
         // // active mapel by admin
         // kalo user belum aktif (kosongin aja list mapelna)
         if($user->status!=="AKTIF") {
-            $aktif = MataPelajaran::with('tingkat');
+            $get_mapel = MataPelajaran::with('tingkat');
 
             // mapel jenjang
-            $aktif = $aktif->whereHas('tingkat', function($query) use ($user) {
+            $get_mapel = $get_mapel->whereHas('tingkat', function($query) use ($user) {
                 $query->where('jenjang_id', @$user->jenjang_id);
             });
 
-            if($request->limit) $aktif = $aktif->limit($request->limit);
+            if($request->limit) $get_mapel = $get_mapel->limit($request->limit);
 
-            $aktif = $aktif->get()->sortBy('tingkat.name');
+            // $get_mapel = $get_mapel->orderBy('urutan', 'asc');
+
+            // $aktif = $aktif->get()->sortBy('tingkat.name');
+
+            $get_mapel = $get_mapel->get()->groupBy('tingkat.name');
+
+            $aktif = new Collection();
+            foreach($get_mapel as $key => $value){
+                $get_mapel[$key] = $value->sortBy('urutan');
+                $aktif = $aktif->merge($value->sortBy('urutan'));
+            }
         }else {
             // $aktif = MataPelajaran::search($request);
             // $aktif = $aktif->with('tingkat.jenjang');
