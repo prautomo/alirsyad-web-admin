@@ -223,7 +223,7 @@ class VideoController extends Controller{
     }
 
     public function create(){
-        
+
         $mapelList = $this->getMataPelajaran();
         $modulList = $this->getModul();
         $semesterList = $this->getSemester();
@@ -388,6 +388,8 @@ class VideoController extends Controller{
             $this->insertToUpdateLog(Video::findOrFail($id), $coverUpdate, 'update');
         }else{
             $dt = Video::where('id', $id)->update(['show_update' => 0]);
+
+            $this->insertToUpdateLog(Video::findOrFail($id), null, 'update', 0);
         }
 
         return redirect()->route($this->routePath.'.index')->with(
@@ -408,7 +410,7 @@ class VideoController extends Controller{
      * @param  String  $type
      * @return void
      */
-    private function insertToUpdateLog(Video $video, $cover, $type){
+    private function insertToUpdateLog(Video $video, $cover, $type, $visible=1){
         $data = [
             'trigger_event' => @$type ?? 'other',
             'trigger' => 'video',
@@ -417,13 +419,17 @@ class VideoController extends Controller{
             'mata_pelajaran' => @$video->mataPelajaran->name,
             'tingkat_id' => @$video->mataPelajaran->tingkat_id,
             'mata_pelajaran_id' => @$video->mataPelajaran->id,
-            'logo' => $cover,
+            'visible' => @$visible,
         ];
 
-        if(Update::where('trigger_id', @$video->id)){
-            Update::where('trigger_id', @$video->id)->delete();
+        if ($cover) {
+            $data['logo'] = $cover;
         }
-        
+
+        if(Update::where(['trigger_id' => @$video->id, 'trigger' => "video"])){
+            Update::where(['trigger_id' => @$video->id, 'trigger' => "video"])->delete();
+        }
+
         Update::create($data);
     }
 }

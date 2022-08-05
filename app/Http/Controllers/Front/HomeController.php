@@ -95,7 +95,7 @@ class HomeController extends Controller
                 $aktif = $aktif->where('tingkat_id', @$lowTingkat->id ?? 0);
 
                 $aktif = $aktif->orderBy('urutan', 'asc');
-                
+
                 $aktif = $aktif->limit(6)->get();
             } else {
                 // $aktif = MataPelajaran::search($request);
@@ -158,10 +158,10 @@ class HomeController extends Controller
             if ($user->status !== 'AKTIF') {
                 $updates = [];
             } else {
-                $updates = Update::with('triggerRel');
+                $updates = Update::with(['video', 'modul']);
 
                 //filter if show update is true
-                $updates = $updates->with(['video', 'modul'])
+                $updates = $updates
                 ->where(function ($query) {
                     $query ->whereHas('video', function($query) {
                                 $query->where('show_update', '=', 1);
@@ -190,19 +190,17 @@ class HomeController extends Controller
         }
         // siswa
         else {
-            $updates = Update::with('triggerRel');
+            $updates = Update::with(['video', 'modul']);
 
             //filter if show update is true
-            $updates = $updates->with(['video', 'modul'])
-            ->where(function ($query) {
-                $query ->whereHas('video', function($query) {
-                            $query->where('show_update', '=', 1);
-                        })
-                        ->orWhereHas('modul', function($query) {
-                            $query->where('show_update', '=', 1);
-                        });
-            });
-           
+            // $updates = $updates->where(function ($query) {
+            //     $query->whereHas('video', function($query) {
+            //         $query;
+            //     })->orWhereHas('modul', function($query) {
+            //         $query->where('show_update', '=', 1);
+            //     });
+            // });
+            $updates = $updates->where('visible', '=', 1);
 
             // filter se jenjang
             $updates = $updates->whereHas('tingkat.jenjang', function ($query) use ($user) {
@@ -217,7 +215,7 @@ class HomeController extends Controller
 
             // filter tingkat nya sendiri
             $updates = $updates->where('tingkat_id', @$user->kelas->tingkat_id);
-            
+
             // sort, limit, and get data
             $updates = $updates->orderBy('created_at', 'desc');
 
