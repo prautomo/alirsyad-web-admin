@@ -330,6 +330,8 @@ class ModulController extends Controller{
             $this->insertToUpdateLog(Modul::findOrFail($id), $coverUpdate, 'update');
         }else{
             $dt = Modul::where('id', $id)->update(['show_update' => 0]);
+
+            $this->insertToUpdateLog(Modul::findOrFail($id), null, 'update', 0);
         }
 
         return redirect()->route($this->routePath.'.index')->with(
@@ -350,7 +352,7 @@ class ModulController extends Controller{
      * @param  String  $type
      * @return void
      */
-    private function insertToUpdateLog(Modul $modul, $cover, $type){
+    private function insertToUpdateLog(Modul $modul, $cover, $type, $visible=1){
         $data = [
             'trigger_event' => @$type ?? 'other',
             'trigger' => 'modul',
@@ -359,11 +361,15 @@ class ModulController extends Controller{
             'mata_pelajaran' => @$modul->mataPelajaran->name,
             'tingkat_id' => @$modul->mataPelajaran->tingkat_id,
             'mata_pelajaran_id' => @$modul->mataPelajaran->id,
-            'logo' => $cover,
+            'visible' => @$visible,
         ];
 
-        if(Update::where('trigger_id', @$modul->id)){
-            Update::where('trigger_id', @$modul->id)->delete();
+        if ($cover) {
+            $data['logo'] = $cover;
+        }
+
+        if(Update::where(['trigger_id' => @$modul->id, 'trigger' => "modul"])){
+            Update::where(['trigger_id' => @$modul->id, 'trigger' => "modul"])->delete();
         }
 
         Update::create($data);
