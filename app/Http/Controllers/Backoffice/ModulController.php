@@ -327,7 +327,7 @@ class ModulController extends Controller{
 
                 $coverUpdate = @$update->logo;
             }
-            $this->insertToUpdateLog(Modul::findOrFail($id), $coverUpdate, 'update');
+            $this->insertToUpdateLog(Modul::findOrFail($id), $coverUpdate, 'update', 1);
         }else{
             $dt = Modul::where('id', $id)->update(['show_update' => 0]);
 
