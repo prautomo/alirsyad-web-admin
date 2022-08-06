@@ -385,7 +385,7 @@ class VideoController extends Controller{
 
                 $coverUpdate = @$update->logo;
             }
-            $this->insertToUpdateLog(Video::findOrFail($id), $coverUpdate, 'update');
+            $this->insertToUpdateLog(Video::findOrFail($id), $coverUpdate, 'update', 1);
         }else{
             $dt = Video::where('id', $id)->update(['show_update' => 0]);
 
