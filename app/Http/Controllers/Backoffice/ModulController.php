@@ -330,8 +330,9 @@ class ModulController extends Controller{
             $this->insertToUpdateLog(Modul::findOrFail($id), $coverUpdate, 'update', 1);
         }else{
             $dt = Modul::where('id', $id)->update(['show_update' => 0]);
-
-            $this->insertToUpdateLog(Modul::findOrFail($id), null, 'update', 0);
+            // last update data
+            $update = Update::where(['trigger' => 'modul', 'trigger_id' => $id])->orderBy('created_at', 'desc')->first();
+            $this->insertToUpdateLog(Modul::findOrFail($id), @$update->logo, 'update', 0);
         }
 
         return redirect()->route($this->routePath.'.index')->with(
