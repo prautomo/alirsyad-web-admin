@@ -388,8 +388,8 @@ class VideoController extends Controller{
             $this->insertToUpdateLog(Video::findOrFail($id), $coverUpdate, 'update', 1);
         }else{
             $dt = Video::where('id', $id)->update(['show_update' => 0]);
-
-            $this->insertToUpdateLog(Video::findOrFail($id), null, 'update', 0);
+            $update = Update::where(['trigger' => 'video', 'trigger_id' => $id])->orderBy('created_at', 'desc')->first();
+            $this->insertToUpdateLog(Video::findOrFail($id), @$update->logo, 'update', 0);
         }
 
         return redirect()->route($this->routePath.'.index')->with(
