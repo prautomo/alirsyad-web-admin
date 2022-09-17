@@ -27,13 +27,13 @@
                             <input type="file" id="img_upload" name="file" accept="image/*" /> 
                         </form>
 
-                        <button class="mt-3 btn btn-small" id="selectPhoto">Select Photo</button>
+                        <button class="mt-3 btn btn-small" id="selectPhoto">Pilih Foto</button>
 
                         <button class="mt-3 btn btn-small" 
                             id="savePhoto"
                             onclick="event.preventDefault();
                                         document.getElementById('change-photo-form').submit();"
-                        >Save</button>
+                        >Simpan</button>
                     </div>
                 </div>
             </div>
@@ -94,10 +94,10 @@
 
                             <div class="form-group mt-2 text-center">
                                 <a href="{{ route('app.akun-saya.profile-edit') }}" type="button" class="btn btn-main btn-small">
-                                    Edit Profile
+                                    Ubah Email
                                 </a>
                                 <a href="{{ route('app.akun-saya.password-edit') }}" type="button" class="ml-1 btn btn-main btn-small">
-                                    Edit Password
+                                    Ubah Password
                                 </a>
                             </div>
                         </div>

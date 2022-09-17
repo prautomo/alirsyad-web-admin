@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="{{ config('app.name', 'Laravel') }}">
-  
+
   <meta name="author" content="Anon">
 
   <title>{{ config('app.name', 'Laravel') }}</title>
@@ -40,7 +40,7 @@
 
 <body>
 
-<!-- Header Start --> 
+<!-- Header Start -->
 <header class="navigation">
 	<nav class="navbar navbar-expand-lg  py-4" id="navbar">
 		<div class="container">
@@ -54,7 +54,7 @@
           <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarsExample09" aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation">
             <span class="fa fa-bars"></span>
           </button>
-          
+
 		  <div class="collapse navbar-collapse text-center" id="navbarsExample09">
 			<ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
@@ -91,7 +91,7 @@
 	</nav>
 </header>
 
-<!-- Header Close --> 
+<!-- Header Close -->
 
 <div class="main-wrapper">
     @yield('content')
@@ -101,7 +101,7 @@
     <!-- Footer end -->
 </div>
 
-    <!-- 
+    <!--
     Essential Scripts
     =====================================-->
 
@@ -119,8 +119,8 @@
     <script src="{{ asset('frontoffice/plugins/slick-carousel/slick/slick.min.js') }}"></script>
     <!-- Counterup -->
     <script src="{{ asset('frontoffice/plugins/counterup/jquery.waypoints.min.js') }}"></script>
-    <script src="{{ asset('frontoffice/plugins/counterup/jquery.counterup.min.js') }}"></script>   
-    
+    <script src="{{ asset('frontoffice/plugins/counterup/jquery.counterup.min.js') }}"></script>
+
     <script src="{{ asset('frontoffice/js/script.js') }}"></script>
 
     @stack('plugin_script')
