@@ -117,3 +117,8 @@ Route::get('/clear-cache', function () {
 
     return "clear cache success.";
 });
+
+//Route api documentation
+Route::get('api/docs', function (){
+    return view('swagger.index');
+});
