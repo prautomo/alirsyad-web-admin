@@ -11,7 +11,8 @@
   <title>{{ config('app.name', 'Laravel') }}</title>
 
   <!-- Favicon -->
-  <link rel="shortcut icon" href="{{ asset('images/icon.png') }}">
+  <link rel="icon" href="{{ asset('images/icon.png') }}" type="image/png">
+  
   <!-- bootstrap.min css -->
   <link rel="stylesheet" href="{{ asset('frontoffice/plugins/bootstrap/css/bootstrap.min.css') }}">
   <!-- Icon Font Css -->
