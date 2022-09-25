@@ -64,6 +64,7 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
         Route::get("/json/moduls", "\App\Http\Controllers\API\ModulController@index")->name('json.modul');
 
         Route::resource('latihan-soal', 'LatihanSoalController');
+        Route::get('soals/create', 'SoalController@create')->name('soals.create');
 
         // Route::name('sub_categories.')->prefix('kelas/{categoryId}/mata_pelajarans')->group(function() {
         //     Route::get('/', 'SubCategoryController@index')->name('index');
