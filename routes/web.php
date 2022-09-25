@@ -63,6 +63,7 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
         Route::get("/json/tingkats/{id}", "\App\Http\Controllers\API\TingkatController@show")->name('json.tingkat.detail');
         Route::get("/json/moduls", "\App\Http\Controllers\API\ModulController@index")->name('json.modul');
 
+        Route::resource('latihan-soal', 'LatihanSoalController');
 
         // Route::name('sub_categories.')->prefix('kelas/{categoryId}/mata_pelajarans')->group(function() {
         //     Route::get('/', 'SubCategoryController@index')->name('index');

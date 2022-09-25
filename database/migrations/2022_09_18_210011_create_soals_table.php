@@ -15,14 +15,14 @@ class CreateSoalsTable extends Migration
     {
         Schema::create('soals', function (Blueprint $table) {
             $table->id();
-            $table->enum('tingkat_kesulitan', ['mudah', 'sedang', 'sulit'])->default('mudah')->comment("tingkat kesulitan soal");
+            $table->unsignedBigInteger('paket_soal_id')->nullable();
             $table->string('soal');
-            $table->string('piliahan_a');
-            $table->string('piliahan_b');
-            $table->string('piliahan_c');
-            $table->string('piliahan_d');
-            $table->string('piliahan_e')->nullable();
-            $table->enum('jawaban', ['piliahan_a', 'piliahan_b', 'piliahan_c', 'piliahan_d', 'piliahan_e'])->comment("jawaban benar");
+            $table->string('pilihan_a');
+            $table->string('pilihan_b');
+            $table->string('pilihan_c');
+            $table->string('pilihan_d');
+            $table->string('pilihan_e')->nullable();
+            $table->enum('jawaban', ['pilihan_a', 'pilihan_b', 'pilihan_c', 'pilihan_d', 'pilihan_e'])->comment("jawaban benar");
             $table->string('sumber')->nullable();
             $table->string('link_pembahasan')->nullable();
             $table->string('pembahasan')->nullable();

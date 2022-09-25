@@ -17,8 +17,10 @@ class CreatePaketSoalsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('mata_pelajaran_id')->nullable();
             $table->unsignedBigInteger('bab_id')->nullable()->comment("modul id or null");
-            $table->integer('subab');
-            $table->string('judul_subab')->comment("judul subab");
+            $table->integer('subbab');
+            $table->string('judul_subbab')->comment("judul subbab");
+
+            $table->enum('tingkat_kesulitan', ['mudah', 'sedang', 'sulit'])->default('mudah')->comment("tingkat kesulitan soal");
 
             $table->integer('jumlah_publish')->default(10);
             $table->float('nilai_kkm');
