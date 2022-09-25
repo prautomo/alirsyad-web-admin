@@ -1,22 +1,16 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Input } from 'reactstrap';
 import ReactDOM from 'react-dom';
 import queryString from 'query-string';
-import Dropzone, { useDropzone } from 'react-dropzone';
+import { useDropzone } from 'react-dropzone';
 import * as XLSX from 'xlsx';
-import validator from 'validator'
+import { Col, Button } from 'react-bootstrap';
 import Swal from 'sweetalert2';
-import FormGroupComponents from '../../components/FormGroupComponents';
-import SoalComponent from './SoalComponent';
-import SoalContextProvider from './SoalContextProvider';
 
-function CreateSoal() {
+function UploadBatchSoal({ id }) {
 
     const [queryParams, setQueryParams] = useState({})
-    const [form, setForm] = useState(null);
     const [params, setParams] = useState({});
     const [excelData, setExcelData] = useState([]);
-    const [tingkats, setTingkats] = useState([]);
 
     const onDrop = useCallback((acceptedFiles) => {
         acceptedFiles.forEach((file) => {
@@ -39,8 +33,6 @@ function CreateSoal() {
                 /* Update state */
                 data.splice(0, 1)
                 console.log("Data>>>", data)
-                // load tingkat
-                getTingkats()
                 // set excel data
                 setExcelData(data)
             }
@@ -48,15 +40,15 @@ function CreateSoal() {
         })
 
     }, [])
-    const { getRootProps, getInputProps } = useDropzone({ onDrop })
 
+    const { getRootProps, getInputProps } = useDropzone({ onDrop })
 
     var doUploadBatch = () => {
         if(excelData.length < 1){
             Swal.fire("Gagal Mengupload", "Data masih kosong!")
             return;
         }
-        window.axios.post("/backoffice/external-users/import", { data: excelData, params: params }).then((response) => {
+        window.axios.post(`/backoffice/paket-soals/${id}/soal/import`, { data: excelData, params: params }).then((response) => {
             console.log(response.data.data)
             // Swal.fire("Berhasil Mengupload", response.data.message)
 
@@ -68,7 +60,7 @@ function CreateSoal() {
             }).then((result) => {
                 /* Read more about isConfirmed, isDenied below */
                 if (result.isConfirmed) {
-                    window.location.href = '/backoffice/external-users?role=SISWA'
+                    window.location.href = `/backoffice/paket-soals/${id}/soal`
                 } 
             })
         }).catch((err) => {
@@ -76,45 +68,12 @@ function CreateSoal() {
         })
 
     }
-
-    // const onUploadSuccess = (index, url) => {
-    //     const currentItem = Object.assign({}, excelData[index]);
-    //     currentItem.default_image = url
-    //     excelData[index] = currentItem
-    //     console.log(excelData)
-    //     setExcelData(excelData)
-    // }
-
-    const onTingkatChange = (index, val) => {
-        const currentItem = Object.assign({}, excelData[index]);
-        currentItem.G = val;
-        excelData[index] = currentItem;
-        setExcelData(excelData);
-    }
-
-    const onKelasChange = (index, val) => {
-        const currentItem = Object.assign({}, excelData[index]);
-        currentItem.H = val;
-        excelData[index] = currentItem;
-        setExcelData(excelData);
-    }
       
     const handleRemove = index => () => {
         const rows = [...excelData];
         rows.splice(index, 1);
         setExcelData(rows)
-
-        // use nis
-        // let items = excelData.filter(row => row.A != item.A);
-        // setExcelData(items);
     };
-
-    var getTingkats = () => {
-        window.axios.get("/backoffice/tingkats").then((response) => {
-            console.log("dika", response.data)
-            setTingkats(response.data.data)
-        })
-    }
 
     useEffect(() => {
         let params = queryString.parse(location.search)
@@ -122,76 +81,133 @@ function CreateSoal() {
     }, [excelData])
 
     return (
-        <SoalContextProvider
-            value={{ form }}
-        >
-            <div className="row gap-20 masonry pos-r">
-                <div className="col col-md-12">
-                    <FormGroupComponents label="Modul (*)">
-                        <select className='form-control select2-hidden-accessible'>
-                            <option value={"adaw"}>Adwa</option>
-                        </select>
-                    </FormGroupComponents>
-                </div>
-                <div className="col col-md-12">
-                    <FormGroupComponents label="Mata Pelajaran">
-                        <select className='form-control select2-hidden-accessible'>
-                            <option value={"adaw"}>Adwa</option>
-                        </select>
-                    </FormGroupComponents>
-                </div>
-                <div className="col col-md-12">
-                    <FormGroupComponents label="Subab">
-                        <Input type='number' placeholder='Subab' />
-                    </FormGroupComponents>
-                </div>
-                <div className="col col-md-12">
-                    <FormGroupComponents label="Judul Subab">
-                        <Input type='text' placeholder='Judul Subab' />
-                    </FormGroupComponents>
-                </div>
-                <div className="col col-md-12">
-                    <FormGroupComponents label="Jumlah Publish">
-                        <Input type='number' placeholder='Jumlah Publish' />
-                    </FormGroupComponents>
-                </div>
-                <div className="col col-md-12">
-                    <FormGroupComponents label="KKM Level Easy">
-                        <Input type='number' placeholder='KKM Level Easy' />
-                    </FormGroupComponents>
-                </div>
-                <div className="col col-md-12">
-                    <FormGroupComponents label="KKM Level Medium">
-                        <Input type='number' placeholder='KKM Level Medium' />
-                    </FormGroupComponents>
-                </div>
-                <div className="col col-md-12">
-                    <FormGroupComponents label="KKM Level Hard">
-                        <Input type='number' placeholder='KKM Level Hard' />
-                    </FormGroupComponents>
-                </div>
-                <div className="col col-md-12">
-                    <FormGroupComponents label="Upload File Soal">
-                        <div {...getRootProps()} style={{
-                            border: "1px dashed #dddddd",
-                            borderRadius: "5px",
-                            marginBottom: "10px"
-                        }} >
-                            <input {...getInputProps()} />
-                            <p style={{ textAlign: "center", marginTop: 10 }}>Geser File Excel Ke sini</p>
+
+        <div className="row gap-20 masonry pos-r">
+            <div className="masonry-sizer col-lg-12"></div>
+            <div className="masonry-item col-lg-12">
+                <div className="bd bgc-white">
+                    <div className="layers">
+                        <Col className="mt-2 text-left pl-0">
+                            <h3>1. Download Sample Excel</h3>
+                            <Button className="btn-info" size="sm" onClick={() => {window.location.href = '/uploads/template_batch_soal.xlsx'}}>Download Template</Button>
+                        </Col>
+
+                        <div className="layer w-100 p-20 mt-2">
+                            <h3>2. Upload File Excel</h3>
+                            <div {...getRootProps()} style={{
+                                border: "1px dashed #dddddd",
+                                borderRadius: "5px",
+                            }} >
+                                <input {...getInputProps()} />
+                                <p style={{ textAlign: "center", marginTop: 10 }}>Geser File Excel Ke sini</p>
+                            </div>
                         </div>
 
-                        <SoalComponent />
-                    </FormGroupComponents>
+                        <Col className="mt-2 text-left pl-0">
+                            <h3>3. Upload Data or Cancel</h3>
+                            <Button color="primary" size="sm" onClick={doUploadBatch}>Upload Data</Button>{" "}
+                            <Button className="btn-secondary" size="sm" onClick={() => {window.location.href = '/backoffice/external-users?role=SISWA'}}>Cancel</Button>
+                        </Col>
+
+                        <div className="layer w-100 p-20 mt-2">
+                            <h3>Preview Data</h3>
+                            <table className="table table-bordered table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th width="5%">
+                                            No
+                                        </th>
+                                        <th width="20%">
+                                            Soal
+                                        </th>
+                                        <th width="15%">
+                                            Pilihan A
+                                        </th>
+                                        <th width="15%">
+                                            Pilihan B
+                                        </th>
+                                        <th width="15%">
+                                            Pilihan C
+                                        </th>
+                                        <th width="10%">
+                                            Pilihan D
+                                        </th>
+                                        <th width="10%">
+                                            Pilihan E
+                                        </th>
+                                        <th width="5%">
+                                            Jawaban
+                                        </th>
+                                        <th width="5%">
+                                            Aksi
+                                        </th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                {excelData.map((item, index) => {
+                                    // init var
+                                    let no = item.A;
+                                    let soal = item.B;
+                                    let pilihanA = item.C;
+                                    let pilihanB = item.D;
+                                    let pilihanC = item.E;
+                                    let pilihanD = item.F;
+                                    let pilihanE = item.G ? item.G : '-';
+                                    let jawaban = item.H.replace("1", "A").replace("2", "B").replace("3", "C").replace("4", "D").replace("5", "E");
+                                
+                                    return <tr key={index}>
+                                        <td>
+                                            {no}
+                                        </td>
+                                        <td>
+                                            {soal}
+                                        </td>
+                                        <td>
+                                            {pilihanA}
+                                        </td>
+                                        <td>
+                                            {pilihanB}
+                                        </td>
+                                        <td>
+                                            {pilihanC}
+                                        </td>
+                                        <td>
+                                            {pilihanD}
+                                        </td>
+                                        <td>
+                                            {pilihanE}
+                                        </td>
+                                        <td>
+                                            {jawaban}
+                                        </td>
+                                        
+                                        <td>
+                                            <a onClick={handleRemove(index)} style={{ cursor: "pointer" }}>
+                                                Delete
+                                            </a>
+                                        </td>
+                                    </tr>
+                                })}
+                                </tbody>
+
+                                {excelData.length === 0 && <tr><td colSpan="7">No data.</td></tr>}
+                            </table>
+                        </div>
+                    </div>
                 </div>
+
             </div>
-        </SoalContextProvider>
+        </div>
     );
 }
 
-export default CreateSoal;
+export default UploadBatchSoal;
 
-if (document.getElementById('create-soal')) {
+var container = document.getElementById("batch-soal");
 
-    ReactDOM.render(<CreateSoal  />, document.getElementById('create-soal'));
+if (container) {
+    var idPaket = container.getAttribute("paket-soal-id");
+
+    ReactDOM.render(<UploadBatchSoal id={idPaket} />, container);
 }
