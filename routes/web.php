@@ -14,6 +14,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+// Route::get('send-mail', function () {
+   
+//     $details = [
+//         'title' => 'Selamat Datang di Al-Irsyad Edu!',
+//         'body' => 'This is for testing email using smtp'
+//     ];
+   
+//     \Mail::to('windahidayat27@gmail.com')->send(new \App\Mail\EmailVerificationMail($details));
+   
+//     dd("Email is Sent.");
+//     // return view('emails.emailVerificationTemplate');
+// });
+
 // Routes backoffice
 Route::get('backoffice/login', 'Auth\BackofficeLoginController@showLoginForm')->name('backoffice.login');
 Route::post('backoffice/login', ['as' => 'backoffice-login', 'uses' => 'Auth\BackofficeLoginController@login']);
