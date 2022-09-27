@@ -37434,18 +37434,18 @@ __webpack_require__(/*! ./datatable */ "./resources/js/datatable.js");
 // admin
 
 
-Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(5), __webpack_require__.e(15), __webpack_require__.e(9)]).then(__webpack_require__.bind(null, /*! ./backoffice/components/ExternalUser */ "./resources/js/backoffice/components/ExternalUser/index.js"));
-Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(4), __webpack_require__.e(6), __webpack_require__.e(7), __webpack_require__.e(11), __webpack_require__.e(16)]).then(__webpack_require__.bind(null, /*! ./backoffice/components/StoryPath/Form */ "./resources/js/backoffice/components/StoryPath/Form.js"));
-Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(5), __webpack_require__.e(17)]).then(__webpack_require__.bind(null, /*! ./backoffice/pages/Soal */ "./resources/js/backoffice/pages/Soal/index.js")); // siswa
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(5), __webpack_require__.e(12), __webpack_require__.e(16)]).then(__webpack_require__.bind(null, /*! ./backoffice/components/ExternalUser */ "./resources/js/backoffice/components/ExternalUser/index.js"));
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(4), __webpack_require__.e(6), __webpack_require__.e(7), __webpack_require__.e(11), __webpack_require__.e(17)]).then(__webpack_require__.bind(null, /*! ./backoffice/components/StoryPath/Form */ "./resources/js/backoffice/components/StoryPath/Form.js"));
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(5), __webpack_require__.e(18)]).then(__webpack_require__.bind(null, /*! ./backoffice/pages/Soal */ "./resources/js/backoffice/pages/Soal/index.js")); // siswa
 
-Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(8), __webpack_require__.e(12), __webpack_require__.e(22)]).then(__webpack_require__.bind(null, /*! ./frontoffice/components/Video/Detail */ "./resources/js/frontoffice/components/Video/Detail.js"));
-Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(14), __webpack_require__.e(7), __webpack_require__.e(8), __webpack_require__.e(13), __webpack_require__.e(23)]).then(__webpack_require__.bind(null, /*! ./frontoffice/components/Modul/Detail */ "./resources/js/frontoffice/components/Modul/Detail.js"));
-Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(6), __webpack_require__.e(14), __webpack_require__.e(24)]).then(__webpack_require__.bind(null, /*! ./frontoffice/components/Nilai/List */ "./resources/js/frontoffice/components/Nilai/List.js")); // guru
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(8), __webpack_require__.e(13), __webpack_require__.e(23)]).then(__webpack_require__.bind(null, /*! ./frontoffice/components/Video/Detail */ "./resources/js/frontoffice/components/Video/Detail.js"));
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(15), __webpack_require__.e(7), __webpack_require__.e(8), __webpack_require__.e(14), __webpack_require__.e(24)]).then(__webpack_require__.bind(null, /*! ./frontoffice/components/Modul/Detail */ "./resources/js/frontoffice/components/Modul/Detail.js"));
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(6), __webpack_require__.e(15), __webpack_require__.e(25)]).then(__webpack_require__.bind(null, /*! ./frontoffice/components/Nilai/List */ "./resources/js/frontoffice/components/Nilai/List.js")); // guru
 
-Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(3), __webpack_require__.e(18), __webpack_require__.e(25)]).then(__webpack_require__.bind(null, /*! ./guru/components/Dashboard/DetailProgressBelajar */ "./resources/js/guru/components/Dashboard/DetailProgressBelajar.js"));
-Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(3), __webpack_require__.e(18), __webpack_require__.e(28)]).then(__webpack_require__.bind(null, /*! ./guru/components/Progress/ListSiswa */ "./resources/js/guru/components/Progress/ListSiswa.js"));
-Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(3), __webpack_require__.e(18), __webpack_require__.e(27)]).then(__webpack_require__.bind(null, /*! ./guru/components/Progress/DetailSiswa */ "./resources/js/guru/components/Progress/DetailSiswa.js"));
-Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(3), __webpack_require__.e(18), __webpack_require__.e(26)]).then(__webpack_require__.bind(null, /*! ./guru/components/Progress/DetailSimulasiPercobaan */ "./resources/js/guru/components/Progress/DetailSimulasiPercobaan.js"));
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(3), __webpack_require__.e(19), __webpack_require__.e(26)]).then(__webpack_require__.bind(null, /*! ./guru/components/Dashboard/DetailProgressBelajar */ "./resources/js/guru/components/Dashboard/DetailProgressBelajar.js"));
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(3), __webpack_require__.e(19), __webpack_require__.e(29)]).then(__webpack_require__.bind(null, /*! ./guru/components/Progress/ListSiswa */ "./resources/js/guru/components/Progress/ListSiswa.js"));
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(3), __webpack_require__.e(19), __webpack_require__.e(28)]).then(__webpack_require__.bind(null, /*! ./guru/components/Progress/DetailSiswa */ "./resources/js/guru/components/Progress/DetailSiswa.js"));
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(3), __webpack_require__.e(19), __webpack_require__.e(27)]).then(__webpack_require__.bind(null, /*! ./guru/components/Progress/DetailSimulasiPercobaan */ "./resources/js/guru/components/Progress/DetailSimulasiPercobaan.js"));
 
 /***/ }),
 
@@ -37590,8 +37590,8 @@ window.initDatatable = function (tableSelector) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\Develops\DIB\web\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\Develops\DIB\web\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\Ferdhika\Projects\DIB\web-digital-interactive-book\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\Ferdhika\Projects\DIB\web-digital-interactive-book\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
