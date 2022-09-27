@@ -30,7 +30,7 @@ class PaketSoalController extends Controller
      */
     public function datatable(Request $request){
         $query = PaketSoal::query();
-        
+
         $datas = $query->select('*');
 
         return datatables()
@@ -137,6 +137,44 @@ class PaketSoalController extends Controller
     }
 
     /**
+     * Get level
+     */
+    private function getLevel() {
+        $levels = ["Mudah", "Sedang", "Sulit"];
+
+        $levelList = [];
+        $levelList[""] = "Pilih tingkat kesulitan";
+
+        foreach($levels as $level){
+            $levelList[strtolower($level)] = $level;
+        }
+
+        return $levelList;
+    }
+
+    /**
+     * Get jawaban
+     */
+    private function getJawaban() {
+        $jawabanBenars = [
+            ["value" => "pilihan_a", "label" => "Pilihan 1"],
+            ["value" => "pilihan_b", "label" => "Pilihan 2"],
+            ["value" => "pilihan_c", "label" => "Pilihan 3"],
+            ["value" => "pilihan_d", "label" => "Pilihan 4"],
+            ["value" => "pilihan_e", "label" => "Pilihan 5"]
+        ];
+
+        $jawabans = [];
+        $jawabans[""] = "Pilih jawaban benar";
+
+        foreach($jawabanBenars as $jawabanBenar){
+            $jawabans[@$jawabanBenar['value']] = @$jawabanBenar['label'];
+        }
+
+        return $jawabans;
+    }
+
+    /**
      * Get bab from modul
      */
     private function getBab(){
@@ -174,6 +212,7 @@ class PaketSoalController extends Controller
 
         $data = [
             'mapelList' => $this->getMataPelajaran(),
+            'levelList' => $this->getLevel(),
             'groupBabList' => $this->getBab()
         ];
 
@@ -188,10 +227,41 @@ class PaketSoalController extends Controller
         $storeLatihanSoal = PaketSoal::create($newLatihanSoal);
 
         if ($storeLatihanSoal) {
-            return redirect()->route($this->prefix . '.index')->with(
-                $this->success(__("Success to Create Latihan Soal "), $storeLatihanSoal)
+            return redirect()->route($this->routePath . '.index')->with(
+                $this->success(__("Success to Create Paket Soal "), $storeLatihanSoal)
             );
         }
+    }
+
+    public function destroy(Request $request, $id){
+        $d = PaketSoal::findOrFail($id);
+
+        $d->delete();
+    }
+
+    public function edit(Request $request, $id){
+        $dt = PaketSoal::with('mataPelajaran', 'bab')->findOrFail($id);
+
+        $data = [
+            'data' => $dt,
+            'mapelList' => $this->getMataPelajaran(),
+            'levelList' => $this->getLevel(),
+            'groupBabList' => $this->getBab()
+        ];
+
+        return view($this->prefix.'.edit', $data);
+    }
+
+    public function update(Request $request, $id){
+
+        $dataReq = $request->only(['mata_pelajaran_id', 'tingkat_kesulitan', 'subbab', 'judul_subbab', 'jumlah_publish', 'nilai_kkm']);
+
+        $dt = PaketSoal::findOrFail($id);
+        $dt->update($dataReq);
+
+        return redirect()->route($this->routePath.'.index')->with(
+            $this->success(__("Success to update Paket Soal"), $dt)
+        );
     }
 
     /**
@@ -199,10 +269,10 @@ class PaketSoalController extends Controller
      *
      * @return void
      */
-    public function datatableSoal(Request $request){
+    public function datatableSoal(Request $request, $id){
         $query = Soal::query();
-        
-        $datas = $query->select('*');
+
+        $datas = $query->select('*')->where('paket_soal_id', $id);
 
         return datatables()
             ->of($datas)
@@ -222,39 +292,68 @@ class PaketSoalController extends Controller
 
             })
             ->addIndexColumn()
-            ->addColumn('show-img', function($data) {
-                if(empty($data->icon)){
+            ->addColumn('soal', function($data) {
+                if(empty($data->soal)){
                     return "not available";
                 }else{
-                    return view("components.datatable.image", [
-                        "url" => asset($data->icon)
+                    return view("components.datatable.popupText", [
+                        "text" => substr(strip_tags($data->soal), 0, 10)."..."
                     ]);
                 }
             })
-            ->addColumn("mapel", function ($data) {
-                $mapel = @$data->mataPelajaran->name ? $data->mataPelajaran->name : 'none';
-                $mapelID = @$data->mataPelajaran->id ? $data->mataPelajaran->id : '';
-
-                return view("components.datatable.link", [
-                    "link" => route($this->routePath.".index")."?mata_pelajaran_id=".$mapelID,
-                    "text" => $mapel,
-                ]);
-                return $mapel;
-            })
-            ->addColumn("tingkat_kesulitan", function ($data) {
-                $tingkatKesulitan = '';
-                switch($data->tingkat_kesulitan){
-                    case 'mudah':
-                        $tingkatKesulitan = 'Mudah';
-                        break;
-                    case 'sedang':
-                        $tingkatKesulitan = 'Sedang';
-                        break;
-                    case 'sulit':
-                        $tingkatKesulitan = 'Sulit';
-                        break;
+            ->addColumn('pilihan_a', function($data) {
+                if(empty($data->pilihan_a)){
+                    return "not available";
+                }else{
+                    return view("components.datatable.popupText", [
+                        "text" => substr(strip_tags($data->pilihan_a), 0, 10)."..."
+                    ]);
                 }
-                return $tingkatKesulitan;
+            })
+            ->addColumn('pilihan_b', function($data) {
+                if(empty($data->pilihan_b)){
+                    return "not available";
+                }else{
+                    return view("components.datatable.popupText", [
+                        "text" => substr(strip_tags($data->pilihan_b), 0, 10)."..."
+                    ]);
+                }
+            })
+            ->addColumn('pilihan_c', function($data) {
+                if(empty($data->pilihan_c)){
+                    return "not available";
+                }else{
+                    return view("components.datatable.popupText", [
+                        "text" => substr(strip_tags($data->pilihan_c), 0, 10)."..."
+                    ]);
+                }
+            })
+            ->addColumn('pilihan_d', function($data) {
+                if(empty($data->pilihan_d)){
+                    return "not available";
+                }else{
+                    return view("components.datatable.popupText", [
+                        "text" => substr(strip_tags($data->pilihan_d), 0, 10)."..."
+                    ]);
+                }
+            })
+            ->addColumn('pilihan_e', function($data) {
+                if(empty($data->pilihan_e)){
+                    return "not available";
+                }else{
+                    return view("components.datatable.popupText", [
+                        "text" => substr(strip_tags($data->pilihan_e), 0, 10)."..."
+                    ]);
+                }
+            })
+            ->addColumn('jawaban', function($data) {
+                if(empty($data->jawaban)){
+                    return "not available";
+                }else{
+                    return view("components.datatable.popupText", [
+                        "text" => substr(strip_tags($data->jawaban), 0, 10)."..."
+                    ]);
+                }
             })
             ->addColumn("action", function ($data) {
                 return view("components.datatable.actions", [
@@ -262,8 +361,8 @@ class PaketSoalController extends Controller
                     "judul_subbab" => $data->judul_subbab,
                     "permissionName" => 'paket-soal',
                     "class" => $data->class,
-                    "deleteRoute" => route($this->routePath.".destroy", $data->id),
-                    "editRoute" => route($this->routePath.".edit", $data->id),
+                    "deleteRoute" => route($this->routePath.".destroy-soal", [$data->paket_soal_id , $data->id]),
+                    "editRoute" => route($this->routePath.".edit-soal", [$data->paket_soal_id , $data->id]),
                 ]);
             })
             ->order(function ($query) {
@@ -274,7 +373,7 @@ class PaketSoalController extends Controller
 
     public function indexSoal(Request $request, $id) {
         if ($request->ajax()) {
-            return $this->datatableSoal($request);
+            return $this->datatableSoal($request, $id);
         }
         $paketSoal = PaketSoal::with('mataPelajaran', 'bab')->findOrFail($id);
 
@@ -287,7 +386,7 @@ class PaketSoalController extends Controller
     }
 
     public function batchSoal(Request $request, $id) {
-        
+
         $data = [
             'id' => $id,
         ];
@@ -321,6 +420,7 @@ class PaketSoalController extends Controller
                     $paketSoal = PaketSoal::find($id);
                     if ($paketSoal === null) continue;
 
+                    $input['paket_soal_id'] = $id;
                     $input['soal'] = $soal;
                     $input['pilihan_a'] = $pilihanA;
                     $input['pilihan_b'] = $pilihanB;
@@ -338,7 +438,7 @@ class PaketSoalController extends Controller
                         $tempJawaban = "pilihan_d";
                     } else if (strtolower($jawaban) === "pilihan 5") {
                         $tempJawaban = "pilihan_e";
-                    } 
+                    }
                     $input['jawaban'] = $tempJawaban;
                     $input['creator_id'] = @Auth::user()->id;
                     $input['created_at'] = now();
@@ -351,5 +451,58 @@ class PaketSoalController extends Controller
         } catch (\Throwable $th) {
             return $this->returnError($th);
         }
+    }
+
+    public function createSoal(Request $request, $id){
+        $data = [
+            'paketId' => $id,
+            'listJawabanBenar' => $this->getJawaban(),
+        ];
+
+        return view($this->prefix.'.create_soal', $data);
+    }
+
+    public function storeSoal(Request $request, $id)
+    {
+        $newLatihanSoal = $request->only(['soal', 'pilihan_a', 'pilihan_b', 'pilihan_c', 'pilihan_d', 'pilihan_e', 'jawaban', 'sumber', 'link_pembahasan', 'pembahasan']);
+        $newLatihanSoal['paket_soal_id'] = $id;
+
+        $storeLatihanSoal = Soal::create($newLatihanSoal);
+
+        if ($storeLatihanSoal) {
+            return redirect()->route($this->routePath . '.index-soal', $id)->with(
+                $this->success(__("Success to Create Paket Soal "), $storeLatihanSoal)
+            );
+        }
+    }
+
+    public function editSoal(Request $request, $paketId, $id){
+        $dt = Soal::with('paket')->findOrFail($id);
+
+        $data = [
+            'data' => $dt,
+            'paketId' => $paketId,
+            'listJawabanBenar' => $this->getJawaban(),
+        ];
+
+        return view($this->prefix.'.edit_soal', $data);
+    }
+
+    public function updateSoal(Request $request, $paketId, $id){
+
+        $dataReq = $request->only(['soal', 'pilihan_a', 'pilihan_b', 'pilihan_c', 'pilihan_d', 'pilihan_e', 'jawaban', 'sumber', 'link_pembahasan', 'pembahasan']);
+
+        $dt = Soal::findOrFail($id);
+        $dt->update($dataReq);
+
+        return redirect()->route($this->routePath.'.index-soal', $paketId)->with(
+            $this->success(__("Success to update Soal"), $dt)
+        );
+    }
+
+    public function destroySoal(Request $request, $paketId, $id){
+        $d = Soal::findOrFail($id);
+
+        $d->delete();
     }
 }

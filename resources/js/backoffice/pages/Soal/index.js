@@ -61,14 +61,14 @@ function UploadBatchSoal({ id }) {
                 /* Read more about isConfirmed, isDenied below */
                 if (result.isConfirmed) {
                     window.location.href = `/backoffice/paket-soals/${id}/soal`
-                } 
+                }
             })
         }).catch((err) => {
             Swal.fire("Gagal Mengupload", err.response.data.message)
         })
 
     }
-      
+
     const handleRemove = index => () => {
         const rows = [...excelData];
         rows.splice(index, 1);
@@ -106,7 +106,7 @@ function UploadBatchSoal({ id }) {
                         <Col className="mt-2 text-left pl-0">
                             <h3>3. Upload Data or Cancel</h3>
                             <Button color="primary" size="sm" onClick={doUploadBatch}>Upload Data</Button>{" "}
-                            <Button className="btn-secondary" size="sm" onClick={() => {window.location.href = '/backoffice/external-users?role=SISWA'}}>Cancel</Button>
+                            <Button className="btn-secondary" size="sm" onClick={() => {window.location.href = `/backoffice/paket-soals/${id}/soal`}}>Cancel</Button>
                         </Col>
 
                         <div className="layer w-100 p-20 mt-2">
@@ -155,7 +155,7 @@ function UploadBatchSoal({ id }) {
                                     let pilihanD = item.F;
                                     let pilihanE = item.G ? item.G : '-';
                                     let jawaban = item.H.replace("1", "A").replace("2", "B").replace("3", "C").replace("4", "D").replace("5", "E");
-                                
+
                                     return <tr key={index}>
                                         <td>
                                             {no}
@@ -181,7 +181,7 @@ function UploadBatchSoal({ id }) {
                                         <td>
                                             {jawaban}
                                         </td>
-                                        
+
                                         <td>
                                             <a onClick={handleRemove(index)} style={{ cursor: "pointer" }}>
                                                 Delete
