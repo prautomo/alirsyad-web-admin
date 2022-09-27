@@ -12,6 +12,7 @@ use App\Services\UploadService;
 use App\Models\MataPelajaran;
 use App\Models\Modul;
 use App\Models\Simulasi;
+use App\Models\UploaderMataPelajaran;
 use App\Helpers\GenerateSlug;
 
 class SimulasiController extends Controller{
@@ -37,29 +38,39 @@ class SimulasiController extends Controller{
         // relation with tingkat
         $query = $query->with('modul.mataPelajaran.tingkat.jenjang');
 
+        $datas = $query->select('*');
+
         return datatables()
-            ->of($query)
+            ->of($datas)
             ->filter(function ($query) use ($request) {
+
+                // kalo bukan superadmin, tambahin filter by mapel na
+                if(!@\Auth::user()->hasRole('Superadmin')){
+                    $mapelIdsUser = $this->getMapelIdsUser();
+                    $query = $query->whereIn('mata_pelajaran_id', $mapelIdsUser);
+                }
 
                 $search = @$request->search['value'];
 
                 if($search){
-                    $query->where('name', 'LIKE', '%'.$search.'%');
+                    $query->where(function($query) use ($search){
+                        $query->where('name', 'LIKE', '%'.$search.'%');
                     
-                    $query = $query->orWhereHas('modul.mataPelajaran.tingkat.jenjang', function($query2) use ( $search ){
-                        $query2->where('name', 'LIKE', '%'.$search.'%');
-                    });
+                        $query = $query->orWhereHas('modul.mataPelajaran.tingkat.jenjang', function($query2) use ( $search ){
+                            $query2->where('name', 'LIKE', '%'.$search.'%');
+                        });
 
-                    $query = $query->orWhereHas('modul.mataPelajaran.tingkat', function($query2) use ( $search ){
-                        $query2->where('name', 'LIKE', '%'.$search.'%');
-                    });
+                        $query = $query->orWhereHas('modul.mataPelajaran.tingkat', function($query2) use ( $search ){
+                            $query2->where('name', 'LIKE', '%'.$search.'%');
+                        });
 
-                    $query = $query->orWhereHas('modul.mataPelajaran', function($query2) use ( $search ){
-                        $query2->where('name', 'LIKE', '%'.$search.'%');
-                    });
+                        $query = $query->orWhereHas('modul.mataPelajaran', function($query2) use ( $search ){
+                            $query2->where('name', 'LIKE', '%'.$search.'%');
+                        });
 
-                    $query = $query->orWhereHas('modul', function($query2) use ( $search ){
-                        $query2->where('name', 'LIKE', '%'.$search.'%');
+                        $query = $query->orWhereHas('modul', function($query2) use ( $search ){
+                            $query2->where('name', 'LIKE', '%'.$search.'%');
+                        });
                     });
                 }
 
@@ -93,13 +104,16 @@ class SimulasiController extends Controller{
                 return $mapel;
             })
             ->addColumn("modul", function ($data) {
-                $modul = @$data->modul->name ? $data->modul->name : 'none';
+                $modul = (@$data->modul->name ? $data->modul->name : 'none') . " (Level ".(@$data->level ?? '1').")";
                 $modulID = @$data->modul->id ? $data->modul->id : '';
 
                 return view("components.datatable.link", [
                     "link" => route($this->routePath.".index")."?modul_id=".$modulID,
                     "text" => $modul,
                 ]);
+            })
+            ->addColumn("created_by", function ($data) {
+                return @$data->uploader->name ?? "-";
             })
             ->addColumn("created_at", function ($data) {
                 $createdAt = new Carbon($data->created_at);
@@ -121,6 +135,14 @@ class SimulasiController extends Controller{
                 $query->orderBy('created_at', 'desc');
             })
             ->toJson();
+    }
+
+    private function getMapelIdsUser(){
+        $userId = @\Auth::user()->id;
+        $mapelIdsUser = UploaderMataPelajaran::where('guru_uploader_id', $userId)->pluck('mata_pelajaran_id')->all();
+        $mapelIdsUser = count($mapelIdsUser) > 0 ? $mapelIdsUser : [];
+        
+        return $mapelIdsUser;
     }
 
     public function index(Request $request){
@@ -155,7 +177,16 @@ class SimulasiController extends Controller{
      */
     private function getModul(){
         // get list modul
-        $moduls = Modul::with('mataPelajaran.tingkat')->get();
+        $moduls = Modul::with('mataPelajaran.tingkat');
+
+        // filter kalo rolenya guru uploader (khusus mapel aja)
+        // kalo bukan superadmin, tambahin filter by mapel na
+        if(!@\Auth::user()->hasRole('Superadmin')){
+            $mapelIdsUser = $this->getMapelIdsUser();
+            $moduls = $moduls->whereIn('mata_pelajaran_id', $mapelIdsUser);
+        }
+
+        $moduls = $moduls->get();
 
         $modulList = [];
         $modulList[""] = "Pilih modul";
@@ -193,11 +224,12 @@ class SimulasiController extends Controller{
             'game' => 'required|file|mimes:zip',
             'semester' => 'required|numeric|min:1,max:2',
             'urutan' => 'required|numeric|min:0',
+            'level' => 'required|numeric|min:1',
         ]);
         // default image
         $url = "images/placeholder.png";
         // temp request
-        $dataReq = $request->only(['name', 'icon', 'description', 'modul_id', 'semester', 'urutan']);
+        $dataReq = $request->only(['name', 'icon', 'description', 'modul_id', 'semester', 'urutan', 'level']);
         $dataReq['uploader_id'] = \Auth::user()->id;
 
         if ($request->hasFile('icon')) {
@@ -263,9 +295,10 @@ class SimulasiController extends Controller{
             'modul_id' => 'required',
             'semester' => 'required|numeric|min:1,max:2',
             'urutan' => 'required|numeric|min:0',
+            'level' => 'required|numeric|min:1',
         ]);
 
-        $dataReq = $request->only(['name', 'icon', 'description', 'modul_id', 'slug', 'semester', 'urutan']);
+        $dataReq = $request->only(['name', 'icon', 'description', 'modul_id', 'slug', 'semester', 'urutan', 'level']);
 
         if ($request->hasFile('icon')) {
             $validated = $request->validate([

@@ -14,7 +14,7 @@
           <!-- Nav items -->
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link{{ request()->is('home') ? ' active' : '' }}" href="{{ route('guru::dashboard') }}">
+              <a class="nav-link{{ request()->is('guru') ? ' active' : '' }}" href="{{ route('guru::dashboard') }}">
                 <i class="ni ni-tv-2 text-dark-green"></i>
                 <span class="nav-link-text">Home</span>
               </a>
@@ -28,9 +28,9 @@
             </li>
 
             <li class="nav-item">
-              <a class="nav-link{{ request()->is('home') ? ' active' : '' }}" href="{{ route('guru::dashboard') }}">
+              <a class="nav-link{{ request()->is('guru/progress') ? ' active' : '' }}" href="{{ route('guru::progress.siswa') }}">
                 <i class="ni ni-bullet-list-67 text-dark-green"></i>
-                <span class="nav-link-text">Nilai Siswa</span>
+                <span class="nav-link-text">Progress Siswa</span>
               </a>
             </li>
 

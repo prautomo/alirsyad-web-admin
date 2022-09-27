@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\SearchableTrait;
 use App\Models\HistoryVideo;
+use App\Observers\VideoObserver;
 
 class Video extends Model
 {
@@ -29,7 +30,19 @@ class Video extends Model
         'semester',
         'urutan',
         'modul_id',
+        'visible',
     ];
+
+    /**
+     * Register any events for your application.
+     *
+     * @return void
+     */
+    protected static function boot(){
+        parent::boot();
+
+        // Video::observe(VideoObserver::class);
+    }
 
     public static function search($request)
     {
@@ -64,7 +77,7 @@ class Video extends Model
                 'endpoint' => route('api.video.detail', @$nextVideo->id),
             ];
         }
-        
+
         return $returnNext;
     }
 
@@ -74,7 +87,7 @@ class Video extends Model
             ->where('urutan', '<', $this->urutan)
             ->where('mata_pelajaran_id', $this->mata_pelajaran_id)
             ->orderBy('urutan', 'desc')->first();
-        
+
         $returnPrevious = null;
 
         if($previousVideo){
@@ -85,19 +98,21 @@ class Video extends Model
                 'endpoint' => route('api.video.detail', @$previousVideo->id),
             ];
         }
-        
+
         return $returnPrevious;
     }
 
     public function getWatchedAttribute()
     {
-        return is_object(HistoryVideo::where(['siswa_id' => \Auth::user()->id, 'video_id' => $this->id])->first());
+        $paramSiswaId = @\Request::get('q_siswa_id') ?? @\Auth::user()->id;
+
+        return is_object(HistoryVideo::where(['siswa_id' => $paramSiswaId, 'video_id' => $this->id])->first());
     }
 
     public function getYoutubeIdAttribute()
     {
         $url = $this->video_url;
-        
+
         parse_str( parse_url( $url, PHP_URL_QUERY ), $my_array_of_vars );
         return @$my_array_of_vars['v'];
     }

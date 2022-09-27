@@ -1,6 +1,6 @@
 @extends('layouts.backoffice')
 
-@section('title', \Request::get('role') ?? __("Pengguna"))
+@section('title', \Request::get('role')=="Guru" ? __("Guru Uploader") : __("Superadmin"))
 
 @section('header')
     @parent
@@ -9,10 +9,12 @@
             <h6 class="h2 text-white d-inline-block mb-0">@yield('title')</h6>
         </div>
         @can('user-create')
+        @if(@strtolower(\Request::get('role')) !== 'guru')
         <div class="col-lg-6 col-5 text-right">
             <a href="{{ route('backoffice::users.create') }}" class="btn btn-sm btn-neutral">New</a>
             <!-- <a href="#" class="btn btn-sm btn-neutral">Filters</a> -->
         </div>
+        @endif
         @endcan
     </div>
 @endsection
@@ -41,9 +43,13 @@
                     <th data-data="name" data-orderable="true" data-searchable="true">@lang("Name")</th>
                     <th data-data="roles" data-orderable="false" data-searchable="false">@lang("Roles")</th>
                     <!-- <th data-data="uploader">@lang("Uploader")</th> -->
-                    <!-- <th data-data="mapel">@lang("Guru Mata Pelajaran")</th> -->
-                    <th data-data="created_at" data-searchable="false">@lang("Created At")</th>
+                    @if(\Request::get('role') === 'Guru')
+                    <th data-data="mapel">@lang("Mata Pelajaran")</th>
+                    @endif
+                    <!-- <th data-data="created_at" data-searchable="false">@lang("Created At")</th> -->\
+                    @if(\Request::get('role') === 'Superadmin')
                     <th data-data="action" data-orderable="false" data-searchable="false">@lang("Action")</th>
+                    @endif
                 </x-datatable>
             </div>
             <!-- endtable -->

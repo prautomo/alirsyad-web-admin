@@ -8,7 +8,7 @@
         <div class="col-lg-6 col-7">
             <h6 class="h2 text-white d-inline-block mb-0">@yield('title')</h6>
         </div>
-        @can('simulasi-create')
+        @can('modul-create')
         <div class="col-lg-6 col-5 text-right">
             <a href="{{ route('backoffice::moduls.create') }}" class="btn btn-sm btn-neutral">New</a>
             <!-- <a href="#" class="btn btn-sm btn-neutral">Filters</a> -->
@@ -44,6 +44,7 @@
                 <th data-data="jenjang">@lang("Jenjang")</th>
                 <th data-data="tingkat">@lang("Tingkat")</th>
                 <th data-data="semester">@lang("Semester")</th>
+                <th data-data="created_by">@lang("Created By")</th>
                 <!-- <th data-data="created_at">@lang("Created At")</th> -->
                 <th data-data="action" data-orderable="false" data-searchable="false">@lang("Action")</th>
             </x-datatable>

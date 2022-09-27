@@ -1,8 +1,17 @@
-@can(isset($permissionName).'-show')
-    @if(isset($showRoute))
+@can(@$permissionName.'-list')
+    @if(@$showRoute)
     <a href="{{ $showRoute }}" class="btn btn-sm btn-icon btn-success">
         <i class="fa fa-eye"></i>
         {{__("Show")}}
+    </a>
+    @endif
+@endcan
+
+@can(@$permissionName.'-list')
+    @if(@$viewPdfRoute)
+    <a href="#" data-toggle="modal" data-target="#viewPdfModal" class="btn btn-sm btn-icon btn-success datatable-viewPdf-btn" data-url="{{$viewPdfRoute ?? ""}}" >
+        <i class="fa fa-eye"></i>
+        {{__("View PDF")}}
     </a>
     @endif
 @endcan
@@ -14,8 +23,17 @@
 </a>
 @endif
 
-@can(isset($permissionName).'-edit')
-    @if(isset($editRoute))
+@can(@$permissionName.'-list')
+    @if(@$soalRoute)
+    <a href="{{ $soalRoute }}" class="btn btn-sm btn-icon btn-info" data-role="form-modal">
+        <i class="fa fa-book"></i>
+        {{__("Soal")}}
+    </a>
+    @endif
+@endcan
+
+@can(@$permissionName.'-edit')
+    @if(@$editRoute)
     <a href="{{ $editRoute }}" class="btn btn-sm btn-icon btn-primary" data-role="form-modal">
         <i class="fa fa-pencil-alt"></i>
         {{__("Edit")}}
@@ -23,11 +41,20 @@
     @endif
 @endcan
 
-@can(isset($permissionName).'-delete')
-    @if(isset($deleteRoute))
+@can(@$permissionName.'-delete')
+    @if(@$deleteRoute)
     <a href="{{$deleteRoute}}" data-name="{{$name ?? ""}}" class="btn btn-sm btn-icon btn-danger datatable-delete-btn">
         <i class="far fa-trash-alt"></i>
         {{__("Remove")}}
+    </a>
+    @endif
+@endcan
+
+@can(@$permissionName.'-edit')
+    @if(@$enableMapelRoute)
+    <a href="{{$enableMapelRoute}}" class="btn btn-sm btn-icon btn-primary enable-mapel-btn">
+        <i class="ni ni-atom"></i>
+        {{__("Choose Mata Pelajaran")}}
     </a>
     @endif
 @endcan
@@ -56,7 +83,7 @@
 </div>
 @endif
 
-@if(isset($copySlug))
+@if(@$copySlug)
 <a href="#" data-slug="{{$copySlug ?? ''}}" class="btn btn-sm btn-icon btn-warning" id="datatable-copy-btn">
     <i class="far fa-copy"></i>
     {{__("Copy Link")}}

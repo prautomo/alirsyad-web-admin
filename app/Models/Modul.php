@@ -6,12 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\SearchableTrait;
+use App\Observers\ModulObserver;
+use Illuminate\Support\Facades\Auth;
 
 class Modul extends Model
 {
     use HasFactory, SearchableTrait, SoftDeletes;
 
-    protected $appends = ['read', 'pdf_url', 'next', 'previous'];
+    protected $appends = ['read', 'pdf_url', 'next', 'previous', 'pdf_viewer'];
 
     /**
      * The attributes that are mass assignable.
@@ -35,6 +37,7 @@ class Modul extends Model
     {
         $data =  self::where("id", "!=", null);
         $data = self::appendSearchQuery($data, $request, [
+            "id" => "=",
             "name" => "LIKE",
             "description" => "LIKE",
             "mata_pelajaran_id" => "=",
@@ -54,29 +57,29 @@ class Modul extends Model
     protected static function boot() {
         parent::boot();
 
-        static::updated(function($model) {
-            // update video mapel_id
-            foreach ($model->videos()->get() as $video) {
-                $video->mata_pelajaran_id = $model->mata_pelajaran_id;
-                $video->save();
-            }
-
-            // update simulasi mapel_id
-            foreach ($model->simulasis()->get() as $simulasi) {
-                $simulasi->mata_pelajaran_id = $model->mata_pelajaran_id;
-                $simulasi->save();
-            }
-        });
+        // Modul::observe(ModulObserver::class);
     }
 
     public function getReadAttribute()
     {
-        return is_object(HistoryModul::where(['siswa_id' => \Auth::user()->id, 'modul_id' => $this->id])->first());
+        $paramSiswaId = @\Request::get('q_siswa_id') ?? \Auth::user()->id;
+        return is_object(HistoryModul::where(['siswa_id' => $paramSiswaId, 'modul_id' => $this->id])->first());
     }
 
     public function getPDFUrlAttribute()
     {
         return asset($this->pdf_path);
+    }
+
+    public function getPDFViewerAttribute()
+    {
+        $modulAnotasi = ModulAnotasi::where(['user_id' => Auth::user()->id, 'modul_id' => $this->id])->orderBy('updated_at', 'desc')->first();
+        $pdfPath = @$modulAnotasi->pdf_path ?? $this->pdf_path;
+
+        return asset('pdf.html')."?url=".asset($pdfPath).
+                "&user_id=".Auth::user()->id.
+                "&modul_id=".$this->id.
+                "&pdf_path=".$pdfPath;
     }
 
     public function getNextAttribute(){
@@ -97,7 +100,7 @@ class Modul extends Model
                 'endpoint' => route('api.modul.detail', @$nextModul->id),
             ];
         }
-        
+
         return $returnNext;
     }
 
@@ -107,7 +110,7 @@ class Modul extends Model
             ->where('urutan', '<', $this->urutan)
             ->where('mata_pelajaran_id', $this->mata_pelajaran_id)
             ->orderBy('urutan','desc')->first();
-        
+
         $returnPrevious = null;
 
         if($previousModul){
@@ -119,7 +122,7 @@ class Modul extends Model
                 'endpoint' => route('api.modul.detail', @$previousModul->id),
             ];
         }
-        
+
         return $returnPrevious;
     }
 

@@ -9,10 +9,11 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use App\Traits\SearchableTrait;
 use Laravel\Passport\HasApiTokens;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, SearchableTrait;
+    use SoftDeletes, HasApiTokens, HasFactory, Notifiable, HasRoles, SearchableTrait;
 
     protected $guard_name = 'backoffice';
 
@@ -66,8 +67,16 @@ class User extends Authenticatable
         return $this->hasOne("App\Models\Jenjang", "uploader_id", "id")->withTrashed();
     }
 
-    public function mataPelajaran()
+    // public function mataPelajaran()
+    // {
+    //     return $this->belongsTo("App\Models\MataPelajaran",  "mata_pelajaran_id", "id")->withTrashed();
+    // }
+
+    /**
+     * The mapels that belong to the gurus.
+     */
+    public function mataPelajarans()
     {
-        return $this->belongsTo("App\Models\MataPelajaran",  "mata_pelajaran_id", "id")->withTrashed();
+        return $this->belongsToMany('App\Models\MataPelajaran', 'uploader_mata_pelajarans', 'guru_uploader_id', 'mata_pelajaran_id');
     }
 }

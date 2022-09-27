@@ -39,6 +39,7 @@ class ExternalUser extends Authenticatable implements MustVerifyEmail
         'kelas_id',
         'is_pengunjung',
         'jenjang_id',
+        'is_uploader',
     ];
 
     /**
@@ -73,6 +74,7 @@ class ExternalUser extends Authenticatable implements MustVerifyEmail
             "role" => "=",
             "kelas_id" => "=",
             "jenjang_id" => "=",
+            "is_uploader" => "=",
         ]);
 
         return $data;
@@ -109,6 +111,14 @@ class ExternalUser extends Authenticatable implements MustVerifyEmail
     public function mataPelajarans()
     {
         return $this->belongsToMany('App\Models\MataPelajaran', 'guru_mata_pelajarans', 'guru_id', 'mata_pelajaran_id');
+    }
+
+    /**
+     * The mapels that belong to the guests.
+     */
+    public function mataPelajaranGuests()
+    {
+        return $this->belongsToMany('App\Models\MataPelajaran', 'guest_mata_pelajarans', 'guest_id', 'mata_pelajaran_id');
     }
 
     public function AauthAcessToken(){

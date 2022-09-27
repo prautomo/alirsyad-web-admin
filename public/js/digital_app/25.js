@@ -1,37 +1,58 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[25],{
 
-/***/ "./resources/js/components/SimpleContainer.js":
-/*!****************************************************!*\
-  !*** ./resources/js/components/SimpleContainer.js ***!
-  \****************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./resources/js/guru/components/Dashboard/DetailProgressBelajar.css":
+/*!**********************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/postcss-loader/src??ref--6-2!./resources/js/guru/components/Dashboard/DetailProgressBelajar.css ***!
+  \**********************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return SimpleContainer; });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
 
-function SimpleContainer(_ref) {
-  var title = _ref.title,
-      content = _ref.content;
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "card border-none  ",
-    style: {
-      backgroundColor: 'transparent'
-    }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "d-flex flex-column"
-  }, content)));
-}
+
+// module
+exports.push([module.i, "#progress-detail-guru .nav-tabs {\r\n    overflow-x: hidden;\r\n    overflow-y: hidden;\r\n    flex-wrap: nowrap;\r\n}\r\n#progress-detail-guru .nav-tabs .nav-link {\r\n    white-space: nowrap;\r\n}\r\n\r\n#progress-detail-guru .nav-tabs:hover {\r\n    overflow-x: auto;\r\n}", ""]);
+
+// exports
+
 
 /***/ }),
 
-/***/ "./resources/js/components/Toko/UpdateJasa.js":
-/*!****************************************************!*\
-  !*** ./resources/js/components/Toko/UpdateJasa.js ***!
-  \****************************************************/
+/***/ "./resources/js/guru/components/Dashboard/DetailProgressBelajar.css":
+/*!**************************************************************************!*\
+  !*** ./resources/js/guru/components/Dashboard/DetailProgressBelajar.css ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../../node_modules/css-loader??ref--6-1!../../../../../node_modules/postcss-loader/src??ref--6-2!./DetailProgressBelajar.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./resources/js/guru/components/Dashboard/DetailProgressBelajar.css");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./resources/js/guru/components/Dashboard/DetailProgressBelajar.js":
+/*!*************************************************************************!*\
+  !*** ./resources/js/guru/components/Dashboard/DetailProgressBelajar.js ***!
+  \*************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -43,25 +64,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _store_useFetch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../store/useFetch */ "./resources/js/store/useFetch.js");
-/* harmony import */ var _Form_InputRenderer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Form/InputRenderer */ "./resources/js/components/Form/InputRenderer.js");
-/* harmony import */ var _SimpleContainer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../SimpleContainer */ "./resources/js/components/SimpleContainer.js");
-/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
-/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var yup__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! yup */ "./node_modules/yup/es/index.js");
-/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
-/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var react_table_scrollbar__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-table-scrollbar */ "./node_modules/react-table-scrollbar/build/index.js");
+/* harmony import */ var react_table_scrollbar__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react_table_scrollbar__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _store_useFetch__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../store/useFetch */ "./resources/js/store/useFetch.js");
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! reactstrap */ "./node_modules/reactstrap/es/index.js");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _DetailProgressBelajar_css__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./DetailProgressBelajar.css */ "./resources/js/guru/components/Dashboard/DetailProgressBelajar.css");
+/* harmony import */ var _DetailProgressBelajar_css__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_DetailProgressBelajar_css__WEBPACK_IMPORTED_MODULE_8__);
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -75,6 +92,7 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
+function _objectDestructuringEmpty(obj) { if (obj == null) throw new TypeError("Cannot destructure undefined"); }
 
 
 
@@ -84,205 +102,218 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
-function UpdateJasa(_ref) {
-  var mitra_detail = _ref.mitra_detail;
 
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])({}),
+function DetailProgressBelajar(_ref) {
+  var _data$data;
+
+  _objectDestructuringEmpty(_ref);
+
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(-1),
       _useState2 = _slicedToArray(_useState, 2),
-      mitraDetail = _useState2[0],
-      setMitraDetail = _useState2[1];
+      activeTab = _useState2[0],
+      setActiveTab = _useState2[1];
 
-  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
-    console.log(mitra_detail);
-    var subService = mitra_detail.sub_service ? mitra_detail.sub_service : {};
-    setMitraDetail(_objectSpread(_objectSpread({}, mitra_detail), {
-      service_id: subService.service_id,
-      sub_service_id: subService.id
-    }));
-  }, []);
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(false),
+      _useState4 = _slicedToArray(_useState3, 2),
+      isLoadingSiswa = _useState4[0],
+      setIsLoadingSiswa = _useState4[1];
 
-  var _useFetch = Object(_store_useFetch__WEBPACK_IMPORTED_MODULE_3__["default"])(mitraDetail.service_id && "/app/data/service/" + mitraDetail.service_id),
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])([]),
+      _useState6 = _slicedToArray(_useState5, 2),
+      dataSiswa = _useState6[0],
+      setDataSiswa = _useState6[1];
+
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(0),
+      _useState8 = _slicedToArray(_useState7, 2),
+      mapelIdActive = _useState8[0],
+      setMapelIdActive = _useState8[1];
+
+  var _useFetch = Object(_store_useFetch__WEBPACK_IMPORTED_MODULE_5__["default"])("/guru/json/ngajar"),
       data = _useFetch.data,
       isLoading = _useFetch.isLoading,
       isError = _useFetch.isError;
 
-  var dataService = Object(_store_useFetch__WEBPACK_IMPORTED_MODULE_3__["default"])("/app/data/service").data;
-
-  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(false),
-      _useState4 = _slicedToArray(_useState3, 2),
-      dataSent = _useState4[0],
-      setDataSent = _useState4[1];
-
-  function updateDataMitra() {
-    return _updateDataMitra.apply(this, arguments);
-  }
-
-  function _updateDataMitra() {
-    _updateDataMitra = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-      var checkoutSchema, valid, tmpMitraDetail;
+  var toggleTab = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(tab, mapelId, kelasId) {
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              // "jasa_id",
-              // "latitude",
-              // "longitude",
-              // "bank_name",
-              // "bank_account_number",
-              // "bank_account_holder",
-              // "rating",
-              // "alamat",
-              // "biaya",
-              // "sub_service_id",
-              checkoutSchema = Object(yup__WEBPACK_IMPORTED_MODULE_7__["object"])().shape({
-                biaya: Object(yup__WEBPACK_IMPORTED_MODULE_7__["string"])().required(),
-                bank_name: Object(yup__WEBPACK_IMPORTED_MODULE_7__["string"])().required(),
-                bank_account_number: Object(yup__WEBPACK_IMPORTED_MODULE_7__["string"])().required(),
-                bank_account_holder: Object(yup__WEBPACK_IMPORTED_MODULE_7__["string"])().required(),
-                location: Object(yup__WEBPACK_IMPORTED_MODULE_7__["object"])().required(),
-                alamat: Object(yup__WEBPACK_IMPORTED_MODULE_7__["string"])().required(),
-                sub_service_id: Object(yup__WEBPACK_IMPORTED_MODULE_7__["string"])().required()
-              });
+              // set mapel id
+              setMapelIdActive(mapelId); // load data
+
               _context.next = 3;
-              return checkoutSchema.isValid(mitraDetail);
+              return loadSiswa(mapelId, kelasId);
 
             case 3:
-              valid = _context.sent;
+              // switch tab
+              if (activeTab !== tab) setActiveTab(tab);
 
-              if (valid) {
-                setDataSent(true);
-                tmpMitraDetail = _objectSpread({}, mitraDetail);
-                tmpMitraDetail["sub_service_id"] = tmpMitraDetail.sub_service_id;
-                tmpMitraDetail["longitude"] = tmpMitraDetail.location.lng;
-                tmpMitraDetail["latitude"] = tmpMitraDetail.location.lat;
-                window.axios.post("/jasa/update", tmpMitraDetail).then(function (res) {
-                  sweetalert2__WEBPACK_IMPORTED_MODULE_8___default.a.fire("Informasi", res.data.message, "success");
-                })["catch"](function (err) {
-                  sweetalert2__WEBPACK_IMPORTED_MODULE_8___default.a.fire("Terjadi kesalahan", err.response.data.message, "error");
-                })["finally"](function () {
-                  setDataSent(false);
-                });
-              } else {
-                sweetalert2__WEBPACK_IMPORTED_MODULE_8___default.a.fire("Validasi", "Silahkan Isi Semua Informasi ", "warning");
-              }
-
-            case 5:
+            case 4:
             case "end":
               return _context.stop();
           }
         }
       }, _callee);
     }));
-    return _updateDataMitra.apply(this, arguments);
+
+    return function toggleTab(_x, _x2, _x3) {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+
+  function loadSiswa(_x4, _x5) {
+    return _loadSiswa.apply(this, arguments);
   }
 
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_SimpleContainer__WEBPACK_IMPORTED_MODULE_5__["default"], {
-    title: "Biaya Pengerjaan",
-    content: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
-      className: "d-flex flex-column"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_Form_InputRenderer__WEBPACK_IMPORTED_MODULE_4__["InputWithLabel"], {
-      label: "Biaya Per Hari",
-      type: "number",
-      placeholder: "EX:  Bank Central Asia",
-      value: mitraDetail["biaya"],
-      onChange: function onChange(val) {
-        setMitraDetail(_objectSpread(_objectSpread({}, mitraDetail), {
-          biaya: val
-        }));
+  function _loadSiswa() {
+    _loadSiswa = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(mapelId, kelasId) {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              setIsLoadingSiswa(true);
+              _context2.next = 3;
+              return axios__WEBPACK_IMPORTED_MODULE_3___default.a.get("/guru/json/getSiswa?mata_pelajaran_id=".concat(mapelId, "&kelas_id=").concat(kelasId), {
+                headers: {
+                  "Content-Type": "application/json"
+                }
+              }).then(function (response) {
+                var data = response.data;
+
+                if (data.success) {
+                  setDataSiswa(data === null || data === void 0 ? void 0 : data.data);
+                }
+              })["catch"](function (e) {
+                var _e$response, _e$response$data;
+
+                console.error("dika error", e === null || e === void 0 ? void 0 : (_e$response = e.response) === null || _e$response === void 0 ? void 0 : (_e$response$data = _e$response.data) === null || _e$response$data === void 0 ? void 0 : _e$response$data.message);
+              });
+
+            case 3:
+              setIsLoadingSiswa(false);
+
+            case 4:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2);
+    }));
+    return _loadSiswa.apply(this, arguments);
+  }
+
+  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {}, []);
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("p", null, "Loading...") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_6__["Nav"], {
+    tabs: true,
+    className: "detail-progress-siswa-tab"
+  }, data === null || data === void 0 ? void 0 : (_data$data = data.data) === null || _data$data === void 0 ? void 0 : _data$data.map(function (mapel, idx) {
+    var _mapel$mata_pelajaran2, _mapel$tingkat, _mapel$kelas2;
+
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_6__["NavItem"], {
+      key: idx
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_6__["NavLink"], {
+      href: "#",
+      className: classnames__WEBPACK_IMPORTED_MODULE_7___default()({
+        active: activeTab === idx
+      }),
+      onClick: function onClick() {
+        var _mapel$mata_pelajaran, _mapel$kelas;
+
+        toggleTab(idx, mapel === null || mapel === void 0 ? void 0 : (_mapel$mata_pelajaran = mapel.mata_pelajaran) === null || _mapel$mata_pelajaran === void 0 ? void 0 : _mapel$mata_pelajaran.id, mapel === null || mapel === void 0 ? void 0 : (_mapel$kelas = mapel.kelas) === null || _mapel$kelas === void 0 ? void 0 : _mapel$kelas.id);
       }
-    })))
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_SimpleContainer__WEBPACK_IMPORTED_MODULE_5__["default"], {
-    title: "Bank Pembayaran",
-    content: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
-      className: "d-flex flex-column"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_Form_InputRenderer__WEBPACK_IMPORTED_MODULE_4__["InputWithLabel"], {
-      label: "Nama Bank",
-      placeholder: "EX:  Bank Central Asia",
-      value: mitraDetail["bank_name"],
-      onChange: function onChange(val) {
-        setMitraDetail(_objectSpread(_objectSpread({}, mitraDetail), {
-          bank_name: val
-        }));
-      }
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_Form_InputRenderer__WEBPACK_IMPORTED_MODULE_4__["InputWithLabel"], {
-      label: "Nomor Rekening",
-      placeholder: "EX:  13213123",
-      value: mitraDetail["bank_account_number"],
-      onChange: function onChange(val) {
-        setMitraDetail(_objectSpread(_objectSpread({}, mitraDetail), {
-          bank_account_number: val
-        }));
-      }
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_Form_InputRenderer__WEBPACK_IMPORTED_MODULE_4__["InputWithLabel"], {
-      label: "Nama Pemilik Rekening",
-      placeholder: "EX:  ",
-      value: mitraDetail["bank_account_holder"],
-      onChange: function onChange(val) {
-        setMitraDetail(_objectSpread(_objectSpread({}, mitraDetail), {
-          bank_account_holder: val
-        }));
-      }
-    })))
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_SimpleContainer__WEBPACK_IMPORTED_MODULE_5__["default"], {
-    title: "Lokasi Mitra",
-    content: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
-      className: "d-flex flex-column"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_Form_InputRenderer__WEBPACK_IMPORTED_MODULE_4__["InputTextAreaWithLabel"], {
-      label: "Alamat",
-      placeholder: "EX: Jl Kolonel Masturi No1",
-      value: mitraDetail["alamat"],
-      onChange: function onChange(val) {
-        setMitraDetail(_objectSpread(_objectSpread({}, mitraDetail), {
-          alamat: val
-        }));
-      }
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_Form_InputRenderer__WEBPACK_IMPORTED_MODULE_4__["InputMapPickerWithLabel"], {
-      label: "Koordinat Lokasi",
-      value: JSON.stringify(mitraDetail["location"]),
-      onChange: function onChange(val) {
-        setMitraDetail(_objectSpread(_objectSpread({}, mitraDetail), {
-          location: val
-        }));
-      }
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_Form_InputRenderer__WEBPACK_IMPORTED_MODULE_4__["InputSelectWithLabel"], {
-      label: "Kategori",
-      items: dataService ? dataService : [],
-      value: mitraDetail['service_id'],
-      onChange: function onChange(e) {
-        setMitraDetail(_objectSpread(_objectSpread({}, mitraDetail), {
-          service_id: e
-        }));
-      }
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_Form_InputRenderer__WEBPACK_IMPORTED_MODULE_4__["InputSelectWithLabel"], {
-      label: "Sub Kategori",
-      items: !isLoading ? data : [],
-      value: mitraDetail['sub_service_id'],
-      onChange: function onChange(e) {
-        setMitraDetail(_objectSpread(_objectSpread({}, mitraDetail), {
-          sub_service_id: e
-        }));
-      }
-    })))
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
-    disabled: dataSent,
-    onClick: function onClick() {
-      updateDataMitra();
-    },
-    className: "btn btn-danger"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("i", {
-    "class": "fa fa-floppy-o",
-    "aria-hidden": "true"
-  }), "  Simpan"));
+    }, mapel === null || mapel === void 0 ? void 0 : (_mapel$mata_pelajaran2 = mapel.mata_pelajaran) === null || _mapel$mata_pelajaran2 === void 0 ? void 0 : _mapel$mata_pelajaran2.name, " - ", mapel === null || mapel === void 0 ? void 0 : (_mapel$tingkat = mapel.tingkat) === null || _mapel$tingkat === void 0 ? void 0 : _mapel$tingkat.name, mapel === null || mapel === void 0 ? void 0 : (_mapel$kelas2 = mapel.kelas) === null || _mapel$kelas2 === void 0 ? void 0 : _mapel$kelas2.name));
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_6__["TabContent"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_6__["TabPane"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_6__["Row"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_6__["Col"], {
+    sm: "12"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_6__["Card"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_6__["CardBody"], {
+    className: "pr-0 pl-0"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_table_scrollbar__WEBPACK_IMPORTED_MODULE_4___default.a, {
+    height: "350px"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("table", {
+    className: "table",
+    id: "user"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", {
+    style: {
+      backgroundColor: "#FFFFFF"
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", {
+    width: "5%",
+    className: "text-center"
+  }, "No"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", {
+    width: "35%"
+  }, "Nama Siswa"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", {
+    width: "20%",
+    className: "text-center"
+  }, "Progres Modul"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", {
+    width: "20%",
+    className: "text-center"
+  }, "Progres Video"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", {
+    width: "20%",
+    className: "text-center"
+  }, "Progres Simulasi"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tbody", null, !isLoadingSiswa && (dataSiswa === null || dataSiswa === void 0 ? void 0 : dataSiswa.map(function (val, idx) {
+    var _val$id, _val$name, _val$progress_modul$d, _val$progress_modul, _val$progress_modul$t, _val$progress_modul2, _val$progress_video$d, _val$progress_video, _val$progress_video$t, _val$progress_video2, _val$progress_simulas, _val$progress_simulas2, _val$progress_simulas3, _val$progress_simulas4;
+
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", {
+      key: idx
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", {
+      width: "5%",
+      className: "text-center"
+    }, idx + 1), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", {
+      width: "35%",
+      className: ""
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("a", {
+      href: "/guru/progress/".concat(mapelIdActive, "/detail/").concat((_val$id = val['id']) !== null && _val$id !== void 0 ? _val$id : '-'),
+      target: "_blank"
+    }, (_val$name = val['name']) !== null && _val$name !== void 0 ? _val$name : '-')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", {
+      width: "20%",
+      className: "text-center"
+    }, (_val$progress_modul$d = (_val$progress_modul = val['progress_modul']) === null || _val$progress_modul === void 0 ? void 0 : _val$progress_modul.done) !== null && _val$progress_modul$d !== void 0 ? _val$progress_modul$d : 0, "/", (_val$progress_modul$t = (_val$progress_modul2 = val['progress_modul']) === null || _val$progress_modul2 === void 0 ? void 0 : _val$progress_modul2.total) !== null && _val$progress_modul$t !== void 0 ? _val$progress_modul$t : 0), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", {
+      width: "20%",
+      className: "text-center"
+    }, (_val$progress_video$d = (_val$progress_video = val['progress_video']) === null || _val$progress_video === void 0 ? void 0 : _val$progress_video.done) !== null && _val$progress_video$d !== void 0 ? _val$progress_video$d : 0, "/", (_val$progress_video$t = (_val$progress_video2 = val['progress_video']) === null || _val$progress_video2 === void 0 ? void 0 : _val$progress_video2.total) !== null && _val$progress_video$t !== void 0 ? _val$progress_video$t : 0), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", {
+      width: "20%",
+      className: "text-center"
+    }, (_val$progress_simulas = (_val$progress_simulas2 = val['progress_simulasi']) === null || _val$progress_simulas2 === void 0 ? void 0 : _val$progress_simulas2.done) !== null && _val$progress_simulas !== void 0 ? _val$progress_simulas : 0, "/", (_val$progress_simulas3 = (_val$progress_simulas4 = val['progress_simulasi']) === null || _val$progress_simulas4 === void 0 ? void 0 : _val$progress_simulas4.total) !== null && _val$progress_simulas3 !== void 0 ? _val$progress_simulas3 : 0));
+  })), isLoadingSiswa && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", {
+    colSpan: "5",
+    className: "text-center"
+  }, "Loading...")), !isLoadingSiswa && dataSiswa.length < 1 && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", {
+    colSpan: "5",
+    className: "text-left"
+  }, "Belum ada data.")))))))))))));
 }
 
-/* harmony default export */ __webpack_exports__["default"] = (UpdateJasa);
+/* harmony default export */ __webpack_exports__["default"] = (DetailProgressBelajar);
+var container = document.getElementById("progress-detail-guru");
 
-if (document.getElementById('jasa-update-form')) {
-  var container = document.getElementById("jasa-update-form");
-  var mitraDetail = container.getAttribute("mitra_detail") ? container.getAttribute("mitra_detail") : "{}";
-  react_dom__WEBPACK_IMPORTED_MODULE_2___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(UpdateJasa, {
-    mitra_detail: JSON.parse(mitraDetail)
-  }), container);
+if (container) {
+  react_dom__WEBPACK_IMPORTED_MODULE_2___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(DetailProgressBelajar, null), container);
+}
+
+/***/ }),
+
+/***/ "./resources/js/store/useFetch.js":
+/*!****************************************!*\
+  !*** ./resources/js/store/useFetch.js ***!
+  \****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return useFetch; });
+/* harmony import */ var swr__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! swr */ "./node_modules/swr/esm/index.js");
+
+function useFetch(url) {
+  var _useSWR = Object(swr__WEBPACK_IMPORTED_MODULE_0__["default"])(url, window.getAxios),
+      data = _useSWR.data,
+      error = _useSWR.error;
+
+  return {
+    data: data,
+    isLoading: !error && !data,
+    isError: error
+  };
 }
 
 /***/ })

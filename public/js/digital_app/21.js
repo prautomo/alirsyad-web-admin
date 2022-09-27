@@ -1,9 +1,9 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[21],{
 
-/***/ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./resources/js/guru/components/Dashboard/DetailProgressBelajar.css":
-/*!**********************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader??ref--6-1!./node_modules/postcss-loader/src??ref--6-2!./resources/js/guru/components/Dashboard/DetailProgressBelajar.css ***!
-  \**********************************************************************************************************************************************************/
+/***/ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./resources/js/guru/components/Progress/ListSiswa.css":
+/*!*********************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/postcss-loader/src??ref--6-2!./resources/js/guru/components/Progress/ListSiswa.css ***!
+  \*********************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -12,22 +12,22 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, "#progress-detail-guru .nav-tabs {\n    overflow-x: hidden;\n    overflow-y: hidden;\n    flex-wrap: nowrap;\n}\n#progress-detail-guru .nav-tabs .nav-link {\n    white-space: nowrap;\n}\n\n#progress-detail-guru .nav-tabs:hover {\n    overflow-x: auto;\n}", ""]);
+exports.push([module.i, "", ""]);
 
 // exports
 
 
 /***/ }),
 
-/***/ "./resources/js/guru/components/Dashboard/DetailProgressBelajar.css":
-/*!**************************************************************************!*\
-  !*** ./resources/js/guru/components/Dashboard/DetailProgressBelajar.css ***!
-  \**************************************************************************/
+/***/ "./resources/js/guru/components/Progress/ListSiswa.css":
+/*!*************************************************************!*\
+  !*** ./resources/js/guru/components/Progress/ListSiswa.css ***!
+  \*************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../../../../../node_modules/css-loader??ref--6-1!../../../../../node_modules/postcss-loader/src??ref--6-2!./DetailProgressBelajar.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./resources/js/guru/components/Dashboard/DetailProgressBelajar.css");
+var content = __webpack_require__(/*! !../../../../../node_modules/css-loader??ref--6-1!../../../../../node_modules/postcss-loader/src??ref--6-2!./ListSiswa.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./resources/js/guru/components/Progress/ListSiswa.css");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -49,10 +49,10 @@ if(false) {}
 
 /***/ }),
 
-/***/ "./resources/js/guru/components/Dashboard/DetailProgressBelajar.js":
-/*!*************************************************************************!*\
-  !*** ./resources/js/guru/components/Dashboard/DetailProgressBelajar.js ***!
-  \*************************************************************************/
+/***/ "./resources/js/guru/components/Progress/ListSiswa.js":
+/*!************************************************************!*\
+  !*** ./resources/js/guru/components/Progress/ListSiswa.js ***!
+  \************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -72,8 +72,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! reactstrap */ "./node_modules/reactstrap/es/index.js");
 /* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
 /* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var _DetailProgressBelajar_css__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./DetailProgressBelajar.css */ "./resources/js/guru/components/Dashboard/DetailProgressBelajar.css");
-/* harmony import */ var _DetailProgressBelajar_css__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_DetailProgressBelajar_css__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _ListSiswa_css__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./ListSiswa.css */ "./resources/js/guru/components/Progress/ListSiswa.css");
+/* harmony import */ var _ListSiswa_css__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_ListSiswa_css__WEBPACK_IMPORTED_MODULE_8__);
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -103,7 +103,7 @@ function _objectDestructuringEmpty(obj) { if (obj == null) throw new TypeError("
 
 
 
-function DetailProgressBelajar(_ref) {
+function ListSiswa(_ref) {
   var _data$data;
 
   _objectDestructuringEmpty(_ref);
@@ -123,6 +123,11 @@ function DetailProgressBelajar(_ref) {
       dataSiswa = _useState6[0],
       setDataSiswa = _useState6[1];
 
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(0),
+      _useState8 = _slicedToArray(_useState7, 2),
+      mapelIdActive = _useState8[0],
+      setMapelIdActive = _useState8[1];
+
   var _useFetch = Object(_store_useFetch__WEBPACK_IMPORTED_MODULE_5__["default"])("/guru/json/ngajar"),
       data = _useFetch.data,
       isLoading = _useFetch.isLoading,
@@ -134,17 +139,17 @@ function DetailProgressBelajar(_ref) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              // load data
-              console.log("dika mapelId", mapelId);
-              console.log("dika kelasId", kelasId);
-              _context.next = 4;
+              // set mapel id
+              setMapelIdActive(mapelId); // load data
+
+              _context.next = 3;
               return loadSiswa(mapelId, kelasId);
 
-            case 4:
+            case 3:
               // switch tab
               if (activeTab !== tab) setActiveTab(tab);
 
-            case 5:
+            case 4:
             case "end":
               return _context.stop();
           }
@@ -246,7 +251,7 @@ function DetailProgressBelajar(_ref) {
     width: "20%",
     className: "text-center"
   }, "Progres Simulasi"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tbody", null, !isLoadingSiswa && (dataSiswa === null || dataSiswa === void 0 ? void 0 : dataSiswa.map(function (val, idx) {
-    var _val$name, _val$progress_modul$d, _val$progress_modul, _val$progress_modul$t, _val$progress_modul2, _val$progress_video$d, _val$progress_video, _val$progress_video$t, _val$progress_video2, _val$progress_simulas, _val$progress_simulas2, _val$progress_simulas3, _val$progress_simulas4;
+    var _val$id, _val$name, _val$progress_modul$d, _val$progress_modul, _val$progress_modul$t, _val$progress_modul2, _val$progress_video$d, _val$progress_video, _val$progress_video$t, _val$progress_video2, _val$progress_simulas, _val$progress_simulas2, _val$progress_simulas3, _val$progress_simulas4;
 
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", {
       key: idx
@@ -256,7 +261,10 @@ function DetailProgressBelajar(_ref) {
     }, idx + 1), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", {
       width: "35%",
       className: ""
-    }, (_val$name = val['name']) !== null && _val$name !== void 0 ? _val$name : '-'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("a", {
+      href: "/guru/progress/".concat(mapelIdActive, "/detail/").concat((_val$id = val['id']) !== null && _val$id !== void 0 ? _val$id : '-'),
+      target: "_blank"
+    }, (_val$name = val['name']) !== null && _val$name !== void 0 ? _val$name : '-')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", {
       width: "20%",
       className: "text-center"
     }, (_val$progress_modul$d = (_val$progress_modul = val['progress_modul']) === null || _val$progress_modul === void 0 ? void 0 : _val$progress_modul.done) !== null && _val$progress_modul$d !== void 0 ? _val$progress_modul$d : 0, "/", (_val$progress_modul$t = (_val$progress_modul2 = val['progress_modul']) === null || _val$progress_modul2 === void 0 ? void 0 : _val$progress_modul2.total) !== null && _val$progress_modul$t !== void 0 ? _val$progress_modul$t : 0), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", {
@@ -275,11 +283,11 @@ function DetailProgressBelajar(_ref) {
   }, "Belum ada data.")))))))))))));
 }
 
-/* harmony default export */ __webpack_exports__["default"] = (DetailProgressBelajar);
-var container = document.getElementById("progress-detail-guru");
+/* harmony default export */ __webpack_exports__["default"] = (ListSiswa);
+var container = document.getElementById("progress-siswa");
 
 if (container) {
-  react_dom__WEBPACK_IMPORTED_MODULE_2___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(DetailProgressBelajar, null), container);
+  react_dom__WEBPACK_IMPORTED_MODULE_2___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(ListSiswa, null), container);
 }
 
 /***/ }),

@@ -58,6 +58,11 @@
                                             {{ @$video->name ?? "-" }}
                                         </a>
                                     </h6>
+                                    @if(@$video->watched)
+                                        <span class="badge badge-success">Selesai ditonton</span>
+                                    @else
+                                        <span class="badge badge-warning">Belum selesai ditonton</span>
+                                    @endif
                                 </div>
                             </div>
                         @empty

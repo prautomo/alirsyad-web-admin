@@ -18,7 +18,7 @@
             <div class="col-lg-4">
                 <div class="card text-center col-lg-12 mb-4">
                     <div class="card-body">
-                        <img src="{{$user_data->photo != '' ? $user_data->photo : '/images/placeholder.png'}}" width="200px" height="200px" class="img-fluid rounded-circle" alt="" style="background-color: #eee;height: 200px;">
+                        <img src="{{$user_data->photo != '' ? asset($user_data->photo) : asset('images/placeholder.png')}}" width="200px" height="200px" class="img-fluid rounded-circle" alt="" style="background-color: #eee;height: 200px;">
 
                         <div class="btn-group mt-4" role="group" aria-label="Edit">
                             <!-- <button type="button" class="btn btn-main btn-small">
@@ -67,6 +67,20 @@
                                     @csrf
                                 </form>
                                 @endif -->
+                            </div>
+
+                            @php
+                            $arr = @$user_data->mataPelajarans ?? collect([]);
+                            $arr = @$arr->pluck('name') ?? collect([]);
+                            $mengajar = implode(", ", $arr->toArray());
+                            @endphp
+
+                            <div class="form-group">
+                                <label>Mengajar</label>
+                                <input type="text" disabled 
+                                    value="{{ @$mengajar!=='' ? @$mengajar : '-' }}" 
+                                    class="form-control" 
+                                />
                             </div>
 
                             <!-- <div class="form-group">

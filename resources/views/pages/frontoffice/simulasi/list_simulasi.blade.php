@@ -46,7 +46,14 @@
 					<div class="card-body" style="height: 500px; overflow: auto;">
                         @forelse($simulasis as $simulasi)
 
-                            <div class="wrap-kelas row mt-3 ml-1 mr-1" style="padding: 15px 15px 15px 15px !important; cursor: pointer;" onclick="location.href='{{ route('app.simulasi.detail', @$simulasi->slug) }}.html';">
+                            <div class="wrap-kelas row mt-3 ml-1 mr-1" 
+                                @if(!@$simulasi->disabled)
+                                style="padding: 15px 15px 15px 15px !important; cursor: pointer;" 
+                                onclick="location.href='{{ route('app.simulasi.detail', @$simulasi->slug) }}.html';"
+                                @else
+                                style="padding: 15px 15px 15px 15px !important;" 
+                                @endif
+                            >
                                 
                                 <div class="col-md-2 mb-md-1 mb-3 pl-0 pr-0">
                                     <span class="image-cover mr-auto ml-auto">
@@ -62,12 +69,25 @@
                                         </div>
                                     </span>
                                 </div>
-                                <div class="col-md-10 mt-auto mb-auto">
-                                    <h6 class="font-weight-bold text-sm-left text-center">
+                                <div class="col-md-10 my-auto">
+                                    <h6 class="font-weight-bold text-sm-left text-center mb-0">
+                                        @if(!@$simulasi->disabled)
                                         <a href="{{ route('app.simulasi.detail', @$simulasi->slug) }}.html" style="text-decoration: none;">
                                             {{ @$simulasi->name ?? "-" }}
                                         </a>
+                                        @else
+                                        <span style="text-decoration: none;" class="disable">
+                                            {{ @$simulasi->name ?? "-" }}
+                                        </span>
+                                        @endif
                                     </h6>
+                                    <span style="font-size: 14px; font-weight: 300;">Level {{ @$simulasi->level ?? 1}}</span>
+                                    
+                                    @if(@$simulasi->played)
+                                        <small class="badge badge-success">Sudah dikerjakan</small>
+                                    @else
+                                        <small class="badge badge-warning">Belum pernah dikerjakan.</small>
+                                    @endif
                                 </div>
                             </div>
                         @empty

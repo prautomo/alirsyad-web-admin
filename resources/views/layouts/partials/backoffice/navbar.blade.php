@@ -23,6 +23,7 @@
               </a>
             </li>
 
+            @canany(['jenjang-list', 'tingkat-list', 'kelas-list', 'mata_pelajaran-list'])
             <li class="nav-item">
               <a class="nav-link{{ request()->is('backoffice/jenjangs*', 'backoffice/tingkats*', 'backoffice/kelas*', 'backoffice/mata_pelajarans*', 'backoffice/promos*') ? ' active' : ' collapsed' }}" href="#navbar-master" data-toggle="collapse" role="button" aria-expanded="{{ request()->is('backoffice/jenjangs*', 'backoffice/tingkats*', 'backoffice/kelas*', 'backoffice/mata_pelajarans*') ? 'true' : 'false' }}" aria-controls="navbar-master">
                 <i class="ni ni-ungroup text-dark-green"></i>
@@ -65,13 +66,15 @@
                 </ul>
               </div>
             </li>
+            @endcanany
 
+            @canany(['modul-list', 'video-list', 'simulasi-list', 'story-path-list', 'paket-soal-list'])
             <li class="nav-item">
-              <a class="nav-link{{ request()->is('backoffice/simulasis*', 'backoffice/videos*', 'backoffice/moduls*', 'backoffice/story-paths*') ? ' active' : ' collapsed' }}" href="#navbar-konten" data-toggle="collapse" role="button" aria-expanded="{{ request()->is('backoffice/simulasis*', 'backoffice/videos*', 'backoffice/moduls*', 'backoffice/story-paths*') ? 'true' : 'false' }}" aria-controls="navbar-konten">
+              <a class="nav-link{{ request()->is('backoffice/simulasis*', 'backoffice/videos*', 'backoffice/moduls*', 'backoffice/story-paths*', 'backoffice/paket-soals*') ? ' active' : ' collapsed' }}" href="#navbar-konten" data-toggle="collapse" role="button" aria-expanded="{{ request()->is('backoffice/simulasis*', 'backoffice/videos*', 'backoffice/moduls*', 'backoffice/story-paths*', 'backoffice/paket-soals*') ? 'true' : 'false' }}" aria-controls="navbar-konten">
                 <i class="ni ni-atom text-dark-green"></i>
                 <span class="nav-link-text">Kelola Konten</span>
               </a>
-              <div class="collapse{{ request()->is('backoffice/simulasis*', 'backoffice/videos*', 'backoffice/moduls*', 'backoffice/story-paths*') ? ' show' : '' }}" id="navbar-konten" style="">
+              <div class="collapse{{ request()->is('backoffice/simulasis*', 'backoffice/videos*', 'backoffice/moduls*', 'backoffice/story-paths*', 'backoffice/paket-soals*') ? ' show' : '' }}" id="navbar-konten" style="">
                 <ul class="nav nav-sm flex-column">
 
                   @can('modul-list')
@@ -106,9 +109,18 @@
                   </li>
                   @endcan
 
+                  @can('paket-soal-list')
+                  <li class="nav-item">
+                    <a href="{{ route('backoffice::paket-soals.index') }}" class="nav-link">
+                      <span class="sidenav-normal"> Kelola Paket Soal </span>
+                    </a>
+                  </li>
+                  @endcan
+
                 </ul>
               </div>
             </li>
+            @endcanany
 
             @canany(['user-list', 'external-user-list'])
             <li class="nav-item">
@@ -151,7 +163,42 @@
                 </ul>
               </div>
             </li>
+
+            <li class="nav-item">
+              <a class="nav-link{{ request()->is('backoffice/manage-external-users*') ? ' active' : ' collapsed' }}" href="#navbar-manage-exus" data-toggle="collapse" role="button" aria-expanded="{{ request()->is('backoffice/manage-external-users*') ? 'true' : 'false' }}" aria-controls="navbar-manage-exus">
+                <i class="ni ni-single-02 text-dark-green"></i>
+                <span class="nav-link-text">Kelola Pengunjung</span>
+              </a>
+              <div class="collapse{{ request()->is('backoffice/manage-external-users*') ? ' show' : '' }}" id="navbar-manage-exus" style="">
+                <ul class="nav nav-sm flex-column">
+                  <li class="nav-item">
+                    <a href="{{ route('backoffice::manage-external-users.index', ['content'=>'modul']) }}" class="nav-link">
+                      <span class="sidenav-normal"> Akses Modul Pengunjung </span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{{ route('backoffice::manage-external-users.index', ['content'=>'video']) }}" class="nav-link">
+                      <span class="sidenav-normal"> Akses Video Pengunjung </span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{{ route('backoffice::manage-external-users.index', ['content'=>'simulasi']) }}" class="nav-link">
+                      <span class="sidenav-normal"> Akses Simulasi Pengunjung </span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
             @endcanany
+
+            @can('banner-list')
+            <li class="nav-item">
+              <a class="nav-link{{ request()->is('banners*') ? ' active' : '' }}" href="{{ route('backoffice::banners.index') }}">
+                <i class="ni ni-image text-dark-green"></i>
+                <span class="nav-link-text">Kelola Banner</span>
+              </a>
+            </li>
+            @endcan
 
             @can('role-list')
             <li class="nav-item">

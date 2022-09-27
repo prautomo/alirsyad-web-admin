@@ -1,79 +1,77 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[26],{
 
-/***/ "./resources/js/components/SimpleContainer.js":
-/*!****************************************************!*\
-  !*** ./resources/js/components/SimpleContainer.js ***!
-  \****************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./resources/js/guru/components/Progress/DetailSimulasiPercobaan.css":
+/*!***********************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/postcss-loader/src??ref--6-2!./resources/js/guru/components/Progress/DetailSimulasiPercobaan.css ***!
+  \***********************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return SimpleContainer; });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
 
-function SimpleContainer(_ref) {
-  var title = _ref.title,
-      content = _ref.content;
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "card border-none  ",
-    style: {
-      backgroundColor: 'transparent'
-    }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "d-flex flex-column"
-  }, content)));
-}
+
+// module
+exports.push([module.i, ".label-progress {\r\n    font-size: 15px;\r\n    font-weight: 300;\r\n}", ""]);
+
+// exports
+
 
 /***/ }),
 
-/***/ "./resources/js/components/Toko/UpdateToko.js":
-/*!****************************************************!*\
-  !*** ./resources/js/components/Toko/UpdateToko.js ***!
-  \****************************************************/
+/***/ "./resources/js/guru/components/Progress/DetailSimulasiPercobaan.css":
+/*!***************************************************************************!*\
+  !*** ./resources/js/guru/components/Progress/DetailSimulasiPercobaan.css ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../../node_modules/css-loader??ref--6-1!../../../../../node_modules/postcss-loader/src??ref--6-2!./DetailSimulasiPercobaan.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./resources/js/guru/components/Progress/DetailSimulasiPercobaan.css");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./resources/js/guru/components/Progress/DetailSimulasiPercobaan.js":
+/*!**************************************************************************!*\
+  !*** ./resources/js/guru/components/Progress/DetailSimulasiPercobaan.js ***!
+  \**************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _store_useFetch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../store/useFetch */ "./resources/js/store/useFetch.js");
-/* harmony import */ var _Form_InputRenderer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Form/InputRenderer */ "./resources/js/components/Form/InputRenderer.js");
-/* harmony import */ var _SimpleContainer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../SimpleContainer */ "./resources/js/components/SimpleContainer.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_table_scrollbar__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-table-scrollbar */ "./node_modules/react-table-scrollbar/build/index.js");
+/* harmony import */ var react_table_scrollbar__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_table_scrollbar__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _store_useFetch__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../store/useFetch */ "./resources/js/store/useFetch.js");
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! reactstrap */ "./node_modules/reactstrap/es/index.js");
 /* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
 /* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var yup__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! yup */ "./node_modules/yup/es/index.js");
-/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
-/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_8__);
-
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+/* harmony import */ var _DetailSimulasiPercobaan_css__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./DetailSimulasiPercobaan.css */ "./resources/js/guru/components/Progress/DetailSimulasiPercobaan.css");
+/* harmony import */ var _DetailSimulasiPercobaan_css__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_DetailSimulasiPercobaan_css__WEBPACK_IMPORTED_MODULE_7__);
 
 
 
@@ -83,179 +81,111 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+function DetailSimulasiPercobaan(_ref) {
+  var _data$data$jumlah_per, _data$data, _data$data$jumlah_ben, _data$data2, _data$data$jumlah_sal, _data$data3, _data$data$percobaan_, _data$data4, _data$data4$percobaan, _data$data$percobaan_2, _data$data5, _data$data5$percobaan, _data$data$nilai_akhi, _data$data6;
 
-function UpdateToko(_ref) {
-  var mitra_detail = _ref.mitra_detail;
+  var idSimulasi = _ref.idSimulasi,
+      idSiswa = _ref.idSiswa;
 
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])({}),
-      _useState2 = _slicedToArray(_useState, 2),
-      mitraDetail = _useState2[0],
-      setMitraDetail = _useState2[1];
-
-  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
-    setMitraDetail(mitra_detail);
-  }, []);
-
-  var _useFetch = Object(_store_useFetch__WEBPACK_IMPORTED_MODULE_3__["default"])("/app/data/district"),
+  var _useFetch = Object(_store_useFetch__WEBPACK_IMPORTED_MODULE_4__["default"])("/guru/json/simulasi/".concat(idSimulasi, "/nilai?q_siswa_id=").concat(idSiswa)),
       data = _useFetch.data,
       isLoading = _useFetch.isLoading,
       isError = _useFetch.isError;
 
-  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(false),
-      _useState4 = _slicedToArray(_useState3, 2),
-      dataSent = _useState4[0],
-      setDataSent = _useState4[1];
-
-  function updateDataMitra() {
-    return _updateDataMitra.apply(this, arguments);
-  }
-
-  function _updateDataMitra() {
-    _updateDataMitra = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-      var checkoutSchema, valid, tmpMitraDetail;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              checkoutSchema = Object(yup__WEBPACK_IMPORTED_MODULE_7__["object"])().shape({
-                bank_name: Object(yup__WEBPACK_IMPORTED_MODULE_7__["string"])().required(),
-                bank_account_number: Object(yup__WEBPACK_IMPORTED_MODULE_7__["string"])().required(),
-                bank_account_holder: Object(yup__WEBPACK_IMPORTED_MODULE_7__["string"])().required(),
-                location: Object(yup__WEBPACK_IMPORTED_MODULE_7__["object"])().required(),
-                alamat: Object(yup__WEBPACK_IMPORTED_MODULE_7__["string"])().required(),
-                district: Object(yup__WEBPACK_IMPORTED_MODULE_7__["object"])().required()
-              });
-              _context.next = 3;
-              return checkoutSchema.isValid(mitraDetail);
-
-            case 3:
-              valid = _context.sent;
-
-              if (valid) {
-                setDataSent(true);
-                tmpMitraDetail = _objectSpread({}, mitraDetail);
-                tmpMitraDetail["district_id"] = tmpMitraDetail.district.id;
-                tmpMitraDetail["longitude"] = tmpMitraDetail.location.lng;
-                tmpMitraDetail["latitude"] = tmpMitraDetail.location.lat;
-                window.axios.post("/toko/update", tmpMitraDetail).then(function (res) {
-                  sweetalert2__WEBPACK_IMPORTED_MODULE_8___default.a.fire("Informasi", res.data.message, "success");
-                })["catch"](function (err) {
-                  sweetalert2__WEBPACK_IMPORTED_MODULE_8___default.a.fire("Terjadi kesalahan", err.response.data.message, "error");
-                })["finally"](function () {
-                  setDataSent(false);
-                });
-              } else {
-                sweetalert2__WEBPACK_IMPORTED_MODULE_8___default.a.fire("Validasi", "Silahkan Isi Semua Informasi ", "warning");
-              }
-
-            case 5:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee);
-    }));
-    return _updateDataMitra.apply(this, arguments);
-  }
-
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_SimpleContainer__WEBPACK_IMPORTED_MODULE_5__["default"], {
-    title: "Bank Pembayaran",
-    content: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
-      className: "d-flex flex-column"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_Form_InputRenderer__WEBPACK_IMPORTED_MODULE_4__["InputWithLabel"], {
-      label: "Nama Bank",
-      placeholder: "EX:  Bank Central Asia",
-      value: mitraDetail["bank_name"],
-      onChange: function onChange(val) {
-        setMitraDetail(_objectSpread(_objectSpread({}, mitraDetail), {
-          bank_name: val
-        }));
-      }
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_Form_InputRenderer__WEBPACK_IMPORTED_MODULE_4__["InputWithLabel"], {
-      label: "Nomor Rekening",
-      placeholder: "EX:  13213123",
-      value: mitraDetail["bank_account_number"],
-      onChange: function onChange(val) {
-        setMitraDetail(_objectSpread(_objectSpread({}, mitraDetail), {
-          bank_account_number: val
-        }));
-      }
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_Form_InputRenderer__WEBPACK_IMPORTED_MODULE_4__["InputWithLabel"], {
-      label: "Nama Pemilik Rekening",
-      placeholder: "EX:  ",
-      value: mitraDetail["bank_account_holder"],
-      onChange: function onChange(val) {
-        setMitraDetail(_objectSpread(_objectSpread({}, mitraDetail), {
-          bank_account_holder: val
-        }));
-      }
-    })))
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_SimpleContainer__WEBPACK_IMPORTED_MODULE_5__["default"], {
-    title: "Lokasi Mitra",
-    content: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
-      className: "d-flex flex-column"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_Form_InputRenderer__WEBPACK_IMPORTED_MODULE_4__["InputTextAreaWithLabel"], {
-      label: "Alamat",
-      placeholder: "EX: Jl Kolonel Masturi No1",
-      value: mitraDetail["alamat"],
-      onChange: function onChange(val) {
-        setMitraDetail(_objectSpread(_objectSpread({}, mitraDetail), {
-          alamat: val
-        }));
-      }
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_Form_InputRenderer__WEBPACK_IMPORTED_MODULE_4__["InputMapPickerWithLabel"], {
-      label: "Koordinat Lokasi",
-      value: JSON.stringify(mitraDetail["location"]),
-      onChange: function onChange(val) {
-        setMitraDetail(_objectSpread(_objectSpread({}, mitraDetail), {
-          location: val
-        }));
-      }
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_Form_InputRenderer__WEBPACK_IMPORTED_MODULE_4__["InputModalSelectorWithLabel"], {
-      label: "Kota / Kecamatan",
-      value: mitraDetail["district"],
-      items: !isLoading && data,
-      onChange: function onChange(val) {
-        setMitraDetail(_objectSpread(_objectSpread({}, mitraDetail), {
-          district: val
-        }));
-      },
-      itemRenderer: function itemRenderer(currentItem, currentIndex, tempSelected, setTempSelected) {
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
-          className: classnames__WEBPACK_IMPORTED_MODULE_6___default()("d-flex flex-column card p-2 mb-2", {
-            "bg-primary": tempSelected.id == currentItem.id,
-            "text-white": tempSelected.id == currentItem.id
-          }),
-          style: {
-            cursor: 'pointer'
-          },
-          onClick: function onClick() {
-            console.log(currentItem);
-            setTempSelected(currentItem);
-          }
-        }, currentItem.name));
-      }
-    })))
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
-    disabled: dataSent,
-    onClick: function onClick() {
-      updateDataMitra();
-    },
-    className: "btn btn-danger"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("i", {
-    "class": "fa fa-floppy-o",
-    "aria-hidden": "true"
-  }), "  Simpan"));
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {}, []);
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Loading...") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_5__["Row"], {
+    className: "mb-2"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_5__["Col"], {
+    md: "6"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "label-progress"
+  }, "Total Percobaan")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_5__["Col"], {
+    md: "6"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "label-progress"
+  }, ": ", (_data$data$jumlah_per = data === null || data === void 0 ? void 0 : (_data$data = data.data) === null || _data$data === void 0 ? void 0 : _data$data.jumlah_percobaan) !== null && _data$data$jumlah_per !== void 0 ? _data$data$jumlah_per : 0))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_5__["Row"], {
+    className: "mb-2"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_5__["Col"], {
+    md: "6"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "label-progress"
+  }, "Jumlah Berhasil")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_5__["Col"], {
+    md: "6"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "label-progress"
+  }, ": ", (_data$data$jumlah_ben = data === null || data === void 0 ? void 0 : (_data$data2 = data.data) === null || _data$data2 === void 0 ? void 0 : _data$data2.jumlah_benar) !== null && _data$data$jumlah_ben !== void 0 ? _data$data$jumlah_ben : 0))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_5__["Row"], {
+    className: "mb-2"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_5__["Col"], {
+    md: "6"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "label-progress"
+  }, "Jumlah Gagal")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_5__["Col"], {
+    md: "6"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "label-progress"
+  }, ": ", (_data$data$jumlah_sal = data === null || data === void 0 ? void 0 : (_data$data3 = data.data) === null || _data$data3 === void 0 ? void 0 : _data$data3.jumlah_salah) !== null && _data$data$jumlah_sal !== void 0 ? _data$data$jumlah_sal : 0))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_5__["Row"], {
+    className: "mb-2"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_5__["Col"], {
+    md: "12"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "label-progress"
+  }, "Jumlah Berhasil 10 Percobaan Terakhir: ", (_data$data$percobaan_ = data === null || data === void 0 ? void 0 : (_data$data4 = data.data) === null || _data$data4 === void 0 ? void 0 : (_data$data4$percobaan = _data$data4.percobaan_terakhir) === null || _data$data4$percobaan === void 0 ? void 0 : _data$data4$percobaan.jumlah_benar) !== null && _data$data$percobaan_ !== void 0 ? _data$data$percobaan_ : 0))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_5__["Row"], {
+    className: "mb-2"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_5__["Col"], {
+    md: "12"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "label-progress"
+  }, "Jumlah Gagal 10 Percobaan Terakhir: ", (_data$data$percobaan_2 = data === null || data === void 0 ? void 0 : (_data$data5 = data.data) === null || _data$data5 === void 0 ? void 0 : (_data$data5$percobaan = _data$data5.percobaan_terakhir) === null || _data$data5$percobaan === void 0 ? void 0 : _data$data5$percobaan.jumlah_salah) !== null && _data$data$percobaan_2 !== void 0 ? _data$data$percobaan_2 : 0))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", {
+    className: "my-1"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_5__["Row"], {
+    className: ""
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_5__["Col"], {
+    md: "6"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "label-progress font-weight-bolder"
+  }, "Nilai Akhir Siswa")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_5__["Col"], {
+    md: "6"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "label-progress font-weight-bolder"
+  }, ": ", (_data$data$nilai_akhi = data === null || data === void 0 ? void 0 : (_data$data6 = data.data) === null || _data$data6 === void 0 ? void 0 : _data$data6.nilai_akhir) !== null && _data$data$nilai_akhi !== void 0 ? _data$data$nilai_akhi : 0)))));
 }
 
-/* harmony default export */ __webpack_exports__["default"] = (UpdateToko);
+/* harmony default export */ __webpack_exports__["default"] = (DetailSimulasiPercobaan);
+var container = document.getElementById("detail-simulasi-percobaan");
 
-if (document.getElementById('toko-update-form')) {
-  var container = document.getElementById("toko-update-form");
-  var mitraDetail = container.getAttribute("mitra_detail") ? container.getAttribute("mitra_detail") : "{}";
-  react_dom__WEBPACK_IMPORTED_MODULE_2___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(UpdateToko, {
-    mitra_detail: JSON.parse(mitraDetail)
+if (container) {
+  var idSimulasi = container.getAttribute("simulasi-id");
+  var idSiswa = container.getAttribute("siswa-id");
+  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DetailSimulasiPercobaan, {
+    idSimulasi: idSimulasi,
+    idSiswa: idSiswa
   }), container);
+}
+
+/***/ }),
+
+/***/ "./resources/js/store/useFetch.js":
+/*!****************************************!*\
+  !*** ./resources/js/store/useFetch.js ***!
+  \****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return useFetch; });
+/* harmony import */ var swr__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! swr */ "./node_modules/swr/esm/index.js");
+
+function useFetch(url) {
+  var _useSWR = Object(swr__WEBPACK_IMPORTED_MODULE_0__["default"])(url, window.getAxios),
+      data = _useSWR.data,
+      error = _useSWR.error;
+
+  return {
+    data: data,
+    isLoading: !error && !data,
+    isError: error
+  };
 }
 
 /***/ })

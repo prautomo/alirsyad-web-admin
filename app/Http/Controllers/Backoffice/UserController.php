@@ -59,11 +59,11 @@ class UserController extends Controller{
                 }
 
                 if($search){
-                    $query = $query->orWhereHas('uploaderTingkat', function($query2) use ( $search ){
-                        $query2->where('name', 'LIKE', '%'.$search.'%');
-                    });
+                    // $query = $query->orWhereHas('uploaderTingkat', function($query2) use ( $search ){
+                    //     $query2->where('name', 'LIKE', '%'.$search.'%');
+                    // });
 
-                    $query = $query->orWhereHas('mataPelajaran', function($query2) use ( $search ){
+                    $query = $query->orWhereHas('mataPelajarans', function($query2) use ( $search ){
                         $query2->where('name', 'LIKE', '%'.$search.'%');
                     });
                 }
@@ -97,14 +97,24 @@ class UserController extends Controller{
             //     }
             // })
             ->addColumn("mapel", function ($data) {
-                return @$data->mataPelajaran->name ? $data->mataPelajaran->name : 'not set';
+                // return @$data->mataPelajaran->name ? $data->mataPelajaran->name : 'not set';
+                $mapels = $data->mataPelajarans;
+
+                $m = [];
+                foreach($mapels as $value){
+                    $m[] = $value->name . " (".@$value->tingkat->name." ".@$value->tingkat->jenjang->name.")";
+                }
+
+                return view("components.datatable.wrapText", [
+                    "text" => (implode(', ', $m)),
+                ]);
             })
             ->addColumn("action", function ($data) {
                 return view("components.datatable.actions", [
                     "name" => $data->name,
                     "permissionName" => 'user',
                     "deleteRoute" => route($this->routePath.".destroy", $data->id),
-                    "editRoute" => route($this->routePath.".edit", $data->id),
+                    "editRoute" => route($this->routePath.".edit", $data->id).(\Request::get('role') ? "?role=".\Request::get('role') : ""),
                 ]);
             })
             ->addColumn("created_at", function ($data) {
@@ -163,14 +173,31 @@ class UserController extends Controller{
     /**
      * Get Mata Pelajaran
      */
-    private function getMataPelajaran(){
-        // get list jenjang
-        $mapels = MataPelajaran::whereNotIn('id', User::whereNotNull('mata_pelajaran_id')->pluck('mata_pelajaran_id'))->get();
-        
+    private function getMataPelajaran($guruId="", $jenjangId=null){
+        // get list mapel
+        $mapels = MataPelajaran::with('tingkat');
+
+        if($jenjangId){
+            $mapels = $mapels->whereHas('tingkat', function($q2) use($jenjangId) {
+                $q2->where('jenjang_id', $jenjangId);
+            });
+        }
+
+        // // filter kalo mapel nya udah ada yg ngajar
+        // $guruMengajar = GuruMataPelajaran::get();
+        // // for edit
+        // if(@$guruId){
+        //     $guruMengajar = GuruMataPelajaran::where('guru_id', '!=', $guruId)->get();
+        // }
+        // $guruMengajar = $guruMengajar->pluck('mata_pelajaran_id');
+        // $mapels = $mapels->whereNotIn('id', $guruMengajar);
+
+        $mapels = $mapels->get();
+
         $mapelList = [];
-        // $mapelList[""] = "-";
+
         foreach($mapels as $mapel){
-            $mapelList[$mapel->id] = $mapel->name . " (Kelas ". @$mapel->kelas->name ." ".@$mapel->kelas->jenjang->name.")";
+            $mapelList[$mapel->id] = $mapel->name . " (Tingkat ".@$mapel->tingkat->name." ".@$mapel->tingkat->jenjang->name.")";
         }
 
         return $mapelList;
@@ -186,8 +213,9 @@ class UserController extends Controller{
         $roles = Role::pluck('name','name')->all();
         $jenjangList = $this->getJenjang();
         $mapelList = $this->getMataPelajaran();
+        $mapelIDS = [];
 
-        return view($this->prefix.'.create',compact('roles', 'jenjangList', 'mapelList'));
+        return view($this->prefix.'.create',compact('roles', 'jenjangList', 'mapelList', 'mapelIDS'));
     }
     
     /**
@@ -213,20 +241,27 @@ class UserController extends Controller{
         $user->assignRole($request->input('roles'));
 
         // if guru
-        if(strtolower(@$request->input('roles')[0]) === "guru"){
+        if(strtolower(@$request->input('roles')[0]) === "guru uploader"){
             // validate assign uploader
             // $this->validate($request, [
             //     'uploader_jenjang_id' => 'required'
             // ]);
 
-            // check jenjang
-            if($request->uploader_jenjang_id){
-                $jenjang = Tingkat::find($request->uploader_jenjang_id);
-                $jenjang->update(['uploader_id' => $user->id]);
+            // // check jenjang
+            // if($request->uploader_jenjang_id){
+            //     $jenjang = Tingkat::find($request->uploader_jenjang_id);
+            //     $jenjang->update(['uploader_id' => $user->id]);
+            // }
+
+            // assign na jadina mata pelajaran 
+            if(@$request->mapel && count($request->mapel) > 0){
+                $user->mataPelajarans()->sync($request->mapel);
             }
+
+            $roleRedirect = "Guru";
         }
     
-        return redirect()->route($this->routePath.'.index')
+        return redirect()->route($this->routePath.'.index', ['role'=>@$roleRedirect])
                         ->with('success','User created successfully');
     }
     
@@ -264,12 +299,17 @@ class UserController extends Controller{
         }
 
         // get selected mapel
-        $mapel = @$data->mataPelajaran;
-        if($mapel){
-            $mapelList[$mapel->id] = $mapel->name . " (Kelas ". @$mapel->kelas->name ." ".@$mapel->kelas->jenjang->name.")";
-        }
+        // $mapel = @$data->mataPelajaran;
+        // if($mapel){
+        //     $mapelList[$mapel->id] = $mapel->name . " (Kelas ". @$mapel->kelas->name ." ".@$mapel->kelas->jenjang->name.")";
+        // }
+        $mapelIDS = [];
+        foreach($data->mataPelajarans as $mapel)
+        {
+            $mapelIDS[] = $mapel->id;
+        }  
     
-        return view($this->prefix.'.edit', compact('data','roles','userRole', 'jenjangList', 'mapelList'));
+        return view($this->prefix.'.edit', compact('data','roles','userRole', 'jenjangList', 'mapelList', 'mapelIDS'));
     }
     
     /**
@@ -304,27 +344,37 @@ class UserController extends Controller{
         $user->assignRole($request->input('roles'));
 
         // if guru
-        if(strtolower(@$request->input('roles')[0]) === "guru"){
-            // validate assign uploader
-            // $this->validate($request, [
-            //     'uploader_jenjang_id' => 'required'
-            // ]);
+        if(strtolower(@$request->input('roles')[0]) === "guru uploader"){
+            // // validate assign uploader
+            // // $this->validate($request, [
+            // //     'uploader_jenjang_id' => 'required'
+            // // ]);
             
-            // update jenjang sebelumnya
-            if(@$user->uploaderTingkat){
-                $jenjangBefore = Tingkat::find($user->uploaderTingkat->id);
-                $jenjangBefore->update(['uploader_id' => null]);
+            // // update jenjang sebelumnya
+            // if(@$user->uploaderTingkat){
+            //     $jenjangBefore = Tingkat::find($user->uploaderTingkat->id);
+            //     $jenjangBefore->update(['uploader_id' => null]);
+            // }
+
+            // // check jenjang
+            // if($request->uploader_jenjang_id){
+            //     $jenjang = Tingkat::find($request->uploader_jenjang_id);
+            //     $jenjang->update(['uploader_id' => $user->id]);
+            // }
+
+            // jadina mapel
+            if(@$request->mapel){
+                if(count(@$request->mapel) > 0){
+                    $user->mataPelajarans()->sync($request->mapel);
+                }
             }
 
-            // check jenjang
-            if($request->uploader_jenjang_id){
-                $jenjang = Tingkat::find($request->uploader_jenjang_id);
-                $jenjang->update(['uploader_id' => $user->id]);
-            }
+            $roleRedirect = "Guru";
         }
     
-        return redirect()->route($this->routePath.'.index')
-                        ->with('success','User updated successfully');
+        return redirect()->route($this->routePath.'.index', ['role'=>@$roleRedirect])->with(
+            $this->success(__("User updated successfully"), $user)
+        );
     }
     
     /**

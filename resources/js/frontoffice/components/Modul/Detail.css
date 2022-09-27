@@ -11,3 +11,20 @@
 .rcp-dark {
     width: 100% !important;
 }
+
+/* for desktop / tablet style */
+@media only screen and (min-device-width: 768px) {
+    .toggle-switch {
+        display: none;
+    }
+
+    .pdf-viewer-mobile {
+        display: none;
+    }
+}
+
+@media only screen and (max-device-width: 768px) {
+    .pdf-viewer-desktop {
+        display: none;
+    }
+}

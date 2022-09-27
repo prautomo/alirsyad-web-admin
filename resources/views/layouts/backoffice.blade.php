@@ -13,18 +13,19 @@
 
   <title>{{ config('app.name', 'Digital Interactive Book') }} - @yield('title')</title>
   <!-- Favicon -->
-  <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/png">
+  <link rel="icon" href="{{ asset('images/icon.png') }}" type="image/png">
   <!-- Fonts -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
   <!-- Icons -->
   <link rel="stylesheet" href="{{ asset('backoffice/assets/vendor/nucleo/css/nucleo.css') }}" type="text/css">
   <link rel="stylesheet" href="{{ asset('backoffice/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css') }}" type="text/css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@8.19.0/dist/sweetalert2.min.css">
-  <!-- Page plugins -->
-  @stack('plugin_css')
+  
   <!-- Argon CSS -->
   <link rel="stylesheet" href="{{ asset('backoffice/assets/css/argon.css?v=1.2.0') }}" type="text/css">
+  <!-- Page plugins -->
   <link rel="stylesheet" href="{{ asset('backoffice/assets/css/gaya.css') }}" type="text/css">
+  @stack('plugin_css')
 </head>
 
 <body>
@@ -236,7 +237,10 @@
                 aria-expanded="false">
                 <div class="media align-items-center">
                   <span class="avatar avatar-sm rounded-circle">
-                    <img alt="{{ Auth::user()->name }}" src="{{ asset('images/user-logo.png') }}">
+                    @php
+                    $userDetail = \App\Models\ExternalUser::where("email", @Auth::user()->email)->first();
+                    @endphp
+                    <img alt="{{ Auth::user()->name }}" src="{{ @$userDetail->photo ? asset(@$userDetail->photo) : asset('images/user-logo.png') }}">
                   </span>
                   <div class="media-body  ml-2  d-none d-lg-block">
                     <span class="mb-0 text-sm  font-weight-bold">{{ Auth::user()->name }}</span>
@@ -259,11 +263,13 @@
                   <i class="ni ni-calendar-grid-58"></i>
                   <span>Activity</span>
                 </a>
-                <a href="#!" class="dropdown-item">
-                  <i class="ni ni-support-16"></i>
-                  <span>Support</span>
-                </a>
+                
                 <div class="dropdown-divider"></div> -->
+                <a href="{{ route('backoffice::akun-saya') }}" class="dropdown-item">
+                  <i class="ni ni-single-02"></i>
+                  <span>Profile</span>
+                </a>
+
                 <a class="dropdown-item" href="{{ route('backoffice-logout') }}"
                     onclick="event.preventDefault();
                                     document.getElementById('logout-form').submit();">

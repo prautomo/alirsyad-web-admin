@@ -1,7 +1,7 @@
 <?php
-   
+
 namespace App\Http\Controllers\API;
-   
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\Score;
@@ -9,10 +9,12 @@ use App\Models\MataPelajaran;
 use App\Models\Simulasi;
 use App\Models\HistorySimulasi;
 use App\Models\Modul;
+use App\Models\Tingkat;
 use App\Models\HistoryModul;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\Score as ScoreResource;
-   
+use Validator;
+
 class ScoreController extends BaseController
 {
 
@@ -53,16 +55,32 @@ class ScoreController extends BaseController
         $user = Auth::user();
         $datas = [];
 
-        // load mapel active kelas/tingkat
-        $mapels = MataPelajaran::where('tingkat_id', @$user->kelas->tingkat_id)->get();
-        $datas[] = [
-            'jenjang' => @$user->kelas->tingkat->jenjang->name ?? "-",
-            'tingkat' => @$user->kelas->tingkat->name ?? "-",
-            'kelas' => @$user->kelas->name  ?? "-",
-            'mata_pelajarans' => @$mapels,
-        ];
+        $tingkatId = @$user->kelas->tingkat_id;
 
-        // load history kelas/tingkat
+        // pengunjung
+        if ($user->is_pengunjung){
+            $tingkats = Tingkat::where('jenjang_id', @$user->jenjang_id)->get();
+
+            foreach($tingkats as $tingkat){
+                // load mapel active kelas/tingkat
+                $mapels = MataPelajaran::where('tingkat_id', $tingkat->id)->get();
+                $datas[] = [
+                    'jenjang' => @$tingkat->jenjang->name ?? "-",
+                    'tingkat' => @$tingkat->name ?? "-",
+                    'mata_pelajarans' => @$mapels,
+                ];
+            }
+        }else{
+            // load mapel active kelas/tingkat
+            $mapels = MataPelajaran::where('tingkat_id', $tingkatId)->get();
+            $datas[] = [
+                'jenjang' => @$user->kelas->tingkat->jenjang->name ?? "-",
+                'tingkat' => @$user->kelas->tingkat->name ?? "-",
+                'kelas' => @$user->kelas->name  ?? "-",
+                'mata_pelajarans' => @$mapels,
+            ];
+            // load history kelas/tingkat
+        }
 
         return $this->sendResponse(ScoreResource::collection($datas), 'Mata Pelajaran retrieved.');
     }
@@ -76,7 +94,7 @@ class ScoreController extends BaseController
     public function progress($id)
     {
         $datas = $this->getProgress($id);
-   
+
         return $this->sendResponse(new ScoreResource($datas), 'Score retrieved successfully.');
     }
 
@@ -113,20 +131,93 @@ class ScoreController extends BaseController
 
         // list simulasi
         $simulasis = Simulasi::with('mataPelajaran');
-        // handle hak akses mapel
-        if($user->role !== "GURU"){
-            $simulasis = $simulasis->whereHas('mataPelajaran', function($query) use($user) {
-                $query->where('tingkat_id', @$user->kelas->tingkat_id);
-            });
-        }
-        
-        $simulasis = $simulasis->where('mata_pelajaran_id', $id)->get();
+        // // handle hak akses mapel
+        // if($user->role !== "GURU"){
+        //     $simulasis = $simulasis->whereHas('mataPelajaran', function($query) use($user) {
+        //         $query->where('tingkat_id', @$user->kelas->tingkat_id);
+        //     });
+        // }
+
+        $simulasis = $simulasis->where('mata_pelajaran_id', $id);
+
+        // sorting by urutan
+        $simulasis = $simulasis->orderBy('urutan', 'asc')->orderBy('level', 'asc');
+        $simulasis = $simulasis->get();
+
         $datas['simulasis'] = $simulasis;
 
         return $datas;
     }
 
     private function calculatePercentage($total, $done){
-        return ($done === 0 || $total === 0) ? 0 : ($done/$total) * 100;
+        return ($done === 0 || $total === 0) ? 0 : round(($done/$total) * 100, 2);
+    }
+
+    // GURU
+    /**
+     * Display a mata pelajaran listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function listNilaiSiswa(Request $request, $id)
+    {
+        $datas = [];
+
+        return $this->sendResponse(ScoreResource::collection($datas), 'Siswas retrieved.');
+    }
+
+    /**
+     * Display a mata pelajaran listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function nilaiSiswa(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'q_siswa_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->returnStatus(400, $validator->errors());
+        }
+
+        $idSiswa = $request->siswa_id;
+
+        $simulasi = Simulasi::find($id);
+
+        $scores = @$simulasi->scores ?? [];
+
+        // data semua percobaan
+        $percobaans = [];
+        foreach($scores as $score){
+            $percobaans[] = [
+                'percobaan_ke' => @$score->percobaan_ke,
+                'status' => (@$score->score ?? 0) < 50 ? 'salah' : 'benar',
+            ];
+        }
+
+        $percobaans = collect($percobaans)->sortBy('percobaan_ke');
+        // $jumlahPercobaan = count($scores->toArray());
+
+        $percobaansBenar = $percobaans->where('status', 'benar')->all();
+        $percobaansSalah = $percobaans->where('status', 'salah')->all();
+
+        // 10 percobaan terakhir
+        $dataPercobaanTerakhir = $scores->take(-10);
+
+        $datas = [
+            'jumlah_percobaan' => @$simulasi->total_percobaan ?? 0,
+            'jumlah_benar' => count(@$percobaansBenar ?? []),
+            'jumlah_salah' => count(@$percobaansSalah ?? []),
+            'percobaan_terakhir' => [
+                'jumlah_benar' => @$simulasi->{"10_percobaan_terakhir_berhasil"} ?? 0,
+                'jumlah_salah' => @$simulasi->{"10_percobaan_terakhir_gagal"} ?? 0,
+                'data_percobaan' => @$dataPercobaanTerakhir ?? [],
+            ],
+            'data_percobaan' => @$simulasi->scores ?? [],
+            'nilai_akhir' => round(@$simulasi->rata_rata_score ?? 0, 2),
+        ];
+
+        return $this->sendResponse(new ScoreResource($datas), 'Score retrieved successfully.');
     }
 }

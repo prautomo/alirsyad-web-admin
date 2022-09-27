@@ -19,29 +19,41 @@ class VideoController extends Controller
      */
     public function indexByMapel(Request $request, $idMapel)
     {
+        $user = @Auth::user();
+
         // mapel data
         $mapel = MataPelajaran::with('tingkat');
         // filter by jenjang yg sama
-        $mapel = $mapel->whereHas('tingkat.jenjang', function($query) {
-            $query->where('id', @Auth::user()->kelas->tingkat->jenjang_id);
+        $mapel = $mapel->whereHas('tingkat.jenjang', function ($query) use ($user) {
+            $jenjangId = $user->is_pengunjung ? $user->jenjang_id : $user->kelas->tingkat->jenjang_id;
+            $query->where('id', $jenjangId);
         });
-        // filter by tingkat bawahnya
-        $mapel = $mapel->whereHas('tingkat', function($query) {
-            $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
-        });
+        // // filter by tingkat bawahnya
+        // if (!$user->is_pengunjung) $mapel = $mapel->whereHas('tingkat', function($query) {
+        //     $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
+        // });
         $mapel = $mapel->findOrFail($idMapel);
 
         // videos
         $videos = Video::with('uploader', 'mataPelajaran');
         // handle hak akses mapel
-        $user = Auth::user();
-        if($user->role !== "GURU"){
-            $videos = $videos->whereHas('mataPelajaran.tingkat', function($query) use($user) {
-                $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
-            });
+        // $user = Auth::user();
+        // if($user->role !== "GURU"){
+        //     if (!$user->is_pengunjung) $videos = $videos->whereHas('mataPelajaran.tingkat', function($query) use($user) {
+        //         $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
+        //     });
+        // }
+
+        // visible for siswa/guest
+        $videos = $videos->where('visible', 1);
+
+        if ($user->status === "AKTIF") {
+            $videos = $videos->where('mata_pelajaran_id', $idMapel);
+        } else {
+            // untuk pengunjung yang belum dikonfirmasi
+            $videos = $videos->where(['is_public' => 1, 'mata_pelajaran_id' => $idMapel]);
         }
-        
-        $videos = $videos->where('mata_pelajaran_id', $idMapel);
+
         // sorting by urutan
         $videos = $videos->orderBy('urutan', 'asc');
         // get list
@@ -75,5 +87,4 @@ class VideoController extends Controller
 
         return view('pages/frontoffice/video/detail', $parseData);
     }
-
 }

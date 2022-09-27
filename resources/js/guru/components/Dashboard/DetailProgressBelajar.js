@@ -12,13 +12,14 @@ function DetailProgressBelajar({ }) {
     const [activeTab, setActiveTab] = useState(-1);
     const [isLoadingSiswa, setIsLoadingSiswa] = useState(false);
     const [dataSiswa, setDataSiswa] = useState([]);
+    const [mapelIdActive, setMapelIdActive] = useState(0);
 
     const { data, isLoading, isError } = useFetch("/guru/json/ngajar")
 
     const toggleTab = async (tab, mapelId, kelasId) => {
+        // set mapel id
+        setMapelIdActive(mapelId);
         // load data
-        console.log("dika mapelId", mapelId);
-        console.log("dika kelasId", kelasId);
         await loadSiswa(mapelId, kelasId);
         
         // switch tab
@@ -100,7 +101,9 @@ function DetailProgressBelajar({ }) {
                                                         {idx+1}
                                                     </td>
                                                     <td width={"35%"} className="">
-                                                        {val['name'] ?? '-'}
+                                                        <a href={`/guru/progress/${mapelIdActive}/detail/${val['id'] ?? '-'}`} target="_blank">
+                                                            {val['name'] ?? '-'}
+                                                        </a>
                                                     </td>
                                                     <td width={"20%"} className="text-center">
                                                         {val['progress_modul']?.done ?? 0}/{val['progress_modul']?.total ?? 0}

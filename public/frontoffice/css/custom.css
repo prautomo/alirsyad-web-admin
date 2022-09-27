@@ -55,3 +55,7 @@
 .rating-simulasi-star {
     margin-top: -30px;
 }
+
+.rating-simulasi-star .checked {
+    color: orange;
+}

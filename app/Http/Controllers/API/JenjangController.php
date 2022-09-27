@@ -18,7 +18,8 @@ class JenjangController extends BaseController
      */
     public function index()
     {
-        $datas = Jenjang::all();
+        // $datas = Jenjang::all();
+        $datas = Jenjang::where('show_for_guest', 1)->get();
     
         return $this->sendResponse(JenjangResource::collection($datas), 'Jenjang retrieved successfully.');
     }

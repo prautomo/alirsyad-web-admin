@@ -7,6 +7,7 @@ use App\Models\ExternalUser;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -47,10 +48,26 @@ class UserController extends Controller
             'password' => 'required|confirmed',
             'password_confirmation' => 'required',
         ]);
-        Auth::user()->update(["password" => Hash::make($validatedData['password'])]);
+        $pass = Hash::make($validatedData['password']);
 
-        return redirect()->route('guru::akun-saya')->with(
-            $this->success(__("Password Berhasil Di Ubah"), $data)
-        );
+        Auth::user()->update(["password" => $pass]);
+
+        // update user guru password
+        if(Auth::user()->is_uploader){
+            $u = User::where('email', Auth::user()->email)->first();
+            $usr = User::find($u->id);
+            $input['password'] = $pass;
+            $usr->update($input);
+        }
+
+        Session::flush();
+        
+        Auth::logout();
+
+        return redirect("/guru/login")->with('success', "Password Berhasil Di Ubah");
+
+        // return redirect()->route('guru::akun-saya')->with(
+        //     $this->success(__("Password Berhasil Di Ubah"), $validatedData)
+        // );
     }
 }

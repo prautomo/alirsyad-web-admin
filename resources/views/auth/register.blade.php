@@ -86,7 +86,7 @@
 
                                 <select id="jenjang_id" class="form-control @error('jenjang_id') is-invalid @enderror" name="jenjang_id" required autofocus>
                                     <option value="" selected>Pilih jenjang.</option>
-                                    @forelse(\App\Models\Jenjang::get() as $jenjang)
+                                    @forelse(\App\Models\Jenjang::where('show_for_guest', 1)->get() as $jenjang)
                                     <option value="{{ $jenjang->id }}">{{ $jenjang->name }}</option>
                                     @empty
                                     <!-- <option value="">Tidak ada jenjang.</option> -->

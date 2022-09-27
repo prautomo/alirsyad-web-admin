@@ -1,7 +1,7 @@
 <?php
-   
+
 namespace App\Http\Controllers\API;
-   
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\Simulasi;
@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\Simulasi as SimulasiResource;
 use App\Http\Resources\HistorySimulasi as HistorySimulasiResource;
 use App\Http\Resources\Score as ScoreResource;
+use App\Models\GuestMataPelajaran;
 use Validator;
 
 class SimulasiController extends BaseController
@@ -23,18 +24,43 @@ class SimulasiController extends BaseController
      */
     public function index(Request $request)
     {
-        $datas = Simulasi::search($request);
-        $datas = $datas->with('uploader', 'mataPelajaran');
-        // handle hak akses mapel
-        $datas = $datas->whereHas('mataPelajaran.tingkat', function($query){
-            if(@Auth::user()->role==="SISWA"){
-                $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
-            }
-        });
+
+        $user = @Auth::user();
+
+        $datas = Simulasi::with('uploader', 'mataPelajaran');
+
+        // // handle hak akses mapel
+        // $user = Auth::user();
+        // if($user->role !== "GURU"){
+        //     if (!$user->is_pengunjung) $datas = $datas->whereHas('mataPelajaran.tingkat', function($query) use($user) {
+        //         $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
+        //     });
+        // }
+
+        $idMapel = @$request->q_mata_pelajaran_id;
+
+        if ($idMapel) {
+            $datas = $datas->where('mata_pelajaran_id', $idMapel);
+        }
+
+        // sorting by urutan
+        $datas = $datas->orderBy('urutan', 'asc')->orderBy('level', 'asc');
+
         // get list
         $datas = $datas->get();
+
+        $selectedMapel = GuestMataPelajaran::where('guest_id', $user->id)->get()->pluck('mata_pelajaran_id')->toArray();
+        if (in_array(@$request->q_mata_pelajaran_id, $selectedMapel)) {
+            foreach ($datas as $simulasi) {
+                $simulasi->mapel_assigned = 1;
+            }
+        } else {
+            foreach ($datas as $simulasi) {
+                $simulasi->mapel_assigned = 0;
+            }
+        }
         // sorting by urutan
-        $datas = $datas->sortBy('urutan');
+        // $datas = $datas->sortBy('urutan')->sortBy('level');
 
         return $this->sendResponse(SimulasiResource::collection($datas), 'Simulasi retrieved successfully.');
     }
@@ -47,21 +73,23 @@ class SimulasiController extends BaseController
      */
     public function show($id)
     {
+        $user = @Auth::user();
+
         $data = Simulasi::with('mataPelajaran.tingkat.jenjang');
-  
-        // handle hak akses mapel
-        $data = $data->whereHas('mataPelajaran.tingkat', function($query){
-            if(@Auth::user()->role==="SISWA"){
-                $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
-            }
-        });
+
+        // // handle hak akses mapel
+        // $data = $data->whereHas('mataPelajaran.tingkat', function($query) use ($user){
+        //     if(@Auth::user()->role==="SISWA"){
+        //         if (!$user->is_pengunjung) $query->where('name', '<=', @$user->kelas->tingkat->name);
+        //     }
+        // });
 
         $data = $data->find($id);
 
         if (is_null($data)) {
             return $this->sendError('Simulasi not found.');
         }
-   
+
         return $this->sendResponse(new SimulasiResource($data), 'Simulasi retrieved successfully.');
     }
 
@@ -72,15 +100,15 @@ class SimulasiController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function createHistory(Request $request, $id) 
+    public function createHistory(Request $request, $id)
     {
         $data = Simulasi::with('mataPelajaran');
         $user = Auth::user();
-  
-        // handle hak akses mapel
-        $data = $data->whereHas('mataPelajaran.tingkat', function($query) use ($user){
-            $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
-        });
+
+        // // handle hak akses mapel
+        // $data = $data->whereHas('mataPelajaran.tingkat', function($query) use ($user){
+        //     if (!$user->is_pengunjung) $query->where('name', '<=', @Auth::user()->kelas->tingkat->name);
+        // });
 
         $data = $data->find($id);
 
@@ -102,23 +130,27 @@ class SimulasiController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function createScore(Request $request, $id) 
+    public function createScore(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'score' => 'required|numeric|max:100',
         ]);
 
         if ($validator->fails()) {
-            return $this->returnStatus(400, $validator->errors());     
+            return $this->returnStatus(400, $validator->errors());
         }
 
         $data = Simulasi::with('mataPelajaran');
         $user = Auth::user();
-  
-        // handle hak akses mapel
-        $data = $data->whereHas('mataPelajaran', function($query) use ($user){
-            $query->where('tingkat_id', @$user->kelas->tingkat_id ?? 0);
-        });
+
+        if ($user->is_pengunjung) {
+            return $this->returnStatus(400, "Score not saved. You\'re not a student.");
+        }
+
+        // // handle hak akses mapel
+        // $data = $data->whereHas('mataPelajaran', function($query) use ($user){
+        //     if (!$user->is_pengunjung) $query->where('tingkat_id', @$user->kelas->tingkat_id ?? 0);
+        // });
 
         $data = $data->find($id);
 
@@ -128,13 +160,13 @@ class SimulasiController extends BaseController
 
         $pengajar = @$data->mataPelajaran->gurus;
 
-        if($user->role!=='SISWA'){
+        if ($user->role !== 'SISWA') {
             $sendResponse = $request->only(['score', 'semester']);
 
             return $this->sendResponse(new ScoreResource($sendResponse), 'Score not saved. You\'re not a student.');
         }
 
-        if($user->is_pengunjung){
+        if ($user->is_pengunjung) {
             $sendResponse = $request->only(['score', 'semester']);
 
             return $this->sendResponse(new ScoreResource($sendResponse), 'Score not saved. You\'re a visitor.');
@@ -144,12 +176,12 @@ class SimulasiController extends BaseController
         $lastScore = Score::where(['simulasi_id' => $id, 'siswa_id' => $user->id])
             ->latest('percobaan_ke')
             ->first();
-        
+
         // from request/payload data
         $saveData = $request->only(['score', 'semester']);
 
         // if last score not empty, increment percobaan ke
-        if($lastScore){
+        if ($lastScore) {
             $saveData['percobaan_ke'] = $lastScore->percobaan_ke + 1;
         }
         $saveData['simulasi_id'] = (int) $id;
@@ -161,16 +193,19 @@ class SimulasiController extends BaseController
         $saveData['pengajar_id'] = @$pengajar[0]->id ?? null;
         $saveData['nama_pengajar'] = @$pengajar[0]->name ?? "";
 
-        if(@$lastScore->percobaan_ke <= 10){
-            $createScore = Score::create($saveData);
-        }else{
-            // update score
-            $createScore = $lastScore->update($saveData);;
-        }
+        // kode lama
+        // if(@$lastScore->percobaan_ke <= 10){
+        //     $createScore = Score::create($saveData);
+        // }else{
+        //     // update score
+        //     $createScore = $lastScore->update($saveData);;
+        // }
+        //kode baru
+        $createScore = Score::create($saveData);
 
         $sendResponse = $request->only(['score', 'semester']);
         $sendResponse['percobaan_ke'] = @$saveData['percobaan_ke'] ?? 1;
-        
+
         // create history simulasi
         $historySimulasi = HistorySimulasi::updateOrCreate(
             ['simulasi_id' => $id, 'siswa_id' => $user->id],

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Backoffice;
 
 /*
@@ -9,6 +10,7 @@ namespace App\Http\Controllers\Backoffice;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Models\ExternalUser;
 use App\Models\MataPelajaran;
 use App\Models\Jenjang;
@@ -21,12 +23,14 @@ use Hash;
 use Illuminate\Support\Arr;
 use Carbon\Carbon;
 
-class ExternalUserController extends Controller{
+class ExternalUserController extends Controller
+{
 
-    function __construct(){
-        $this->middleware('permission:external-user-list|external-user-create|external-user-edit|external-user-delete', ['only' => ['index','show']]);
-        $this->middleware('permission:external-user-create', ['only' => ['create','store']]);
-        $this->middleware('permission:external-user-edit', ['only' => ['edit','update']]);
+    function __construct()
+    {
+        $this->middleware('permission:external-user-list|external-user-create|external-user-edit|external-user-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:external-user-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:external-user-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:external-user-delete', ['only' => ['destroy']]);
 
         $this->prefix = 'pages.backoffice.external-user';
@@ -38,88 +42,90 @@ class ExternalUserController extends Controller{
      *
      * @return void
      */
-    public function datatable($request){
+    public function datatable($request)
+    {
         $role = $request->role;
         $isPengunjung = $request->is_pengunjung;
         $query = ExternalUser::query();
         // relation with kelas and tingkat
         $query = $query->with('kelas.tingkat.jenjang', 'mataPelajarans', 'jenjang');
 
-        if(!empty($role)){
+        if (!empty($role)) {
             $query = $query->where('role', $role);
         }
 
         $query = $query->where('is_pengunjung', @$isPengunjung ?? 0);
 
         $dt = datatables()
-        ->of($query)
-        ->filter(function ($query) use ($request) {
+            ->of($query)
+            ->filter(function ($query) use ($request) {
 
-            $role = $request->role;
-            $isPengunjung = $request->is_pengunjung;
+                $role = $request->role;
+                $isPengunjung = $request->is_pengunjung;
 
-            $search = @$request->search['value'];
+                $search = @$request->search['value'];
 
-            if($search){
-                
-                $query->where('name', 'LIKE', '%'.$search.'%');
-                $query->orWhere('nis', 'LIKE', '%'.$search.'%');
-                
-                $query->orWhereHas('mataPelajarans', function($query2) use ( $search ){
-                    $query2->where('name', 'LIKE', '%'.$search.'%');
-                });
+                if ($search) {
 
-                if(!empty($role)){
-                    $query->where('role', $role);
+                    $query->where('name', 'LIKE', '%' . $search . '%');
+                    $query->orWhere('nis', 'LIKE', '%' . $search . '%');
+
+                    $query->orWhereHas('mataPelajarans', function ($query2) use ($search) {
+                        $query2->where('name', 'LIKE', '%' . $search . '%');
+                    });
+
+                    if (!empty($role)) {
+                        $query->where('role', $role);
+                    }
+
+                    $query->where('is_pengunjung', @$isPengunjung ?? 0);
                 }
-        
-                $query->where('is_pengunjung', @$isPengunjung ?? 0);
-            }
-           
-        })
-        ->addIndexColumn()
-        ->addColumn('show-img', function($data) {
-            return view("components.datatable.image", [
-                "url" => asset($data->photo)
-            ]);
-        })
-        ->addColumn('show-status', function($data) {
-            return view("components.datatable.status", [
-                "route" => route($this->routePath.".update-status", $data->id),
-                "text" => $data->status,
-                "id" => $data->id,
-                "role" => $data->role
-            ]);
-        })
-        ->addColumn('mengajar', function($data) {
-            $mapels = $data->mataPelajarans->pluck('name');
+            })
+            ->addIndexColumn()
+            ->addColumn('show-img', function ($data) {
+                return view("components.datatable.image", [
+                    "url" => asset($data->photo)
+                ]);
+            })
+            ->addColumn('show-status', function ($data) {
+                return view("components.datatable.status", [
+                    "route" => route($this->routePath . ".update-status", $data->id),
+                    "text" => $data->status,
+                    "id" => $data->id,
+                    "role" => $data->role
+                ]);
+            })
+            ->addColumn('mengajar', function ($data) {
+                $mapels = $data->mataPelajarans;
 
-            $m = [];
-            foreach($mapels as $idx){
-                $m[] = $idx;
-            }
+                $m = [];
+                foreach ($mapels as $value) {
+                    $m[] = $value->name . " (" . @$value->tingkat->name . " " . @$value->tingkat->jenjang->name . ")";
+                }
 
-            return view("components.datatable.wrapText", [
-                "text" => (implode(', ', $m)),
-            ]);
-        })
-        ->addColumn("created_at", function ($data) {
-            $createdAt = new Carbon($data->created_at);
+                return view("components.datatable.wrapText", [
+                    "text" => (implode(', ', $m)),
+                ]);
+            })
+            ->addColumn("created_at", function ($data) {
+                $createdAt = new Carbon($data->created_at);
 
-            return $createdAt->format("d-m-Y H:i:s");
-        })
-        ->addColumn("action", function ($data) {
-            $actions = [
-                "name" => $data->name,
-                "deleteRoute" => route($this->routePath.".destroy", $data->id),
-            ];
+                return $createdAt->format("d-m-Y H:i:s");
+            })
+            ->addColumn("action", function ($data) {
+                $actions = [
+                    "name" => $data->name,
+                    "deleteRoute" => route($this->routePath . ".destroy", $data->id),
+                ];
 
-            if(!$data->is_pengunjung){
-                $actions["editRoute"] = route($this->routePath.".edit", $data->id).(\Request::get('role') ? "?role=".\Request::get('role') : "");
-            }
+                if ($data->is_pengunjung) {
+                    $actions["enableMapelRoute"] = route($this->routePath . ".enableMapel", $data->id) . (\Request::get('role') ? "?role=" . \Request::get('role') : "");
+                } else {
+                    $actions["editRoute"] = route($this->routePath . ".edit", $data->id) . (\Request::get('role') ? "?role=" . \Request::get('role') : "");
+                }
 
-            return view("components.datatable.actions", $actions);
-        });
+                return view("components.datatable.actions", $actions);
+            });
 
         $dt = $dt->order(function ($query) {
             $query->orderBy('created_at', 'desc');
@@ -139,19 +145,20 @@ class ExternalUserController extends Controller{
             return $this->datatable($request);
         }
 
-        return view($this->prefix.'.index');
+        return view($this->prefix . '.index');
     }
 
     /**
      * Get tingkat
      */
-    private function getTingkat(){
+    private function getTingkat()
+    {
         // get list tingkat
         $tingkats = Tingkat::all();
         $tingkatList = [];
         $tingkatList[""] = "Pilih tingkat";
 
-        foreach($tingkats as $tingkat){
+        foreach ($tingkats as $tingkat) {
             $tingkatList[$tingkat->id] = $tingkat->name . " " . @$tingkat->jenjang->name;
         }
 
@@ -161,9 +168,16 @@ class ExternalUserController extends Controller{
     /**
      * Get mata pelajaran
      */
-    private function getMataPelajaran($guruId=""){
+    private function getMataPelajaran($guruId = "", $jenjangId = null)
+    {
         // get list mapel
         $mapels = MataPelajaran::with('tingkat');
+
+        if ($jenjangId) {
+            $mapels = $mapels->whereHas('tingkat', function ($q2) use ($jenjangId) {
+                $q2->where('jenjang_id', $jenjangId);
+            });
+        }
 
         // // filter kalo mapel nya udah ada yg ngajar
         // $guruMengajar = GuruMataPelajaran::get();
@@ -178,8 +192,8 @@ class ExternalUserController extends Controller{
 
         $mapelList = [];
 
-        foreach($mapels as $mapel){
-            $mapelList[$mapel->id] = $mapel->name . " (Tingkat ".@$mapel->tingkat->name." ".@$mapel->tingkat->jenjang->name.")";
+        foreach ($mapels as $mapel) {
+            $mapelList[$mapel->id] = $mapel->name . " (Tingkat " . @$mapel->tingkat->name . " " . @$mapel->tingkat->jenjang->name . ")";
         }
 
         return $mapelList;
@@ -195,8 +209,12 @@ class ExternalUserController extends Controller{
         $tingkatList = $this->getTingkat();
         $mapelList = $this->getMataPelajaran();
         $mapelIDS = [];
+        $isUploader = [
+            1 => 'Ya',
+            0 => 'Tidak',
+        ];
 
-        return view($this->prefix.'.create', ['tingkatList' => $tingkatList, 'mapelList' => $mapelList, 'mapelIDS' => $mapelIDS]);
+        return view($this->prefix . '.create', ['tingkatList' => $tingkatList, 'mapelList' => $mapelList, 'mapelIDS' => $mapelIDS, 'isUploader' => $isUploader]);
     }
 
     /**
@@ -209,14 +227,14 @@ class ExternalUserController extends Controller{
     {
         $this->validate($request, [
             'username' => 'required|unique:external_users,username',
-            'nis' => 'required|unique:external_users,nis',
+            'nis' => 'required|unique:external_users,nis|unique:users,username',
             'name' => 'required',
-            'email' => 'required|email|unique:external_users,email',
+            'email' => 'required|email|unique:external_users,email|unique:users,email',
             // 'phone' => 'required|unique:external_users,phone',
             'password' => 'required',
         ]);
 
-        if(@$request->role === "SISWA"){
+        if (@$request->role === "SISWA") {
             $this->validate($request, [
                 'kelas_id' => 'required',
             ]);
@@ -242,13 +260,30 @@ class ExternalUserController extends Controller{
 
         $user = ExternalUser::create($input);
 
-        if(@$request->role === "GURU"){
-            if(@$request->mapel && count($request->mapel) > 0){
+        if (@$request->role === "GURU") {
+
+            if ($request->is_uploader) {
+                // insert ke table user jadi guru uploader
+                $inputUploader['name'] = $input['name'];
+                $inputUploader['username'] = $input['nis'];
+                $inputUploader['email'] = $input['email'];
+                $inputUploader['password'] = $input['password'];
+
+                $guruUploader = User::create($inputUploader);
+                $guruUploader->assignRole("Guru Uploader");
+            }
+
+            if (@$request->mapel && count($request->mapel) > 0) {
+                // guru
                 $user->mataPelajarans()->sync($request->mapel);
+                // giuru uplaoder
+                if ($request->is_uploader) {
+                    $guruUploader->mataPelajarans()->sync($request->mapel);
+                }
             }
         }
 
-        return redirect()->route($this->routePath.'.index', ['role'=>$request->role])->with(
+        return redirect()->route($this->routePath . '.index', ['role' => $request->role])->with(
             $this->success(__("External User created successfully"), $user)
         );
     }
@@ -266,12 +301,16 @@ class ExternalUserController extends Controller{
         $mapelList = $this->getMataPelajaran($id);
 
         $mapelIDS = [];
-        foreach($dt->mataPelajarans as $mapel)
-        {
+        foreach ($dt->mataPelajarans as $mapel) {
             $mapelIDS[] = $mapel->id;
-        }  
+        }
 
-        return view($this->prefix.'.edit', ['data' => $dt, 'tingkatList' => $tingkatList, 'mapelList' => $mapelList, 'mapelIDS' => $mapelIDS]);
+        $isUploader = [
+            1 => 'Ya',
+            0 => 'Tidak',
+        ];
+
+        return view($this->prefix . '.edit', ['data' => $dt, 'tingkatList' => $tingkatList, 'mapelList' => $mapelList, 'mapelIDS' => $mapelIDS, 'isUploader' => $isUploader]);
     }
 
     /**
@@ -284,16 +323,17 @@ class ExternalUserController extends Controller{
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'username' => 'required|unique:external_users,username,'.$id,
+            'username' => 'required|unique:external_users,username,' . $id,
+            'nis' => 'required|unique:external_users,nis,' . $id,
             'name' => 'required',
-            'email' => 'required|email|unique:external_users,email,'.$id,
+            'email' => 'required|email|unique:external_users,email,' . $id,
             // 'phone' => 'required|unique:external_users,phone,'.$id,
         ]);
 
         $input = $request->all();
-        if(!empty($input['password'])){
+        if (!empty($input['password'])) {
             $input['password'] = Hash::make($input['password']);
-        }else{
+        } else {
             $input = Arr::except($input, array('password'));
         }
 
@@ -310,17 +350,57 @@ class ExternalUserController extends Controller{
         }
 
         $user = ExternalUser::find($id);
+
+        if (@$request->role === "GURU") {
+            // update ke table user jadi guru uploader
+            if ($request->is_uploader || @$user->is_uploader) {
+                $gu = User::where('username', $user->nis)->first();
+
+                $this->validate($request, [
+                    'nis' => 'required|unique:users,username,' . @$gu->id,
+                    'name' => 'required',
+                    'email' => 'required|email|unique:users,email,' . @$gu->id,
+                    // 'phone' => 'required|unique:external_users,phone,'.$gu->id,
+                ]);
+
+                $inputUploader['name'] = $input['name'];
+                $inputUploader['username'] = $input['nis'];
+                $inputUploader['email'] = $input['email'];
+
+                if (!empty($input['password'])) {
+                    $inputUploader['password'] = $input['password'];
+                }
+
+                $guruUploader = User::find(@$gu->id);
+                if ($guruUploader) {
+                    $guruUploader->update($inputUploader);
+                } else {
+                    $inputUploader['password'] = $user->password;
+                    $guruUploader = User::create($inputUploader);
+                    $guruUploader->assignRole("Guru Uploader");
+                }
+
+                if (@$request->mapel) {
+                    if (count(@$request->mapel) > 0) {
+                        // giuru uplaoder
+                        $guruUploader->mataPelajarans()->sync($request->mapel);
+                    }
+                }
+            }
+        }
+
         $user->update($input);
 
-        if(@$request->role === "GURU"){
-            if(@$request->mapel){
-                if(count(@$request->mapel) > 0){
+        if (@$request->role === "GURU") {
+            if (@$request->mapel) {
+                if (count(@$request->mapel) > 0) {
+                    // guru
                     $user->mataPelajarans()->sync($request->mapel);
                 }
             }
         }
 
-        return redirect()->route($this->routePath.'.index', ['role'=>$request->role])->with(
+        return redirect()->route($this->routePath . '.index', ['role' => $request->role])->with(
             $this->success(__("External User updated successfully"), $user)
         );
     }
@@ -335,7 +415,7 @@ class ExternalUserController extends Controller{
         $user = ExternalUser::find($id);
         $user->update($input);
 
-        return redirect()->route($this->routePath.'.index', ['role'=>$request->role])->with(
+        return redirect()->route($this->routePath . '.index', ['role' => $request->role])->with(
             $this->success(__("Status updated successfully"), $user)
         );
     }
@@ -354,14 +434,23 @@ class ExternalUserController extends Controller{
     //         $this->success(__("User deleted successfully"), $data)
     //     );
     // }
-    public function destroy(Request $request, $id){
+    public function destroy(Request $request, $id)
+    {
         $d = ExternalUser::findOrFail($id);
-        $d->nis = "DEL_".date('Ymdhis');
-        $d->username = "DEL_".date('Ymdhis')."_".$d->username;
-        $d->email = "DEL_".date('Ymdhis')."@sample.id";
+        $dU1 = User::where('username', $d->nis)->first();
+        $d->nis = "DEL_" . date('Ymdhis');
+        $d->username = "DEL_" . date('Ymdhis') . "_" . $d->username;
+        $d->email = "DEL_" . date('Ymdhis') . "@sample.id";
         $d->save();
-
         $d->delete();
+
+        $dU = User::find(@$dU1->id);
+        if ($dU) {
+            $dU->username = "DEL_" . date('Ymdhis') . "_" . $d->username;
+            $dU->email = "DEL_" . date('Ymdhis') . "@sample.id";
+            $dU->save();
+            $dU->delete();
+        }
     }
 
     /**
@@ -369,8 +458,9 @@ class ExternalUserController extends Controller{
      *
      * @return \Illuminate\Http\Response
      */
-    public function batchImport(Request $request){
-        return view($this->prefix.'.batch_upload');
+    public function batchImport(Request $request)
+    {
+        return view($this->prefix . '.batch_upload');
     }
 
     /**
@@ -378,7 +468,8 @@ class ExternalUserController extends Controller{
      *
      * @return \Illuminate\Http\Response
      */
-    public function import(Request $request){
+    public function import(Request $request)
+    {
         try {
             return DB::transaction(function ()  use ($request) {
 
@@ -395,21 +486,19 @@ class ExternalUserController extends Controller{
                     $email = $row["H"];
 
                     // skip existing nis
-                    if(ExternalUser::where('nis', $nis)->first()!==null){
+                    if (ExternalUser::where('nis', $nis)->first() !== null) {
                         continue;
                     }
 
                     // send password to email siswa
-                    if(@$request->payload->sendEmail){
-                        
-                    }
+                    if (@$request->payload->sendEmail) { }
 
                     // cek jenjang if not exist
                     $jenjangObject = Jenjang::firstOrCreate([
                         'name' => $jenjang,
                     ], [
                         'name' => $jenjang,
-                        'description' => $jenjang.' from batch',
+                        'description' => $jenjang . ' from batch',
                         'status' => 'active',
                     ]);
 
@@ -419,7 +508,7 @@ class ExternalUserController extends Controller{
                         'jenjang_id' => $jenjangObject->id,
                     ], [
                         'name' => $tingkat,
-                        'description' => $tingkat.' from batch',
+                        'description' => $tingkat . ' from batch',
                         'status' => 'active',
                     ]);
 
@@ -429,16 +518,16 @@ class ExternalUserController extends Controller{
                         'tingkat_id' => $tingkatObject->id,
                     ], [
                         'name' => $kelas,
-                        'description' => $kelas.' from batch',
+                        'description' => $kelas . ' from batch',
                         'status' => 'active',
                     ]);
 
                     // assign kelas id
-                    if($kelasObject!==null){
+                    if ($kelasObject !== null) {
                         $input['kelas_id'] = $kelasObject->id;
                     }
 
-                    if(!$password){
+                    if (!$password) {
                         $password = "123456"; // default password
                     }
 
@@ -446,11 +535,11 @@ class ExternalUserController extends Controller{
                     $input['name'] = $name;
                     $input['username'] = $name;
                     $input['email'] = $email;
-                    if(@$phone){
+                    if (@$phone) {
                         $input['phone'] = $phone;
                         $input['phone_verified_at'] = now();
                     }
-                    if(@$rombonganBelajar){
+                    if (@$rombonganBelajar) {
                         $input['rombongan_belajar'] = $rombonganBelajar;
                     }
                     $input['password'] = Hash::make($password);
@@ -466,5 +555,84 @@ class ExternalUserController extends Controller{
         } catch (\Throwable $th) {
             return $this->returnError($th);
         }
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function enableMapel($id)
+    {
+        $dt = ExternalUser::with('kelas')->findOrFail($id);
+
+        $jenjangId = @$dt->jenjang->id;
+
+        // get list group mapel 
+        $mapels = MataPelajaran::with('tingkat');
+
+        if ($jenjangId) {
+            $mapels = $mapels->whereHas('tingkat', function ($q2) use ($jenjangId) {
+                $q2->where('jenjang_id', $jenjangId);
+            });
+        }
+
+        $mapels = $mapels->get();
+
+        $groupMapelList = [];
+        foreach ($mapels as $mapel) {
+
+            $textTingkat = "Tingkat " . @$mapel->tingkat->name . " " . @$mapel->tingkat->jenjang->name;
+            $idxSearch = array_search("Semua " . @$textTingkat, array_column($groupMapelList, 'text'));
+
+            // belum ada
+            if ($idxSearch === false) {
+                array_push($groupMapelList, [
+                    'id' => $mapel->tingkat_id,
+                    'text' => "Semua " . @$textTingkat,
+                    'children' => [[
+                        'id' => $mapel->id,
+                        'text' => @$mapel->name . " (" . $textTingkat . ")",
+                    ]],
+                ]);
+            } else {
+                // udah ada
+                array_push($groupMapelList[$idxSearch]['children'], [
+                    'id' => $mapel->id,
+                    'text' => @$mapel->name . " (" . $textTingkat . ")",
+                ]);
+            }
+        }
+
+        $mapelIDS = [];
+        foreach ($dt->mataPelajaranGuests as $mapel) {
+            $mapelIDS[] = $mapel->id;
+        }
+
+        return view($this->prefix . '.enableMapel', ['data' => $dt, 'mapelList' => $groupMapelList, 'mapelIDS' => $mapelIDS]);
+    }
+
+    public function enableMapelUpdate(Request $request, $id)
+    {
+
+        $this->validate($request, [
+            'mapel' => 'required',
+        ]);
+
+        $user = ExternalUser::find($id);
+
+        $user->status = "AKTIF";
+        $user->save();
+
+        if (@$request->mapel) {
+            if (count(@$request->mapel) > 0) {
+                $user->mataPelajaranGuests()->sync($request->mapel);
+            }
+        }
+
+        return redirect()->route($this->routePath . '.index', ['role' => 'SISWA', 'is_pengunjung' => 1])->with(
+            $this->success(__("External User updated successfully"), $user)
+        );
     }
 }

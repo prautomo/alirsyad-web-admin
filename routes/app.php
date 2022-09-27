@@ -28,23 +28,28 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
-})->middleware('auth')->name('verification.notice');
+})->middleware('auth')->name('verification.notice');    
 
+
+Route::get("/verify-email", "Auth\RegisterController@verify")->name('verification.verify.email');
 
 Route::get("/tingkats/json", "API\TingkatController@index")->name('app.tingkat.json');
 Route::get("/kelas/json", "API\KelasController@index")->name('app.kelas.json');
 
 // route front office keur nu login (siswa/guru)
 Route::middleware(['auth'])->group(function () {
-    
+
     Route::get('/', "Front\HomeController@index")->name('app.home');
     Route::get('/mata-pelajaran', "Front\MataPelajaranController@index")->name('app.mapel.list');
     Route::get('/mata-pelajaran/upcoming', 'Front\MataPelajaranController@indexUpcoming')->name('app.mapel.upcoming');
     Route::get('/mata-pelajaran/passed', 'Front\MataPelajaranController@indexPassed')->name('app.mapel.passed');
+    Route::get('/mata-pelajaran/{id}/by-tingkat', "Front\MataPelajaranController@indexByTingkat")->name('app.mapel.byTingkat');
     Route::get('/mata-pelajaran/{id}', "Front\MataPelajaranController@show")->name('app.mapel.detail');
     Route::get('/mata-pelajaran/{id}/modul', "Front\ModulController@indexByMapel")->name('app.mapel.modul');
     Route::get('/mata-pelajaran/{id}/video', "Front\VideoController@indexByMapel")->name('app.mapel.video');
     Route::get('/mata-pelajaran/{id}/simulasi', "Front\SimulasiController@indexByMapel")->name('app.mapel.simulasi');
+
+    Route::get('/updates', "Front\UpdateController@index")->name('app.update');
 
     Route::get('/modul/{id}', "Front\ModulController@show")->name('app.modul.detail');
     Route::get('/video/{id}', "Front\VideoController@show")->name('app.video.detail');
