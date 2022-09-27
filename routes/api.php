@@ -22,6 +22,7 @@ Route::get("login", function (Request $request) {
     return "ok";
 });
 Route::post('register', [AuthController::class, 'register']);
+Route::get("/verify-email", [AuthController::class, 'verify']);
 Route::post('password/forgot', [AuthController::class, 'forgot']);
 
 Route::get("/jenjangs", "API\JenjangController@index");

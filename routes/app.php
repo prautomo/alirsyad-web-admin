@@ -28,8 +28,10 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
-})->middleware('auth')->name('verification.notice');
+})->middleware('auth')->name('verification.notice');    
 
+
+Route::get("/verify-email", "Auth\RegisterController@verify")->name('verification.verify.email');
 
 Route::get("/tingkats/json", "API\TingkatController@index")->name('app.tingkat.json');
 Route::get("/kelas/json", "API\KelasController@index")->name('app.kelas.json');

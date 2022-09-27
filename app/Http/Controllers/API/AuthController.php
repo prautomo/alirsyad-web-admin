@@ -24,6 +24,14 @@ class AuthController extends BaseController
 
         $login_type = filter_var( $request->nis, FILTER_VALIDATE_EMAIL ) ? 'email' : 'nis';
 
+        if($login_type == 'email'){
+            $get_visitor = ExternalUser::where('email', $request->nis)->first();
+
+            if($get_visitor['is_pengunjung'] == 1 && $get_visitor['email_verified_at'] == null){
+                return $this->sendError('Unauthorised.', ['error'=>'Your email has not verified']);
+            }
+        }
+
         if(Auth::attempt([$login_type => $request->nis, 'password' => $request->password])){
             $user = Auth::user();
             // handle status belum aktif
@@ -64,7 +72,7 @@ class AuthController extends BaseController
         ]);
 
         if ($validator->fails()) {
-            return $this->returnStatus(400, $validator->errors());
+            return $this->sendError($validator->errors(), 400);
         }
 
         $data = $request;
@@ -81,7 +89,25 @@ class AuthController extends BaseController
             'jenjang_id' => $data['jenjang_id'],
         ]);
 
+        $details = [
+            'title' => 'Selamat Datang di Al-Irsyad Edu!',
+            'email' => $data['email'],
+            'url_link' => 'http://127.0.0.1:8000'
+        ];
+    
+        \Mail::to($data['email'])->send(new \App\Mail\EmailVerificationMail($details));
+
         return $this->sendResponse($registerd, 'User registered successfully.');
+    }
+
+    
+    public function verify(Request $request)
+    {
+        $update_email_verified_at = ExternalUser::where('email', $request->email)->update(['email_verified_at'=> now() ]);
+
+        if($update_email_verified_at){
+            return $this->sendResponse('', 'Your email has been verified.');
+        }
     }
 
     public function forgot(Request $request) {

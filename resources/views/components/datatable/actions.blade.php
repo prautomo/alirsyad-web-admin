@@ -23,6 +23,15 @@
 </a>
 @endif
 
+@can(@$permissionName.'-list')
+    @if(@$soalRoute)
+    <a href="{{ $soalRoute }}" class="btn btn-sm btn-icon btn-info" data-role="form-modal">
+        <i class="fa fa-book"></i>
+        {{__("Soal")}}
+    </a>
+    @endif
+@endcan
+
 @can(@$permissionName.'-edit')
     @if(@$editRoute)
     <a href="{{ $editRoute }}" class="btn btn-sm btn-icon btn-primary" data-role="form-modal">
