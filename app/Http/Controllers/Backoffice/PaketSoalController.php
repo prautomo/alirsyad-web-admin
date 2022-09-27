@@ -292,39 +292,68 @@ class PaketSoalController extends Controller
 
             })
             ->addIndexColumn()
-            ->addColumn('show-img', function($data) {
-                if(empty($data->icon)){
+            ->addColumn('soal', function($data) {
+                if(empty($data->soal)){
                     return "not available";
                 }else{
-                    return view("components.datatable.image", [
-                        "url" => asset($data->icon)
+                    return view("components.datatable.popupText", [
+                        "text" => substr(strip_tags($data->soal), 0, 10)."..."
                     ]);
                 }
             })
-            ->addColumn("mapel", function ($data) {
-                $mapel = @$data->mataPelajaran->name ? $data->mataPelajaran->name : 'none';
-                $mapelID = @$data->mataPelajaran->id ? $data->mataPelajaran->id : '';
-
-                return view("components.datatable.link", [
-                    "link" => route($this->routePath.".index")."?mata_pelajaran_id=".$mapelID,
-                    "text" => $mapel,
-                ]);
-                return $mapel;
-            })
-            ->addColumn("tingkat_kesulitan", function ($data) {
-                $tingkatKesulitan = '';
-                switch($data->tingkat_kesulitan){
-                    case 'mudah':
-                        $tingkatKesulitan = 'Mudah';
-                        break;
-                    case 'sedang':
-                        $tingkatKesulitan = 'Sedang';
-                        break;
-                    case 'sulit':
-                        $tingkatKesulitan = 'Sulit';
-                        break;
+            ->addColumn('pilihan_a', function($data) {
+                if(empty($data->pilihan_a)){
+                    return "not available";
+                }else{
+                    return view("components.datatable.popupText", [
+                        "text" => substr(strip_tags($data->pilihan_a), 0, 10)."..."
+                    ]);
                 }
-                return $tingkatKesulitan;
+            })
+            ->addColumn('pilihan_b', function($data) {
+                if(empty($data->pilihan_b)){
+                    return "not available";
+                }else{
+                    return view("components.datatable.popupText", [
+                        "text" => substr(strip_tags($data->pilihan_b), 0, 10)."..."
+                    ]);
+                }
+            })
+            ->addColumn('pilihan_c', function($data) {
+                if(empty($data->pilihan_c)){
+                    return "not available";
+                }else{
+                    return view("components.datatable.popupText", [
+                        "text" => substr(strip_tags($data->pilihan_c), 0, 10)."..."
+                    ]);
+                }
+            })
+            ->addColumn('pilihan_d', function($data) {
+                if(empty($data->pilihan_d)){
+                    return "not available";
+                }else{
+                    return view("components.datatable.popupText", [
+                        "text" => substr(strip_tags($data->pilihan_d), 0, 10)."..."
+                    ]);
+                }
+            })
+            ->addColumn('pilihan_e', function($data) {
+                if(empty($data->pilihan_e)){
+                    return "not available";
+                }else{
+                    return view("components.datatable.popupText", [
+                        "text" => substr(strip_tags($data->pilihan_e), 0, 10)."..."
+                    ]);
+                }
+            })
+            ->addColumn('jawaban', function($data) {
+                if(empty($data->jawaban)){
+                    return "not available";
+                }else{
+                    return view("components.datatable.popupText", [
+                        "text" => substr(strip_tags($data->jawaban), 0, 10)."..."
+                    ]);
+                }
             })
             ->addColumn("action", function ($data) {
                 return view("components.datatable.actions", [

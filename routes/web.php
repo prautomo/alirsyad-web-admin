@@ -75,8 +75,9 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
 
         Route::get('soals/create', 'SoalController@create')->name('soals.create');
 
-        // Route::post("upload/image",  "FileUploadController@uploadImageFile");
-        // Route::post("upload/base64",  "FileUploadController@uploadImageBase64");
+        Route::post("upload/image",  "FileUploadController@uploadImageFile")->name('upload.image');
+        Route::post("upload/base64",  "FileUploadController@uploadImageBase64");
+        Route::post("upload/imageCKEditor",  "FileUploadController@uploadImageCKEditor")->name('upload.imageCKEditor');
     });
 
 Route::get('/clear-cache', function () {
