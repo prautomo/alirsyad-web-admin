@@ -2,13 +2,12 @@
 <div class="row">
     <x-input.select :label="__('Mata Pelajaran')" id="mata_pelajaran_id" name="mata_pelajaran_id" :sources="$mapelList" :data="$data" onchange="clickMapel(this)" required />
 
-    
     <div class="col-md-12">
         <div class="form-group">
             <label class="form-control-label" for="input-bab">Bab (*)</label>
 
             <select id="bab" name="bab[]" class="form-control {{($errors->has('bab') ? ' is-invalid' : '')}}" >
-                
+
             </select>
 
             @if($errors->has('bab'))
@@ -22,9 +21,9 @@
     <x-input.text :label="__('Subbab')" name="subbab" :data="$data" :placeholder="__('Nomor Subbab (contoh: 1)')" required />
     <x-input.text :label="__('Judul Subbab')" name="judul_subbab" :placeholder="__('Judul Subbab (contoh: Fauna Air)')" :data="$data" required/>
 
-    {{-- <x-input.select :label="__('Tingkat Kesulitan')" id="tingkat_kesulitan" name="tingkat_kesulitan" :sources="$levelList" :data="$data" required /> --}}
-    
-    <div class="col-md-12">
+    <x-input.select :label="__('Tingkat Kesulitan')" id="tingkat_kesulitan" name="tingkat_kesulitan" :sources="$levelList" :data="$data" required />
+
+    <!-- <div class="col-md-12">
         <div class="form-group">
             <label class="form-control-label">Tingkat Kesulitan (*)</label>
             <select name="tingkat_kesulitan" class="form-control">
@@ -34,7 +33,7 @@
                 <option value="sulit">Sulit</option>
             </select>
         </div>
-    </div>
+    </div> -->
 
     <x-input.text type="number" :label="__('Jumlah Publish')" name="jumlah_publish" :data="$data" />
     <x-input.text type="number" :label="__('Nilai KKM')" name="nilai_kkm" :data="$data" required />

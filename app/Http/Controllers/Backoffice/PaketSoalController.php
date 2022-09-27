@@ -30,7 +30,7 @@ class PaketSoalController extends Controller
      */
     public function datatable(Request $request){
         $query = PaketSoal::query();
-        
+
         $datas = $query->select('*');
 
         return datatables()
@@ -137,6 +137,22 @@ class PaketSoalController extends Controller
     }
 
     /**
+     * Get mata pelajaran
+     */
+    private function getLevel() {
+        $levels = ["Mudah", "Sedang", "Sulit"];
+
+        $levelList = [];
+        $levelList[""] = "Pilih tingkat kesulitan";
+
+        foreach($levels as $level){
+            $levelList[strtolower($level)] = $level;
+        }
+
+        return $levelList;
+    }
+
+    /**
      * Get bab from modul
      */
     private function getBab(){
@@ -174,6 +190,7 @@ class PaketSoalController extends Controller
 
         $data = [
             'mapelList' => $this->getMataPelajaran(),
+            'levelList' => $this->getLevel(),
             'groupBabList' => $this->getBab()
         ];
 
@@ -188,10 +205,41 @@ class PaketSoalController extends Controller
         $storeLatihanSoal = PaketSoal::create($newLatihanSoal);
 
         if ($storeLatihanSoal) {
-            return redirect()->route($this->prefix . '.index')->with(
-                $this->success(__("Success to Create Latihan Soal "), $storeLatihanSoal)
+            return redirect()->route($this->routePath . '.index')->with(
+                $this->success(__("Success to Create Paket Soal "), $storeLatihanSoal)
             );
         }
+    }
+
+    public function destroy(Request $request, $id){
+        $d = PaketSoal::findOrFail($id);
+
+        $d->delete();
+    }
+
+    public function edit(Request $request, $id){
+        $dt = PaketSoal::with('mataPelajaran', 'bab')->findOrFail($id);
+
+        $data = [
+            'data' => $dt,
+            'mapelList' => $this->getMataPelajaran(),
+            'levelList' => $this->getLevel(),
+            'groupBabList' => $this->getBab()
+        ];
+
+        return view($this->prefix.'.edit', $data);
+    }
+
+    public function update(Request $request, $id){
+
+        $dataReq = $request->only(['mata_pelajaran_id', 'tingkat_kesulitan', 'subbab', 'judul_subbab', 'jumlah_publish', 'nilai_kkm']);
+
+        $dt = PaketSoal::findOrFail($id);
+        $dt->update($dataReq);
+
+        return redirect()->route($this->routePath.'.index')->with(
+            $this->success(__("Success to update Paket Soal"), $dt)
+        );
     }
 
     /**
@@ -201,7 +249,7 @@ class PaketSoalController extends Controller
      */
     public function datatableSoal(Request $request){
         $query = Soal::query();
-        
+
         $datas = $query->select('*');
 
         return datatables()
@@ -287,7 +335,7 @@ class PaketSoalController extends Controller
     }
 
     public function batchSoal(Request $request, $id) {
-        
+
         $data = [
             'id' => $id,
         ];
@@ -338,7 +386,7 @@ class PaketSoalController extends Controller
                         $tempJawaban = "pilihan_d";
                     } else if (strtolower($jawaban) === "pilihan 5") {
                         $tempJawaban = "pilihan_e";
-                    } 
+                    }
                     $input['jawaban'] = $tempJawaban;
                     $input['creator_id'] = @Auth::user()->id;
                     $input['created_at'] = now();
