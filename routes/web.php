@@ -66,8 +66,12 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
         Route::resource('paket-soals', 'PaketSoalController');
         Route::get('paket-soals/{id}/soal', 'PaketSoalController@indexSoal')->name('paket-soals.index-soal');
         Route::get('paket-soals/{id}/soal/create', 'PaketSoalController@createSoal')->name('paket-soals.create-soal');
+        Route::post('paket-soals/{id}/soal/create', 'PaketSoalController@storeSoal')->name('paket-soals.store-soal');
         Route::get('paket-soals/{id}/soal/batch-create', 'PaketSoalController@batchSoal')->name('paket-soals.batch-soal');
         Route::post('paket-soals/{id}/soal/import', 'PaketSoalController@importSoal')->name('paket-soals.import-soal');
+        Route::get('paket-soals/{paketId}/soal/{id}/edit', 'PaketSoalController@editSoal')->name('paket-soals.edit-soal');
+        Route::put('paket-soals/{paketId}/soal/{id}/edit', 'PaketSoalController@updateSoal')->name('paket-soals.update-soal');
+        Route::delete('paket-soals/{paketId}/soal/{id}/delete', 'PaketSoalController@destroySoal')->name('paket-soals.destroy-soal');
 
         Route::get('soals/create', 'SoalController@create')->name('soals.create');
 

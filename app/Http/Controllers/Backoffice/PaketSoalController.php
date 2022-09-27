@@ -137,7 +137,7 @@ class PaketSoalController extends Controller
     }
 
     /**
-     * Get mata pelajaran
+     * Get level
      */
     private function getLevel() {
         $levels = ["Mudah", "Sedang", "Sulit"];
@@ -150,6 +150,28 @@ class PaketSoalController extends Controller
         }
 
         return $levelList;
+    }
+
+    /**
+     * Get jawaban
+     */
+    private function getJawaban() {
+        $jawabanBenars = [
+            ["value" => "pilihan_a", "label" => "Pilihan 1"],
+            ["value" => "pilihan_b", "label" => "Pilihan 2"],
+            ["value" => "pilihan_c", "label" => "Pilihan 3"],
+            ["value" => "pilihan_d", "label" => "Pilihan 4"],
+            ["value" => "pilihan_e", "label" => "Pilihan 5"]
+        ];
+
+        $jawabans = [];
+        $jawabans[""] = "Pilih jawaban benar";
+
+        foreach($jawabanBenars as $jawabanBenar){
+            $jawabans[@$jawabanBenar['value']] = @$jawabanBenar['label'];
+        }
+
+        return $jawabans;
     }
 
     /**
@@ -247,10 +269,10 @@ class PaketSoalController extends Controller
      *
      * @return void
      */
-    public function datatableSoal(Request $request){
+    public function datatableSoal(Request $request, $id){
         $query = Soal::query();
 
-        $datas = $query->select('*');
+        $datas = $query->select('*')->where('paket_soal_id', $id);
 
         return datatables()
             ->of($datas)
@@ -310,8 +332,8 @@ class PaketSoalController extends Controller
                     "judul_subbab" => $data->judul_subbab,
                     "permissionName" => 'paket-soal',
                     "class" => $data->class,
-                    "deleteRoute" => route($this->routePath.".destroy", $data->id),
-                    "editRoute" => route($this->routePath.".edit", $data->id),
+                    "deleteRoute" => route($this->routePath.".destroy-soal", [$data->paket_soal_id , $data->id]),
+                    "editRoute" => route($this->routePath.".edit-soal", [$data->paket_soal_id , $data->id]),
                 ]);
             })
             ->order(function ($query) {
@@ -322,7 +344,7 @@ class PaketSoalController extends Controller
 
     public function indexSoal(Request $request, $id) {
         if ($request->ajax()) {
-            return $this->datatableSoal($request);
+            return $this->datatableSoal($request, $id);
         }
         $paketSoal = PaketSoal::with('mataPelajaran', 'bab')->findOrFail($id);
 
@@ -369,6 +391,7 @@ class PaketSoalController extends Controller
                     $paketSoal = PaketSoal::find($id);
                     if ($paketSoal === null) continue;
 
+                    $input['paket_soal_id'] = $id;
                     $input['soal'] = $soal;
                     $input['pilihan_a'] = $pilihanA;
                     $input['pilihan_b'] = $pilihanB;
@@ -399,5 +422,58 @@ class PaketSoalController extends Controller
         } catch (\Throwable $th) {
             return $this->returnError($th);
         }
+    }
+
+    public function createSoal(Request $request, $id){
+        $data = [
+            'paketId' => $id,
+            'listJawabanBenar' => $this->getJawaban(),
+        ];
+
+        return view($this->prefix.'.create_soal', $data);
+    }
+
+    public function storeSoal(Request $request, $id)
+    {
+        $newLatihanSoal = $request->only(['soal', 'pilihan_a', 'pilihan_b', 'pilihan_c', 'pilihan_d', 'pilihan_e', 'jawaban', 'sumber', 'link_pembahasan', 'pembahasan']);
+        $newLatihanSoal['paket_soal_id'] = $id;
+
+        $storeLatihanSoal = Soal::create($newLatihanSoal);
+
+        if ($storeLatihanSoal) {
+            return redirect()->route($this->routePath . '.index-soal', $id)->with(
+                $this->success(__("Success to Create Paket Soal "), $storeLatihanSoal)
+            );
+        }
+    }
+
+    public function editSoal(Request $request, $paketId, $id){
+        $dt = Soal::with('paket')->findOrFail($id);
+
+        $data = [
+            'data' => $dt,
+            'paketId' => $paketId,
+            'listJawabanBenar' => $this->getJawaban(),
+        ];
+
+        return view($this->prefix.'.edit_soal', $data);
+    }
+
+    public function updateSoal(Request $request, $paketId, $id){
+
+        $dataReq = $request->only(['soal', 'pilihan_a', 'pilihan_b', 'pilihan_c', 'pilihan_d', 'pilihan_e', 'jawaban', 'sumber', 'link_pembahasan', 'pembahasan']);
+
+        $dt = Soal::findOrFail($id);
+        $dt->update($dataReq);
+
+        return redirect()->route($this->routePath.'.index-soal', $paketId)->with(
+            $this->success(__("Success to update Soal"), $dt)
+        );
+    }
+
+    public function destroySoal(Request $request, $paketId, $id){
+        $d = Soal::findOrFail($id);
+
+        $d->delete();
     }
 }
