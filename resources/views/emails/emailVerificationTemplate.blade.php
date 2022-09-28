@@ -33,7 +33,7 @@
     <p>Silahkan verifikasi alamat emailmu dengan klik tautan berikut dan memulai login kembali :</p>
    
     <div style="height: 4rem">
-        <a href="{{ $details['url_link'] . '/verify-email?email=' . $details['email'] }}" class="button">Confirm Email & Login</a>
+        <a href="{{ $details['url_link'] . 'verify-email?email=' . $details['email'] }}" class="button">Confirm Email & Login</a>
     </div>
 
     <p>Penting untuk memiliki akun dengan alamat email yang akurat karena semua keterangan investasimu akan dikirim ke sini. Harap abaikan email ini bila kamu tidak pernah mendaftar ke Al Irsyad Edu.</p>
