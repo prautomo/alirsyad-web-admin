@@ -28,6 +28,7 @@ paths:
                   password: '123456'
                   password_confirmation: '123456'
                   jenjang_id: 1
+                  source_api_call: ios
             example:
               name: Ferdhika Yudira
               email: fera@dika.web.id
@@ -35,6 +36,7 @@ paths:
               password: '123456'
               password_confirmation: '123456'
               jenjang_id: 1
+              source_api_call: ios
         required: true
       responses:
         '200':
@@ -107,6 +109,60 @@ paths:
                   email: fer@dika.web.id
             example:
               email: fer@dika.web.id
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /password/forgot/student:
+    post:
+      tags:
+      - Auth
+      summary: Forgot Password Student
+      operationId: ForgotPasswordStudent
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/ForgotPasswordStudentRequest'
+              - example:
+                  nis: 9883274
+            example:
+              nis: 9883274
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /password/reset:
+    post:
+      tags:
+      - Auth
+      summary: Reset Password
+      operationId: ResetPassword
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/ResetPasswordRequest'
+              - example:
+                  email: fer@dika.web.id
+                  token: 0b0a664a113d0609367c21af482ada725ea68c46ce274e87efa234e388a8160d
+                  password: new_password
+                  password_confirmation: new_password
+            example:
+              email: fer@dika.web.id
+              token: 0b0a664a113d0609367c21af482ada725ea68c46ce274e87efa234e388a8160d
+              password: new_password
+              password_confirmation: new_password
         required: true
       responses:
         '200':
@@ -1139,6 +1195,38 @@ components:
           type: string
       example:
         email: fer@dika.web.id
+    ForgotPasswordStudentRequest:
+      title: ForgotPasswordStudentRequest
+      required:
+      - nis
+      type: object
+      properties:
+        nis:
+          type: string
+      example:
+        nis: 9883274
+    ResetPasswordRequest:
+      title: ResetPasswordRequest
+      required:
+      - email
+      - token
+      - password
+      - password_confirmation
+      type: object
+      properties:
+        email:
+          type: string
+        token:
+          type: string
+        password:
+          type: string
+        password_confirmation:
+          type: string
+      example:
+        email: fera@dika.web.id
+        phone: '0b0a664a113d0609367c21af482ada725ea68c46ce274e87efa234e388a8160d'
+        password: 'new_password'
+        password_confirmation: 'new_password'
     EditProfileRequest:
       title: EditProfileRequest
       required:

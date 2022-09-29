@@ -24,6 +24,8 @@ Route::get("login", function (Request $request) {
 Route::post('register', [AuthController::class, 'register']);
 Route::get("/verify-email", [AuthController::class, 'verify']);
 Route::post('password/forgot', [AuthController::class, 'forgot']);
+Route::post('password/reset', [AuthController::class, 'reset']);
+Route::post('password/forgot/student', [AuthController::class, 'forgot_password_student']);
 
 Route::get("/jenjangs", "API\JenjangController@index");
 Route::get("/jenjangs/{id}", "API\JenjangController@show");

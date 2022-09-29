@@ -7,8 +7,11 @@ use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\ExternalUser;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ResetPasswordRequest;
+use App\Models\PasswordResetStudent;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 use Validator;
 
 class AuthController extends BaseController
@@ -72,7 +75,7 @@ class AuthController extends BaseController
         ]);
 
         if ($validator->fails()) {
-            return $this->sendError($validator->errors(), 400);
+            return $this->sendError('User registered not successful.', $validator->errors());
         }
 
         $data = $request;
@@ -90,10 +93,14 @@ class AuthController extends BaseController
         ]);
 
         $details = [
-            'title' => 'Selamat Datang di Al-Irsyad Edu!',
+            'title' => 'Selamat Datang di Al-Irsyad Edu!',  
             'email' => $data['email'],
-            'url_link' => 'http://127.0.0.1:8000'
+            'url_link' => 'http://dev.alirsyadbandung.sch.id/'
         ];
+
+        if($data['source_api_call'] == 'ios'){
+            $details['url_link'] = 'alirsyadedu://';
+        }
     
         \Mail::to($data['email'])->send(new \App\Mail\EmailVerificationMail($details));
 
@@ -126,18 +133,63 @@ class AuthController extends BaseController
         return $this->sendResponse([], 'Reset password link sent on your email id.');
     }
 
-    public function reset(ResetPasswordRequest $request) {
-        $reset_password_status = Password::reset($request->validated(), function ($user, $password) {
-            $user->password = Hash::make($password);
-            $user->save();
+    public function reset(Request $request) {
+
+        $request->validate([
+            'email' => 'required|email',
+            'token' => 'required',
+            'password' => 'required|string|confirmed'
+        ]);
+
+        $reset_password_status = Password::reset($request->only('email', 'password', 'password_confirmation', 'token'), 
+        function ($user) use ($request) {
+            $user->forceFill([
+                'password' => Hash::make($request->password),
+                'remember_token' => Str::random(60)
+            ])->save();
+
+            event(new PasswordReset($user));
         });
 
-        if ($reset_password_status == Password::INVALID_TOKEN) {
-            return $this->respondBadRequest(ApiCode::INVALID_RESET_PASSWORD_TOKEN);
+        if($reset_password_status == Password::PASSWORD_RESET){
+            return $this->sendResponse([], "Password has been successfully changed.");
+        }else{
+            return $this->sendError('Failed to change password.', $reset_password_status);
         }
 
-        return $this->respondWithMessage("Password has been successfully changed");
     }
+
+    public function forgot_password_student(Request $request) {
+
+        $validator = Validator::make($request->all(), [
+            'nis' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->returnStatus(400, $validator->errors());
+        }
+
+        $data = $request;
+
+        $list_nis = ExternalUser::where('role', 'SISWA')->pluck('nis')->all();
+
+        if (!in_array( $data['nis'] , $list_nis )) {
+            return $this->sendError('NIS is not registred', []);
+        }
+
+        $new_req = PasswordResetStudent::create([
+            'external_user_id' => ExternalUser::where('nis', $data['nis'])->first()->id,
+            'nis' => $data['nis']
+        ]);
+
+        if($new_req){
+            return $this->sendResponse([], 'Reset password is requested.');
+        }else{
+            return $this->sendError('Failed to request password reset.', $new_req);
+        }
+
+    }
+    
 
     /**
      * Logout api

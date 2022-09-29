@@ -89,6 +89,9 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
 
         Route::get('soals/create', 'SoalController@create')->name('soals.create');
 
+        Route::resource('password-reset-students', 'PasswordResetStudentController');
+        Route::post('password-reset-students/update-status/{id}', 'PasswordResetStudentController@updateStatus')->name('password-reset-students.update-status');
+
         Route::post("upload/image",  "FileUploadController@uploadImageFile")->name('upload.image');
         Route::post("upload/base64",  "FileUploadController@uploadImageBase64");
         Route::post("upload/imageCKEditor",  "FileUploadController@uploadImageCKEditor")->name('upload.imageCKEditor');
