@@ -191,6 +191,15 @@
             </li>
             @endcanany
 
+            @canany(['user-list', 'external-user-list'])
+              <li class="nav-item">
+                <a class="nav-link{{ request()->is('backoffice/password-reset-students*') ? ' active' : '' }}" href="{{ route('backoffice::password-reset-students.index') }}">
+                  <i class="ni ni-key-25 text-dark-green"></i>
+                  <span class="nav-link-text">Reset Password Siswa</span>
+                </a>
+              </li>
+            @endcanany
+
             @can('banner-list')
             <li class="nav-item">
               <a class="nav-link{{ request()->is('banners*') ? ' active' : '' }}" href="{{ route('backoffice::banners.index') }}">

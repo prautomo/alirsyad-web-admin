@@ -249,6 +249,67 @@
             }
         })
     }
+
+    
+    // change status password reset modal
+    function changeStatusPasswordReset(id, role, route){
+        Swal.fire({
+            title: 'Select Status',
+            input: 'select',
+            inputOptions: {
+                'RESET_PASSWORD_SELESAI': 'Reset Password',
+                'RESET_PASSWORD_DITOLAK': 'Tolak Permintaan Reset Password'
+            },
+            inputPlaceholder: 'Select a status',
+            showCancelButton: true,
+            inputValidator: (value) => {
+                return new Promise((resolve) => {
+                    if (value === 'RESET_PASSWORD_SELESAI' || value === 'RESET_PASSWORD_DITOLAK') {
+                        var url = route
+                        var payload = {
+                            status: value,
+                            role: role
+                        };
+                        $.ajax({
+                            url: url,
+                            type: "POST",
+                            data: payload,
+                        })
+                        .done(function (response) {
+                            Swal.fire(
+                            'Updated!',
+                            _.get(response, "message", '{{__("Status has been updated.")}}'),
+                            'success'
+                            ).then(() => {
+                                $(".datatable-serverside").DataTable().destroy() 
+                                const datatable = initDatatable('.datatable-serverside');
+                                datatable.ajax.reload()
+                            });
+                        })
+                        .fail(function (err) {
+                            let message = '{{__("Status failed to update.")}}';
+
+                            if (err.status === 404) {
+                                message = '{{__("Data doesn\'t exists")}}';
+                            } else {
+                                message = _.get(err, "responseJSON.message", message);
+                            }
+
+                            Swal.fire({
+                                type: 'error',
+                                title: 'Oops...',
+                                text: message
+                            })
+                        });
+
+                        resolve()
+                    } else {
+                        resolve('You need to select RESET_PASSWORD_SELESAI or RESET_PASSWORD_DITOLAK :)')
+                    }
+                })
+            }
+        })
+    }
 </script>
 
 <div class="modal fade" id="viewPdfModal" tabindex="-1" role="dialog" aria-labelledby="viewPdfModalLabel" aria-hidden="true">
