@@ -346,7 +346,7 @@ class PaketSoalController extends Controller
                     return "not available";
                 }else{
                     return view("components.datatable.popupText", [
-                        "text" => $data->jawaban
+                        "text" => ucwords(str_replace("_", " ", @$data->jawaban))
                     ]);
                 }
             })

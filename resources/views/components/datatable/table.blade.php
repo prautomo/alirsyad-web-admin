@@ -132,19 +132,19 @@
             $('#ps-pilihan4-value').html(soal.pilihan_d);
             $('#ps-pilihan5-value').html(soal.pilihan_e);
 
-            let jawaban = "Pilihan 5";
+            let jawaban = "Pilihan E";
             switch (soal.jawaban) {
                 case "pilihan_a":
-                    jawaban = "Pilihan 1"
+                    jawaban = "Pilihan A"
                     break;
                 case "pilihan_b":
-                    jawaban = "Pilihan 2"
+                    jawaban = "Pilihan B"
                     break;
                 case "pilihan_c":
-                    jawaban = "Pilihan 3"
+                    jawaban = "Pilihan C"
                     break;
                 case "pilihan_d":
-                    jawaban = "Pilihan 4"
+                    jawaban = "Pilihan D"
                     break;
             }
 
@@ -383,15 +383,15 @@
             <div class="col-md-12">
                 <h2 class="font-weight-bold">Soal :</h2>
                 <div id="ps-soal-value">-</div>
-                <h2 class="font-weight-bold">Pilihan 1 :</h2>
+                <h2 class="font-weight-bold">Pilihan A :</h2>
                 <div id="ps-pilihan1-value">-</div>
-                <h2 class="font-weight-bold">Pilihan 2 :</h2>
+                <h2 class="font-weight-bold">Pilihan B :</h2>
                 <div id="ps-pilihan2-value">-</div>
-                <h2 class="font-weight-bold">Pilihan 3 :</h2>
+                <h2 class="font-weight-bold">Pilihan C :</h2>
                 <div id="ps-pilihan3-value">-</div>
-                <h2 class="font-weight-bold">Pilihan 4 :</h2>
+                <h2 class="font-weight-bold">Pilihan D :</h2>
                 <div id="ps-pilihan4-value">-</div>
-                <h2 class="font-weight-bold">Pilihan 5 :</h2>
+                <h2 class="font-weight-bold">Pilihan E :</h2>
                 <div id="ps-pilihan5-value">-</div>
                 <h2 class="font-weight-bold">Jawaban :</h2>
                 <div id="ps-jawaban-value">-</div>
