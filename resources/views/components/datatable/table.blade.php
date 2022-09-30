@@ -9,6 +9,13 @@
 @once
 @push('plugin_css')
 <link rel="stylesheet" href="{{ asset('backoffice/assets/vendor/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css') }}">
+
+<style>
+    .ps-soal-preview img {
+        width: 100% !important;
+        height: 100% !important;
+    }
+</style>
 @endpush
 @push('plugin_script')
 <script src="{{ asset('backoffice/assets/vendor/datatables.net/js/jquery.dataTables.min.js') }}"></script>
@@ -52,7 +59,7 @@
 
             /* Copy the text inside the text field */
             copyToClipboard(slug);
-            
+
             alert("Copied the text: " + slug);
         });
 
@@ -110,8 +117,38 @@
             const url = $(this).data("url");
 
             let template = "<object type='application/pdf' width='100%' height='400px' data= '"+ url +"'>";
-            
+
             $('#previewContent').html(template);
+        });
+
+        $(document).on('click', '.datatable-viewSoal-btn', function(event) {
+            event.preventDefault();
+            const soal = $(this).data("soal");
+
+            $('#ps-soal-value').html(soal.soal);
+            $('#ps-pilihan1-value').html(soal.pilihan_a);
+            $('#ps-pilihan2-value').html(soal.pilihan_b);
+            $('#ps-pilihan3-value').html(soal.pilihan_c);
+            $('#ps-pilihan4-value').html(soal.pilihan_d);
+            $('#ps-pilihan5-value').html(soal.pilihan_e);
+
+            let jawaban = "Pilihan 5";
+            switch (soal.jawaban) {
+                case "pilihan_a":
+                    jawaban = "Pilihan 1"
+                    break;
+                case "pilihan_b":
+                    jawaban = "Pilihan 2"
+                    break;
+                case "pilihan_c":
+                    jawaban = "Pilihan 3"
+                    break;
+                case "pilihan_d":
+                    jawaban = "Pilihan 4"
+                    break;
+            }
+
+            $('#ps-jawaban-value').html(jawaban);
         });
 
         $(document).on('click', '.datatable-status-dana-btn', function(event) {
@@ -158,7 +195,7 @@
                                     _.get(response, "message", '{{__("Status has been updated.")}}'),
                                     'success'
                                     ).then(() => {
-                                        $(".datatable-serverside").DataTable().destroy() 
+                                        $(".datatable-serverside").DataTable().destroy()
                                         const datatable = initDatatable('.datatable-serverside');
                                         datatable.ajax.reload()
                                     });
@@ -220,7 +257,7 @@
                             _.get(response, "message", '{{__("Status has been updated.")}}'),
                             'success'
                             ).then(() => {
-                                $(".datatable-serverside").DataTable().destroy() 
+                                $(".datatable-serverside").DataTable().destroy()
                                 const datatable = initDatatable('.datatable-serverside');
                                 datatable.ajax.reload()
                             });
@@ -250,7 +287,7 @@
         })
     }
 
-    
+
     // change status password reset modal
     function changeStatusPasswordReset(id, role, route){
         Swal.fire({
@@ -281,7 +318,7 @@
                             _.get(response, "message", '{{__("Status has been updated.")}}'),
                             'success'
                             ).then(() => {
-                                $(".datatable-serverside").DataTable().destroy() 
+                                $(".datatable-serverside").DataTable().destroy()
                                 const datatable = initDatatable('.datatable-serverside');
                                 datatable.ajax.reload()
                             });
@@ -323,6 +360,43 @@
       </div>
       <div class="modal-body pt-0">
         <div id="previewContent"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="viewSoalModal" tabindex="-1" role="dialog" aria-labelledby="viewSoalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title" id="viewSoalLabel">Preview Soal</h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body pt-0 ps-soal-preview">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="font-weight-bold">Soal :</h2>
+                <div id="ps-soal-value">-</div>
+                <h2 class="font-weight-bold">Pilihan 1 :</h2>
+                <div id="ps-pilihan1-value">-</div>
+                <h2 class="font-weight-bold">Pilihan 2 :</h2>
+                <div id="ps-pilihan2-value">-</div>
+                <h2 class="font-weight-bold">Pilihan 3 :</h2>
+                <div id="ps-pilihan3-value">-</div>
+                <h2 class="font-weight-bold">Pilihan 4 :</h2>
+                <div id="ps-pilihan4-value">-</div>
+                <h2 class="font-weight-bold">Pilihan 5 :</h2>
+                <div id="ps-pilihan5-value">-</div>
+                <h2 class="font-weight-bold">Jawaban :</h2>
+                <div id="ps-jawaban-value">-</div>
+            </div>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

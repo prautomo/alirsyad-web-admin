@@ -51,14 +51,8 @@ class PaketSoalController extends Controller
 
             })
             ->addIndexColumn()
-            ->addColumn('show-img', function($data) {
-                if(empty($data->icon)){
-                    return "not available";
-                }else{
-                    return view("components.datatable.image", [
-                        "url" => asset($data->icon)
-                    ]);
-                }
+            ->addColumn('jumlah_soal', function($data) {
+                return count(@$data->soals);
             })
             ->addColumn("mapel", function ($data) {
                 $mapel = @$data->mataPelajaran->name ? $data->mataPelajaran->name : 'none';
@@ -297,7 +291,8 @@ class PaketSoalController extends Controller
                     return "not available";
                 }else{
                     return view("components.datatable.popupText", [
-                        "text" => substr(strip_tags($data->soal), 0, 10)."..."
+                        "text" => substr(strip_tags($data->soal), 0, 10)."...",
+                        "data" => $data,
                     ]);
                 }
             })
@@ -351,7 +346,7 @@ class PaketSoalController extends Controller
                     return "not available";
                 }else{
                     return view("components.datatable.popupText", [
-                        "text" => substr(strip_tags($data->jawaban), 0, 10)."..."
+                        "text" => $data->jawaban
                     ]);
                 }
             })
@@ -363,6 +358,7 @@ class PaketSoalController extends Controller
                     "class" => $data->class,
                     "deleteRoute" => route($this->routePath.".destroy-soal", [$data->paket_soal_id , $data->id]),
                     "editRoute" => route($this->routePath.".edit-soal", [$data->paket_soal_id , $data->id]),
+                    "viewSoal" => $data,
                 ]);
             })
             ->order(function ($query) {
