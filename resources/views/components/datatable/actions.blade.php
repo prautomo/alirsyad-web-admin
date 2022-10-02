@@ -16,6 +16,16 @@
     @endif
 @endcan
 
+
+@can(@$permissionName.'-list')
+    @if(@$viewSoal)
+    <a href="#" data-toggle="modal" data-target="#viewSoalModal" class="btn btn-sm btn-icon btn-success datatable-viewSoal-btn" data-soal="{{$viewSoal ?? ""}}" >
+        <i class="fa fa-eye"></i>
+        {{__("View Soal")}}
+    </a>
+    @endif
+@endcan
+
 @if(isset($subRoute))
 <a href="{{ $subRoute }}" class="btn btn-sm btn-icon btn-success">
     <i class="fa fa-eye"></i>

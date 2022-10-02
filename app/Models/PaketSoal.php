@@ -23,4 +23,9 @@ class PaketSoal extends Model
     {
         return $this->belongsTo("App\Models\Modul",  "bab_id", "id")->withTrashed();
     }
+
+    public function soals()
+    {
+        return $this->hasMany("App\Models\Soal",  "paket_soal_id", "id");
+    }
 }
