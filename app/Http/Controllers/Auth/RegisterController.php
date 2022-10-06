@@ -87,7 +87,7 @@ class RegisterController extends Controller
         $details = [
             'title' => 'Selamat Datang di Al-Irsyad Edu!',
             'email' => $data['email'],
-            'url_link' => 'http://127.0.0.1:8000'
+            'url_link' => url('/')
         ];
     
         \Mail::to($data['email'])->send(new \App\Mail\EmailVerificationMail($details));
@@ -120,10 +120,21 @@ class RegisterController extends Controller
     public function verify(Request $request)
     {
         $update_email_verified_at = ExternalUser::where('email', $request->email)->update(['email_verified_at'=> now() ]);
-
+        if($request->source == 'ios'){
+            return redirect()->away('alirsyadedu://login');
+        }
         if($update_email_verified_at){
             return redirect()->route('login')
                 ->with('success', 'Your email has been verified.');
+        }
+    }
+
+    public function reset_password(Request $request){
+
+        if($request->source == 'ios'){
+            return redirect()->away('alirsyadedu://reset-password?token=' . $request->token . '&email=' . $request->email );
+        }else{
+            return redirect()->route('/password/reset/' . $request->token . '&email=' . $request->email );
         }
     }
 }

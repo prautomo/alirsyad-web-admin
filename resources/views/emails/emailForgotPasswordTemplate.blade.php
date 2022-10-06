@@ -13,7 +13,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 150px;
+            width: 101px;
             font-weight: 600 !important;
             text-decoration: none;
             background-color: #024102;
@@ -29,18 +29,15 @@
 <body>
     <img src="{{ $message->embed(public_path().'/images/banner-email-verification.png') }}" alt="">
     <h1>{{ $details['title'] }}</h1>
-    <p>Terima kasih sudah mendaftarkan dirimu di Al Irsyad Edu. Sebentar lagi kamu akan siap memulai pengalaman baru dalam belajar</p>
-    <p>Silahkan verifikasi alamat emailmu dengan klik tautan berikut dan memulai login kembali :</p>
-   
+    <p>Silahkan reset passwod Anda dengan klik tautan dibawah ini :</p>
+    
     <div style="height: 4rem">
         @if($details['source_api_call'] =='ios')         
-            <a href="{{ $details['url_link'] . 'verify-email?email=' . $details['email'] . '&source=ios'}}" class="button">Confirm Email & Login</a>     
+            <a href="{{ $details['url_link'] . '/reset-password?token=' . $details['token'] . '&email=' . urlencode($details['email']) . '&source=ios'}}" class="button">Reset Password</a>     
         @else
-            <a href="{{ $details['url_link'] . 'verify-email?email=' . $details['email'] }}" class="button">Confirm Email & Login</a>     
+            <a href="{{ $details['url_link'] . '/password/reset/' . $details['token'] . '?email=' . urlencode($details['email']) }}" class="button">Reset Password</a>     
         @endif
     </div>
-
-    <p>Penting untuk memiliki akun dengan alamat email yang akurat karena semua keterangan investasimu akan dikirim ke sini. Harap abaikan email ini bila kamu tidak pernah mendaftar ke Al Irsyad Edu.</p>
 
     <p>Salam</p>
     <p style="font-size: 12pt; font-weight: 700">SD IT Al-Irsyad Al-Islamiyyah</p>
