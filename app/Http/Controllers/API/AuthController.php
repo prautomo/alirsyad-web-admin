@@ -193,7 +193,7 @@ class AuthController extends BaseController
         // Redirect the user back to the password reset request form if the token is invalid
         if (!$tokenData) return view('auth.passwords.email');
 
-        $user = User::where('email', $tokenData->email)->first();
+        $user = ExternalUser::where('email', $tokenData->email)->first();
         // Redirect the user back if the email is invalid
         if (!$user) return redirect()->back()->withErrors(['email' => 'Email not found']);
 
