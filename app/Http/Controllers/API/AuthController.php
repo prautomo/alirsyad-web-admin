@@ -8,7 +8,9 @@ use App\Models\ExternalUser;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ResetPasswordRequest;
 use App\Models\PasswordResetStudent;
+use Carbon\Carbon;
 use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
@@ -95,12 +97,9 @@ class AuthController extends BaseController
         $details = [
             'title' => 'Selamat Datang di Al-Irsyad Edu!',  
             'email' => $data['email'],
-            'url_link' => 'http://dev.alirsyadbandung.sch.id/'
+            'source_api_call' => $data['source_api_call'],
+            'url_link' => 'http://127.0.0.1:8000/'
         ];
-
-        if($data['source_api_call'] == 'ios'){
-            $details['url_link'] = 'alirsyadedu://';
-        }
     
         \Mail::to($data['email'])->send(new \App\Mail\EmailVerificationMail($details));
 
@@ -113,7 +112,7 @@ class AuthController extends BaseController
         $update_email_verified_at = ExternalUser::where('email', $request->email)->update(['email_verified_at'=> now() ]);
 
         if($update_email_verified_at){
-            return $this->sendResponse('', 'Your email has been verified.');
+            return $this->sendResponse('', 'Your emaill has been verified.');
         }
     }
 
@@ -126,11 +125,48 @@ class AuthController extends BaseController
             return $this->returnStatus(400, $validator->errors());
         }
 
-        $credentials = $request->only(['email']);
+        // $credentials = $request->only(['email']);
 
-        Password::sendResetLink($credentials);
+        // Password::sendResetLink($credentials);
 
-        return $this->sendResponse([], 'Reset password link sent on your email id.');
+        //Create Password Reset Token
+        DB::table('password_resets')->insert([
+            'email' => $request->email,
+            'token' => Str::random(60),
+            'created_at' => Carbon::now()
+        ]);
+
+        //Get the token just created above
+        $tokenData = DB::table('password_resets')
+            ->where('email', $request->email)->first();
+
+        if ($this->sendResetEmail($request->email, $tokenData->token, $request->source_api_call)) {
+            return $this->sendResponse([], 'Reset password link sent to your email.');
+        }else{
+            return $this->sendError('Failed to request password reset.');
+        }
+    }
+
+    private function sendResetEmail($email, $token, $source)
+    {
+        //Generate, the password reset link. The token generated is embedded in the link
+        $link = config('base_url') . 'password/reset/' . $token . '?email=' . urlencode($email);
+
+        try {
+            
+            $details = [
+                'title' => 'Reset Password Akun Al-Irsyad Edu!',
+                'email' => $email,
+                'token' => $token,
+                'source_api_call' => $source    ,
+                'url_link' => url('/')
+            ];
+        
+            \Mail::to($email)->send(new \App\Mail\EmailForgotPasswordMail($details));
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     public function reset(Request $request) {
@@ -141,20 +177,38 @@ class AuthController extends BaseController
             'password' => 'required|string|confirmed'
         ]);
 
-        $reset_password_status = Password::reset($request->only('email', 'password', 'password_confirmation', 'token'), 
-        function ($user) use ($request) {
-            $user->forceFill([
-                'password' => Hash::make($request->password),
-                'remember_token' => Str::random(60)
-            ])->save();
+        // $reset_password_status = Password::reset($request->only('email', 'password', 'password_confirmation', 'token'), 
+        // function ($user) use ($request) {
+        //     $user->forceFill([
+        //         'password' => Hash::make($request->password),
+        //         'remember_token' => Str::random(60)
+        //     ])->save();
 
-            event(new PasswordReset($user));
-        });
+        //     event(new PasswordReset($user));
+        // });
 
-        if($reset_password_status == Password::PASSWORD_RESET){
+        // Validate the token
+        $tokenData = DB::table('password_resets')
+            ->where('token', $request->token)->first();
+        // Redirect the user back to the password reset request form if the token is invalid
+        if (!$tokenData) return view('auth.passwords.email');
+
+        $user = ExternalUser::where('email', $tokenData->email)->first();
+        // Redirect the user back if the email is invalid
+        if (!$user) return redirect()->back()->withErrors(['email' => 'Email not found']);
+
+        //Hash and update the new password
+        $user->password = Hash::make($request->password);
+        $updated_user = $user->update(); //or $user->save();
+
+        //Delete the token
+        DB::table('password_resets')->where('email', $user->email)
+            ->delete();
+
+        if($updated_user){
             return $this->sendResponse([], "Password has been successfully changed.");
         }else{
-            return $this->sendError('Failed to change password.', $reset_password_status);
+            return $this->sendError('Failed to change password.', []);
         }
 
     }
