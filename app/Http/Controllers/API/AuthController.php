@@ -53,6 +53,8 @@ class AuthController extends BaseController
                 $success['is_pengunjung'] = @$user->is_pengunjung;
                 $success['tingkat'] = @$user->kelas->tingkat->name;
                 $success['jenjang'] = @$user->kelas->tingkat->jenjang->name ?? @$user->jenjang->name;
+                $success['tingkat_id'] = @$user->kelas->tingkat->id;
+                $success['jenjang_id'] = @$user->kelas->tingkat->jenjang->id ?? @$user->jenjang->id;
                 $success['status'] = @$user->status;
 
                 return $this->sendResponse($success, 'User login successfully.');
