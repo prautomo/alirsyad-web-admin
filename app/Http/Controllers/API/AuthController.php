@@ -53,6 +53,8 @@ class AuthController extends BaseController
                 $success['is_pengunjung'] = @$user->is_pengunjung;
                 $success['tingkat'] = @$user->kelas->tingkat->name;
                 $success['jenjang'] = @$user->kelas->tingkat->jenjang->name ?? @$user->jenjang->name;
+                $success['tingkat_id'] = @$user->kelas->tingkat->id;
+                $success['jenjang_id'] = @$user->kelas->tingkat->jenjang->id ?? @$user->jenjang->id;
                 $success['status'] = @$user->status;
 
                 return $this->sendResponse($success, 'User login successfully.');
@@ -98,7 +100,7 @@ class AuthController extends BaseController
             'title' => 'Selamat Datang di Al-Irsyad Edu!',  
             'email' => $data['email'],
             'source_api_call' => $data['source_api_call'],
-            'url_link' => 'http://127.0.0.1:8000/'
+            'url_link' => url('/')
         ];
     
         \Mail::to($data['email'])->send(new \App\Mail\EmailVerificationMail($details));
@@ -158,7 +160,7 @@ class AuthController extends BaseController
                 'title' => 'Reset Password Akun Al-Irsyad Edu!',
                 'email' => $email,
                 'token' => $token,
-                'source_api_call' => $source    ,
+                'source_api_call' => $source,
                 'url_link' => url('/')
             ];
         
