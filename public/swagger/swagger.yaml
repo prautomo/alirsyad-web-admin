@@ -1088,6 +1088,65 @@ paths:
           description: ''
           headers: {}
       deprecated: false
+  /soal:
+    get:
+      tags:
+      - Soal
+      summary: Get Soal By Mapel, Bab and Subbab
+      operationId: GetSoalByMapelBabSubbab
+      parameters:
+      - name: mata_pelajaran_id
+        in: query
+        description: ''
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+          example: 4
+      - name: bab_id
+        in: query
+        description: ''
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+          example: 189
+      - name: subbab
+        in: query
+        description: ''
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+          example: 1
+      - name: tingkat_kesulitan
+        in: query
+        description: ''
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: 'mudah'
+      - name: Accept
+        in: header
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: application/json
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false    
   /guru/simulasi/34/siswa:
     get:
       tags:
@@ -1281,4 +1340,5 @@ tags:
 - name: Home
 - name: Siswa
 - name: Dashboard
+- name: Soal
 - name: Nilai Simulasi
