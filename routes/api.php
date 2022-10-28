@@ -77,7 +77,10 @@ Route::middleware('auth:api')->group(function () {
     Route::get("/home/tingkats", "API\TingkatController@userTingkat");
     Route::get("/home/tingkats/{id}", "API\MataPelajaranController@showByTingkat");
 
+    Route::get("/paket-soal", "API\PaketSoalController@index");
+
     Route::get("/soal", "API\SoalController@index");
+    Route::post("/soal/check-answers", "API\SoalController@check_answers");
 
     Route::prefix('guru')->group(function () {
         Route::get("/dashboard", "API\DashboardController@index");

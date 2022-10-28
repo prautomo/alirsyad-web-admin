@@ -38,14 +38,42 @@ class SoalController extends BaseController
                 $idx_soal = $list_soal_id[$random_idx];
                 $get_soal = Soal::select(
                     'id', 'soal',
-                    'pilihan_a', 'pilihan_b', 'pilihan_c', 'pilihan_d', 'pilihan_e',
+                    'pilihan_a', 'pilihan_b', 'pilihan_c', 'pilihan_d', 'pilihan_e'
                 )->find($idx_soal);
                 array_push($list_idx_soal_to_send, $idx_soal);
                 array_push($list_soal_to_send, $get_soal);
+                $idx++;
             }
-            $idx++;
         } while ($idx <= $length_soal_to_send);
+
+        $data = [
+            "paket_soal_id" => $paket_soal->id,
+            "list_soal" => $list_soal_to_send
+        ];
     
-        return $this->sendResponse($list_soal_to_send, 'Soal retrieved successfully.');
+        return $this->sendResponse($data, 'Soal retrieved successfully.');
+    }
+
+    public function check_answers(Request $request)
+    {
+        $paket_soal = PaketSoal::find($request->paket_soal_id);
+        $count_correct = 0;
+
+        foreach($request->list_soal as $soal){
+            $get_soal = Soal::find($soal['id']);
+            $get_jawaban_selection = $get_soal->jawaban;
+            $get_jawaban = $get_soal->$get_jawaban_selection;
+
+            if($get_jawaban == $soal['jawaban']){
+                $count_correct++;
+            }
+        }
+
+        if($count_correct >= $paket_soal->nilai_kkm){
+            return $this->sendResponse($count_correct, 'pass');
+        }else{
+            return $this->sendResponse($count_correct, 'fail');
+        }
+
     }
 }
