@@ -5,6 +5,7 @@ info:
   version: '1.0'
 servers:
 - url: http://dev.alirsyadbandung.sch.id/api
+- url: http://127.0.0.1:8000/api
   variables: {}
 paths:
   /register:
@@ -1088,6 +1089,137 @@ paths:
           description: ''
           headers: {}
       deprecated: false
+  /paket-soal:
+    get:
+      tags:
+      - Paket Soal
+      summary: Get Paket Soal by Mapel
+      operationId: GetPaketSoalByMapel
+      parameters:
+      - name: mata_pelajaran_id
+        in: query
+        description: ''
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+          example: 4
+      - name: Accept
+        in: header
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: application/json
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false    
+  /soal:
+    get:
+      tags:
+      - Soal
+      summary: Get Soal By Mapel, Bab and Subbab
+      operationId: GetSoalByMapelBabSubbab
+      parameters:
+      - name: mata_pelajaran_id
+        in: query
+        description: ''
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+          example: 4
+      - name: bab_id
+        in: query
+        description: ''
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+          example: 189
+      - name: subbab
+        in: query
+        description: ''
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+          example: 1
+      - name: tingkat_kesulitan
+        in: query
+        description: ''
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: 'mudah'
+      - name: Accept
+        in: header
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: application/json
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false    
+  /soal/check-answers:
+    post:
+      tags:
+      - Soal
+      summary: Check Answers (pass or fail for next level)
+      operationId: SoalCheckAnswers
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/SoalCheckAnswerRequest'
+              - example:
+                  paket_soal_id: 3
+                  list_soal:
+                    - id: 24
+                      jawaban: 18
+                    - id: 2
+                      jawaban: Green
+                    - id: 4
+                      jawaban: 4 dan 6
+                    - id: 23
+                      jawaban: 19 buah
+                    - id: 35
+                      jawaban: 6
+                    - id: 10
+                      jawaban: Maret
+                    - id: 15
+                      jawaban: Kubus
+                    - id: 29
+                      jawaban: 6 buah
+                    - id: 11
+                      jawaban: Mei
+                    - id: 40
+                      jawaban: 14
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
   /guru/simulasi/34/siswa:
     get:
       tags:
@@ -1259,6 +1391,21 @@ components:
         old_password: '654321'
         new_password: '123456'
         new_password_confirmation: '123456'
+    SoalCheckAnswerRequest:
+      title: SoalCheckAnswerRequest
+      type: object
+      properties:
+        paket_soal_id:
+          type: integer
+        list_soal:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              jawaban:
+                type: string
   securitySchemes:
     httpBearer:
       type: http
@@ -1281,4 +1428,6 @@ tags:
 - name: Home
 - name: Siswa
 - name: Dashboard
+- name: Paket Soal
+- name: Soal
 - name: Nilai Simulasi

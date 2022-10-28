@@ -460,6 +460,27 @@ class PaketSoalController extends Controller
 
     public function storeSoal(Request $request, $id)
     {
+        // IF YOU WANT SOME CLEAN RESPONSE (WITH NO HTML)
+        // $newLatihanSoal = [
+        //     'soal' => strip_tags($request->soal),
+        //     'pilihan_a' => str_contains($request->pilihan_a, '<img') ? '(img)' . strtok($request->pilihan_a, 'src=\"') . '(text)' . strip_tags($request->pilihan_a) : strip_tags($request->pilihan_a),
+        //     'pilihan_b' => str_contains($request->pilihan_b, '<img') ? '(img)' . strtok($request->pilihan_b, 'src=\"') . '(text)' . strip_tags($request->pilihan_b) : strip_tags($request->pilihan_b),
+        //     'pilihan_c' => str_contains($request->pilihan_c, '<img') ? '(img)' . strtok($request->pilihan_c, 'src=\"') . '(text)' . strip_tags($request->pilihan_c)  : strip_tags($request->pilihan_c),
+        //     'pilihan_d' => str_contains($request->pilihan_d, '<img') ? '(img)' . strtok($request->pilihan_d, 'src=\"') . '(text)' . strip_tags($request->pilihan_d)  : strip_tags($request->pilihan_d),
+        //     'pilihan_e' => str_contains($request->pilihan_e, '<img') ? '(img)' . strtok($request->pilihan_e, 'src=\"') . '(text)' . strip_tags($request->pilihan_e)  : strip_tags($request->pilihan_e),
+        //     'jawaban' => $request->jawaban,
+        //     'sumber' => $request->sumber,
+        //     'link_pembahasan' => $request->link_pembahasan,
+        //     'pembahasan' => $request->pembahasan,
+        //     'paket_soal_id' => $id
+        // ];
+        // if(str_contains($request->soal, '<img')){
+        //     $soal_img = explode('src="', $request->soal)[1];
+        //     $soal_img = explode('" style=', $soal_img)[0];
+        //     $soal_contain_img =  '(img) ' . $soal_img . ' (text) ' . strip_tags($request->soal);
+        //     $soal_contain_img = trim($soal_contain_img, " \t\n\r\0\x0B\xC2\xA0");
+        //     $newLatihanSoal['soal'] = $soal_contain_img;
+        // }
         $newLatihanSoal = $request->only(['soal', 'pilihan_a', 'pilihan_b', 'pilihan_c', 'pilihan_d', 'pilihan_e', 'jawaban', 'sumber', 'link_pembahasan', 'pembahasan']);
         $newLatihanSoal['paket_soal_id'] = $id;
 
