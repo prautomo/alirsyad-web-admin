@@ -12,13 +12,15 @@ class SoalController extends BaseController
 {
     public function index(Request $request)
     {
-        $paket_soal = PaketSoal::where([
-            'mata_pelajaran_id' => $request->mata_pelajaran_id,
-            'bab_id' => $request->bab_id, 
-            'subbab' => $request->subbab,
-            'tingkat_kesulitan' => $request->tingkat_kesulitan,
-            'is_active' => 1,
-        ])->first();
+        // $paket_soal = PaketSoal::where([
+        //     'mata_pelajaran_id' => $request->mata_pelajaran_id,
+        //     'bab_id' => $request->bab_id, 
+        //     'subbab' => $request->subbab,
+        //     'tingkat_kesulitan' => $request->tingkat_kesulitan,
+        //     'is_active' => 1,
+        // ])->first();
+
+        $paket_soal = PaketSoal::find($request->paket_soal_id);
 
         if(!$paket_soal){
             return $this->sendError('Soal is not exist.');
@@ -40,8 +42,38 @@ class SoalController extends BaseController
                     'id', 'soal',
                     'pilihan_a', 'pilihan_b', 'pilihan_c', 'pilihan_d', 'pilihan_e'
                 )->find($idx_soal);
+
+                $obj_soal = [
+                    "id" => $get_soal->id,
+                    "soal" => $get_soal->soal,
+                    "image" => ""
+                ];
+                
+                $list_multiple_choice = [];
+                $obj_soal['jawaban'] = [];
+                $length_multiple_choice = 0;
+
+                do {
+                    $multiple_choice = chr(rand(97,101));
+                    if(!in_array($multiple_choice, $list_multiple_choice )){
+                        array_push($list_multiple_choice, $multiple_choice);
+                        array_push($obj_soal['jawaban'], trim(strip_tags($get_soal['pilihan_' . $multiple_choice]), " \t\n\r\0\x0B\xC2\xA0"));
+                        $length_multiple_choice++;
+                    }
+                }while ($length_multiple_choice < 5);
+
+                 // IF YOU WANT SOME CLEAN RESPONSE (WITH NO HTML)
+                if(str_contains($get_soal->soal, '<img')){
+                    $soal_img = explode('src="', $get_soal->soal)[1];
+                    $soal_img = explode('" style=', $soal_img)[0];
+                    $soal_contain_img =  $soal_img;
+                    $soal_contain_img_text = trim(strip_tags($get_soal->soal), " \t\n\r\0\x0B\xC2\xA0");
+                    $obj_soal['soal'] = $soal_contain_img_text;
+                    $obj_soal['image'] = $soal_contain_img;
+                }
+
                 array_push($list_idx_soal_to_send, $idx_soal);
-                array_push($list_soal_to_send, $get_soal);
+                array_push($list_soal_to_send, $obj_soal);
                 $idx++;
             }
         } while ($idx <= $length_soal_to_send);
@@ -58,6 +90,7 @@ class SoalController extends BaseController
     {
         $paket_soal = PaketSoal::find($request->paket_soal_id);
         $count_correct = 0;
+        $next_paket_soal_id = 0;
 
         foreach($request->list_soal as $soal){
             $get_soal = Soal::find($soal['id']);
@@ -69,10 +102,36 @@ class SoalController extends BaseController
             }
         }
 
+        switch($paket_soal->tingkat_kesulitan){
+            case 'mudah': 
+                $next_paket_soal_id = PaketSoal::where([
+                        'mata_pelajaran_id' => $paket_soal->mata_pelajaran_id,
+                        'bab_id' => $paket_soal->bab_id, 
+                        'subbab' => $paket_soal->subbab,
+                        'tingkat_kesulitan' => 'sedang',
+                    ])->first()->id;
+                    break;
+            case 'sedang': 
+                $next_paket_soal_id = PaketSoal::where([
+                        'mata_pelajaran_id' => $paket_soal->mata_pelajaran_id,
+                        'bab_id' => $paket_soal->bab_id, 
+                        'subbab' => $paket_soal->subbab,
+                        'tingkat_kesulitan' => 'sulit',
+                    ])->first()->id;
+                    break;
+        }
+
+        $data = [
+            "score" => $count_correct,
+            "next_paket_soal_id" => $next_paket_soal_id
+        ];
+
         if($count_correct >= $paket_soal->nilai_kkm){
-            return $this->sendResponse($count_correct, 'pass');
+            $data['status'] = 'pass';
+            return $this->sendResponse($data, 'Passed the test.');
         }else{
-            return $this->sendResponse($count_correct, 'fail');
+            $data['status'] = 'fail';
+            return $this->sendResponse($count_correct, 'Failed the test.');
         }
 
     }

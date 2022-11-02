@@ -14,7 +14,7 @@ class PaketSoalController extends BaseController
         $list_paket_soal = PaketSoal::where([
             'mata_pelajaran_id' => $request->mata_pelajaran_id,
             // soon get from last position student
-            // 'tingkat_kesulitan' => 'mudah',
+            'tingkat_kesulitan' => 'mudah',
             'is_active' => 1,
         ])->get();
     
