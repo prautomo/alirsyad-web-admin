@@ -1123,10 +1123,10 @@ paths:
     get:
       tags:
       - Soal
-      summary: Get Soal By Mapel, Bab and Subbab
-      operationId: GetSoalByMapelBabSubbab
+      summary: Get Soal By Paket Soal Id
+      operationId: GetSoalByPaketSoalId
       parameters:
-      - name: mata_pelajaran_id
+      - name: paket_soal_id
         in: query
         description: ''
         required: true
@@ -1136,35 +1136,6 @@ paths:
           type: integer
           format: int32
           example: 4
-      - name: bab_id
-        in: query
-        description: ''
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: integer
-          format: int32
-          example: 189
-      - name: subbab
-        in: query
-        description: ''
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: integer
-          format: int32
-          example: 1
-      - name: tingkat_kesulitan
-        in: query
-        description: ''
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: string
-          example: 'mudah'
       - name: Accept
         in: header
         description: ''
@@ -1218,6 +1189,23 @@ paths:
       responses:
         '200':
           description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  score:
+                    type: integer
+                    description: Achieved score by student.
+                    example: 7
+                  status:
+                    type: string
+                    description: Status if student is passed or failed the test (pass/fail).
+                    example: pass
+                  next_paket_soal_id:
+                    type: integer
+                    description: Next Id of paket soal (depend on level).
+                    example: 4
           headers: {}
       deprecated: false
   /guru/simulasi/34/siswa:
