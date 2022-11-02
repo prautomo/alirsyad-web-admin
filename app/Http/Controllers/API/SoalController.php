@@ -131,7 +131,8 @@ class SoalController extends BaseController
             return $this->sendResponse($data, 'Passed the test.');
         }else{
             $data['status'] = 'fail';
-            return $this->sendResponse($count_correct, 'Failed the test.');
+            $data['next_paket_soal_id'] = $paket_soal->id;
+            return $this->sendResponse($data, 'Failed the test.');
         }
 
     }
