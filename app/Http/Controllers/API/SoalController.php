@@ -90,7 +90,7 @@ class SoalController extends BaseController
     {
         $paket_soal = PaketSoal::find($request->paket_soal_id);
         $count_correct = 0;
-        $next_paket_soal_id = 0;
+        $next_paket_soal_id = null;
 
         foreach($request->list_soal as $soal){
             $get_soal = Soal::find($soal['id']);
@@ -104,20 +104,26 @@ class SoalController extends BaseController
 
         switch($paket_soal->tingkat_kesulitan){
             case 'mudah': 
-                $next_paket_soal_id = PaketSoal::where([
-                        'mata_pelajaran_id' => $paket_soal->mata_pelajaran_id,
-                        'bab_id' => $paket_soal->bab_id, 
-                        'subbab' => $paket_soal->subbab,
-                        'tingkat_kesulitan' => 'sedang',
-                    ])->first()->id;
+                    $get_paket_soal = PaketSoal::where([
+                            'mata_pelajaran_id' => $paket_soal->mata_pelajaran_id,
+                            'bab_id' => $paket_soal->bab_id, 
+                            'subbab' => $paket_soal->subbab,
+                            'tingkat_kesulitan' => 'sedang',
+                        ])->first();
+                    if($get_paket_soal){
+                        $next_paket_soal_id = $get_paket_soal->id;
+                    }
                     break;
             case 'sedang': 
-                $next_paket_soal_id = PaketSoal::where([
+                    $get_paket_soal = PaketSoal::where([
                         'mata_pelajaran_id' => $paket_soal->mata_pelajaran_id,
                         'bab_id' => $paket_soal->bab_id, 
                         'subbab' => $paket_soal->subbab,
                         'tingkat_kesulitan' => 'sulit',
-                    ])->first()->id;
+                    ])->first();
+                    if($get_paket_soal){
+                        $next_paket_soal_id = $get_paket_soal->id;
+                    }
                     break;
         }
 

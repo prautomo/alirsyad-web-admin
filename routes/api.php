@@ -78,6 +78,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get("/home/tingkats/{id}", "API\MataPelajaranController@showByTingkat");
 
     Route::get("/paket-soal", "API\PaketSoalController@index");
+    Route::get("/all-paket-soal", "API\PaketSoalController@all_paket_soal");
 
     Route::get("/soal", "API\SoalController@index");
     Route::post("/soal/check-answers", "API\SoalController@check_answers");
