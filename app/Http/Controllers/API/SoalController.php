@@ -57,7 +57,15 @@ class SoalController extends BaseController
                     $multiple_choice = chr(rand(97,101));
                     if(!in_array($multiple_choice, $list_multiple_choice )){
                         array_push($list_multiple_choice, $multiple_choice);
-                        array_push($obj_soal['jawaban'], trim(strip_tags($get_soal['pilihan_' . $multiple_choice]), " \t\n\r\0\x0B\xC2\xA0"));
+                        $choice = $get_soal['pilihan_' . $multiple_choice];
+                        if(str_contains($choice, '<img')){
+                            $jawaban_img = explode('src="', $choice)[1];
+                            $jawaban_img = explode('" style=', $jawaban_img)[0];
+                            $jawaban_contain_img =  $jawaban_img;
+                            array_push($obj_soal['jawaban'], $jawaban_contain_img);
+                        }else{
+                            array_push($obj_soal['jawaban'], trim(strip_tags($choice), " \t\n\r\0\x0B\xC2\xA0"));
+                        }
                         $length_multiple_choice++;
                     }
                 }while ($length_multiple_choice < 5);
