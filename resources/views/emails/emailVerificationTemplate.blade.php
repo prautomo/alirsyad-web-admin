@@ -34,9 +34,9 @@
    
     <div style="height: 4rem">
         @if($details['source_api_call'] =='ios')         
-            <a href="{{ $details['url_link'] . 'verify-email?email=' . $details['email'] . '&source=ios'}}" class="button">Confirm Email & Login</a>     
+            <a href="{{ $details['url_link'] . '/verify-email?email=' . $details['email'] . '&source=ios'}}" class="button">Confirm Email & Login</a>     
         @else
-            <a href="{{ $details['url_link'] . 'verify-email?email=' . $details['email'] }}" class="button">Confirm Email & Login</a>     
+            <a href="{{ $details['url_link'] . '/verify-email?email=' . $details['email'] }}" class="button">Confirm Email & Login</a>     
         @endif
     </div>
 

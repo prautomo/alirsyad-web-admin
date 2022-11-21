@@ -150,4 +150,9 @@ class Modul extends Model
     {
         return $this->hasMany("App\Models\Simulasi", "modul_id", "id")->withTrashed();
     }
+    
+    public function paket_soals()
+    {
+        return $this->hasMany("App\Models\PaketSoal", "bab_id", "id")->withTrashed();
+    }
 }
