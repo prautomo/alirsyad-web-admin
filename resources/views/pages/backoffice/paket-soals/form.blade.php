@@ -6,7 +6,8 @@
         <div class="form-group">
             <label class="form-control-label" for="input-bab">Bab (*)</label>
 
-            <select id="bab" name="bab[]" class="form-control {{($errors->has('bab') ? ' is-invalid' : '')}}" >
+            {{-- To do masih belum terpilih sesuai bab_id --}}
+            <select id="bab" name="bab[]" class="form-control {{($errors->has('bab') ? ' is-invalid' : '')}}">
 
             </select>
 
