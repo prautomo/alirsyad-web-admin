@@ -249,6 +249,7 @@ class PaketSoalController extends Controller
     public function update(Request $request, $id){
 
         $dataReq = $request->only(['mata_pelajaran_id', 'tingkat_kesulitan', 'subbab', 'judul_subbab', 'jumlah_publish', 'nilai_kkm']);
+        $dataReq['bab_id'] = $request->bab[0];
 
         $dt = PaketSoal::findOrFail($id);
         $dt->update($dataReq);
