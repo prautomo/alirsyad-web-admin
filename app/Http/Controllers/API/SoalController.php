@@ -88,6 +88,7 @@ class SoalController extends BaseController
 
         $data = [
             "paket_soal_id" => $paket_soal->id,
+            "tingkat_kesulitan" => $paket_soal->tingkat_kesulitan,
             "list_soal" => $list_soal_to_send
         ];
     
@@ -99,6 +100,7 @@ class SoalController extends BaseController
         $paket_soal = PaketSoal::find($request->paket_soal_id);
         $count_correct = 0;
         $next_paket_soal_id = null;
+        $next_tingkat_kesulitan = null;
 
         foreach($request->list_soal as $soal){
             $get_soal = Soal::find($soal['id']);
@@ -120,6 +122,7 @@ class SoalController extends BaseController
                         ])->first();
                     if($get_paket_soal){
                         $next_paket_soal_id = $get_paket_soal->id;
+                        $next_tingkat_kesulitan = 'sedang';
                     }
                     break;
             case 'sedang': 
@@ -131,13 +134,15 @@ class SoalController extends BaseController
                     ])->first();
                     if($get_paket_soal){
                         $next_paket_soal_id = $get_paket_soal->id;
+                        $next_tingkat_kesulitan = 'sulit';
                     }
                     break;
         }
 
         $data = [
             "score" => $count_correct,
-            "next_paket_soal_id" => $next_paket_soal_id
+            "next_paket_soal_id" => $next_paket_soal_id,
+            "next_tingkat_kesulitan" => $next_tingkat_kesulitan,
         ];
 
         if($count_correct >= $paket_soal->nilai_kkm){
@@ -146,6 +151,7 @@ class SoalController extends BaseController
         }else{
             $data['status'] = 'fail';
             $data['next_paket_soal_id'] = $paket_soal->id;
+            $data['next_tingkat_kesulitan'] = $paket_soal->tingkat_kesulitan;
             return $this->sendResponse($data, 'Failed the test.');
         }
 
