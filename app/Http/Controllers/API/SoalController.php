@@ -137,6 +137,10 @@ class SoalController extends BaseController
                         $next_tingkat_kesulitan = 'sulit';
                     }
                     break;
+            case 'sulit':
+                    $next_paket_soal_id = $paket_soal->id;
+                    $next_tingkat_kesulitan = 'sulit';
+                    break;
         }
 
         $data = [
