@@ -19,6 +19,7 @@ class PaketSoalController extends BaseController
             $obj_bab = [
                 "id" => $bab->id,
                 "name" => $bab->name,
+                "icon" => $bab->icon,
                 "paket_soal" => PaketSoal::where([
                     'bab_id' => $bab->id,
                     'tingkat_kesulitan' => 'mudah',
