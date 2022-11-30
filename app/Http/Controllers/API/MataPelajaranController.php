@@ -53,6 +53,17 @@ class MataPelajaranController extends BaseController
         // sort by created at descending
         // $datas = $datas->sortByDesc('created_at');
         // ->sortBy('disabled')->sortBy('kelas.tingkat_id')->sortBy('kelas_id');
+        foreach($datas as $mapel){
+            $get_simulation = Simulasi::with('uploader', 'mataPelajaran');
+            $get_simulation = $get_simulation->where('mata_pelajaran_id', $mapel->id);
+            $get_simulation = $get_simulation->get();
+    
+            if(count($get_simulation) == 0){
+                $mapel['is_has_simulation'] = 0;
+            }else{
+                $mapel['is_has_simulation'] = 1;
+            }
+        }
 
         return $this->sendResponse(MataPelajaranResource::collection($datas), 'Mata Pelajaran retrieved successfully.');
     }
