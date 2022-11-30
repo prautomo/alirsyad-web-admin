@@ -61,9 +61,11 @@ paths:
               - example:
                   nis: guru_sd_1
                   password: '123456'
+                  role: 'student'
             example:
               nis: guru_sd_1
               password: '123456'
+              role: 'student'
         required: true
       responses:
         '200':
@@ -1296,15 +1298,19 @@ components:
       required:
       - nis
       - password
+      - role
       type: object
       properties:
         nis:
           type: string
         password:
           type: string
+        role:
+          type: string
       example:
         nis: windaa@sample.id
         password: '123456'
+        role: 'student'
     ForgotPasswordRequest:
       title: ForgotPasswordRequest
       required:

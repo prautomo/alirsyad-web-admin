@@ -39,25 +39,30 @@ class AuthController extends BaseController
 
         if(Auth::attempt([$login_type => $request->nis, 'password' => $request->password])){
             $user = Auth::user();
+            
+            if(!$user->is_pengunjung && $request->role == 'visitor' || $user->is_pengunjung && $request->role == 'student'){
+                return $this->sendError('Invalid.', ['error'=>"You're not registered as " . $request->role . "."]);
+            }
+
+            $generateToken = $user->createToken('MyAppDigiBook308');
+            $success['token'] = @$generateToken->accessToken;
+            $success['expires_at'] = @$generateToken->token->expires_at;
+            $success['nis'] = @$user->nis;
+            $success['name'] = @$user->name;
+            $success['photo'] = @$user->photo ? asset($user->photo) : '';
+            $success['email'] = @$user->email;
+            $success['role'] = @$user->role;
+            $success['kelas'] = @$user->kelas->name;
+            $success['is_pengunjung'] = @$user->is_pengunjung;
+            $success['tingkat'] = @$user->kelas->tingkat->name;
+            $success['jenjang'] = @$user->kelas->tingkat->jenjang->name ?? @$user->jenjang->name;
+            $success['tingkat_id'] = @$user->kelas->tingkat->id;
+            $success['jenjang_id'] = @$user->kelas->tingkat->jenjang->id ?? @$user->jenjang->id;
+            $success['status'] = @$user->status;
+
+            return $this->sendResponse($success, 'User login successfully.');
             // handle status belum aktif
             // if($user->status === 'AKTIF'){
-                $generateToken = $user->createToken('MyAppDigiBook308');
-                $success['token'] = @$generateToken->accessToken;
-                $success['expires_at'] = @$generateToken->token->expires_at;
-                $success['nis'] = @$user->nis;
-                $success['name'] = @$user->name;
-                $success['photo'] = @$user->photo ? asset($user->photo) : '';
-                $success['email'] = @$user->email;
-                $success['role'] = @$user->role;
-                $success['kelas'] = @$user->kelas->name;
-                $success['is_pengunjung'] = @$user->is_pengunjung;
-                $success['tingkat'] = @$user->kelas->tingkat->name;
-                $success['jenjang'] = @$user->kelas->tingkat->jenjang->name ?? @$user->jenjang->name;
-                $success['tingkat_id'] = @$user->kelas->tingkat->id;
-                $success['jenjang_id'] = @$user->kelas->tingkat->jenjang->id ?? @$user->jenjang->id;
-                $success['status'] = @$user->status;
-
-                return $this->sendResponse($success, 'User login successfully.');
             // }else {
             //     return $this->sendError('Maaf, status akun kamu : '.(str_replace('_', ' ', @$user->status)).'. Silahkan kontak administrator/guru.', ['error'=>'Unauthorised']);
             // }
@@ -72,8 +77,8 @@ class AuthController extends BaseController
             // 'nis' => ['required', 'string', 'max:255', 'unique:external_users'],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:external_users'],
-            'phone' => ['required', 'string', 'max:255', 'unique:external_users'],
-            'password' => ['required', 'string', 'min:6', 'confirmed'],
+            'phone' => ['required', 'string', 'min:8', 'max:13'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
             'jenjang_id' => ['required', 'integer'],
             // 'user_type' => ['required', 'string', 'in:SISWA'],
         ]);

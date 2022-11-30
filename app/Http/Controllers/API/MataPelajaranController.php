@@ -263,6 +263,16 @@ class MataPelajaranController extends BaseController
     {
         $data = MataPelajaran::with('tingkat.jenjang')->find($id);
 
+        $get_simulation = Simulasi::with('uploader', 'mataPelajaran');
+        $get_simulation = $get_simulation->where('mata_pelajaran_id', $id);
+        $get_simulation = $get_simulation->get();
+
+        if(count($get_simulation) == 0){
+            $data['is_has_simulation'] = 0;
+        }else{
+            $data['is_has_simulation'] = 1;
+        }
+
         if (is_null($data)) {
             return $this->sendError('MataPelajaran not found.');
         }
