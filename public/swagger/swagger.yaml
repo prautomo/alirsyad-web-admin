@@ -2,165 +2,165 @@ openapi: 3.0.0
 info:
   title: DIB V1
   contact: {}
-  version: '1.0'
+  version: "1.0"
 servers:
-- url: http://dev.alirsyadbandung.sch.id/api
-- url: http://127.0.0.1:8000/api
-  variables: {}
+  - url: https://dev.alirsyadbandung.sch.id/api
+  - url: http://127.0.0.1:8000/api
+    variables: {}
 paths:
   /register:
     post:
       tags:
-      - Auth
+        - Auth
       summary: Register
       operationId: Register
       parameters: []
       requestBody:
-        description: ''
+        description: ""
         content:
           application/json:
             schema:
               allOf:
-              - $ref: '#/components/schemas/RegisterRequest'
-              - example:
-                  name: Ferdhika Yudira
-                  email: fera@dika.web.id
-                  phone: '083821208281'
-                  password: '123456'
-                  password_confirmation: '123456'
-                  jenjang_id: 1
-                  source_api_call: ios
+                - $ref: "#/components/schemas/RegisterRequest"
+                - example:
+                    name: Ferdhika Yudira
+                    email: fera@dika.web.id
+                    phone: "083821208281"
+                    password: "123456"
+                    password_confirmation: "123456"
+                    jenjang_id: 1
+                    source_api_call: ios
             example:
               name: Ferdhika Yudira
               email: fera@dika.web.id
-              phone: '083821208281'
-              password: '123456'
-              password_confirmation: '123456'
+              phone: "083821208281"
+              password: "123456"
+              password_confirmation: "123456"
               jenjang_id: 1
               source_api_call: ios
         required: true
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /login:
     post:
       tags:
-      - Auth
+        - Auth
       summary: Login
       operationId: Login
       parameters: []
       requestBody:
-        description: ''
+        description: ""
         content:
           application/json:
             schema:
               allOf:
-              - $ref: '#/components/schemas/LoginRequest'
-              - example:
-                  nis: guru_sd_1
-                  password: '123456'
-                  role: 'student'
+                - $ref: "#/components/schemas/LoginRequest"
+                - example:
+                    nis: guru_sd_1
+                    password: "123456"
+                    role: "student"
             example:
               nis: guru_sd_1
-              password: '123456'
-              role: 'student'
+              password: "123456"
+              role: "student"
         required: true
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /verify-email:
     get:
       tags:
-      - Auth
+        - Auth
       summary: Verify Email
       operationId: Verify Email
-      parameters: 
-      - name: email
-        in: query
-        description: ''
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: string
-          format: string
-          example: fera@dika.web.id
+      parameters:
+        - name: email
+          in: query
+          description: ""
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+            format: string
+            example: fera@dika.web.id
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /password/forgot:
     post:
       tags:
-      - Auth
+        - Auth
       summary: Forgot Password
       operationId: ForgotPassword
       parameters: []
       requestBody:
-        description: ''
+        description: ""
         content:
           application/json:
             schema:
               allOf:
-              - $ref: '#/components/schemas/ForgotPasswordRequest'
-              - example:
-                  email: fer@dika.web.id
+                - $ref: "#/components/schemas/ForgotPasswordRequest"
+                - example:
+                    email: fer@dika.web.id
             example:
               email: fer@dika.web.id
         required: true
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /password/forgot/student:
     post:
       tags:
-      - Auth
+        - Auth
       summary: Forgot Password Student
       operationId: ForgotPasswordStudent
       parameters: []
       requestBody:
-        description: ''
+        description: ""
         content:
           application/json:
             schema:
               allOf:
-              - $ref: '#/components/schemas/ForgotPasswordStudentRequest'
-              - example:
-                  nis: 9883274
+                - $ref: "#/components/schemas/ForgotPasswordStudentRequest"
+                - example:
+                    nis: 9883274
             example:
               nis: 9883274
         required: true
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /password/reset:
     post:
       tags:
-      - Auth
+        - Auth
       summary: Reset Password
       operationId: ResetPassword
       parameters: []
       requestBody:
-        description: ''
+        description: ""
         content:
           application/json:
             schema:
               allOf:
-              - $ref: '#/components/schemas/ResetPasswordRequest'
-              - example:
-                  email: fer@dika.web.id
-                  token: 0b0a664a113d0609367c21af482ada725ea68c46ce274e87efa234e388a8160d
-                  password: new_password
-                  password_confirmation: new_password
+                - $ref: "#/components/schemas/ResetPasswordRequest"
+                - example:
+                    email: fer@dika.web.id
+                    token: 0b0a664a113d0609367c21af482ada725ea68c46ce274e87efa234e388a8160d
+                    password: new_password
+                    password_confirmation: new_password
             example:
               email: fer@dika.web.id
               token: 0b0a664a113d0609367c21af482ada725ea68c46ce274e87efa234e388a8160d
@@ -168,687 +168,687 @@ paths:
               password_confirmation: new_password
         required: true
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /logout:
     post:
       tags:
-      - Auth
+        - Auth
       summary: Logout
       operationId: Logout
       parameters: []
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /profile:
     get:
       tags:
-      - Profile
+        - Profile
       summary: Profile
       operationId: Profile
       parameters: []
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
     post:
       tags:
-      - Profile
+        - Profile
       summary: Edit Profile
       operationId: EditProfile
       parameters:
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       requestBody:
-        description: ''
+        description: ""
         content:
           application/json:
             schema:
               allOf:
-              - $ref: '#/components/schemas/EditProfileRequest'
-              - example:
-                  photo: storage/file/photo/DIGIBOOK_IMG_25_09_2021_05_28_04.jpeg
-                  email: fer@dika.web.id
+                - $ref: "#/components/schemas/EditProfileRequest"
+                - example:
+                    photo: storage/file/photo/DIGIBOOK_IMG_25_09_2021_05_28_04.jpeg
+                    email: fer@dika.web.id
             example:
               photo: storage/file/photo/DIGIBOOK_IMG_25_09_2021_05_28_04.jpeg
               email: fer@dika.web.id
         required: true
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /profile/password:
     post:
       tags:
-      - Profile
+        - Profile
       summary: Edit Password
       operationId: EditPassword
       parameters:
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       requestBody:
-        description: ''
+        description: ""
         content:
           application/json:
             schema:
               allOf:
-              - $ref: '#/components/schemas/EditPasswordRequest'
-              - example:
-                  old_password: '654321'
-                  new_password: '123456'
-                  new_password_confirmation: '123456'
+                - $ref: "#/components/schemas/EditPasswordRequest"
+                - example:
+                    old_password: "654321"
+                    new_password: "123456"
+                    new_password_confirmation: "123456"
             example:
-              old_password: '654321'
-              new_password: '123456'
-              new_password_confirmation: '123456'
+              old_password: "654321"
+              new_password: "123456"
+              new_password_confirmation: "123456"
         required: true
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /upload/photo:
     post:
       tags:
-      - Profile
+        - Profile
       summary: Upload Photo
       operationId: UploadPhoto
       parameters:
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       requestBody:
         content:
           application/x-www-form-urlencoded:
             encoding: {}
             schema:
               required:
-              - file
+                - file
               type: object
               properties:
                 file:
                   type: string
         required: false
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /mata_pelajarans:
     get:
       tags:
-      - Mata Pelajaran
+        - Mata Pelajaran
       summary: Get List All
       operationId: GetListAll
       parameters:
-      - name: q_tingkat_id
-        in: query
-        description: ''
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: integer
-          format: int32
-          example: 1
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: q_tingkat_id
+          in: query
+          description: ""
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: integer
+            format: int32
+            example: 1
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /mata_pelajarans/inprogress:
     get:
       tags:
-      - Mata Pelajaran
+        - Mata Pelajaran
       summary: Get List (Sedang di Pelajari)
       operationId: GetList(SedangdiPelajari)
       parameters:
-      - name: limit
-        in: query
-        description: ''
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: integer
-          format: int32
-          example: 2
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: limit
+          in: query
+          description: ""
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: integer
+            format: int32
+            example: 2
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /mata_pelajarans/upcoming:
     get:
       tags:
-      - Mata Pelajaran
+        - Mata Pelajaran
       summary: Get List (Yang akan datang)
       operationId: GetList(Yangakandatang)
       parameters:
-      - name: limit
-        in: query
-        description: ''
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: integer
-          format: int32
-          example: 1
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: limit
+          in: query
+          description: ""
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: integer
+            format: int32
+            example: 1
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /mata_pelajarans/passed:
     get:
       tags:
-      - Mata Pelajaran
+        - Mata Pelajaran
       summary: Get List (Mapel Tingkat Sebelum)
       operationId: GetList(MapelTingkatSebelum)
       parameters:
-      - name: limit
-        in: query
-        description: ''
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: integer
-          format: int32
-          example: 1
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: limit
+          in: query
+          description: ""
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: integer
+            format: int32
+            example: 1
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /mata_pelajarans/active:
     get:
       tags:
-      - Mata Pelajaran
+        - Mata Pelajaran
       summary: Get List (Mapel Active by Admin)
       operationId: GetList(MapelActivebyAdmin)
       parameters:
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /mata_pelajarans/not-active:
     get:
       tags:
-      - Mata Pelajaran
+        - Mata Pelajaran
       summary: Get List (Mapel Not Active/Disabled by Admin)
       operationId: GetList(MapelNotActive/DisabledbyAdmin)
       parameters:
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /mata_pelajarans/1:
     get:
       tags:
-      - Mata Pelajaran
+        - Mata Pelajaran
       summary: Get Detail
       operationId: GetDetail
       parameters:
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /jenjangs:
     get:
       tags:
-      - Jenjang
+        - Jenjang
       summary: Get List
       operationId: GetList
       parameters:
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /jenjangs/1:
     get:
       tags:
-      - Jenjang
+        - Jenjang
       summary: Get Detail
       operationId: GetDetail1
       parameters:
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /tingkats:
     get:
       tags:
-      - Tingkat
+        - Tingkat
       summary: Get List
       operationId: GetList1
       parameters:
-      - name: q_jenjang_id
-        in: query
-        description: ''
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: integer
-          format: int32
-          example: 2
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: q_jenjang_id
+          in: query
+          description: ""
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: integer
+            format: int32
+            example: 2
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /tingkats/1:
     get:
       tags:
-      - Tingkat
+        - Tingkat
       summary: Get Detail
       operationId: GetDetail2
       parameters:
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /kelas:
     get:
       tags:
-      - Kelas
+        - Kelas
       summary: Get List
       operationId: GetList2
       parameters:
-      - name: q_tingkat_id
-        in: query
-        description: ''
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: integer
-          format: int32
-          example: 2
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: q_tingkat_id
+          in: query
+          description: ""
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: integer
+            format: int32
+            example: 2
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /kelas/1:
     get:
       tags:
-      - Kelas
+        - Kelas
       summary: Get Detail
       operationId: GetDetail3
       parameters:
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /moduls:
     get:
       tags:
-      - Modul
+        - Modul
       summary: Get List By Mapel
       operationId: GetListByMapel
       parameters:
-      - name: q_mata_pelajaran_id
-        in: query
-        description: by mapel id
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: integer
-          format: int32
-          example: 3
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: q_mata_pelajaran_id
+          in: query
+          description: by mapel id
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: integer
+            format: int32
+            example: 3
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /moduls/1:
     get:
       tags:
-      - Modul
+        - Modul
       summary: Get Detail
       operationId: GetDetail4
       parameters:
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /moduls/1/flag:
     post:
       tags:
-      - Modul
+        - Modul
       summary: Save Flag Modul
       operationId: SaveFlagModul
       parameters:
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /videos:
     get:
       tags:
-      - Videos
+        - Videos
       summary: Get List By Mapel
       operationId: GetListByMapel1
       parameters:
-      - name: q_mata_pelajaran_id
-        in: query
-        description: by mapel id
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: integer
-          format: int32
-          example: 103
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: q_mata_pelajaran_id
+          in: query
+          description: by mapel id
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: integer
+            format: int32
+            example: 103
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /videos/1:
     get:
       tags:
-      - Videos
+        - Videos
       summary: Get Detail
       operationId: GetDetail5
       parameters:
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /videos/1/flag:
     post:
       tags:
-      - Videos
+        - Videos
       summary: Save Flag Video
       operationId: SaveFlagVideo
       parameters:
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /simulasis:
     get:
       tags:
-      - Simulasi
+        - Simulasi
       summary: Get List By Mapel
       operationId: GetListByMapel2
       parameters:
-      - name: q_mata_pelajaran_id
-        in: query
-        description: ''
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: integer
-          format: int32
-          example: 103
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: q_mata_pelajaran_id
+          in: query
+          description: ""
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: integer
+            format: int32
+            example: 103
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /simulasis/30:
     get:
       tags:
-      - Simulasi
+        - Simulasi
       summary: Get Detail
       operationId: GetDetail6
       parameters:
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /simulasis/3/flag:
     post:
       tags:
-      - Simulasi
+        - Simulasi
       summary: Save Flag Simulasi
       operationId: SaveFlagSimulasi
       parameters:
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /simulasis/29/score:
     post:
       tags:
-      - Simulasi
+        - Simulasi
       summary: Save Score Simulasi
       operationId: SaveScoreSimulasi
       parameters:
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       requestBody:
         content:
           application/x-www-form-urlencoded:
             encoding: {}
             schema:
               required:
-              - score
+                - score
               type: object
               properties:
                 score:
@@ -857,340 +857,340 @@ paths:
                   example: 100
         required: false
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /mata_pelajarans/103/summary:
     get:
       tags:
-      - Konten
+        - Konten
       summary: Get Summary Mata Pelajaran
       operationId: GetSummaryMataPelajaran
       parameters:
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /home/banners:
     get:
       tags:
-      - Banner
+        - Banner
       summary: Get List
       operationId: GetList3
       parameters:
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /home/banners/1:
     get:
       tags:
-      - Banner
+        - Banner
       summary: Get Detail
       operationId: GetDetail7
       parameters:
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /home/tingkats:
     get:
       tags:
-      - Tingkat (Semua mata pelajaran)
+        - Tingkat (Semua mata pelajaran)
       summary: Get Tingkat List
       operationId: GetTingkatList
       parameters:
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /home/updates:
     get:
       tags:
-      - Home
+        - Home
       summary: Get Updates
       operationId: GetUpdates
       parameters:
-      - name: limit
-        in: query
-        description: ''
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: integer
-          format: int32
-          example: 3
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: limit
+          in: query
+          description: ""
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: integer
+            format: int32
+            example: 3
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /nilai-simulasi:
     get:
       tags:
-      - Siswa
+        - Siswa
       summary: Get Nilai Simulasi
       operationId: GetNilaiSimulasi
       parameters:
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /guru/ngajar:
     get:
       tags:
-      - Dashboard
+        - Dashboard
       summary: Get Ngajar Mapel
       operationId: GetNgajarMapel
       parameters:
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /guru/dashboard:
     get:
       tags:
-      - Dashboard
+        - Dashboard
       summary: Get Dashboard
       operationId: GetDashboard
       parameters:
-      - name: mata_pelajaran_id
-        in: query
-        description: ''
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: integer
-          format: int32
-          example: 3
-      - name: kelas_id
-        in: query
-        description: ''
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: integer
-          format: int32
-          example: 2
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: mata_pelajaran_id
+          in: query
+          description: ""
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: integer
+            format: int32
+            example: 3
+        - name: kelas_id
+          in: query
+          description: ""
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: integer
+            format: int32
+            example: 2
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /guru/dashboard/detail:
     get:
       tags:
-      - Dashboard
+        - Dashboard
       summary: Get Detail Progres Belajar
       operationId: GetDetailProgresBelajar
       parameters:
-      - name: mata_pelajaran_id
-        in: query
-        description: ''
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: integer
-          format: int32
-          example: 3
-      - name: kelas_id
-        in: query
-        description: ''
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: integer
-          format: int32
-          example: 2
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: mata_pelajaran_id
+          in: query
+          description: ""
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: integer
+            format: int32
+            example: 3
+        - name: kelas_id
+          in: query
+          description: ""
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: integer
+            format: int32
+            example: 2
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /paket-soal:
     get:
       tags:
-      - Paket Soal
+        - Paket Soal
       summary: Get Paket Soal by Mapel
       operationId: GetPaketSoalByMapel
       parameters:
-      - name: mata_pelajaran_id
-        in: query
-        description: ''
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: integer
-          format: int32
-          example: 4
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: mata_pelajaran_id
+          in: query
+          description: ""
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: integer
+            format: int32
+            example: 4
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
-      deprecated: false    
+      deprecated: false
   /soal:
     get:
       tags:
-      - Soal
+        - Soal
       summary: Get Soal By Paket Soal Id
       operationId: GetSoalByPaketSoalId
       parameters:
-      - name: paket_soal_id
-        in: query
-        description: ''
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: integer
-          format: int32
-          example: 4
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: paket_soal_id
+          in: query
+          description: ""
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: integer
+            format: int32
+            example: 4
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
-      deprecated: false    
+      deprecated: false
   /soal/check-answers:
     post:
       tags:
-      - Soal
+        - Soal
       summary: Check Answers (pass or fail for next level)
       operationId: SoalCheckAnswers
       requestBody:
-        description: ''
+        description: ""
         content:
           application/json:
             schema:
               allOf:
-              - $ref: '#/components/schemas/SoalCheckAnswerRequest'
-              - example:
-                  paket_soal_id: 3
-                  list_soal:
-                    - id: 24
-                      jawaban: 18
-                    - id: 2
-                      jawaban: Green
-                    - id: 4
-                      jawaban: 4 dan 6
-                    - id: 23
-                      jawaban: 19 buah
-                    - id: 35
-                      jawaban: 6
-                    - id: 10
-                      jawaban: Maret
-                    - id: 15
-                      jawaban: Kubus
-                    - id: 29
-                      jawaban: 6 buah
-                    - id: 11
-                      jawaban: Mei
-                    - id: 40
-                      jawaban: 14
+                - $ref: "#/components/schemas/SoalCheckAnswerRequest"
+                - example:
+                    paket_soal_id: 3
+                    list_soal:
+                      - id: 24
+                        jawaban: 18
+                      - id: 2
+                        jawaban: Green
+                      - id: 4
+                        jawaban: 4 dan 6
+                      - id: 23
+                        jawaban: 19 buah
+                      - id: 35
+                        jawaban: 6
+                      - id: 10
+                        jawaban: Maret
+                      - id: 15
+                        jawaban: Kubus
+                      - id: 29
+                        jawaban: 6 buah
+                      - id: 11
+                        jawaban: Mei
+                      - id: 40
+                        jawaban: 14
         required: true
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -1213,51 +1213,51 @@ paths:
   /guru/simulasi/34/siswa:
     get:
       tags:
-      - Nilai Simulasi
+        - Nilai Simulasi
       summary: Get Nilai Simulasi Siswa List
       operationId: GetNilaiSimulasiSiswaList
       parameters:
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
   /guru/simulasi/29/nilai:
     get:
       tags:
-      - Nilai Simulasi
+        - Nilai Simulasi
       summary: Get Nilai Simulasi Siswa Detail
       operationId: GetNilaiSimulasiSiswaDetail
       parameters:
-      - name: q_siswa_id
-        in: query
-        description: ''
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: integer
-          format: int32
-          example: 1
-      - name: Accept
-        in: header
-        description: ''
-        required: true
-        style: simple
-        schema:
-          type: string
-          example: application/json
+        - name: q_siswa_id
+          in: query
+          description: ""
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: integer
+            format: int32
+            example: 1
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
       deprecated: false
 components:
@@ -1265,12 +1265,12 @@ components:
     RegisterRequest:
       title: RegisterRequest
       required:
-      - name
-      - email
-      - phone
-      - password
-      - password_confirmation
-      - jenjang_id
+        - name
+        - email
+        - phone
+        - password
+        - password_confirmation
+        - jenjang_id
       type: object
       properties:
         name:
@@ -1289,16 +1289,16 @@ components:
       example:
         name: Ferdhika Yudira
         email: fera@dika.web.id
-        phone: '083821208281'
-        password: '123456'
-        password_confirmation: '123456'
+        phone: "083821208281"
+        password: "123456"
+        password_confirmation: "123456"
         jenjang_id: 1
     LoginRequest:
       title: LoginRequest
       required:
-      - nis
-      - password
-      - role
+        - nis
+        - password
+        - role
       type: object
       properties:
         nis:
@@ -1309,12 +1309,12 @@ components:
           type: string
       example:
         nis: windaa@sample.id
-        password: '123456'
-        role: 'student'
+        password: "123456"
+        role: "student"
     ForgotPasswordRequest:
       title: ForgotPasswordRequest
       required:
-      - email
+        - email
       type: object
       properties:
         email:
@@ -1324,7 +1324,7 @@ components:
     ForgotPasswordStudentRequest:
       title: ForgotPasswordStudentRequest
       required:
-      - nis
+        - nis
       type: object
       properties:
         nis:
@@ -1334,10 +1334,10 @@ components:
     ResetPasswordRequest:
       title: ResetPasswordRequest
       required:
-      - email
-      - token
-      - password
-      - password_confirmation
+        - email
+        - token
+        - password
+        - password_confirmation
       type: object
       properties:
         email:
@@ -1350,14 +1350,14 @@ components:
           type: string
       example:
         email: fera@dika.web.id
-        phone: '0b0a664a113d0609367c21af482ada725ea68c46ce274e87efa234e388a8160d'
-        password: 'new_password'
-        password_confirmation: 'new_password'
+        phone: "0b0a664a113d0609367c21af482ada725ea68c46ce274e87efa234e388a8160d"
+        password: "new_password"
+        password_confirmation: "new_password"
     EditProfileRequest:
       title: EditProfileRequest
       required:
-      - photo
-      - email
+        - photo
+        - email
       type: object
       properties:
         photo:
@@ -1370,9 +1370,9 @@ components:
     EditPasswordRequest:
       title: EditPasswordRequest
       required:
-      - old_password
-      - new_password
-      - new_password_confirmation
+        - old_password
+        - new_password
+        - new_password_confirmation
       type: object
       properties:
         old_password:
@@ -1382,9 +1382,9 @@ components:
         new_password_confirmation:
           type: string
       example:
-        old_password: '654321'
-        new_password: '123456'
-        new_password_confirmation: '123456'
+        old_password: "654321"
+        new_password: "123456"
+        new_password_confirmation: "123456"
     SoalCheckAnswerRequest:
       title: SoalCheckAnswerRequest
       type: object
@@ -1405,23 +1405,23 @@ components:
       type: http
       scheme: bearer
 security:
-- httpBearer: []
+  - httpBearer: []
 tags:
-- name: Auth
-- name: Profile
-- name: Mata Pelajaran
-- name: Jenjang
-- name: Tingkat
-- name: Kelas
-- name: Modul
-- name: Videos
-- name: Simulasi
-- name: Konten
-- name: Banner
-- name: Tingkat (Semua mata pelajaran)
-- name: Home
-- name: Siswa
-- name: Dashboard
-- name: Paket Soal
-- name: Soal
-- name: Nilai Simulasi
+  - name: Auth
+  - name: Profile
+  - name: Mata Pelajaran
+  - name: Jenjang
+  - name: Tingkat
+  - name: Kelas
+  - name: Modul
+  - name: Videos
+  - name: Simulasi
+  - name: Konten
+  - name: Banner
+  - name: Tingkat (Semua mata pelajaran)
+  - name: Home
+  - name: Siswa
+  - name: Dashboard
+  - name: Paket Soal
+  - name: Soal
+  - name: Nilai Simulasi
