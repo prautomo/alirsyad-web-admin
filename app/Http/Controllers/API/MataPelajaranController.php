@@ -288,7 +288,7 @@ class MataPelajaranController extends BaseController
             return $this->sendError('MataPelajaran not found.');
         }
 
-        return $this->sendResponse(new MataPelajaranResource($data), 'MataPelajaran retrieved successfully.');
+        return $this->sendResponse(new MataPelajaranResource($data), 'Mata Pelajaran retrieved successfully.');
     }
 
     /**
@@ -393,4 +393,37 @@ class MataPelajaranController extends BaseController
     private function calculatePercentage($total, $done){
         return ($done === 0 || $total === 0) ? 0 : round(($done/$total) * 100, 2);
     }
+
+    public function simulasi(Request $request)
+    {
+        // $datas = MataPelajaran::search($request);
+        // $datas = $datas->with('tingkat.jenjang');
+        $datas = MataPelajaran::with('tingkat.jenjang');
+        // limit data
+        if (@$request->limit) $datas = $datas->limit($request->limit);
+
+        if(@$request->q_tingkat_id){
+            $datas = $datas->where('tingkat_id', $request->q_tingkat_id);
+        }
+
+        // sort by urutan
+        $datas = $datas->orderBy('urutan', 'asc');
+
+        // sort by active mapel
+        $datas = $datas->get();
+
+        $list_mapel_simulation = [];
+
+        foreach($datas as $mapel){
+            $get_simulation = Simulasi::with('uploader', 'mataPelajaran');
+            $get_simulation = $get_simulation->where('mata_pelajaran_id', $mapel->id)->get();
+    
+            if(count($get_simulation) > 0){
+                array_push($list_mapel_simulation, $mapel);
+            }
+        }
+
+        return $this->sendResponse(MataPelajaranResource::collection($list_mapel_simulation), 'Mata Pelajaran retrieved successfully.');
+    }
+
 }

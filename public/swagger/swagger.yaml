@@ -457,13 +457,47 @@ paths:
           description: ''
           headers: {}
       deprecated: false
-  /mata_pelajarans/1:
+  /mata_pelajarans/{id}:
     get:
       tags:
       - Mata Pelajaran
       summary: Get Detail
       operationId: GetDetail
       parameters:
+      - in: path
+        name: id
+        required: true
+        type: integer
+      - name: Accept
+        in: header
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: application/json
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /mata_pelajarans_simulasi:
+    get:
+      tags:
+      - Mata Pelajaran
+      summary: Get Mapel for Simulation by Tingkat id
+      operationId: GetMapelSimulation
+      parameters:
+      - name: q_tingkat_id
+        in: query
+        description: ''
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+          example: 1
       - name: Accept
         in: header
         description: ''
@@ -978,6 +1012,26 @@ paths:
       summary: Get Nilai Simulasi
       operationId: GetNilaiSimulasi
       parameters:
+      - name: Acceptsimulasi
+        in: header
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: application/json
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /nilai-simulasi/mapels/{idMapel}:
+    get:
+      tags:
+      - Siswa
+      summary: Get Nilai Simulasi by Mapel
+      operationId: GetNilaiSimulasiByMapel
+      parameters:
       - name: Accept
         in: header
         description: ''
@@ -986,6 +1040,10 @@ paths:
         schema:
           type: string
           example: application/json
+      - in: path
+        name: idMapel
+        required: true
+        type: integer
       responses:
         '200':
           description: ''

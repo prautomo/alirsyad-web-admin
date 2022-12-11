@@ -52,6 +52,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get("/mata_pelajarans/not-active", "API\MataPelajaranController@notActive");
     Route::get("/mata_pelajarans/{id}", "API\MataPelajaranController@show");
     Route::get("/mata_pelajarans/{id}/summary", "API\MataPelajaranController@summary");
+    Route::get("/mata_pelajarans_simulasi", "API\MataPelajaranController@simulasi");
 
     Route::get("/moduls", "API\ModulController@index");
     Route::get("/moduls/{id}", "API\ModulController@show")->name('api.modul.detail');
