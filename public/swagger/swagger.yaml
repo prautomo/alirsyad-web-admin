@@ -464,7 +464,6 @@ paths:
       summary: Get Detail
       operationId: GetDetail
       parameters:
-<<<<<<< HEAD
       - in: path
         name: id
         required: true
@@ -507,16 +506,6 @@ paths:
         schema:
           type: string
           example: application/json
-=======
-        - name: Accept
-          in: header
-          description: ""
-          required: true
-          style: simple
-          schema:
-            type: string
-            example: application/json
->>>>>>> 3d5eb41df17b05fb2d6089cb5940db13ad0758af
       responses:
         "200":
           description: ""
@@ -1023,7 +1012,6 @@ paths:
       summary: Get Nilai Simulasi
       operationId: GetNilaiSimulasi
       parameters:
-<<<<<<< HEAD
       - name: Acceptsimulasi
         in: header
         description: ''
@@ -1056,16 +1044,6 @@ paths:
         name: idMapel
         required: true
         type: integer
-=======
-        - name: Accept
-          in: header
-          description: ""
-          required: true
-          style: simple
-          schema:
-            type: string
-            example: application/json
->>>>>>> 3d5eb41df17b05fb2d6089cb5940db13ad0758af
       responses:
         "200":
           description: ""
