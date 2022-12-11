@@ -45,7 +45,7 @@ class SoalController extends BaseController
 
                 $obj_soal = [
                     "id" => $get_soal->id,
-                    "soal" => $get_soal->soal,
+                    "soal" => trim(strip_tags($get_soal->soal), " \t\n\r\0\x0B\xC2\xA0"),
                     "image" => ""
                 ];
                 
@@ -73,7 +73,7 @@ class SoalController extends BaseController
                  // IF YOU WANT SOME CLEAN RESPONSE (WITH NO HTML)
                 if(str_contains($get_soal->soal, '<img')){
                     $soal_img = explode('src="', $get_soal->soal)[1];
-                    $soal_img = explode('" style=', $soal_img)[0];
+                    $soal_img = explode('"', $soal_img)[0];
                     $soal_contain_img =  $soal_img;
                     $soal_contain_img_text = trim(strip_tags($get_soal->soal), " \t\n\r\0\x0B\xC2\xA0");
                     $obj_soal['soal'] = $soal_contain_img_text;
