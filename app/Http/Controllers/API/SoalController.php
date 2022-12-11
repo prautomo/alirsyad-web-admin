@@ -107,7 +107,7 @@ class SoalController extends BaseController
             $get_jawaban_selection = $get_soal->jawaban;
             $get_jawaban = $get_soal->$get_jawaban_selection;
 
-            if($get_jawaban == $soal['jawaban']){
+            if(str_contains($get_jawaban, $soal['jawaban'])){
                 $count_correct++;
             }
         }
