@@ -41,7 +41,7 @@ class SoalController extends BaseController
                 $get_soal = Soal::select(
                     'id', 'soal',
                     'pilihan_a', 'pilihan_b', 'pilihan_c', 'pilihan_d', 'pilihan_e'
-                )->find($idx_soal);
+                )->find(252);
 
                 $obj_soal = [
                     "id" => $get_soal->id,
@@ -60,11 +60,15 @@ class SoalController extends BaseController
                         $choice = $get_soal['pilihan_' . $multiple_choice];
                         if(str_contains($choice, '<img')){
                             $jawaban_img = explode('src="', $choice)[1];
-                            $jawaban_img = explode('" style=', $jawaban_img)[0];
+                            $jawaban_img = explode('"', $jawaban_img)[0];
                             $jawaban_contain_img =  $jawaban_img;
                             array_push($obj_soal['jawaban'], $jawaban_contain_img);
                         }else{
-                            array_push($obj_soal['jawaban'], trim(strip_tags($choice), " \t\n\r\0\x0B\xC2\xA0"));
+                            $temp_jawaban = utf8_decode(strip_tags($choice));
+                            $temp_jawaban = str_replace("&nbsp;", "", $temp_jawaban);
+                            $temp_jawaban = preg_replace('/\s+/', ' ',$temp_jawaban);
+                            $temp_jawaban = trim($temp_jawaban);
+                            array_push($obj_soal['jawaban'], $temp_jawaban);
                         }
                         $length_multiple_choice++;
                     }
@@ -75,8 +79,13 @@ class SoalController extends BaseController
                     $soal_img = explode('src="', $get_soal->soal)[1];
                     $soal_img = explode('"', $soal_img)[0];
                     $soal_contain_img =  $soal_img;
-                    $soal_contain_img_text = trim(strip_tags($get_soal->soal), " \t\n\r\0\x0B\xC2\xA0");
-                    $obj_soal['soal'] = $soal_contain_img_text;
+                    
+                    $temp_soal_contain_img_text = utf8_decode(strip_tags($get_soal->soal));
+                    $temp_soal_contain_img_text = str_replace("&nbsp;", "", $temp_soal_contain_img_text);
+                    $temp_soal_contain_img_text = preg_replace('/\s+/', ' ',$temp_soal_contain_img_text);
+                    $temp_soal_contain_img_text = trim($temp_soal_contain_img_text);
+
+                    $obj_soal['soal'] = $temp_soal_contain_img_text;
                     $obj_soal['image'] = $soal_contain_img;
                 }
 
@@ -107,7 +116,25 @@ class SoalController extends BaseController
             $get_jawaban_selection = $get_soal->jawaban;
             $get_jawaban = $get_soal->$get_jawaban_selection;
 
-            if(str_contains($get_jawaban, $soal['jawaban'])){
+            // clean jawaban benar
+            $temp_get_jawaban = utf8_decode(strip_tags($get_jawaban));
+            $temp_get_jawaban = str_replace("&nbsp;", "", $temp_get_jawaban);
+            $temp_get_jawaban = preg_replace('/\s+/', ' ',$temp_get_jawaban);
+            $temp_get_jawaban = trim($temp_get_jawaban);
+
+            if(str_contains($get_jawaban, '<img')){
+                $jawaban_img = explode('src="', $get_jawaban)[1];
+                $jawaban_img = explode('"', $jawaban_img)[0];
+                $temp_get_jawaban =  $jawaban_img;
+            }
+
+            // clean jawaban from req
+            $temp_req_jawaban = utf8_decode(strip_tags($soal['jawaban']));
+            $temp_req_jawaban = str_replace("&nbsp;", "", $temp_req_jawaban);
+            $temp_req_jawaban = preg_replace('/\s+/', ' ',$temp_req_jawaban);
+            $temp_req_jawaban = trim($temp_req_jawaban);
+
+            if($temp_get_jawaban == $temp_req_jawaban){
                 $count_correct++;
             }
         }
