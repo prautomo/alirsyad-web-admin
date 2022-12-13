@@ -97,7 +97,7 @@ class PasswordResetStudentController extends Controller
 
         if($input['status'] == 'RESET_PASSWORD_SELESAI'){
             $updatePassword = ExternalUser::where('id', $passwordReset->external_user_id);
-            $updatePassword->update(['password' => Hash::make('123456')]);
+            $updatePassword->update(['password' => Hash::make('Siswa123')]);
         }
 
         return redirect()->route($this->routePath . '.index', ['role' => $request->role])->with(

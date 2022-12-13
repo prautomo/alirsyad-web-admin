@@ -528,7 +528,7 @@ class ExternalUserController extends Controller
                     }
 
                     if (!$password) {
-                        $password = "123456"; // default password
+                        $password = "Siswa123"; // default password
                     }
 
                     $input['nis'] = $nis;
