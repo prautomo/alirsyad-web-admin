@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Backoffice;
 
 use Illuminate\Http\Request;
@@ -15,12 +16,14 @@ use App\Models\UploaderMataPelajaran;
 use App\Models\MataPelajaran;
 use App\Models\Video;
 
-class VideoController extends Controller{
+class VideoController extends Controller
+{
 
-    function __construct(){
-        $this->middleware('permission:video-list|video-create|video-edit|video-delete', ['only' => ['index','show']]);
-        $this->middleware('permission:video-create', ['only' => ['create','store']]);
-        $this->middleware('permission:video-edit', ['only' => ['edit','update']]);
+    function __construct()
+    {
+        $this->middleware('permission:video-list|video-create|video-edit|video-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:video-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:video-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:video-delete', ['only' => ['destroy']]);
 
         $this->prefix = 'pages.backoffice.videos';
@@ -32,11 +35,12 @@ class VideoController extends Controller{
      *
      * @return void
      */
-    public function datatable(Request $request){
+    public function datatable(Request $request)
+    {
         $query = Video::query();
 
         // kalo bukan superadmin, tambahin filter by mapel na
-        if(!@\Auth::user()->hasRole('Superadmin')){
+        if (!@\Auth::user()->hasRole('Superadmin')) {
             $mapelIdsUser = $this->getMapelIdsUser();
             $query = $query->whereIn('mata_pelajaran_id', $mapelIdsUser);
         }
@@ -52,39 +56,39 @@ class VideoController extends Controller{
 
                 $search = @$request->search['value'];
 
-                if($search){
-                    $query->where(function($query) use ($search){
-                        $query->where('name', 'LIKE', '%'.$search.'%');
+                if ($search) {
+                    $query->where(function ($query) use ($search) {
+                        $query->where('name', 'LIKE', '%' . $search . '%');
 
-                        $query = $query->orWhereHas('mataPelajaran.tingkat.jenjang', function($query2) use ( $search ){
-                            $query2->where('name', 'LIKE', '%'.$search.'%');
+                        $query = $query->orWhereHas('mataPelajaran.tingkat.jenjang', function ($query2) use ($search) {
+                            $query2->where('name', 'LIKE', '%' . $search . '%');
                         });
 
-                        $query = $query->orWhereHas('mataPelajaran.tingkat', function($query2) use ( $search ){
-                            $query2->where('name', 'LIKE', '%'.$search.'%');
+                        $query = $query->orWhereHas('mataPelajaran.tingkat', function ($query2) use ($search) {
+                            $query2->where('name', 'LIKE', '%' . $search . '%');
                         });
 
-                        $query = $query->orWhereHas('mataPelajaran', function($query2) use ( $search ){
-                            $query2->where('name', 'LIKE', '%'.$search.'%');
+                        $query = $query->orWhereHas('mataPelajaran', function ($query2) use ($search) {
+                            $query2->where('name', 'LIKE', '%' . $search . '%');
                         });
 
-                        $query = $query->orWhereHas('modul', function($query2) use ( $search ){
-                            $query2->where('name', 'LIKE', '%'.$search.'%');
+                        $query = $query->orWhereHas('modul', function ($query2) use ($search) {
+                            $query2->where('name', 'LIKE', '%' . $search . '%');
                         });
                     });
                 }
 
                 // query param mapel id
-                if(@$request->mata_pelajaran_id) $query->where('mata_pelajaran_id', @$request->mata_pelajaran_id);
+                if (@$request->mata_pelajaran_id) $query->where('mata_pelajaran_id', @$request->mata_pelajaran_id);
 
                 // query param modul id
-                if(@$request->modul_id) $query->where('modul_id', @$request->modul_id);
+                if (@$request->modul_id) $query->where('modul_id', @$request->modul_id);
             })
             ->addIndexColumn()
-            ->addColumn('show-img', function($data) {
-                if(empty($data->icon)){
+            ->addColumn('show-img', function ($data) {
+                if (empty($data->icon)) {
                     return "not available";
-                }else{
+                } else {
                     return view("components.datatable.image", [
                         "url" => asset($data->icon)
                     ]);
@@ -97,16 +101,16 @@ class VideoController extends Controller{
                 return @$data->mataPelajaran->tingkat ? $data->mataPelajaran->tingkat->name : '-';
             })
             ->addColumn("mapel", function ($data) {
-                if(@$data->modul->mataPelajaran){
+                if (@$data->modul->mataPelajaran) {
                     $mapel = @$data->modul->mataPelajaran->name ? $data->modul->mataPelajaran->name : 'none';
                     $mapelID = @$data->modul->mataPelajaran->id ? $data->modul->mataPelajaran->id : '';
-                }else{
+                } else {
                     $mapel = @$data->mataPelajaran->name ?? 'none';
                     $mapelID = @$data->mataPelajaran->id ?? '';
                 }
 
                 return view("components.datatable.link", [
-                    "link" => route($this->routePath.".index")."?mata_pelajaran_id=".$mapelID,
+                    "link" => route($this->routePath . ".index") . "?mata_pelajaran_id=" . $mapelID,
                     "text" => $mapel,
                 ]);
             })
@@ -115,7 +119,7 @@ class VideoController extends Controller{
                 $modulID = @$data->modul->id ? $data->modul->id : '';
 
                 return view("components.datatable.link", [
-                    "link" => route($this->routePath.".index")."?modul_id=".$modulID,
+                    "link" => route($this->routePath . ".index") . "?modul_id=" . $modulID,
                     "text" => $modul,
                 ]);
             })
@@ -128,14 +132,14 @@ class VideoController extends Controller{
                 return @$data->uploader->name ?? "-";
             })
             ->addColumn("action", function ($data) {
-                $relModul = @$data->modul->slug ? "?rel=modul/".@$data->modul->slug.".html" : "";
+                $relModul = @$data->modul->slug ? "?rel=modul/" . @$data->modul->slug . ".html" : "";
                 return view("components.datatable.actions", [
                     "name" => $data->name,
                     "permissionName" => 'video',
                     "class" => $data->class,
-                    "copySlug" => route("app.video.detail", $data->id).$relModul,
-                    "deleteRoute" => route($this->routePath.".destroy", $data->id),
-                    "editRoute" => route($this->routePath.".edit", $data->id),
+                    "copySlug" => route("app.video.detail", $data->id) . $relModul,
+                    "deleteRoute" => route($this->routePath . ".destroy", $data->id),
+                    "editRoute" => route($this->routePath . ".edit", $data->id),
                 ]);
             })
             ->order(function ($query) {
@@ -144,7 +148,8 @@ class VideoController extends Controller{
             ->toJson();
     }
 
-    private function getMapelIdsUser(){
+    private function getMapelIdsUser()
+    {
         $userId = @\Auth::user()->id;
         $mapelIdsUser = UploaderMataPelajaran::where('guru_uploader_id', $userId)->pluck('mata_pelajaran_id')->all();
         $mapelIdsUser = count($mapelIdsUser) > 0 ? $mapelIdsUser : [];
@@ -152,24 +157,26 @@ class VideoController extends Controller{
         return $mapelIdsUser;
     }
 
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         if ($request->ajax()) {
             return $this->datatable($request);
         }
 
-        return view($this->prefix.'.index');
+        return view($this->prefix . '.index');
     }
 
     /**
      * Get mata pelajaran
      */
-    private function getMataPelajaran(){
+    private function getMataPelajaran()
+    {
         // get list mapel
         $mapels = MataPelajaran::with('tingkat');
 
         // filter kalo rolenya guru uploader (khusus mapel aja)
         // kalo bukan superadmin, tambahin filter by mapel na
-        if(!@\Auth::user()->hasRole('Superadmin')){
+        if (!@\Auth::user()->hasRole('Superadmin')) {
             $mapelIdsUser = $this->getMapelIdsUser();
             $mapels = $mapels->whereIn('id', $mapelIdsUser);
         }
@@ -179,8 +186,8 @@ class VideoController extends Controller{
         $mapelList = [];
         $mapelList[""] = "Pilih mata pelajaran";
 
-        foreach($mapels as $mapel){
-            $mapelList[$mapel->id] = $mapel->name . " (Tingkat ".@$mapel->tingkat->name." ".@$mapel->tingkat->jenjang->name.")";
+        foreach ($mapels as $mapel) {
+            $mapelList[$mapel->id] = $mapel->name . " (Tingkat " . @$mapel->tingkat->name . " " . @$mapel->tingkat->jenjang->name . ")";
         }
 
         return $mapelList;
@@ -189,13 +196,14 @@ class VideoController extends Controller{
     /**
      * Get modul
      */
-    private function getModul(){
+    private function getModul()
+    {
         // get list modul
         $moduls = Modul::with('mataPelajaran.tingkat');
 
         // filter kalo rolenya guru uploader (khusus mapel aja)
         // kalo bukan superadmin, tambahin filter by mapel na
-        if(!@\Auth::user()->hasRole('Superadmin')){
+        if (!@\Auth::user()->hasRole('Superadmin')) {
             $mapelIdsUser = $this->getMapelIdsUser();
             $moduls = $moduls->whereIn('mata_pelajaran_id', $mapelIdsUser);
         }
@@ -205,14 +213,15 @@ class VideoController extends Controller{
         $modulList = [];
         $modulList[""] = "Pilih modul";
 
-        foreach($moduls as $modul){
-            $modulList[$modul->id] = $modul->name . " (".@$modul->mataPelajaran->name." Tingkat: ".@$modul->mataPelajaran->tingkat->name. " ". @$modul->mataPelajaran->tingkat->jenjang->name .")";
+        foreach ($moduls as $modul) {
+            $modulList[$modul->id] = $modul->name . " (" . @$modul->mataPelajaran->name . " Tingkat: " . @$modul->mataPelajaran->tingkat->name . " " . @$modul->mataPelajaran->tingkat->jenjang->name . ")";
         }
 
         return $modulList;
     }
 
-    private function getSemester(){
+    private function getSemester()
+    {
         $semesterList = [];
         $semesterList[""] = "Pilih semester";
 
@@ -222,7 +231,8 @@ class VideoController extends Controller{
         return $semesterList;
     }
 
-    public function create(){
+    public function create()
+    {
 
         $mapelList = $this->getMataPelajaran();
         $modulList = $this->getModul();
@@ -232,10 +242,11 @@ class VideoController extends Controller{
             0 => 'Tidak',
         ];
 
-        return view($this->prefix.'.create', ['mapelList' => $mapelList, 'semesterList' => $semesterList, 'modulList' => $modulList, 'showUpdate' => $show]);
+        return view($this->prefix . '.create', ['mapelList' => $mapelList, 'semesterList' => $semesterList, 'modulList' => $modulList, 'showUpdate' => $show]);
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         // validasi form
         $this->validate($request, [
             'name' => 'required|string',
@@ -244,7 +255,7 @@ class VideoController extends Controller{
             'urutan' => 'required|numeric|min:0',
         ]);
 
-        if (@$request->modul_id==null) {
+        if (@$request->modul_id == null) {
             $validated = $request->validate([
                 'mata_pelajaran_id' => 'required',
             ]);
@@ -255,7 +266,7 @@ class VideoController extends Controller{
         // temp request
         $dataReq = $request->only(['name', 'video_url', 'icon', 'description', 'modul_id', 'mata_pelajaran_id', 'semester', 'urutan', 'visible']);
 
-        $dataReq['visible'] = @$request->visible=="ya" ? 1 : 0;
+        $dataReq['visible'] = @$request->visible == "ya" ? 1 : 0;
 
         $dataReq['uploader_id'] = \Auth::user()->id;
 
@@ -271,7 +282,7 @@ class VideoController extends Controller{
             $dataReq['icon'] = $url;
         }
 
-        if(@$request->mata_pelajaran_id==null){
+        if (@$request->mata_pelajaran_id == null) {
             // assign mapel id (temporary bad strucure)
             // get mapel id from modul
             $modul = Modul::find($request->modul_id);
@@ -281,7 +292,7 @@ class VideoController extends Controller{
         $data = Video::create($dataReq);
 
         // insert to log update
-        if(@$request->showUpdate){
+        if (@$request->showUpdate) {
 
             Video::where('id', $data->id)->update(['show_update' => 1]);
 
@@ -301,12 +312,13 @@ class VideoController extends Controller{
             $this->insertToUpdateLog($data, $coverUpdate, 'create');
         }
 
-        return redirect()->route($this->routePath.'.index')->with(
+        return redirect()->route($this->routePath . '.index')->with(
             $this->success(__("Success to create Video"), $data)
         );
     }
 
-    public function edit(Request $request, $id){
+    public function edit(Request $request, $id)
+    {
         $dt = Video::with('mataPelajaran')->findOrFail($id);
         $mapelList = $this->getMataPelajaran();
         $modulList = $this->getModul();
@@ -319,10 +331,11 @@ class VideoController extends Controller{
         // last update data
         $update = Update::where(['trigger' => 'video', 'trigger_id' => $id])->orderBy('created_at', 'desc')->first();
 
-        return view($this->prefix.'.edit', ['data' => $dt, 'mapelList' => $mapelList, 'semesterList' => $semesterList, 'modulList' => $modulList, 'showUpdate' => $show, 'update' => $update]);
+        return view($this->prefix . '.edit', ['data' => $dt, 'mapelList' => $mapelList, 'semesterList' => $semesterList, 'modulList' => $modulList, 'showUpdate' => $show, 'update' => $update]);
     }
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $id)
+    {
         // validasi form
         $this->validate($request, [
             'name' => 'required|string',
@@ -331,7 +344,7 @@ class VideoController extends Controller{
             'urutan' => 'required|numeric|min:0',
         ]);
 
-        if (@$request->modul_id==null) {
+        if (@$request->modul_id == null) {
             $validated = $request->validate([
                 'mata_pelajaran_id' => 'required',
             ]);
@@ -339,7 +352,7 @@ class VideoController extends Controller{
 
         $dataReq = $request->only(['name', 'video_url', 'icon', 'description', 'modul_id', 'mata_pelajaran_id', 'semester', 'urutan', 'visible']);
 
-        $dataReq['visible'] = @$request->visible=="ya" ? 1 : 0;
+        $dataReq['visible'] = @$request->visible == "ya" ? 1 : 0;
 
         if ($request->hasFile('icon')) {
             $validated = $request->validate([
@@ -353,7 +366,7 @@ class VideoController extends Controller{
             $dataReq['icon'] = $url;
         }
 
-        if(@$request->mata_pelajaran_id==null){
+        if (@$request->mata_pelajaran_id == null) {
             // assign mapel id (temporary bad strucure)
             // get mapel id from modul
             $modul = Modul::find($request->modul_id);
@@ -364,7 +377,7 @@ class VideoController extends Controller{
         $dt->update($dataReq);
 
         // insert to log update
-        if(@$request->showUpdate){
+        if (@$request->showUpdate) {
 
             $dt = Video::where('id', $id)->update(['show_update' => 1]);
 
@@ -379,25 +392,27 @@ class VideoController extends Controller{
                 $url = UploadService::uploadImage($image, 'icon/cover_update');
 
                 $coverUpdate = $url;
-            }else {
+            } else {
                 // last update data
                 $update = Update::where(['trigger' => 'video', 'trigger_id' => $id])->orderBy('created_at', 'desc')->first();
 
                 $coverUpdate = @$update->logo;
             }
             $this->insertToUpdateLog(Video::findOrFail($id), $coverUpdate, 'update', 1);
-        }else{
+        } else {
             $dt = Video::where('id', $id)->update(['show_update' => 0]);
             $update = Update::where(['trigger' => 'video', 'trigger_id' => $id])->orderBy('created_at', 'desc')->first();
             $this->insertToUpdateLog(Video::findOrFail($id), @$update->logo, 'update', 0);
         }
 
-        return redirect()->route($this->routePath.'.index')->with(
+        return redirect()->route($this->routePath . '.index')->with(
             $this->success(__("Success to update Video"), $dt)
         );
     }
 
-    public function destroy(Request $request, $id){
+    public function destroy(Request $request, $id)
+    {
+        $delete_update = Update::where(['trigger' => 'video', 'trigger_id' => $id])->delete();
         $d = Video::findOrFail($id);
 
         $d->delete();
@@ -410,7 +425,8 @@ class VideoController extends Controller{
      * @param  String  $type
      * @return void
      */
-    private function insertToUpdateLog(Video $video, $cover, $type, $visible=1){
+    private function insertToUpdateLog(Video $video, $cover, $type, $visible = 1)
+    {
         $data = [
             'trigger_event' => @$type ?? 'other',
             'trigger' => 'video',
@@ -426,7 +442,7 @@ class VideoController extends Controller{
             $data['logo'] = $cover;
         }
 
-        if(Update::where(['trigger_id' => @$video->id, 'trigger' => "video"])){
+        if (Update::where(['trigger_id' => @$video->id, 'trigger' => "video"])) {
             Update::where(['trigger_id' => @$video->id, 'trigger' => "video"])->delete();
         }
 
