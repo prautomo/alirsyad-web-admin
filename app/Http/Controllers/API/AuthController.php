@@ -27,21 +27,21 @@ class AuthController extends BaseController
     public function login(Request $request)
     {
 
-        $login_type = filter_var( $request->nis, FILTER_VALIDATE_EMAIL ) ? 'email' : 'nis';
+        $login_type = filter_var($request->nis, FILTER_VALIDATE_EMAIL) ? 'email' : 'nis';
 
-        if($login_type == 'email'){
+        if ($login_type == 'email') {
             $get_visitor = ExternalUser::where('email', $request->nis)->first();
 
-            if($get_visitor['is_pengunjung'] == 1 && $get_visitor['email_verified_at'] == null){
-                return $this->sendError('Unauthorised.', ['error'=>'Your email has not verified']);
+            if ($get_visitor['is_pengunjung'] == 1 && $get_visitor['email_verified_at'] == null) {
+                return $this->sendError('Unauthorised.', ['error' => 'Your email has not verified']);
             }
         }
 
-        if(Auth::attempt([$login_type => $request->nis, 'password' => $request->password])){
+        if (Auth::attempt([$login_type => $request->nis, 'password' => $request->password])) {
             $user = Auth::user();
-            
-            if(!$user->is_pengunjung && $request->role == 'visitor' || $user->is_pengunjung && $request->role == 'student'){
-                return $this->sendError('Invalid.', ['error'=>"You're not registered as " . $request->role . "."]);
+
+            if (!$user->is_pengunjung && $request->role == 'visitor' || $user->is_pengunjung && $request->role == 'student') {
+                return $this->sendError('Invalid.', ['error' => "You're not registered as " . $request->role . "."]);
             }
 
             $generateToken = $user->createToken('MyAppDigiBook308');
@@ -59,6 +59,7 @@ class AuthController extends BaseController
             $success['tingkat_id'] = @$user->kelas->tingkat->id;
             $success['jenjang_id'] = @$user->kelas->tingkat->jenjang->id ?? @$user->jenjang->id;
             $success['status'] = @$user->status;
+            $success['user_id'] = @$user->id;
 
             return $this->sendResponse($success, 'User login successfully.');
             // handle status belum aktif
@@ -66,13 +67,13 @@ class AuthController extends BaseController
             // }else {
             //     return $this->sendError('Maaf, status akun kamu : '.(str_replace('_', ' ', @$user->status)).'. Silahkan kontak administrator/guru.', ['error'=>'Unauthorised']);
             // }
-        }
-        else{
-            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+        } else {
+            return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
         }
     }
 
-    public function register(Request $request) {
+    public function register(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             // 'nis' => ['required', 'string', 'max:255', 'unique:external_users'],
             'name' => ['required', 'string', 'max:255'],
@@ -102,28 +103,29 @@ class AuthController extends BaseController
         ]);
 
         $details = [
-            'title' => 'Selamat Datang di Al-Irsyad Edu!',  
+            'title' => 'Selamat Datang di Al-Irsyad Edu!',
             'email' => $data['email'],
             'source_api_call' => $data['source_api_call'],
             'url_link' => url('/')
         ];
-    
+
         \Mail::to($data['email'])->send(new \App\Mail\EmailVerificationMail($details));
 
         return $this->sendResponse($registerd, 'User registered successfully.');
     }
 
-    
+
     public function verify(Request $request)
     {
-        $update_email_verified_at = ExternalUser::where('email', $request->email)->update(['email_verified_at'=> now() ]);
+        $update_email_verified_at = ExternalUser::where('email', $request->email)->update(['email_verified_at' => now()]);
 
-        if($update_email_verified_at){
+        if ($update_email_verified_at) {
             return $this->sendResponse('', 'Your emaill has been verified.');
         }
     }
 
-    public function forgot(Request $request) {
+    public function forgot(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
         ]);
@@ -149,7 +151,7 @@ class AuthController extends BaseController
 
         if ($this->sendResetEmail($request->email, $tokenData->token, $request->source_api_call)) {
             return $this->sendResponse([], 'Reset password link sent to your email.');
-        }else{
+        } else {
             return $this->sendError('Failed to request password reset.');
         }
     }
@@ -160,7 +162,7 @@ class AuthController extends BaseController
         $link = config('base_url') . 'password/reset/' . $token . '?email=' . urlencode($email);
 
         try {
-            
+
             $details = [
                 'title' => 'Reset Password Akun Al-Irsyad Edu!',
                 'email' => $email,
@@ -168,7 +170,7 @@ class AuthController extends BaseController
                 'source_api_call' => $source,
                 'url_link' => url('/')
             ];
-        
+
             \Mail::to($email)->send(new \App\Mail\EmailForgotPasswordMail($details));
             return true;
         } catch (\Exception $e) {
@@ -176,7 +178,8 @@ class AuthController extends BaseController
         }
     }
 
-    public function reset(Request $request) {
+    public function reset(Request $request)
+    {
 
         $request->validate([
             'email' => 'required|email',
@@ -212,15 +215,15 @@ class AuthController extends BaseController
         DB::table('password_resets')->where('email', $user->email)
             ->delete();
 
-        if($updated_user){
+        if ($updated_user) {
             return $this->sendResponse([], "Password has been successfully changed.");
-        }else{
+        } else {
             return $this->sendError('Failed to change password.', []);
         }
-
     }
 
-    public function forgot_password_student(Request $request) {
+    public function forgot_password_student(Request $request)
+    {
 
         $validator = Validator::make($request->all(), [
             'nis' => 'required',
@@ -234,7 +237,7 @@ class AuthController extends BaseController
 
         $list_nis = ExternalUser::where('role', 'SISWA')->pluck('nis')->all();
 
-        if (!in_array( $data['nis'] , $list_nis )) {
+        if (!in_array($data['nis'], $list_nis)) {
             return $this->sendError('NIS is not registred', []);
         }
 
@@ -243,14 +246,13 @@ class AuthController extends BaseController
             'nis' => $data['nis']
         ]);
 
-        if($new_req){
+        if ($new_req) {
             return $this->sendResponse([], 'Reset password is requested.');
-        }else{
+        } else {
             return $this->sendError('Failed to request password reset.', $new_req);
         }
-
     }
-    
+
 
     /**
      * Logout api
@@ -262,8 +264,8 @@ class AuthController extends BaseController
         if (Auth::check()) {
             Auth::user()->AauthAcessToken()->delete();
             return $this->sendResponse([], 'User logout successfully.');
-        }else{
-            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+        } else {
+            return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
         }
     }
 }

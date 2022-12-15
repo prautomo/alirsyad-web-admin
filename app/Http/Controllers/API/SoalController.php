@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Http\Resources\Soal as ResourcesSoal;
+use App\Models\ERaport;
 use App\Models\PaketSoal;
 use App\Models\Soal;
 use Illuminate\Http\Request;
@@ -118,6 +119,25 @@ class SoalController extends BaseController
         $next_paket_soal_id = null;
         $next_tingkat_kesulitan = null;
 
+        // eraport
+        $e_raport = '';
+        $exist_e_raport = ERaport::where([
+            'user_id' => $request->user_id, 'paket_soal_id' => $request->paket_soal_id, 'tipe' => 'subbab'
+        ])->first();
+
+        if ($exist_e_raport) {
+            $e_raport = $exist_e_raport;
+        } else {
+            $e_raport = ERaport::create([
+                'user_id' => $request->user_id,
+                'paket_soal_id' => $request->paket_soal_id,
+                'tipe' => 'subbab',
+            ]);
+        }
+
+        $temp_list_id_soal_terjawab = json_decode($e_raport->list_id_soal_terjawab, TRUE);
+        $temp_list_id_soal_benar = json_decode($e_raport->list_id_soal_benar, TRUE);
+
         foreach ($request->list_soal as $soal) {
             $get_soal = Soal::find($soal['id']);
             $get_jawaban_selection = $get_soal->jawaban;
@@ -143,7 +163,36 @@ class SoalController extends BaseController
 
             if ($temp_get_jawaban == $temp_req_jawaban) {
                 $count_correct++;
+                if ($temp_list_id_soal_benar == null) {
+                    $temp_list_id_soal_benar = [];
+                    $e_raport->total_benar++;
+                    array_push($temp_list_id_soal_benar, $soal['id']);
+                } else {
+                    if (!in_array($soal['id'], $temp_list_id_soal_benar)) {
+                        $e_raport->total_benar++;
+                        array_push($temp_list_id_soal_benar, $soal['id']);
+                    }
+                }
             }
+
+            if ($temp_list_id_soal_terjawab == null) {
+                $temp_list_id_soal_terjawab = [];
+                $e_raport->total_terjawab++;
+                array_push($temp_list_id_soal_terjawab, $soal['id']);
+            } else {
+                if (!in_array($soal['id'], $temp_list_id_soal_terjawab)) {
+                    $e_raport->total_terjawab++;
+                    array_push($temp_list_id_soal_terjawab, $soal['id']);
+                }
+            }
+
+            ERaport::find($e_raport->id)->update([
+
+                'total_terjawab' => $e_raport->total_terjawab,
+                'total_benar' => $e_raport->total_benar,
+                'list_id_soal_terjawab' => $temp_list_id_soal_terjawab,
+                'list_id_soal_benar' => $temp_list_id_soal_benar,
+            ]);
         }
 
         switch ($paket_soal->tingkat_kesulitan) {
