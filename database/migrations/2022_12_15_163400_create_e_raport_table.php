@@ -19,8 +19,8 @@ class CreateERaportTable extends Migration
             $table->unsignedBigInteger('paket_soal_id');
             $table->integer('total_terjawab')->default(0);
             $table->integer('total_benar')->default(0);
-            $table->text('list_id_soal_terjawab')->default("[]");
-            $table->text('list_id_soal_benar')->default("[]");
+            $table->text('list_id_soal_terjawab')->default("");
+            $table->text('list_id_soal_benar')->default("");
             $table->string('tipe');
             $table->timestamps();
             $table->softDeletes();
