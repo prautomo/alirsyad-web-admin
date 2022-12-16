@@ -20,7 +20,7 @@ class ERaportController extends BaseController
 
         $list_bab = [];
         foreach ($list_bab_id as $bab_id) {
-            $bab_name = Modul::find($bab_id)->name;
+            $get_bab = Modul::find($bab_id);
             $list_judul_subbab = PaketSoal::where(['mata_pelajaran_id' => $mata_pelajaran_id, 'bab_id' => $bab_id])->pluck('judul_subbab')->toArray();
             $list_subbab = [];
 
@@ -37,6 +37,7 @@ class ERaportController extends BaseController
 
                     $subbab_nilai_obj = [
                         'tingkat_kesulitan' => $tingkat_kesulitan,
+                        'percentage' => 0,
                         'total_benar' => 0,
                         'total_terjawab' => 0,
                     ];
@@ -45,6 +46,7 @@ class ERaportController extends BaseController
                         $get_e_raport = ERaport::where(['user_id' => $user_id, 'paket_soal_id' => $get_paket_soal->id])->first();
 
                         if ($get_e_raport != null) {
+                            $subbab_nilai_obj['percentage'] = ($get_e_raport->total_benar / $get_e_raport->total_terjawab) * 100;
                             $subbab_nilai_obj['total_benar'] = $get_e_raport->total_benar;
                             $subbab_nilai_obj['total_terjawab'] = $get_e_raport->total_terjawab;
                         }
@@ -62,7 +64,8 @@ class ERaportController extends BaseController
             }
 
             $bab_obj = [
-                'nama' => $bab_name,
+                'nama' => $get_bab->name,
+                'icon' => $get_bab->icon,
                 'subbab' => $list_subbab
             ];
             array_push($list_bab, $bab_obj);
