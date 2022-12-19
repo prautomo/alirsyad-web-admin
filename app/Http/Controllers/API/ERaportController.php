@@ -21,7 +21,7 @@ class ERaportController extends BaseController
         $list_bab = [];
         foreach ($list_bab_id as $bab_id) {
             $get_bab = Modul::find($bab_id);
-            $list_judul_subbab = PaketSoal::where(['mata_pelajaran_id' => $mata_pelajaran_id, 'bab_id' => $bab_id])->pluck('judul_subbab')->toArray();
+            $list_judul_subbab = PaketSoal::where(['mata_pelajaran_id' => $mata_pelajaran_id, 'bab_id' => $bab_id])->distinct()->pluck('judul_subbab')->toArray();
             $list_subbab = [];
 
             foreach ($list_judul_subbab as $judul_subbab) {
