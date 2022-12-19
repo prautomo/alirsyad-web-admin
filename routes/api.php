@@ -84,7 +84,10 @@ Route::middleware('auth:api')->group(function () {
     Route::get("/soal", "API\SoalController@index");
     Route::post("/soal/check-answers", "API\SoalController@check_answers");
 
-    Route::get("/e-raport", "API\ERaportController@index");
+    Route::get("/e-raport", "API\ERaportController@score");
+    Route::get("/e-raport/summary-of-level", "API\ERaportController@summary_of_level");
+    Route::get("/e-raport/subject-achievement", "API\ERaportController@subject_achievement");
+    Route::get("/e-raport/home-achievement", "API\ERaportController@home_achievement");
 
 
     Route::prefix('guru')->group(function () {
