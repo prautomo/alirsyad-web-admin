@@ -15,7 +15,7 @@ class ERaportController extends BaseController
         $user_id = $request->user_id;
         $mata_pelajaran_id = $request->mata_pelajaran_id;
 
-        $list_bab_id = PaketSoal::where('mata_pelajaran_id', $mata_pelajaran_id)->pluck('bab_id')->toArray();
+        $list_bab_id = PaketSoal::where('mata_pelajaran_id', $mata_pelajaran_id)->distinct()->pluck('bab_id')->toArray();
         $list_tingkat_kesulitan = ['mudah', 'sedang', 'sulit'];
 
         $list_bab = [];
