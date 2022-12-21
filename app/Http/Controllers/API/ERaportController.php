@@ -95,18 +95,20 @@ class ERaportController extends BaseController
                 'total_terjawab' => 0,
             ];
 
-            foreach ($list_paket_soal[$tingkat_kesulitan] as $paket_soal) {
-                $get_e_raport = ERaport::where(['user_id' => $user_id, 'paket_soal_id' => $paket_soal->id])->first();
-
-                if ($get_e_raport != null) {
-
-                    $nilai_obj['total_benar'] += $get_e_raport->total_benar;
-                    $nilai_obj['total_terjawab'] += $get_e_raport->total_terjawab;
+            if(array_key_exists($tingkat_kesulitan, $list_paket_soal)){
+                foreach ($list_paket_soal[$tingkat_kesulitan] as $paket_soal) {
+                    $get_e_raport = ERaport::where(['user_id' => $user_id, 'paket_soal_id' => $paket_soal->id])->first();
+    
+                    if ($get_e_raport != null) {
+    
+                        $nilai_obj['total_benar'] += $get_e_raport->total_benar;
+                        $nilai_obj['total_terjawab'] += $get_e_raport->total_terjawab;
+                    }
                 }
-            }
-
-            if ($nilai_obj['total_benar'] > 0 && $nilai_obj['total_terjawab'] > 0) {
-                $nilai_obj['percentage'] = ($nilai_obj['total_benar'] / $nilai_obj['total_terjawab']) * 100;
+    
+                if ($nilai_obj['total_benar'] > 0 && $nilai_obj['total_terjawab'] > 0) {
+                    $nilai_obj['percentage'] = ($nilai_obj['total_benar'] / $nilai_obj['total_terjawab']) * 100;
+                }
             }
 
             array_push($result, $nilai_obj);
