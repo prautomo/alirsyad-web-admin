@@ -88,7 +88,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get("/e-raport/summary-of-level", "API\ERaportController@summary_of_level");
     Route::get("/e-raport/subject-achievement", "API\ERaportController@subject_achievement");
     Route::get("/e-raport/home-achievement", "API\ERaportController@home_achievement");
-
+    Route::get("/e-raport/current-score", "API\ERaportController@current_score");
 
     Route::prefix('guru')->group(function () {
         Route::get("/dashboard", "API\DashboardController@index");
