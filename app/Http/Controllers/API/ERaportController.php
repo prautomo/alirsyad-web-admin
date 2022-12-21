@@ -95,7 +95,7 @@ class ERaportController extends BaseController
                 'total_terjawab' => 0,
             ];
 
-            if(array_key_exists($tingkat_kesulitan, $list_paket_soal)){
+            if(isset($list_paket_soal[$tingkat_kesulitan])){
                 foreach ($list_paket_soal[$tingkat_kesulitan] as $paket_soal) {
                     $get_e_raport = ERaport::where(['user_id' => $user_id, 'paket_soal_id' => $paket_soal->id])->first();
     
