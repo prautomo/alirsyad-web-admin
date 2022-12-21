@@ -1285,6 +1285,86 @@ paths:
           schema:
             type: integer
             format: int32
+            example: 43
+        - name: user_id
+          in: query
+          description: ""
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: integer
+            format: int32
+            example: 1276
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+  /e-raport/summary-of-level:
+    get:
+      tags:
+        - E-Raport
+      summary: Get E-Raport by Mapel for Summary of Level
+      operationId: GetERaportSummaryOfLevel
+      parameters:
+        - name: mata_pelajaran_id
+          in: query
+          description: ""
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: integer
+            format: int32
+            example: 43
+        - name: user_id
+          in: query
+          description: ""
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: integer
+            format: int32
+            example: 1276
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+  /e-raport/subject-achievement:
+    get:
+      tags:
+        - E-Raport
+      summary: Get E-Raport Subject Achievement
+      operationId: GetERaportSubjectAchievement
+      parameters:
+        - name: tingkat_id
+          in: query
+          description: ""
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: integer
+            format: int32
             example: 4
         - name: user_id
           in: query
@@ -1295,7 +1375,47 @@ paths:
           schema:
             type: integer
             format: int32
+            example: 1276
+        - name: Accept
+          in: header
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: application/json
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+  /e-raport/home-achievement:
+    get:
+      tags:
+        - E-Raport
+      summary: Get E-Raport Home Achievement
+      operationId: GetERaportHomeAchievement
+      parameters:
+        - name: tingkat_id
+          in: query
+          description: ""
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: integer
+            format: int32
             example: 4
+        - name: user_id
+          in: query
+          description: ""
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: integer
+            format: int32
+            example: 1276
         - name: Accept
           in: header
           description: ""

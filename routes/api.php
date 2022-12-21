@@ -84,15 +84,21 @@ Route::middleware('auth:api')->group(function () {
     Route::get("/soal", "API\SoalController@index");
     Route::post("/soal/check-answers", "API\SoalController@check_answers");
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     Route::get("/e-raport", "API\ERaportController@index");
 =======
+=======
+>>>>>>> a1d82ea399e9a7d2673ca7528b40d8ac20ec855c
     Route::get("/e-raport", "API\ERaportController@score");
     Route::get("/e-raport/summary-of-level", "API\ERaportController@summary_of_level");
     Route::get("/e-raport/subject-achievement", "API\ERaportController@subject_achievement");
     Route::get("/e-raport/home-achievement", "API\ERaportController@home_achievement");
+<<<<<<< HEAD
     Route::get("/e-raport/current-score", "API\ERaportController@current_score");
 >>>>>>> Stashed changes
+=======
+>>>>>>> a1d82ea399e9a7d2673ca7528b40d8ac20ec855c
 
 
     Route::prefix('guru')->group(function () {

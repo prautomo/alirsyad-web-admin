@@ -4,24 +4,25 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\ERaport;
+use App\Models\MataPelajaran;
 use App\Models\Modul;
 use App\Models\PaketSoal;
 use Illuminate\Http\Request;
 
 class ERaportController extends BaseController
 {
-    public function index(Request $request)
+    public function score(Request $request)
     {
         $user_id = $request->user_id;
         $mata_pelajaran_id = $request->mata_pelajaran_id;
 
-        $list_bab_id = PaketSoal::where('mata_pelajaran_id', $mata_pelajaran_id)->pluck('bab_id')->toArray();
+        $list_bab_id = PaketSoal::where('mata_pelajaran_id', $mata_pelajaran_id)->distinct()->pluck('bab_id')->toArray();
         $list_tingkat_kesulitan = ['mudah', 'sedang', 'sulit'];
 
         $list_bab = [];
         foreach ($list_bab_id as $bab_id) {
             $get_bab = Modul::find($bab_id);
-            $list_judul_subbab = PaketSoal::where(['mata_pelajaran_id' => $mata_pelajaran_id, 'bab_id' => $bab_id])->pluck('judul_subbab')->toArray();
+            $list_judul_subbab = PaketSoal::where(['mata_pelajaran_id' => $mata_pelajaran_id, 'bab_id' => $bab_id])->distinct()->pluck('judul_subbab')->toArray();
             $list_subbab = [];
 
             foreach ($list_judul_subbab as $judul_subbab) {
@@ -70,6 +71,7 @@ class ERaportController extends BaseController
             ];
             array_push($list_bab, $bab_obj);
         }
+
         return $this->sendResponse($list_bab, 'Score retrieved successfully.');
     }
 
