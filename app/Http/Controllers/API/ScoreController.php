@@ -31,7 +31,7 @@ class ScoreController extends BaseController
         // load mapel active kelas/tingkat
         $mapels = MataPelajaran::where('tingkat_id', @$user->kelas->tingkat_id)->get();
         $mapelsWithDetail = [];
-        foreach($mapels as $mapel){
+        foreach ($mapels as $mapel) {
             $mapel['detail'] = $this->getProgress($mapel->id);
             $mapelsWithDetail[] = $mapel;
         }
@@ -58,10 +58,10 @@ class ScoreController extends BaseController
         $tingkatId = @$user->kelas->tingkat_id;
 
         // pengunjung
-        if ($user->is_pengunjung){
+        if ($user->is_pengunjung) {
             $tingkats = Tingkat::where('jenjang_id', @$user->jenjang_id)->get();
 
-            foreach($tingkats as $tingkat){
+            foreach ($tingkats as $tingkat) {
                 // load mapel active kelas/tingkat
                 $mapels = MataPelajaran::where('tingkat_id', $tingkat->id)->get();
                 $datas[] = [
@@ -70,7 +70,7 @@ class ScoreController extends BaseController
                     'mata_pelajarans' => @$mapels,
                 ];
             }
-        }else{
+        } else {
             // load mapel active kelas/tingkat
             $mapels = MataPelajaran::where('tingkat_id', $tingkatId)->get();
             $datas[] = [
@@ -98,7 +98,8 @@ class ScoreController extends BaseController
         return $this->sendResponse(new ScoreResource($datas), 'Score retrieved successfully.');
     }
 
-    private function getProgress($id){
+    private function getProgress($id)
+    {
         $user = Auth::user();
         $datas = [];
 
@@ -116,7 +117,7 @@ class ScoreController extends BaseController
         // simulasi done by siswa
         $simulasiHistory = HistorySimulasi::where('siswa_id', Auth::user()->id);
         // simulasi history by mapel
-        $simulasiHistory = $simulasiHistory->whereHas('simulasi', function($query) use ($id) {
+        $simulasiHistory = $simulasiHistory->whereHas('simulasi', function ($query) use ($id) {
             $query->where('mata_pelajaran_id', $id);
         });
         $simulasiHistory = $simulasiHistory->get();
@@ -146,11 +147,20 @@ class ScoreController extends BaseController
 
         $datas['simulasis'] = $simulasis;
 
+        foreach ($simulasis as $key => $simulasi) {
+            $history_simulasi = HistorySimulasi::where(['siswa_id' => Auth::user()->id, 'simulasi_id' => $simulasi->id])->first();
+            if ($history_simulasi == null) {
+                $datas['simulasis'][$key]['last_played'] = null;
+            } else {
+                $datas['simulasis'][$key]['last_played'] = $history_simulasi->updated_at;
+            }
+        }
         return $datas;
     }
 
-    private function calculatePercentage($total, $done){
-        return ($done === 0 || $total === 0) ? 0 : round(($done/$total) * 100, 2);
+    private function calculatePercentage($total, $done)
+    {
+        return ($done === 0 || $total === 0) ? 0 : round(($done / $total) * 100, 2);
     }
 
     // GURU
@@ -189,7 +199,7 @@ class ScoreController extends BaseController
 
         // data semua percobaan
         $percobaans = [];
-        foreach($scores as $score){
+        foreach ($scores as $score) {
             $percobaans[] = [
                 'percobaan_ke' => @$score->percobaan_ke,
                 'status' => (@$score->score ?? 0) < 50 ? 'salah' : 'benar',
