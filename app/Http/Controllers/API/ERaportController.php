@@ -95,17 +95,17 @@ class ERaportController extends BaseController
                 'total_terjawab' => 0,
             ];
 
-            if(isset($list_paket_soal[$tingkat_kesulitan])){
+            if (isset($list_paket_soal[$tingkat_kesulitan])) {
                 foreach ($list_paket_soal[$tingkat_kesulitan] as $paket_soal) {
                     $get_e_raport = ERaport::where(['user_id' => $user_id, 'paket_soal_id' => $paket_soal->id])->first();
-    
+
                     if ($get_e_raport != null) {
-    
+
                         $nilai_obj['total_benar'] += $get_e_raport->total_benar;
                         $nilai_obj['total_terjawab'] += $get_e_raport->total_terjawab;
                     }
                 }
-    
+
                 if ($nilai_obj['total_benar'] > 0 && $nilai_obj['total_terjawab'] > 0) {
                     $nilai_obj['percentage'] = ($nilai_obj['total_benar'] / $nilai_obj['total_terjawab']) * 100;
                 }
@@ -126,31 +126,41 @@ class ERaportController extends BaseController
         $result = [];
 
         foreach ($list_mapel as $mapel) {
-            $list_paket_soal = PaketSoal::where('mata_pelajaran_id', $mapel->id)->get();
-
             $mata_pelajaran = MataPelajaran::find($mapel->id);
 
             $nilai_obj = [
                 'mata_pelajaran' => $mata_pelajaran->name,
-                'percentage' => 0,
-                'total_benar' => 0,
-                'total_terjawab' => 0,
             ];
 
-            foreach ($list_paket_soal as $paket_soal) {
-                $get_e_raport = ERaport::where(['user_id' => $user_id, 'paket_soal_id' => $paket_soal->id])->first();
+            $list_paket_soal = PaketSoal::where('mata_pelajaran_id', $mapel->id)->get()->groupBy(function ($data) {
+                return $data->tingkat_kesulitan;
+            });
 
-                if ($get_e_raport != null) {
+            $list_tingkat_kesulitan = ['mudah', 'sedang', 'sulit'];
 
-                    $nilai_obj['total_benar'] += $get_e_raport->total_benar;
-                    $nilai_obj['total_terjawab'] += $get_e_raport->total_terjawab;
+            foreach ($list_tingkat_kesulitan as $tingkat_kesulitan) {
+                $nilai_obj[$tingkat_kesulitan] = [
+                    'percentage' => 0,
+                    'total_benar' => 0,
+                    'total_terjawab' => 0,
+                ];
+
+                if (isset($list_paket_soal[$tingkat_kesulitan])) {
+                    foreach ($list_paket_soal[$tingkat_kesulitan] as $paket_soal) {
+                        $get_e_raport = ERaport::where(['user_id' => $user_id, 'paket_soal_id' => $paket_soal->id])->first();
+
+                        if ($get_e_raport != null) {
+
+                            $nilai_obj[$tingkat_kesulitan]['total_benar'] += $get_e_raport->total_benar;
+                            $nilai_obj[$tingkat_kesulitan]['total_terjawab'] += $get_e_raport->total_terjawab;
+                        }
+                    }
+
+                    if ($nilai_obj[$tingkat_kesulitan]['total_benar'] > 0 && $nilai_obj[$tingkat_kesulitan]['total_terjawab'] > 0) {
+                        $nilai_obj[$tingkat_kesulitan]['percentage'] = ($nilai_obj[$tingkat_kesulitan]['total_benar'] / $nilai_obj[$tingkat_kesulitan]['total_terjawab']) * 100;
+                    }
                 }
             }
-
-            if ($nilai_obj['total_benar'] > 0 && $nilai_obj['total_terjawab'] > 0) {
-                $nilai_obj['percentage'] = ($nilai_obj['total_benar'] / $nilai_obj['total_terjawab']) * 100;
-            }
-
             array_push($result, $nilai_obj);
         }
 
