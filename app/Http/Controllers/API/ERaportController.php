@@ -211,6 +211,7 @@ class ERaportController extends BaseController
             $paket_soal = PaketSoal::find($e_raport->paket_soal_id);
             $score_obj = [
                 "title" => $paket_soal->judul_subbab,
+                "mata_pelajaran_id" => $paket_soal->mataPelajaran->id,
                 "mata_pelajaran_name" => $paket_soal->mataPelajaran->name,
                 "mata_pelajaran_icon" => $paket_soal->mataPelajaran->icon,
                 "tingkat_kesulitan" => $paket_soal->tingkat_kesulitan,
