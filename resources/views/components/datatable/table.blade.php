@@ -143,13 +143,6 @@
         $(document).on('click', '.datatable-viewSoal-btn', function(event) {
             event.preventDefault();
             const soal = $(this).data("soal");
-            MathJax.startup.promise.then(() => {
-                MathJax.typeset([$("#ps-pilihan1-value")[0]]);
-                MathJax.typeset([$("#ps-pilihan2-value")[0]]);
-                MathJax.typeset([$("#ps-pilihan3-value")[0]]);
-                MathJax.typeset([$("#ps-pilihan4-value")[0]]);
-                MathJax.typeset([$("#ps-pilihan5-value")[0]]);
-            })
 
             $('#ps-soal-value').html(soal.soal);
             $('#ps-pilihan1-value').html(soal.pilihan_a);
@@ -175,6 +168,16 @@
             }
 
             $('#ps-jawaban-value').html(jawaban);
+            
+            MathJax.startup.promise.then(() => {
+                MathJax.typeset([$("#ps-soal-value")[0]]);
+                MathJax.typeset([$("#ps-pilihan1-value")[0]]);
+                MathJax.typeset([$("#ps-pilihan2-value")[0]]);
+                MathJax.typeset([$("#ps-pilihan3-value")[0]]);
+                MathJax.typeset([$("#ps-pilihan4-value")[0]]);
+                MathJax.typeset([$("#ps-pilihan5-value")[0]]);
+                MathJax.typeset([$("#ps-jawaban-value")[0]]);
+            })
         });
 
         $(document).on('click', '.datatable-status-dana-btn', function(event) {
