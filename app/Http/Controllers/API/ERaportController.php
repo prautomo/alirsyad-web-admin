@@ -122,7 +122,7 @@ class ERaportController extends BaseController
         $user_id = $request->user_id;
         $tingkat_id = $request->tingkat_id;
 
-        $list_mapel = MataPelajaran::where('tingkat_id', $tingkat_id)->get();
+        $list_mapel = MataPelajaran::where('tingkat_id', $tingkat_id)->orderBy('urutan', 'ASC')->get();
         $result = [];
 
         foreach ($list_mapel as $mapel) {
