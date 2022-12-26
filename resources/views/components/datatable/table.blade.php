@@ -20,6 +20,25 @@
 @push('plugin_script')
 <script src="{{ asset('backoffice/assets/vendor/datatables.net/js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('backoffice/assets/js/dataTables.bootstrap.js') }}"></script>
+<script>
+    MathJax = {
+      tex: {
+        inlineMath: [
+          ["$", "$"],
+          ["\\(", "\\)"]
+        ],
+        displayMath: [
+          ["$$", "$$"],
+          ["\\[", "\\]"]
+        ]
+      }
+    };
+</script>
+<script
+    id="MathJax-script"
+    async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+></script>
 @endpush
 @endonce
 
@@ -149,6 +168,16 @@
             }
 
             $('#ps-jawaban-value').html(jawaban);
+            
+            MathJax.startup.promise.then(() => {
+                MathJax.typeset([$("#ps-soal-value")[0]]);
+                MathJax.typeset([$("#ps-pilihan1-value")[0]]);
+                MathJax.typeset([$("#ps-pilihan2-value")[0]]);
+                MathJax.typeset([$("#ps-pilihan3-value")[0]]);
+                MathJax.typeset([$("#ps-pilihan4-value")[0]]);
+                MathJax.typeset([$("#ps-pilihan5-value")[0]]);
+                MathJax.typeset([$("#ps-jawaban-value")[0]]);
+            })
         });
 
         $(document).on('click', '.datatable-status-dana-btn', function(event) {
