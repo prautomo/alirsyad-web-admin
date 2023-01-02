@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Backoffice;
 
+use Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Validator;
 use App\Services\CloudinaryFileManager;
+use App\Services\UploadService;
 
 class FileUploadController extends Controller
 {
@@ -16,7 +17,7 @@ class FileUploadController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->returnStatus(400, $validator->errors());  
+            return $this->returnStatus(400, $validator->errors());
         }
 
         return $this->returnData([
@@ -33,5 +34,24 @@ class FileUploadController extends Controller
         return $this->returnData([
             "image" =>  CloudinaryFileManager::saveFile($request->file('image'), 'images')
         ], "Berhasil Upload gambar");
+    }
+
+    public function uploadImageCKEditor(Request $request)
+    {
+        if($request->hasFile('upload')) {
+
+            $image = $request->file('upload');
+            $extension = $image->extension();
+            $url = asset( UploadService::uploadImage($image, 'soal') );
+
+            $CKEditorFuncNum = $request->input('CKEditorFuncNum');
+
+            $msg = 'Image successfully uploaded';
+            $re = "<script>window.parent.CKEDITOR.tools.callFunction($CKEditorFuncNum, '$url', '$msg')</script>";
+
+            // Render HTML output
+            @header('Content-type: text/html; charset=utf-8');
+            echo $re;
+        }
     }
 }

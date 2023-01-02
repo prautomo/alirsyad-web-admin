@@ -68,13 +68,13 @@
             </li>
             @endcanany
 
-            @canany(['modul-list', 'video-list', 'simulasi-list', 'story-path-list'])
+            @canany(['modul-list', 'video-list', 'simulasi-list', 'story-path-list', 'paket-soal-list'])
             <li class="nav-item">
-              <a class="nav-link{{ request()->is('backoffice/simulasis*', 'backoffice/videos*', 'backoffice/moduls*', 'backoffice/story-paths*') ? ' active' : ' collapsed' }}" href="#navbar-konten" data-toggle="collapse" role="button" aria-expanded="{{ request()->is('backoffice/simulasis*', 'backoffice/videos*', 'backoffice/moduls*', 'backoffice/story-paths*') ? 'true' : 'false' }}" aria-controls="navbar-konten">
+              <a class="nav-link{{ request()->is('backoffice/simulasis*', 'backoffice/videos*', 'backoffice/moduls*', 'backoffice/story-paths*', 'backoffice/paket-soals*') ? ' active' : ' collapsed' }}" href="#navbar-konten" data-toggle="collapse" role="button" aria-expanded="{{ request()->is('backoffice/simulasis*', 'backoffice/videos*', 'backoffice/moduls*', 'backoffice/story-paths*', 'backoffice/paket-soals*') ? 'true' : 'false' }}" aria-controls="navbar-konten">
                 <i class="ni ni-atom text-dark-green"></i>
                 <span class="nav-link-text">Kelola Konten</span>
               </a>
-              <div class="collapse{{ request()->is('backoffice/simulasis*', 'backoffice/videos*', 'backoffice/moduls*', 'backoffice/story-paths*') ? ' show' : '' }}" id="navbar-konten" style="">
+              <div class="collapse{{ request()->is('backoffice/simulasis*', 'backoffice/videos*', 'backoffice/moduls*', 'backoffice/story-paths*', 'backoffice/paket-soals*') ? ' show' : '' }}" id="navbar-konten" style="">
                 <ul class="nav nav-sm flex-column">
 
                   @can('modul-list')
@@ -105,6 +105,14 @@
                   <li class="nav-item">
                     <a href="{{ route('backoffice::story-paths.index') }}" class="nav-link">
                       <span class="sidenav-normal"> Kelola Story Path </span>
+                    </a>
+                  </li>
+                  @endcan
+
+                  @can('paket-soal-list')
+                  <li class="nav-item">
+                    <a href="{{ route('backoffice::paket-soals.index') }}" class="nav-link">
+                      <span class="sidenav-normal"> Kelola Paket Soal </span>
                     </a>
                   </li>
                   @endcan
@@ -181,6 +189,15 @@
                 </ul>
               </div>
             </li>
+            @endcanany
+
+            @canany(['user-list', 'external-user-list'])
+              <li class="nav-item">
+                <a class="nav-link{{ request()->is('backoffice/password-reset-students*') ? ' active' : '' }}" href="{{ route('backoffice::password-reset-students.index') }}">
+                  <i class="ni ni-key-25 text-dark-green"></i>
+                  <span class="nav-link-text">Reset Password Siswa</span>
+                </a>
+              </li>
             @endcanany
 
             @can('banner-list')

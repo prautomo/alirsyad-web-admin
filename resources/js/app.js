@@ -16,6 +16,7 @@ require('./datatable');
 // admin
 import('./backoffice/components/ExternalUser');
 import('./backoffice/components/StoryPath/Form');
+import('./backoffice/pages/Soal');
 // siswa
 import('./frontoffice/components/Video/Detail');
 import('./frontoffice/components/Modul/Detail');

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Backoffice;
 
 use Illuminate\Http\Request;
@@ -17,12 +18,14 @@ use App\Models\UploaderMataPelajaran;
 use App\Helpers\ExtractArchive;
 use App\Helpers\GenerateSlug;
 
-class ModulController extends Controller{
+class ModulController extends Controller
+{
 
-    function __construct(){
-        $this->middleware('permission:modul-list|modul-create|modul-edit|modul-delete', ['only' => ['index','show']]);
-        $this->middleware('permission:modul-create', ['only' => ['create','store']]);
-        $this->middleware('permission:modul-edit', ['only' => ['edit','update']]);
+    function __construct()
+    {
+        $this->middleware('permission:modul-list|modul-create|modul-edit|modul-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:modul-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:modul-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:modul-delete', ['only' => ['destroy']]);
 
         $this->prefix = 'pages.backoffice.moduls';
@@ -34,11 +37,12 @@ class ModulController extends Controller{
      *
      * @return void
      */
-    public function datatable(Request $request){
+    public function datatable(Request $request)
+    {
         $query = Modul::query();
 
         // kalo bukan superadmin, tambahin filter by mapel na
-        if(!@\Auth::user()->hasRole('Superadmin')){
+        if (!@\Auth::user()->hasRole('Superadmin')) {
             $mapelIdsUser = $this->getMapelIdsUser();
             $query = $query->whereIn('mata_pelajaran_id', $mapelIdsUser);
         }
@@ -53,32 +57,32 @@ class ModulController extends Controller{
 
                 $search = @$request->search['value'];
 
-                if($search){
-                    $query->where(function($query) use ($search){
-                        $query->where('name', 'LIKE', '%'.$search.'%');
+                if ($search) {
+                    $query->where(function ($query) use ($search) {
+                        $query->where('name', 'LIKE', '%' . $search . '%');
 
-                        $query = $query->orWhereHas('mataPelajaran.tingkat.jenjang', function($query2) use ( $search ){
-                            $query2->where('name', 'LIKE', '%'.$search.'%');
+                        $query = $query->orWhereHas('mataPelajaran.tingkat.jenjang', function ($query2) use ($search) {
+                            $query2->where('name', 'LIKE', '%' . $search . '%');
                         });
 
-                        $query = $query->orWhereHas('mataPelajaran.tingkat', function($query2) use ( $search ){
-                            $query2->where('name', 'LIKE', '%'.$search.'%');
+                        $query = $query->orWhereHas('mataPelajaran.tingkat', function ($query2) use ($search) {
+                            $query2->where('name', 'LIKE', '%' . $search . '%');
                         });
 
-                        $query = $query->orWhereHas('mataPelajaran', function($query2) use ( $search ){
-                            $query2->where('name', 'LIKE', '%'.$search.'%');
+                        $query = $query->orWhereHas('mataPelajaran', function ($query2) use ($search) {
+                            $query2->where('name', 'LIKE', '%' . $search . '%');
                         });
                     });
                 }
 
                 // query param mapel id
-                if(@$request->mata_pelajaran_id) $query->where('mata_pelajaran_id', @$request->mata_pelajaran_id);
+                if (@$request->mata_pelajaran_id) $query->where('mata_pelajaran_id', @$request->mata_pelajaran_id);
             })
             ->addIndexColumn()
-            ->addColumn('show-img', function($data) {
-                if(empty($data->icon)){
+            ->addColumn('show-img', function ($data) {
+                if (empty($data->icon)) {
                     return "not available";
-                }else{
+                } else {
                     return view("components.datatable.image", [
                         "url" => asset($data->icon)
                     ]);
@@ -95,7 +99,7 @@ class ModulController extends Controller{
                 $mapelID = @$data->mataPelajaran->id ? $data->mataPelajaran->id : '';
 
                 return view("components.datatable.link", [
-                    "link" => route($this->routePath.".index")."?mata_pelajaran_id=".$mapelID,
+                    "link" => route($this->routePath . ".index") . "?mata_pelajaran_id=" . $mapelID,
                     "text" => $mapel,
                 ]);
                 return $mapel;
@@ -113,8 +117,8 @@ class ModulController extends Controller{
                     "name" => $data->name,
                     "permissionName" => 'modul',
                     "class" => $data->class,
-                    "deleteRoute" => route($this->routePath.".destroy", $data->id),
-                    "editRoute" => route($this->routePath.".edit", $data->id),
+                    "deleteRoute" => route($this->routePath . ".destroy", $data->id),
+                    "editRoute" => route($this->routePath . ".edit", $data->id),
                     "viewPdfRoute" => asset($data->pdf_path),
                 ]);
             })
@@ -124,7 +128,8 @@ class ModulController extends Controller{
             ->toJson();
     }
 
-    private function getMapelIdsUser(){
+    private function getMapelIdsUser()
+    {
         $userId = @\Auth::user()->id;
         $mapelIdsUser = UploaderMataPelajaran::where('guru_uploader_id', $userId)->pluck('mata_pelajaran_id')->all();
         $mapelIdsUser = count($mapelIdsUser) > 0 ? $mapelIdsUser : [];
@@ -132,24 +137,26 @@ class ModulController extends Controller{
         return $mapelIdsUser;
     }
 
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         if ($request->ajax()) {
             return $this->datatable($request);
         }
 
-        return view($this->prefix.'.index');
+        return view($this->prefix . '.index');
     }
 
     /**
      * Get mata pelajaran
      */
-    private function getMataPelajaran(){
+    private function getMataPelajaran()
+    {
         // get list mapel
         $mapels = MataPelajaran::with('tingkat');
 
         // filter kalo rolenya guru uploader (khusus mapel aja)
         // kalo bukan superadmin, tambahin filter by mapel na
-        if(!@\Auth::user()->hasRole('Superadmin')){
+        if (!@\Auth::user()->hasRole('Superadmin')) {
             $mapelIdsUser = $this->getMapelIdsUser();
             $mapels = $mapels->whereIn('id', $mapelIdsUser);
         }
@@ -159,14 +166,15 @@ class ModulController extends Controller{
         $mapelList = [];
         $mapelList[""] = "Pilih mata pelajaran";
 
-        foreach($mapels as $mapel){
-            $mapelList[$mapel->id] = $mapel->name . " (Tingkat ".@$mapel->tingkat->name." ".@$mapel->tingkat->jenjang->name.")";
+        foreach ($mapels as $mapel) {
+            $mapelList[$mapel->id] = $mapel->name . " (Tingkat " . @$mapel->tingkat->name . " " . @$mapel->tingkat->jenjang->name . ")";
         }
 
         return $mapelList;
     }
 
-    private function getSemester(){
+    private function getSemester()
+    {
         $semesterList = [];
         $semesterList[""] = "Pilih semester";
 
@@ -176,7 +184,8 @@ class ModulController extends Controller{
         return $semesterList;
     }
 
-    public function create(){
+    public function create()
+    {
 
         $mapelList = $this->getMataPelajaran();
         $semesterList = $this->getSemester();
@@ -185,10 +194,11 @@ class ModulController extends Controller{
             0 => 'Tidak',
         ];
 
-        return view($this->prefix.'.create', ['mapelList' => $mapelList, 'semesterList' => $semesterList, 'showUpdate' => $show]);
+        return view($this->prefix . '.create', ['mapelList' => $mapelList, 'semesterList' => $semesterList, 'showUpdate' => $show]);
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         // validasi form
         $this->validate($request, [
             'name' => 'required|string',
@@ -223,12 +233,12 @@ class ModulController extends Controller{
 
         $data = Modul::create($dataReq);
 
-        if(empty($request->slug)){
+        if (empty($request->slug)) {
             $data->slug = GenerateSlug::generateSlug($data->id, $data->name);
             $data->save();
         }
 
-        if(@$request->showUpdate){
+        if (@$request->showUpdate) {
 
             Modul::where('id', $data->id)->update(['show_update' => 1]);
 
@@ -248,12 +258,13 @@ class ModulController extends Controller{
             $this->insertToUpdateLog($data, $coverUpdate, 'create');
         }
 
-        return redirect()->route($this->routePath.'.index')->with(
+        return redirect()->route($this->routePath . '.index')->with(
             $this->success(__("Success to create Modul"), $data)
         );
     }
 
-    public function edit(Request $request, $id){
+    public function edit(Request $request, $id)
+    {
         $dt = Modul::with('mataPelajaran')->findOrFail($id);
         $mapelList = $this->getMataPelajaran();
         $semesterList = $this->getSemester();
@@ -265,13 +276,14 @@ class ModulController extends Controller{
         // last update data
         $update = Update::where(['trigger' => 'modul', 'trigger_id' => $id])->orderBy('created_at', 'desc')->first();
 
-        return view($this->prefix.'.edit', ['data' => $dt, 'mapelList' => $mapelList, 'semesterList' => $semesterList, 'showUpdate' => $show, 'update' => $update]);
+        return view($this->prefix . '.edit', ['data' => $dt, 'mapelList' => $mapelList, 'semesterList' => $semesterList, 'showUpdate' => $show, 'update' => $update]);
     }
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $id)
+    {
         // validasi form
         $this->validate($request, [
-            'slug' => 'unique:mata_pelajarans,slug,'.$id,
+            'slug' => 'unique:mata_pelajarans,slug,' . $id,
             'name' => 'required|string',
             'mata_pelajaran_id' => 'required',
             'semester' => 'required|numeric|min:1,max:2',
@@ -299,14 +311,14 @@ class ModulController extends Controller{
             $dataReq['pdf_path'] = $url;
         }
 
-        if(empty($request->slug)){
+        if (empty($request->slug)) {
             $dataReq['slug'] = GenerateSlug::generateSlug($id, $request->name);
         }
 
         $dt = Modul::findOrFail($id);
         $dt->update($dataReq);
 
-        if(@$request->showUpdate){
+        if (@$request->showUpdate) {
 
             $dt = Modul::where('id', $id)->update(['show_update' => 1]);
 
@@ -321,26 +333,28 @@ class ModulController extends Controller{
                 $url = UploadService::uploadImage($image, 'icon/cover_update');
 
                 $coverUpdate = $url;
-            }else {
+            } else {
                 // last update data
                 $update = Update::where(['trigger' => 'modul', 'trigger_id' => $id])->orderBy('created_at', 'desc')->first();
 
                 $coverUpdate = @$update->logo;
             }
             $this->insertToUpdateLog(Modul::findOrFail($id), $coverUpdate, 'update', 1);
-        }else{
+        } else {
             $dt = Modul::where('id', $id)->update(['show_update' => 0]);
             // last update data
             $update = Update::where(['trigger' => 'modul', 'trigger_id' => $id])->orderBy('created_at', 'desc')->first();
             $this->insertToUpdateLog(Modul::findOrFail($id), @$update->logo, 'update', 0);
         }
 
-        return redirect()->route($this->routePath.'.index')->with(
+        return redirect()->route($this->routePath . '.index')->with(
             $this->success(__("Success to update Modul"), $dt)
         );
     }
 
-    public function destroy(Request $request, $id){
+    public function destroy(Request $request, $id)
+    {
+        $delete_update = Update::where(['trigger' => 'modul', 'trigger_id' => $id])->delete();
         $d = Modul::findOrFail($id);
 
         $d->delete();
@@ -353,7 +367,8 @@ class ModulController extends Controller{
      * @param  String  $type
      * @return void
      */
-    private function insertToUpdateLog(Modul $modul, $cover, $type, $visible=1){
+    private function insertToUpdateLog(Modul $modul, $cover, $type, $visible = 1)
+    {
         $data = [
             'trigger_event' => @$type ?? 'other',
             'trigger' => 'modul',
@@ -369,7 +384,7 @@ class ModulController extends Controller{
             $data['logo'] = $cover;
         }
 
-        if(Update::where(['trigger_id' => @$modul->id, 'trigger' => "modul"])){
+        if (Update::where(['trigger_id' => @$modul->id, 'trigger' => "modul"])) {
             Update::where(['trigger_id' => @$modul->id, 'trigger' => "modul"])->delete();
         }
 

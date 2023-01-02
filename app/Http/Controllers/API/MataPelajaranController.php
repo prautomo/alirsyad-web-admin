@@ -35,11 +35,11 @@ class MataPelajaranController extends BaseController
         // limit data
         if (@$request->limit) $datas = $datas->limit($request->limit);
 
-        if(@$request->q_kelas_id){
+        if (@$request->q_kelas_id) {
             $datas = $datas->where('kelas_id', $request->q_kelas_id);
         }
 
-        if(@$request->q_tingkat_id){
+        if (@$request->q_tingkat_id) {
             $datas = $datas->where('tingkat_id', $request->q_tingkat_id);
         }
 
@@ -53,6 +53,17 @@ class MataPelajaranController extends BaseController
         // sort by created at descending
         // $datas = $datas->sortByDesc('created_at');
         // ->sortBy('disabled')->sortBy('kelas.tingkat_id')->sortBy('kelas_id');
+        foreach ($datas as $mapel) {
+            $get_simulation = Simulasi::with('uploader', 'mataPelajaran');
+            $get_simulation = $get_simulation->where('mata_pelajaran_id', $mapel->id);
+            $get_simulation = $get_simulation->get();
+
+            if (count($get_simulation) == 0) {
+                $mapel['is_has_simulation'] = 0;
+            } else {
+                $mapel['is_has_simulation'] = 1;
+            }
+        }
 
         return $this->sendResponse(MataPelajaranResource::collection($datas), 'Mata Pelajaran retrieved successfully.');
     }
@@ -67,7 +78,7 @@ class MataPelajaranController extends BaseController
         // $datas = MataPelajaran::search($request);
         // $datas = $datas->with('tingkat.jenjang');
         $datas = MataPelajaran::with('tingkat.jenjang');
-        $datas = $datas->whereHas('tingkat.kelas', function($query) {
+        $datas = $datas->whereHas('tingkat.kelas', function ($query) {
             $query->where('id', @Auth::user()->kelas_id);
         });
         // limit data
@@ -97,29 +108,29 @@ class MataPelajaranController extends BaseController
         $datas = MataPelajaran::search($request);
         $datas = $datas->with('tingkat.jenjang');
         // filter by jenjang yg sama
-        $datas = $datas->whereHas('tingkat.jenjang', function($query) use ($user) {
+        $datas = $datas->whereHas('tingkat.jenjang', function ($query) use ($user) {
             $jenjangId = $user->is_pengunjung ? $user->jenjang_id : $user->kelas->tingkat->jenjang_id;
             $query->where('id', $jenjangId);
         });
         // filter by tingkat atasnya
-        $datas = $datas->whereHas('tingkat', function($query) use ($user) {
+        $datas = $datas->whereHas('tingkat', function ($query) use ($user) {
             if (!$user->is_pengunjung) $query->where('name', '>', @Auth::user()->kelas->tingkat->name);
         });
         // get
         $datas = $user->is_pengunjung ? [] : $datas->get();
 
         // yg akan datang kalo tingkat akhir & bukan pengunjung
-        if(!@$user->is_pengunjung){
+        if (!@$user->is_pengunjung) {
             // 1. get tingkat akhir
             $getTingkatAkhir = Tingkat::where('jenjang_id', @Auth::user()->kelas->tingkat->jenjang_id)->orderBy('name', 'desc')->first();
             // 2. cek tingkat akhir
-            if($getTingkatAkhir->name===@Auth::user()->kelas->tingkat->name && !$user->is_pengunjung){
+            if ($getTingkatAkhir->name === @Auth::user()->kelas->tingkat->name && !$user->is_pengunjung) {
                 $yangAkanDatangNextJenjang = MataPelajaran::search($request);
                 $yangAkanDatangNextJenjang = $yangAkanDatangNextJenjang->with('tingkat');
-                $yangAkanDatangNextJenjang = $yangAkanDatangNextJenjang->whereHas('tingkat', function($query) {
+                $yangAkanDatangNextJenjang = $yangAkanDatangNextJenjang->whereHas('tingkat', function ($query) {
                     $tingkatnya = @Auth::user()->kelas->tingkat->name;
                     // kalo tk b, assign aja akhirnya jadi tingkat 1
-                    $tingkatnya = $tingkatnya==="B" ? 1 : ((int) $tingkatnya)+1;
+                    $tingkatnya = $tingkatnya === "B" ? 1 : ((int) $tingkatnya) + 1;
 
                     $query->where('name', '=', $tingkatnya ?? '-');
                 });
@@ -150,13 +161,13 @@ class MataPelajaranController extends BaseController
         $datas = MataPelajaran::search($request);
         $datas = $datas->with('tingkat.jenjang');
         // filter by jenjang yg sama
-        $datas = $datas->whereHas('tingkat.jenjang', function($query) use ($user) {
+        $datas = $datas->whereHas('tingkat.jenjang', function ($query) use ($user) {
             $jenjangId = $user->is_pengunjung ? $user->jenjang_id : $user->kelas->tingkat->jenjang_id;
             $query->where('id', $jenjangId);
         });
         // filter by tingkat bawahnya
-        $datas = $datas->whereHas('tingkat', function($query) use ($user) {
-            if(!$user->is_pengunjung) $query->where('name', '<', @Auth::user()->kelas->tingkat->name);
+        $datas = $datas->whereHas('tingkat', function ($query) use ($user) {
+            if (!$user->is_pengunjung) $query->where('name', '<', @Auth::user()->kelas->tingkat->name);
         });
         // limit data
         if (@$request->limit) $datas = $datas->limit($request->limit);
@@ -179,15 +190,15 @@ class MataPelajaranController extends BaseController
 
         // // active mapel by admin
         // kalo user belum aktif (kosongin aja list mapelna)
-        if($user->status!=="AKTIF") {
+        if ($user->status !== "AKTIF") {
             $get_mapel = MataPelajaran::with('tingkat');
 
             // mapel jenjang
-            $get_mapel = $get_mapel->whereHas('tingkat', function($query) use ($user) {
+            $get_mapel = $get_mapel->whereHas('tingkat', function ($query) use ($user) {
                 $query->where('jenjang_id', @$user->jenjang_id);
             });
 
-            if($request->limit) $get_mapel = $get_mapel->limit($request->limit);
+            if ($request->limit) $get_mapel = $get_mapel->limit($request->limit);
 
             // $get_mapel = $get_mapel->orderBy('urutan', 'asc');
 
@@ -196,16 +207,16 @@ class MataPelajaranController extends BaseController
             $get_mapel = $get_mapel->get()->groupBy('tingkat.name');
 
             $aktif = new Collection();
-            foreach($get_mapel as $key => $value){
+            foreach ($get_mapel as $key => $value) {
                 $get_mapel[$key] = $value->sortBy('urutan');
                 $aktif = $aktif->merge($value->sortBy('urutan'));
             }
-        }else {
+        } else {
             // $aktif = MataPelajaran::search($request);
             // $aktif = $aktif->with('tingkat.jenjang');
             $aktif = MataPelajaran::with('tingkat.jenjang');
             // mapel pilihan admin
-            $aktif = $aktif->whereHas('guests', function($query) use ($user) {
+            $aktif = $aktif->whereHas('guests', function ($query) use ($user) {
                 $query->where('guest_id', $user->id);
             });
             // limit data
@@ -235,11 +246,11 @@ class MataPelajaranController extends BaseController
         $tidakAktif = MataPelajaran::search($request);
         $tidakAktif = $tidakAktif->with('tingkat.jenjang');
         // by tingkat
-        $tidakAktif = $tidakAktif->whereHas('tingkat', function($q2) use ($user){
+        $tidakAktif = $tidakAktif->whereHas('tingkat', function ($q2) use ($user) {
             $q2->where('jenjang_id', $user->jenjang_id);
         });
         // mapel bukan pilihan admin
-        if($user->status==="AKTIF"){
+        if ($user->status === "AKTIF") {
             $selectedMapel = GuestMataPelajaran::where('guest_id', $user->id)->get()->pluck('mata_pelajaran_id');
             $tidakAktif = $tidakAktif->whereNotIn('id', $selectedMapel);
         }
@@ -263,11 +274,21 @@ class MataPelajaranController extends BaseController
     {
         $data = MataPelajaran::with('tingkat.jenjang')->find($id);
 
+        $get_simulation = Simulasi::with('uploader', 'mataPelajaran');
+        $get_simulation = $get_simulation->where('mata_pelajaran_id', $id);
+        $get_simulation = $get_simulation->get();
+
+        if (count($get_simulation) == 0) {
+            $data['is_has_simulation'] = 0;
+        } else {
+            $data['is_has_simulation'] = 1;
+        }
+
         if (is_null($data)) {
             return $this->sendError('MataPelajaran not found.');
         }
 
-        return $this->sendResponse(new MataPelajaranResource($data), 'MataPelajaran retrieved successfully.');
+        return $this->sendResponse(new MataPelajaranResource($data), 'Mata Pelajaran retrieved successfully.');
     }
 
     /**
@@ -285,12 +306,12 @@ class MataPelajaranController extends BaseController
         $jenjangUser = @$userInfo->kelas->tingkat->jenjang_id;
 
         // cek jenjang user sama jenjang tingkatna harus sama
-        if(@$tingkatInfo->jenjang_id === $jenjangUser){
+        if (@$tingkatInfo->jenjang_id === $jenjangUser) {
             $mapels = MataPelajaran::where('tingkat_id', $tingkatId);
             $mapels = $mapels->with('tingkat');
             $mapels = $mapels->orderBy('urutan', 'asc');
             $mapels = $mapels->get();
-        }else{
+        } else {
             // jangan kasih info tingkat
             abort(404);
         }
@@ -318,7 +339,7 @@ class MataPelajaranController extends BaseController
         // modul done by siswa
         $modulHistory = HistoryModul::where('siswa_id', Auth::user()->id);
         // modul history by mapel
-        $modulHistory = $modulHistory->whereHas('modul', function($query) use ($id) {
+        $modulHistory = $modulHistory->whereHas('modul', function ($query) use ($id) {
             $query->where('mata_pelajaran_id', $id);
         });
         $modulHistory = $modulHistory->get();
@@ -330,7 +351,7 @@ class MataPelajaranController extends BaseController
         // video watched by siswa
         $videoHistory = HistoryVideo::where('siswa_id', Auth::user()->id);
         // video history by mapel
-        $videoHistory = $videoHistory->whereHas('video', function($query) use ($id) {
+        $videoHistory = $videoHistory->whereHas('video', function ($query) use ($id) {
             $query->where('mata_pelajaran_id', $id);
         });
         $videoHistory = $videoHistory->get();
@@ -342,7 +363,7 @@ class MataPelajaranController extends BaseController
         // simulasi done by siswa
         $simulasiHistory = HistorySimulasi::where('siswa_id', Auth::user()->id);
         // simulasi history by mapel
-        $simulasiHistory = $simulasiHistory->whereHas('simulasi', function($query) use ($id) {
+        $simulasiHistory = $simulasiHistory->whereHas('simulasi', function ($query) use ($id) {
             $query->where('mata_pelajaran_id', $id);
         });
         $simulasiHistory = $simulasiHistory->get();
@@ -369,7 +390,54 @@ class MataPelajaranController extends BaseController
         return $this->sendResponse(new SummaryResource($data), 'Summary retrieved successfully.');
     }
 
-    private function calculatePercentage($total, $done){
-        return ($done === 0 || $total === 0) ? 0 : round(($done/$total) * 100, 2);
+    private function calculatePercentage($total, $done)
+    {
+        return ($done === 0 || $total === 0) ? 0 : round(($done / $total) * 100, 2);
+    }
+
+    public function simulasi(Request $request)
+    {
+        // $datas = MataPelajaran::search($request);
+        // $datas = $datas->with('tingkat.jenjang');
+        // $datas = MataPelajaran::with('tingkat.jenjang');
+        // // limit data
+        // if (@$request->limit) $datas = $datas->limit($request->limit);
+
+        // if (@$request->q_tingkat_id) {
+        //     $datas = $datas->where('tingkat_id', $request->q_tingkat_id);
+        // }
+
+        // // sort by urutan
+        // $datas = $datas->orderBy('urutan', 'asc');
+
+        // // sort by active mapel
+        // $datas = $datas->get();
+
+        // $list_mapel_simulation = [];
+
+        // foreach ($datas as $mapel) {
+        //     $get_simulation = Simulasi::with('uploader', 'mataPelajaran');
+        //     $get_simulation = $get_simulation->where('mata_pelajaran_id', $mapel->id)->get();
+
+        //     if (count($get_simulation) > 0) {
+        //         array_push($list_mapel_simulation, $mapel);
+        //     }
+        // }
+
+        $list_mapel_simulation = [];
+        $tingkat = Tingkat::find($request->q_tingkat_id);
+        $list_mapel = [];
+        if ($tingkat->name >= 1 && $tingkat->name < 4) {
+            $list_mapel = ['Tematik'];
+        } else if ($tingkat->name >= 4) {
+            $list_mapel = ['Matematika', 'IPA'];
+        }
+
+        foreach ($list_mapel as $mapel_name) {
+            $mapel = MataPelajaran::where(['tingkat_id' => $tingkat->id, 'name' => $mapel_name])->first();
+            array_push($list_mapel_simulation, $mapel);
+        }
+
+        return $this->sendResponse(MataPelajaranResource::collection($list_mapel_simulation), 'Mata Pelajaran retrieved successfully.');
     }
 }

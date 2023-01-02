@@ -22,7 +22,10 @@ Route::get("login", function (Request $request) {
     return "ok";
 });
 Route::post('register', [AuthController::class, 'register']);
+Route::get("/verify-email", [AuthController::class, 'verify']);
 Route::post('password/forgot', [AuthController::class, 'forgot']);
+Route::post('password/reset', [AuthController::class, 'reset']);
+Route::post('password/forgot/student', [AuthController::class, 'forgot_password_student']);
 
 Route::get("/jenjangs", "API\JenjangController@index");
 Route::get("/jenjangs/{id}", "API\JenjangController@show");
@@ -49,6 +52,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get("/mata_pelajarans/not-active", "API\MataPelajaranController@notActive");
     Route::get("/mata_pelajarans/{id}", "API\MataPelajaranController@show");
     Route::get("/mata_pelajarans/{id}/summary", "API\MataPelajaranController@summary");
+    Route::get("/mata_pelajarans_simulasi", "API\MataPelajaranController@simulasi");
 
     Route::get("/moduls", "API\ModulController@index");
     Route::get("/moduls/{id}", "API\ModulController@show")->name('api.modul.detail');
@@ -74,6 +78,17 @@ Route::middleware('auth:api')->group(function () {
     Route::get("/home/tingkats", "API\TingkatController@userTingkat");
     Route::get("/home/tingkats/{id}", "API\MataPelajaranController@showByTingkat");
 
+    Route::get("/paket-soal", "API\PaketSoalController@index");
+    Route::get("/all-paket-soal", "API\PaketSoalController@all_paket_soal");
+
+    Route::get("/soal", "API\SoalController@index");
+    Route::post("/soal/check-answers", "API\SoalController@check_answers");
+
+    Route::get("/e-raport", "API\ERaportController@score");
+    Route::get("/e-raport/summary-of-level", "API\ERaportController@summary_of_level");
+    Route::get("/e-raport/subject-achievement", "API\ERaportController@subject_achievement");
+    Route::get("/e-raport/home-achievement", "API\ERaportController@home_achievement");
+    Route::get("/e-raport/current-score", "API\ERaportController@current_score");
 
     Route::prefix('guru')->group(function () {
         Route::get("/dashboard", "API\DashboardController@index");
