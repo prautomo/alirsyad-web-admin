@@ -59,6 +59,11 @@ class SimulasiController extends BaseController
                 $simulasi->mapel_assigned = 0;
             }
         }
+
+        foreach ($datas as $item_simulasi) {
+            $item_simulasi->rata_rata_score = (string) $item_simulasi->rata_rata_score;
+        }
+
         // sorting by urutan
         // $datas = $datas->sortBy('urutan')->sortBy('level');
 
