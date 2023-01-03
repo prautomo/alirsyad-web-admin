@@ -50,23 +50,24 @@ class Simulasi extends Model
         return $data;
     }
 
-    public function getDisabledAttribute(){
+    public function getDisabledAttribute()
+    {
         $statusDisabled = true;
         $name = $this->name;
         $level = $this->level;
 
-        if($level===1){
+        if ($level === 1) {
             $statusDisabled = false;
-        }elseif($level > 1){
+        } elseif ($level > 1) {
             // mundur satu level
             $level -= 1;
             // cek level sebelumnya
-            $simulasiSebelumnya = $this->with('scores')->whereHas('scores', function($q){
+            $simulasiSebelumnya = $this->with('scores')->whereHas('scores', function ($q) {
                 $q->where('siswa_id', @\Auth::user()->id ?? 0);
-            })->where(["name"=>$name, "level"=>$level])->first();
+            })->where(["name" => $name, "level" => $level])->first();
             // cek punya score di level sebelumnya
             $scores = @$simulasiSebelumnya->scores ?? [];
-            if(count($scores) > 1){
+            if (count($scores) > 1) {
                 $statusDisabled = false;
             }
         }
@@ -88,12 +89,12 @@ class Simulasi extends Model
 
     public function getSimulasiUrlAttribute()
     {
-        return asset($this->path_simulasi)."/index.html";
+        return asset($this->path_simulasi) . "/index.html";
     }
 
     public function getSlugUrlAttribute()
     {
-        return route('app.simulasi.detail', $this->slug).".html";
+        return route('app.simulasi.detail', $this->slug) . ".html";
     }
 
     public function getCoverUrlAttribute()
@@ -101,17 +102,18 @@ class Simulasi extends Model
         return asset($this->icon);
     }
 
-    public function getNextLevelAttribute(){
+    public function getNextLevelAttribute()
+    {
         // get next simulasi
         $nextSimulasi = $this
             ->where('urutan', '=', $this->urutan)
             ->where('level', '>', $this->level)
             ->where('mata_pelajaran_id', $this->mata_pelajaran_id)
-            ->orderBy('urutan','asc')->first();
+            ->orderBy('urutan', 'asc')->first();
 
         $returnNext = null;
 
-        if($nextSimulasi){
+        if ($nextSimulasi) {
             $returnNext = [
                 'id' => @$nextSimulasi->id,
                 'name' => @$nextSimulasi->name,
@@ -119,21 +121,22 @@ class Simulasi extends Model
                 'endpoint' => route('api.simulasi.detail', @$nextSimulasi->id),
             ];
         }
-        
+
         return $returnNext;
     }
 
-    public function getPreviousLevelAttribute(){
+    public function getPreviousLevelAttribute()
+    {
         // get previous simulasi
         $previousSimulasi =  $this
             ->where('urutan', '=', $this->urutan)
             ->where('level', '<', $this->level)
             ->where('mata_pelajaran_id', $this->mata_pelajaran_id)
-            ->orderBy('urutan','desc')->first();
-        
+            ->orderBy('urutan', 'desc')->first();
+
         $returnPrevious = null;
 
-        if($previousSimulasi){
+        if ($previousSimulasi) {
             $returnPrevious = [
                 'id' => @$previousSimulasi->id,
                 'name' => @$previousSimulasi->name,
@@ -141,20 +144,21 @@ class Simulasi extends Model
                 'endpoint' => route('api.simulasi.detail', @$previousSimulasi->id),
             ];
         }
-        
+
         return $returnPrevious;
     }
 
-    public function getNextAttribute(){
+    public function getNextAttribute()
+    {
         // get next simulasi
         $nextSimulasi = $this
             ->where('urutan', '>', $this->urutan)
             ->where('mata_pelajaran_id', $this->mata_pelajaran_id)
-            ->orderBy('urutan','asc')->first();
+            ->orderBy('urutan', 'asc')->first();
 
         $returnNext = null;
 
-        if($nextSimulasi){
+        if ($nextSimulasi) {
             $returnNext = [
                 'id' => @$nextSimulasi->id,
                 'name' => @$nextSimulasi->name,
@@ -162,20 +166,21 @@ class Simulasi extends Model
                 'endpoint' => route('api.simulasi.detail', @$nextSimulasi->id),
             ];
         }
-        
+
         return $returnNext;
     }
 
-    public function getPreviousAttribute(){
+    public function getPreviousAttribute()
+    {
         // get previous simulasi
         $previousSimulasi =  $this
             ->where('urutan', '<', $this->urutan)
             ->where('mata_pelajaran_id', $this->mata_pelajaran_id)
-            ->orderBy('urutan','desc')->first();
-        
+            ->orderBy('urutan', 'desc')->first();
+
         $returnPrevious = null;
 
-        if($previousSimulasi){
+        if ($previousSimulasi) {
             $returnPrevious = [
                 'id' => @$previousSimulasi->id,
                 'name' => @$previousSimulasi->name,
@@ -183,7 +188,7 @@ class Simulasi extends Model
                 'endpoint' => route('api.simulasi.detail', @$previousSimulasi->id),
             ];
         }
-        
+
         return $returnPrevious;
     }
 
@@ -195,24 +200,25 @@ class Simulasi extends Model
         $totalScore = 0;
         // calculate average score
         $jumlahPercobaan = 0;
-        foreach($scores as $score){
+        foreach ($scores as $score) {
             $jumlahPercobaan += 1;
             // handle max percobaan sampe 10, yg ke 11 mh ga di itung
-            if($jumlahPercobaan <= 10){
+            if ($jumlahPercobaan <= 10) {
                 $totalScore += @$score->score;
             }
         }
 
-        return ($totalScore === 0 || $scores === 0) ? 0 : $totalScore/count($scores);
+        return ($totalScore === 0 || $scores === 0) ? 0 : $totalScore / count($scores);
     }
 
-    private function getAllPercobaan(){
+    private function getAllPercobaan()
+    {
         $paramSiswaId = @\Request::get('q_siswa_id') ?? @\Auth::user()->id;
         $scores = $this->scores->where('siswa_id', $paramSiswaId);
 
         // data semua percobaan
         $percobaans = [];
-        foreach($scores as $score){
+        foreach ($scores as $score) {
             $percobaans[] = [
                 'percobaan_ke' => @$score->percobaan_ke,
                 'status' => (@$score->score ?? 0) < 50 ? 'salah' : 'benar',
@@ -229,13 +235,13 @@ class Simulasi extends Model
 
         // sort by percobaan ke ascending
         $percobaans = collect($percobaans)->sortBy('percobaan_ke');
-        
+
         $percobaansBenar = $percobaans->where('status', 'benar')->all();
-        
+
         // 10 percobaan terakhir
         $percobaanTerakhirs = $percobaans->take(-10);
         $percobaanTerakhirsBenar = $percobaanTerakhirs->where('status', 'benar')->all();
-    
+
         return count(@$percobaanTerakhirsBenar ?? []);
     }
 
@@ -246,13 +252,13 @@ class Simulasi extends Model
 
         // sort by percobaan ke ascending
         $percobaans = collect($percobaans)->sortBy('percobaan_ke');
-        
+
         $percobaansBenar = $percobaans->where('status', 'salah')->all();
-        
+
         // 10 percobaan terakhir
         $percobaanTerakhirs = $percobaans->take(-10);
         $percobaanTerakhirsBenar = $percobaanTerakhirs->where('status', 'salah')->all();
-    
+
         return count(@$percobaanTerakhirsBenar ?? []);
     }
 
@@ -266,15 +272,15 @@ class Simulasi extends Model
         $scores = $scores->sortByDesc('percobaan_ke');
         // calculate average score
         $jumlahPercobaan = 0;
-        foreach($scores as $score){
+        foreach ($scores as $score) {
             $jumlahPercobaan += 1;
             // ambil 10 percobaan terakhir
-            if($jumlahPercobaan <= 10){
+            if ($jumlahPercobaan <= 10) {
                 $totalScore += @$score->score;
             }
         }
 
-        return ($totalScore === 0 || $scores === 0) ? 0 : number_format($totalScore/(count($scores) < 10 ? count($scores) : 10), 2);
+        return ($totalScore === 0 || $scores === 0) ? "0" : number_format($totalScore / (count($scores) < 10 ? count($scores) : 10), 2);
     }
 
     public function getRataRataScoreAttribute()
@@ -298,11 +304,11 @@ class Simulasi extends Model
     {
         $avgScore = $this->avgScore();
         $bintang = 0;
-        if($avgScore>=99){
+        if ($avgScore >= 99) {
             $bintang = 3;
-        }else if($avgScore>=66){
+        } else if ($avgScore >= 66) {
             $bintang = 2;
-        }else if($avgScore>=33){
+        } else if ($avgScore >= 33) {
             $bintang = 1;
         }
 
@@ -331,13 +337,13 @@ class Simulasi extends Model
 
     public function scores()
     {
-        if(@\Auth::user()->role==="SISWA" || (@\Auth::user()->is_pengunjung) ){
+        if (@\Auth::user()->role === "SISWA" || (@\Auth::user()->is_pengunjung)) {
             $paramSiswaId = @\Request::get('q_siswa_id') ?? @\Auth::user()->id;
-        }else {
+        } else {
             $paramSiswaId = @\Request::get('q_siswa_id');
         }
-        
-        if($paramSiswaId){
+
+        if ($paramSiswaId) {
             return $this->hasMany("App\Models\Score", "simulasi_id", "id")->withTrashed()->where(['siswa_id' => $paramSiswaId]);
         }
         return $this->hasMany("App\Models\Score", "simulasi_id", "id")->withTrashed();
