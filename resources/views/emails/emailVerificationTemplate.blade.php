@@ -9,30 +9,44 @@
             font-family: 'Poppins', sans-serif;
             color: black;
         }
-        .button {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 150px;
-            font-weight: 600 !important;
-            text-decoration: none;
-            background-color: #024102;
-            color: #fff !important;
-            border-radius: 10px;
-            color: #333333;
-            padding: 20px 20px;
-            margin-left: 400px;
+
+        p{
+            font-size: 1rem;
+        }
+
+        .center {
             text-align: center;
+        }
+
+        .button {
+            display: inline-block;
+            font-weight: 400;
+            color: #fff !important;
+            text-align: center;
+            vertical-align: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            background-color: #024102;
+            border: 1px solid #024102;
+            padding: 1rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            border-radius: 0.25rem;
+            text-decoration: none;
         }
     </style>
 </head>
 <body>
-    <img src="{{ $message->embed(public_path().'/images/banner-email-verification.png') }}" alt="">
+    <div class="center">
+        <img src="{{ $message->embed(public_path().'/images/banner-email-verification.png') }}" alt="">
+    </div>
     <h1>{{ $details['title'] }}</h1>
     <p>Terima kasih sudah mendaftarkan dirimu di Al Irsyad Edu. Sebentar lagi kamu akan siap memulai pengalaman baru dalam belajar</p>
     <p>Silahkan verifikasi alamat emailmu dengan klik tautan berikut dan memulai login kembali :</p>
    
-    <div style="height: 4rem">
+    <div class="center">
         @if($details['source_api_call'] =='ios')         
             <a href="{{ $details['url_link'] . '/verify-email?email=' . $details['email'] . '&source=ios'}}" class="button">Confirm Email & Login</a>     
         @else

@@ -56,7 +56,7 @@ class RegisterController extends Controller
             // 'nis' => ['required', 'string', 'max:255', 'unique:external_users'],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:external_users'],
-            'phone' => ['required', 'string', 'max:255', 'unique:external_users'],
+            'phone' => ['required', 'string', 'max:255'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
             'jenjang_id' => ['required', 'integer'],
             // 'user_type' => ['required', 'string', 'in:SISWA'],
@@ -87,7 +87,8 @@ class RegisterController extends Controller
         $details = [
             'title' => 'Selamat Datang di Al-Irsyad Edu!',
             'email' => $data['email'],
-            'url_link' => url('/')
+            'url_link' => url('/'),
+            'source_api_call' => 'web',
         ];
     
         \Mail::to($data['email'])->send(new \App\Mail\EmailVerificationMail($details));
