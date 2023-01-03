@@ -60,13 +60,6 @@ class SimulasiController extends BaseController
             }
         }
 
-        foreach ($datas as $item_simulasi) {
-            $temp_rata_rata_score = (int) $item_simulasi->rata_rata_score;
-            if ($temp_rata_rata_score == 0) {
-                $item_simulasi->rata_rata_score = "0";
-            }
-        }
-
         // sorting by urutan
         // $datas = $datas->sortBy('urutan')->sortBy('level');
 
