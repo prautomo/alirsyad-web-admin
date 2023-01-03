@@ -155,7 +155,10 @@ class ScoreController extends BaseController
                 $datas['simulasis'][$key]['last_played'] = $history_simulasi->updated_at;
             }
 
-            $datas['simulasis'][$key]['rata_rata_score'] = (string) $simulasi->rata_rata_score;
+            $temp_rata_rata_score = (int) $simulasi->rata_rata_score;
+            if ($temp_rata_rata_score == 0) {
+                $datas['simulasis'][$key]['rata_rata_score'] = "0";
+            }
         }
         return $datas;
     }
