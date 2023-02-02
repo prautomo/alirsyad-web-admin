@@ -133,11 +133,14 @@ class VideoController extends Controller
             })
             ->addColumn("action", function ($data) {
                 $relModul = @$data->modul->slug ? "?rel=modul/" . @$data->modul->slug . ".html" : "";
+                $url_userdev = "https://userdev.alirsyadbandung.sch.id/";
+                $video = Video::find($data->id);
                 return view("components.datatable.actions", [
                     "name" => $data->name,
                     "permissionName" => 'video',
                     "class" => $data->class,
-                    "copySlug" => route("app.video.detail", $data->id) . $relModul,
+                    // "copySlug" => route("app.video.detail", $data->id) . $relModul,
+                    "copySlug" => $url_userdev . 'subject/'  . $video->mata_pelajaran_id . '/learning-video/' . $data->id . $relModul,
                     "deleteRoute" => route($this->routePath . ".destroy", $data->id),
                     "editRoute" => route($this->routePath . ".edit", $data->id),
                 ]);
