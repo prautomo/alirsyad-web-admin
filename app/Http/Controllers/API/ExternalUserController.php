@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\ExternalUser;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Services\CloudinaryFileManager;
 use App\Services\UploadService;
@@ -82,12 +83,11 @@ class ExternalUserController extends BaseController
             return $this->returnStatus(400, $validator->errors());
         }
 
-        $user = Auth::user();
+        $user = User::find(Auth::user()->id);
 
         if(Hash::check($request->old_password, $user->password)){
-            $user->password = Hash::make($request->new_password);
 
-            $user->save();
+            $user->update(['password' => Hash::make($request->new_password)]);
 
             $success['nis'] = @$user->nis;
             $success['name'] = @$user->name;
@@ -102,7 +102,7 @@ class ExternalUserController extends BaseController
 
             return $this->sendResponse($success, 'User password updated successfully.');
         }else{
-            return $this->sendResponse([], 'Failed to update password.');
+            return $this->sendError('Failed to update password.');
         }
     }
 

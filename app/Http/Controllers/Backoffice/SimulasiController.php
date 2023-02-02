@@ -122,11 +122,14 @@ class SimulasiController extends Controller{
             })
             ->addColumn("action", function ($data) {
                 $relModul = @$data->modul->slug ? "?rel=modul/".@$data->modul->slug.".html" : "";
+                $url_userdev = "https://userdev.alirsyadbandung.sch.id/";
+                $simulasi = Simulasi::find($data->id);
                 return view("components.datatable.actions", [
                     "name" => $data->name,
                     "permissionName" => 'simulasi',
                     "class" => $data->class,
-                    "copySlug" => asset('simulasi/'.$data->slug.".html").$relModul,
+                    // "copySlug" => asset('simulasi/'.$data->slug.".html").$relModul,
+                    "copySlug" => $url_userdev . 'subject/'  . $simulasi->mata_pelajaran_id . '/learning-module/' . $data->id . $relModul,
                     "deleteRoute" => route($this->routePath.".destroy", $data->id),
                     "editRoute" => route($this->routePath.".edit", $data->id),
                 ]);
