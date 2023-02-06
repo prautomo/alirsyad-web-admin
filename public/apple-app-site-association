@@ -1,0 +1,11 @@
+{
+    "applinks": {
+        "apps": [],
+        "details": [
+            {
+                "appID": "1659371500.al.irsyad.edu.ios-dev",
+                "paths": ["*"],
+            }
+        ]
+    }
+}
