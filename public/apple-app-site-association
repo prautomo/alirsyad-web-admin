@@ -3,8 +3,8 @@
         "apps": [],
         "details": [
             {
-                "appID": "1659371500.al.irsyad.edu.ios-dev",
-                "paths": ["*"],
+                "appID": "N47GB7A6HA.al.irsyad.edu.ios-dev",
+                "paths": ["/*"],
             }
         ]
     }
