@@ -50,7 +50,7 @@
         @if($details['source_api_call'] =='ios')         
             <a href="{{ $details['url_link'] . '/verify-email?email=' . $details['email'] . '&source=ios'}}" class="button">Confirm Email & Login</a>     
         @elseif($details['source_api_call'] =='web')  
-            <a href="{{ 'https://userdev.alirsyadbandung.sch.id/' . '/verify-email/' . $details['email'] }}" class="button">Confirm Email & Login</a>     
+            <a href="{{ 'https://userdev.alirsyadbandung.sch.id/' . 'verify-email/' . $details['email'] }}" class="button">Confirm Email & Login</a>     
         @else
             <a href="{{ $details['url_link'] . '/verify-email?email=' . $details['email'] }}" class="button">Confirm Email & Login</a> 
         @endif

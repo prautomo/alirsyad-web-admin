@@ -49,7 +49,7 @@
         @if($details['source_api_call'] =='ios')         
             <a href="{{ $details['url_link'] . '/reset-password?token=' . $details['token'] . '&email=' . urlencode($details['email']) . '&source=ios'}}" class="button">Reset Password</a>     
         @elseif($details['source_api_call'] =='web')  
-            <a href="{{ 'https://userdev.alirsyadbandung.sch.id/' . '/reset-password/' . $details['token'] . '/' $details['email'] }}" class="button">Reset Password</a>     
+            <a href="{{ 'https://userdev.alirsyadbandung.sch.id/' . 'reset-password/' . $details['token'] . '/' .  $details['email'] }}" class="button">Reset Password</a>     
         @else
             <a href="{{ $details['url_link'] . '/password/reset/' . $details['token'] . 'email=' . $details['email'] }}" class="button">Reset Password</a>     
         @endif
