@@ -83,7 +83,7 @@ class ExternalUserController extends BaseController
             return $this->returnStatus(400, $validator->errors());
         }
 
-        $user = User::find(Auth::user()->id);
+        $user = ExternalUser::find(Auth::user()->id);
 
         if(Hash::check($request->old_password, $user->password)){
 
