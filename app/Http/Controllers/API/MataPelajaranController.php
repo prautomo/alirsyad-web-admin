@@ -438,6 +438,11 @@ class MataPelajaranController extends BaseController
             array_push($list_mapel_simulation, $mapel);
         }
 
+        if($tingkat->jenjang->name == 'TK'){
+            $mapel = MataPelajaran::where(['tingkat_id' => $tingkat->id])->first();
+            array_push($list_mapel_simulation, $mapel);
+        }
+
         return $this->sendResponse(MataPelajaranResource::collection($list_mapel_simulation), 'Mata Pelajaran retrieved successfully.');
     }
 }
