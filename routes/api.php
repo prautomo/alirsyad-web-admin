@@ -38,6 +38,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('profile/password', [ExternalUserController::class, 'changePassword']);
     Route::post('upload/photo', [ExternalUserController::class, 'uploadPhoto']);
     Route::post('upload/photo/base64', [ExternalUserController::class, 'uploadImageBase64']);
+    Route::post('deactive-profile', [ExternalUserController::class, 'deactiveProfile']);
 
     Route::get("/tingkats", "API\TingkatController@index");
     Route::get("/tingkats/{id}", "API\TingkatController@show");
