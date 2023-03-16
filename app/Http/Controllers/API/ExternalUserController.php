@@ -150,4 +150,38 @@ class ExternalUserController extends BaseController
 
         return $this->sendResponse($success, 'Image uploaded.');
     }
+
+    
+    public function deactiveProfile(Request $request)
+    {
+        $user_email = $request->email;
+        $auth_user_email = Auth::user()->nis;
+
+        $external_user = ExternalUser::where('email', $user_email)->first();
+
+        if($external_user == null){
+            return $this->sendError('User email not found.');
+        }
+
+        if($auth_user_email != $external_user->email){
+            return $this->sendError('Failed to delete user.');
+        }
+
+        $user = User::where('username', $external_user->nis)->first();
+        $external_user->nis = "DEL_" . date('Ymdhis');
+        $external_user->username = "DEL_" . date('Ymdhis') . "_" . $external_user->username;
+        $external_user->email = "DEL_" . date('Ymdhis') . "@sample.id";
+        $external_user->save();
+        $external_user->delete();
+
+        $update_user = User::find(@$user->id);
+        if ($update_user) {
+            $update_user->username = "DEL_" . date('Ymdhis') . "_" . $external_user->username;
+            $update_user->email = "DEL_" . date('Ymdhis') . "@sample.id";
+            $update_user->save();
+            $update_user->delete();
+        }
+
+        return $this->sendResponse([], 'User deleted.');
+    }
 }
