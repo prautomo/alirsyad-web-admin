@@ -16,14 +16,14 @@ use Illuminate\Support\Facades\Route;
 
 
 // Route::get('send-mail', function () {
-   
+
 //     $details = [
 //         'title' => 'Selamat Datang di Al-Irsyad Edu!',
 //         'body' => 'This is for testing email using smtp'
 //     ];
-   
+
 //     \Mail::to('windahidayat27@gmail.com')->send(new \App\Mail\EmailVerificationMail($details));
-   
+
 //     dd("Email is Sent.");
 //     // return view('emails.emailVerificationTemplate');
 // });
@@ -35,7 +35,7 @@ Route::post('backoffice/logout', ['as' => 'backoffice-logout', 'uses' => 'Auth\B
 
 Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'])->namespace('Backoffice')
     ->group(function () {
-        Route::get('/', 'DashboardController@index')->name('dashboard');
+        Route::get('/', 'DashboardController@index')->name('dashboard1');
         Route::get('dashboard', 'DashboardController@index')->name('dashboard');
 
         Route::get('/profile', "ProfileController@profile")->name('akun-saya');
