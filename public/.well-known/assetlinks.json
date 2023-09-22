@@ -1,9 +1,14 @@
-[{
-  "relation": ["delegate_permission/common.handle_all_urls"],
-  "target": {
-    "namespace": "android_app",
-    "package_name": "com.alirsyad.app",
-    "sha256_cert_fingerprints":
-    ["86:73:45:EC:C7:56:91:19:C7:BB:46:EF:57:0E:5D:78:CC:37:EE:0B:03:F5:07:FF:75:58:DB:54:8A:D1:A3:33"]
-  }
-}]
+[
+   {
+      "relation": [
+         "delegate_permission/common.handle_all_urls"
+      ],
+      "target": {
+         "namespace": "android_app",
+         "package_name": "com.alirsyad.app",
+         "sha256_cert_fingerprints": [
+            "8F:89:B3:1C:50:57:EE:E5:EF:E7:13:67:6F:61:4C:BA:4B:85:FA:71:CA:4A:3A:6D:D8:3F:2E:7F:90:71:E6:14"
+         ]
+      }
+   }
+]
