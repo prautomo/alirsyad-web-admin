@@ -129,7 +129,8 @@ class SimulasiController extends Controller{
                     "permissionName" => 'simulasi',
                     "class" => $data->class,
                     // "copySlug" => asset('simulasi/'.$data->slug.".html").$relModul,
-                    "copySlug" => $url_userdev . 'subject/'  . $simulasi->mata_pelajaran_id . '/learning-module/' . $data->id . $relModul,
+                    // "copySlug" => $url_userdev . 'subject/'  . $simulasi->mata_pelajaran_id . '/learning-module/' . $data->id . $relModul,
+                    "copySlug" => $url_userdev . '/module/' . $data->id . $relModul,
                     "deleteRoute" => route($this->routePath.".destroy", $data->id),
                     "editRoute" => route($this->routePath.".edit", $data->id),
                 ]);
