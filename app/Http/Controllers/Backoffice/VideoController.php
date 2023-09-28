@@ -140,7 +140,8 @@ class VideoController extends Controller
                     "permissionName" => 'video',
                     "class" => $data->class,
                     // "copySlug" => route("app.video.detail", $data->id) . $relModul,
-                    "copySlug" => $url_userdev . 'subject/'  . $video->mata_pelajaran_id . '/learning-video/' . $data->id . $relModul,
+                    // "copySlug" => $url_userdev . 'subject/'  . $video->mata_pelajaran_id . '/learning-video/' . $data->id . $relModul,
+                    "copySlug" => $url_userdev . '/video/' . $data->id . $relModul,
                     "deleteRoute" => route($this->routePath . ".destroy", $data->id),
                     "editRoute" => route($this->routePath . ".edit", $data->id),
                 ]);
