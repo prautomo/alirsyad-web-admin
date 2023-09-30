@@ -51,7 +51,14 @@ class UpdateController extends BaseController
 
             $updates = $updates->orderBy('created_at', 'desc');
             if (@$request->limit) $updates = $updates->limit(@$request->limit);
-            $updates = $updates->get();
+            
+            //needs from ios, set modul_id as 0 if its null
+            $updates = $updates->get()->map(function ($update, $key) {
+                if ($update->video->modul_id == null) {
+                    $update->video->modul_id = 0;
+                }
+                return $update;
+            });
         }
         // siswa
         else {
@@ -80,9 +87,17 @@ class UpdateController extends BaseController
             // });
             // filter tingkat nya sendiri
             $updates = $updates->where('tingkat_id', @$user->kelas->tingkat_id);
+
             $updates = $updates->orderBy('created_at', 'desc');
             if (@$request->limit) $updates = $updates->limit(@$request->limit);
-            $updates = $updates->get();
+            
+            //needs from ios, set modul_id as 0 if its null
+            $updates = $updates->get()->map(function ($update, $key) {
+                if ($update->video->modul_id == null) {
+                    $update->video->modul_id = 0;
+                }
+                return $update;
+            });
         }
 
         return $this->sendResponse(UpdateResource::collection($updates), 'Update retrieved successfully.');
