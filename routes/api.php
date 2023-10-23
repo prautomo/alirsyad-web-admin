@@ -84,6 +84,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get("/soal", "API\SoalController@index");
     Route::post("/soal/check-answers", "API\SoalController@check_answers");
+    Route::post("/soal/studies", "API\SoalController@studies");
 
     Route::get("/e-raport", "API\ERaportController@score");
     Route::get("/e-raport/summary-of-level", "API\ERaportController@summary_of_level");

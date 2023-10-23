@@ -107,7 +107,7 @@ class SoalController extends BaseController
             "list_soal" => $list_soal_to_send
         ];
 
-        $data = mb_convert_encoding($data, 'UTF-8', 'UTF-8');
+        // $data = mb_convert_encoding($data, 'UTF-8', 'UTF-8');
 
         return $this->sendResponse($data, 'Soal retrieved successfully.');
     }
@@ -241,5 +241,64 @@ class SoalController extends BaseController
             $data['next_tingkat_kesulitan'] = $paket_soal->tingkat_kesulitan;
             return $this->sendResponse($data, 'Failed the test.');
         }
+    }
+
+    
+    public function studies(Request $request)
+    {
+        $paket_soal = PaketSoal::find($request->paket_soal_id);
+        $count_correct = 0;
+        $next_paket_soal_id = null;
+        $next_tingkat_kesulitan = null;
+        
+        $list_soal_to_send = [];
+
+        foreach ($request->list_soal as $soal) {
+           
+            $get_soal = Soal::find($soal['id']);
+
+            $obj_soal = [
+                "id" => $get_soal->id,
+                "soal" => trim(strip_tags($get_soal->soal), " \t\n\r\0\x0B\xC2\xA0"),
+                "image" => ""
+            ];
+
+            $jawaban_benar = $get_soal[$get_soal['jawaban']];
+
+            // IF YOU WANT SOME CLEAN RESPONSE (WITH NO HTML)
+            if (str_contains($get_soal->soal, '<img')) {
+                $soal_img = explode('src="', $get_soal->soal)[1];
+                $soal_img = explode('"', $soal_img)[0];
+                $soal_contain_img =  $soal_img;
+
+                $temp_soal_contain_img_text = utf8_decode(strip_tags($get_soal->soal));
+                $temp_soal_contain_img_text = str_replace("&nbsp;", "", $temp_soal_contain_img_text);
+                $temp_soal_contain_img_text = preg_replace('/\s+/', ' ', $temp_soal_contain_img_text);
+                $temp_soal_contain_img_text = trim($temp_soal_contain_img_text);
+
+                $obj_soal['soal'] = $temp_soal_contain_img_text;
+                $obj_soal['image'] = $soal_contain_img;
+            }
+            
+            $list_multiple_choice = [];
+            $obj_soal['jawaban'] = $soal['list_jawaban'];
+            $obj_soal['jawaban_siswa'] = $soal['jawaban'];
+            $obj_soal['jawaban_benar'] = $jawaban_benar;
+            $obj_soal['is_correct'] = $soal['jawaban'] == $jawaban_benar ? true : false;
+
+            $obj_soal['pembahasan_text'] = $get_soal->pembahasan;
+            $obj_soal['pembahasan_video'] = $get_soal->link_pembahasan;
+            $length_multiple_choice = 0;
+
+            array_push($list_soal_to_send, $obj_soal);
+        }
+
+        $data = [
+            "paket_soal_id" => $paket_soal->id,
+            "tingkat_kesulitan" => $paket_soal->tingkat_kesulitan,
+            "list_soal" => $list_soal_to_send,
+        ];
+
+        return $this->sendResponse($data, 'Studies retrieved successfully.');
     }
 }
