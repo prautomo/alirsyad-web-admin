@@ -11,7 +11,7 @@
 
     <x-input.text :label="__('Sumber')" name="sumber" :data="$data" :placeholder="__('Wikipedia')" />
     <x-input.text :label="__('Link Pembahasan')" name="link_pembahasan" :data="$data" :placeholder="__('http://sample.com/wiki')" />
-    <x-input.textarea :label="__('Pembahasan')" name="pembahasan" :data="$data" :placeholder="__('Lorem ipsum')" />
+    <x-input.textarea :label="__('Pembahasan')" id="pembahasan" name="pembahasan" :data="$data" :placeholder="__('Lorem ipsum')" />
 
     <div class="col-xs-12 col-sm-12 col-md-12 text-right">
         <button type="submit" class="btn btn-sm btn-primary">@lang("Save")</button>
@@ -52,6 +52,11 @@
     } );
 
     CKEDITOR.replace( 'pilihan_e', {
+        filebrowserUploadUrl: "{{route('backoffice::upload.imageCKEditor', ['_token' => csrf_token() ])}}",
+        filebrowserUploadMethod: 'form'
+    } );
+
+    CKEDITOR.replace( 'pembahasan', {
         filebrowserUploadUrl: "{{route('backoffice::upload.imageCKEditor', ['_token' => csrf_token() ])}}",
         filebrowserUploadMethod: 'form'
     } );
