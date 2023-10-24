@@ -263,7 +263,7 @@ class SoalController extends BaseController
                 "image" => ""
             ];
 
-            $jawaban_benar = $get_soal[$get_soal['jawaban']];
+            $jawaban_benar = trim(strip_tags($get_soal[$get_soal['jawaban']]), " \t\n\r\0\x0B\xC2\xA0");
 
             // IF YOU WANT SOME CLEAN RESPONSE (WITH NO HTML)
             if (str_contains($get_soal->soal, '<img')) {
