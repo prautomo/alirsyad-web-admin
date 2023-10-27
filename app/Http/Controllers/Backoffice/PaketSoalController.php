@@ -451,9 +451,16 @@ class PaketSoalController extends Controller
     }
 
     public function createSoal(Request $request, $id){
+        
+        $pembahasanOption = [
+            0 => 'Video',
+            1 => 'Text',
+        ];
+
         $data = [
             'paketId' => $id,
             'listJawabanBenar' => $this->getJawaban(),
+            'pembahasanOption' => $pembahasanOption
         ];
 
         return view($this->prefix.'.create_soal', $data);
@@ -482,8 +489,21 @@ class PaketSoalController extends Controller
         //     $soal_contain_img = trim($soal_contain_img, " \t\n\r\0\x0B\xC2\xA0");
         //     $newLatihanSoal['soal'] = $soal_contain_img;
         // }
-        $newLatihanSoal = $request->only(['soal', 'pilihan_a', 'pilihan_b', 'pilihan_c', 'pilihan_d', 'pilihan_e', 'jawaban', 'sumber', 'link_pembahasan', 'pembahasan']);
+        $newLatihanSoal = $request->only(['soal', 'pilihan_a', 'pilihan_b', 'pilihan_c', 'pilihan_d', 'pilihan_e', 'jawaban', 'sumber', 'pembahasan_option', 'link_pembahasan', 'pembahasan']);
         $newLatihanSoal['paket_soal_id'] = $id;
+
+        switch($newLatihanSoal['pembahasan_option']){
+            case 0:
+                $newLatihanSoal['pembahasan'] = null;
+                break;
+            case 1:
+                $newLatihanSoal['link_pembahasan'] = null;
+                break;
+            default:
+                $newLatihanSoal['link_pembahasan'] = null;
+                $newLatihanSoal['pembahasan'] = null;
+                break;
+        }
 
         $storeLatihanSoal = Soal::create($newLatihanSoal);
 
@@ -497,10 +517,16 @@ class PaketSoalController extends Controller
     public function editSoal(Request $request, $paketId, $id){
         $dt = Soal::with('paket')->findOrFail($id);
 
+        $pembahasanOption = [
+            0 => 'Video',
+            1 => 'Text',
+        ];
+
         $data = [
             'data' => $dt,
             'paketId' => $paketId,
             'listJawabanBenar' => $this->getJawaban(),
+            'pembahasanOption' => $pembahasanOption
         ];
 
         return view($this->prefix.'.edit_soal', $data);
@@ -508,7 +534,20 @@ class PaketSoalController extends Controller
 
     public function updateSoal(Request $request, $paketId, $id){
 
-        $dataReq = $request->only(['soal', 'pilihan_a', 'pilihan_b', 'pilihan_c', 'pilihan_d', 'pilihan_e', 'jawaban', 'sumber', 'link_pembahasan', 'pembahasan']);
+        $dataReq = $request->only(['soal', 'pilihan_a', 'pilihan_b', 'pilihan_c', 'pilihan_d', 'pilihan_e', 'jawaban', 'sumber', 'pembahasan_option', 'link_pembahasan', 'pembahasan']);
+
+        switch($dataReq['pembahasan_option']){
+            case 0:
+                $dataReq['pembahasan'] = null;
+                break;
+            case 1:
+                $dataReq['link_pembahasan'] = null;
+                break;
+            default:
+                $dataReq['link_pembahasan'] = null;
+                $dataReq['pembahasan'] = null;
+                break;
+        }
 
         $dt = Soal::findOrFail($id);
         $dt->update($dataReq);

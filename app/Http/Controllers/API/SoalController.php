@@ -287,7 +287,16 @@ class SoalController extends BaseController
             $obj_soal['is_correct'] = $soal['jawaban'] == $jawaban_benar ? true : false;
 
             $obj_soal['pembahasan_text'] = $get_soal->pembahasan;
-            $obj_soal['pembahasan_video'] = $get_soal->link_pembahasan;
+            $obj_soal['pembahasan_video'] = null;
+
+            $link_pembahasan = $get_soal->link_pembahasan;
+            if($link_pembahasan != null){
+                $pattern = "/v=([A-Za-z0-9_\-]{11})/";
+                preg_match($pattern, $link_pembahasan, $matches);
+
+                $obj_soal['pembahasan_video'] = substr($matches[0], 2);
+            }
+
             $length_multiple_choice = 0;
 
             array_push($list_soal_to_send, $obj_soal);
