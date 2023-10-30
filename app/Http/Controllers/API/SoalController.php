@@ -107,7 +107,7 @@ class SoalController extends BaseController
             "list_soal" => $list_soal_to_send
         ];
 
-        // $data = mb_convert_encoding($data, 'UTF-8', 'UTF-8');
+        $data = mb_convert_encoding($data, 'UTF-8', 'UTF-8');
 
         return $this->sendResponse($data, 'Soal retrieved successfully.');
     }
@@ -307,6 +307,8 @@ class SoalController extends BaseController
             "tingkat_kesulitan" => $paket_soal->tingkat_kesulitan,
             "list_soal" => $list_soal_to_send,
         ];
+
+        $data = mb_convert_encoding($data, 'UTF-8', 'UTF-8');
 
         return $this->sendResponse($data, 'Studies retrieved successfully.');
     }
