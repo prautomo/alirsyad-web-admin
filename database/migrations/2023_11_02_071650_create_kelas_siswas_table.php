@@ -19,6 +19,7 @@ class CreateKelasSiswasTable extends Migration
             $table->unsignedBigInteger('kelas_id');
             $table->string('tahun_ajaran');
             $table->boolean('is_current')->default(1);
+            $table->timestamps();
 
             $table->foreign('siswa_id')->references('id')->on('external_users')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('kelas_id')->references('id')->on('kelas')->onUpdate('cascade')->onDelete('cascade');

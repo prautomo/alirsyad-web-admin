@@ -1,10 +1,10 @@
-<x-page.form :title="__('Create External User')">
+<x-page.form :title="__('Naik Kelas')">
     {!! Form::open(array('route' => ['backoffice::external-users.next_grade_update'], 'method'=>'POST', 'enctype' => 'multipart/form-data')) !!}
     @csrf
     <div class="row">
 
         {{-- Tingkat dan Kelas SEBELUMNYA --}}
-        <x-input.select :label="__('Tingkat Sebelumnya')" id="prev_tingkat" name="prev_tingkat_id" :sources="$tingkatList" required />
+        <x-input.select :label="__('Tingkat Sebelumnya')" id="prev_tingkat_id" name="prev_tingkat_id" :sources="$tingkatList" required />
         
         <!-- Dropdown Kelas -->
         <div class="col-md-12">
@@ -130,8 +130,8 @@
                     $('#select_student_id').append($('<option>').val("").text("Pilih Siswa"));
 
                     for(var i=0; i<res.length; i++){
-                        var kelas = res[i];
-                        $('#select_student_id').append($('<option>').val(kelas.id).text(kelas.name));
+                        var siswa = res[i];
+                        $('#select_student_id').append($('<option>').val(siswa.id).text(siswa.name));
                     }
                 }
             }); 

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class KelasSiswa extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     protected $table = 'kelas_siswas';
     protected $fillable = [

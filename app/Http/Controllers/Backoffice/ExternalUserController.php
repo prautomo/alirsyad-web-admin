@@ -17,6 +17,7 @@ use App\Models\Jenjang;
 use App\Models\Tingkat;
 use App\Models\Kelas;
 use App\Models\GuruMataPelajaran;
+use App\Models\KelasSiswa;
 use App\Services\UploadService;
 use DB;
 use Hash;
@@ -48,6 +49,7 @@ class ExternalUserController extends Controller
         $isPengunjung = $request->is_pengunjung;
         $query = ExternalUser::query();
         // relation with kelas and tingkat
+        $query = $query->whereNotNull('kelas_id');
         $query = $query->with('kelas.tingkat.jenjang', 'mataPelajarans', 'jenjang');
 
         if (!empty($role)) {
@@ -55,6 +57,8 @@ class ExternalUserController extends Controller
         }
 
         $query = $query->where('is_pengunjung', @$isPengunjung ?? 0);
+
+        // return response()->json($query->get(), 200);
 
         $dt = datatables()
             ->of($query)
@@ -67,18 +71,19 @@ class ExternalUserController extends Controller
 
                 if ($search) {
 
-                    $query->where('name', 'LIKE', '%' . $search . '%');
-                    $query->orWhere('nis', 'LIKE', '%' . $search . '%');
-
-                    $query->orWhereHas('mataPelajarans', function ($query2) use ($search) {
-                        $query2->where('name', 'LIKE', '%' . $search . '%');
-                    });
+                    $query = $query->where('name', 'LIKE', '%' . $search . '%');
+                    $query = $query->orWhere('nis', 'LIKE', '%' . $search . '%');
 
                     if (!empty($role)) {
-                        $query->where('role', $role);
+                        $query = $query->where('role', $role);
+                        if($role == "GURU"){
+                            $query = $query->orWhereHas('mataPelajarans', function ($query2) use ($search) {
+                                $query2->where('name', 'LIKE', '%' . $search . '%');
+                            });
+                        }
                     }
 
-                    $query->where('is_pengunjung', @$isPengunjung ?? 0);
+                    $query = $query->where('is_pengunjung', @$isPengunjung ?? 0);
                 }
             })
             ->addIndexColumn()
@@ -685,27 +690,54 @@ class ExternalUserController extends Controller
 
     public function nextGradeUpdate(Request $request)
     {
-        dd("not implemented yet");
-        dd($request->all());
         $this->validate($request, [
-            'prev_class' => 'required',
-            'new_class' => 'required',
-            'students' => 'required',
+            'prev_tingkat_id' => 'required',
+            'prev_kelas_id' => 'required',
+            'next_tingkat_id' => 'required',
+            'next_kelas_id' => 'required',
+            'selected_students' => 'required',
         ]);
 
-        // $user = ExternalUser::find($id);
+        $selected_students = $request->selected_students;
+        foreach($selected_students as $selected_student){
+            $current_class = KelasSiswa::where(['siswa_id' => $selected_student, 'is_current' => 1])->first();
+            $siswa = ExternalUser::find($selected_student);
 
-        // $user->status = "AKTIF";
-        // $user->save();
+            if($current_class != null){
+                $new_school_year = ((int) $current_class->tahun_ajaran) + 1;
+                
+                KelasSiswa::create([
+                    'kelas_id' => $request->next_kelas_id,
+                    'siswa_id' => $selected_student,
+                    'tahun_ajaran' => (string) $new_school_year
+                ]);
+                
+                $current_class->update(['is_current' => 0]);
+                $siswa->update(['kelas_id' => $request->next_kelas_id]);
+            }
+        }
 
-        // if (@$request->mapel) {
-        //     if (count(@$request->mapel) > 0) {
-        //         $user->mataPelajaranGuests()->sync($request->mapel);
-        //     }
-        // }
-
-        return redirect()->route($this->routePath . '.index', ['role' => 'SISWA', 'is_pengunjung' => 1])->with(
-            $this->success(__("External User updated successfully"))
+        return redirect()->route($this->routePath . '.index', ['role' => 'SISWA'])->with(
+            $this->success(__("Next graded successfully"))
         );
+    }
+
+    // development purpose only (just ONE hit)
+    public function initKelasSiswa(Request $request){
+        $datas = ExternalUser::where('role', "SISWA")->whereNotNull('kelas_id')->get();
+
+        if($request->secret_key != null){
+            if($request->secret_key == "@dev_Dib_naik_kelas_secret_key_432589"){
+                foreach($datas as $data){
+                    KelasSiswa::create([
+                        'kelas_id' => $data->kelas_id,
+                        'siswa_id' => $data->id,
+                        'tahun_ajaran' => "2022"
+                    ]);
+                }
+        
+                return response()->json("Success init data kelas siswa.", 200);
+            }
+        }
     }
 }
