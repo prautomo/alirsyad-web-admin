@@ -67,6 +67,9 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
         Route::post('external-users/import', 'ExternalUserController@import')->name('external-users.import');
         Route::get('external-users/enableMapel/{id}', 'ExternalUserController@enableMapel')->name('external-users.enableMapel');
         Route::put('external-users/enableMapel/{id}', 'ExternalUserController@enableMapelUpdate')->name('external-users.enableMapelUpdate');
+        Route::get('external-users/next-grade',  "ExternalUserController@nextGrade")->name('external-users.next_grade');
+        Route::post('external-users/next-grade', 'ExternalUserController@nextGradeUpdate')->name('external-users.next_grade_update');
+        Route::get('external-users/next-grade/list-siswa', 'ExternalUserController@listSiswaJson')->name('external-users.listSiswaJson');
         Route::resource('external-users', 'ExternalUserController');
         Route::post('external-users/update-status/{id}', 'ExternalUserController@updateStatus')->name('external-users.update-status');
 

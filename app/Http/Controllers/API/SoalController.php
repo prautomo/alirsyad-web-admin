@@ -291,10 +291,12 @@ class SoalController extends BaseController
 
             $link_pembahasan = $get_soal->link_pembahasan;
             if($link_pembahasan != null){
-                $pattern = "/v=([A-Za-z0-9_\-]{11})/";
+                $pattern = "/(e\/|v=)([A-Za-z0-9_\-]{11})/";
                 preg_match($pattern, $link_pembahasan, $matches);
 
-                $obj_soal['pembahasan_video'] = substr($matches[0], 2);
+                if(count($matches) > 0){
+                    $obj_soal['pembahasan_video'] = substr($matches[0], 2);
+                }
             }
 
             $length_multiple_choice = 0;

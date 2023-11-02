@@ -635,4 +635,77 @@ class ExternalUserController extends Controller
             $this->success(__("External User updated successfully"), $user)
         );
     }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function nextGrade()
+    {
+        // dd("test");
+        $tingkatList = $this->getTingkat();
+
+        $listKelas = Kelas::orderBy('tingkat_id')->get();
+
+        $groupKelasList = [];
+        foreach ($listKelas as $kelas) {
+            $textTingkat = "Tingkat " . @$kelas->tingkat->name. " " . @$kelas->tingkat->jenjang->name;
+
+            $idxSearch = array_search(@$textTingkat, array_column($groupKelasList, 'text'));
+
+            // belum ada
+            if ($idxSearch === false) {
+                array_push($groupKelasList, [
+                    'id' => $kelas->tingkat->id,
+                    'text' => $textTingkat,
+                    'children' => [[
+                        'id' => $kelas->id,
+                        'text' => @$kelas->name,
+                    ]],
+                ]);
+            } else {
+                // udah ada
+                array_push($groupKelasList[$idxSearch]['children'], [
+                    'id' => $kelas->id,
+                    'text' => @$kelas->name,
+                ]);
+            }
+        }
+
+        // return view($this->prefix . '.next-grade', ['title' => 'Naik Kelas', 'tingkatList' => $tingkatList, 'groupContentList' => $groupContentList, 'contentIDS' => $contentIDS, 'form_mode' => 'create', 'content' => $request->query('content')]);
+        return view($this->prefix . '.next_grade', ['title' => 'Naik Kelas', 'tingkatList' => $tingkatList, 'groupKelasList' => $groupKelasList]);
+    }
+    
+    public function listSiswaJson(Request $request){
+        $datas = ExternalUser::where('kelas_id', $request->q_kelas_id)->get();
+
+        return response()->json($datas, 200);
+    }
+
+    public function nextGradeUpdate(Request $request)
+    {
+        dd("not implemented yet");
+        dd($request->all());
+        $this->validate($request, [
+            'prev_class' => 'required',
+            'new_class' => 'required',
+            'students' => 'required',
+        ]);
+
+        // $user = ExternalUser::find($id);
+
+        // $user->status = "AKTIF";
+        // $user->save();
+
+        // if (@$request->mapel) {
+        //     if (count(@$request->mapel) > 0) {
+        //         $user->mataPelajaranGuests()->sync($request->mapel);
+        //     }
+        // }
+
+        return redirect()->route($this->routePath . '.index', ['role' => 'SISWA', 'is_pengunjung' => 1])->with(
+            $this->success(__("External User updated successfully"))
+        );
+    }
 }

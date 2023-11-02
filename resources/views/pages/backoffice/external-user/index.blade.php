@@ -15,8 +15,11 @@
             @endif
             <!-- <a href="#" class="btn btn-sm btn-neutral">Filters</a> -->
             @if(\Request::get('role') === 'SISWA' && !@\Request::get('is_pengunjung'))
-            <a href="{{ route('backoffice::external-users.batch_create', ['role'=>\Request::get('role')]) }}" class="btn btn-sm btn-primary">
+            <a href="{{ route('backoffice::external-users.batch_create', ['role'=>\Request::get('role')]) }}" class="btn btn-sm btn-info">
               Import dari Excel
+            </a>
+            <a href="{{ route('backoffice::external-users.next_grade', ['role'=>\Request::get('role')]) }}" class="btn btn-sm btn-primary">
+              Naik Kelas
             </a>
             @endif
         </div>

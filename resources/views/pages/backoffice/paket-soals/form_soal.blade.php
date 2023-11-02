@@ -24,7 +24,7 @@
         </div>
     </div>
     
-    <x-input.text :label="__('Link Pembahasan')" wrapId="linkPembahasan" name="link_pembahasan" :data="$data" :placeholder="__('http://sample.com/wiki')" />
+    <x-input.text :label="__('Link Video Pembahasan (Youtube)')" wrapId="linkPembahasan" name="link_pembahasan" :data="$data" :placeholder="__('https://www.youtube.com/watch?v=yAoLSRbwxL8&t=3s')" />
     <x-input.textarea :label="__('Pembahasan')" wrapId="textPembahasan" id="pembahasan" name="pembahasan" :data="$data" :placeholder="__('Lorem ipsum')" />
 
     <div class="col-xs-12 col-sm-12 col-md-12 text-right">
