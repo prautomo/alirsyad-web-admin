@@ -59,6 +59,7 @@
                 <th data-data="kelas.tingkat.jenjang.name">@lang("Jenjang")</th>
                 <th data-data="kelas.tingkat.name">@lang("Tingkat")</th>
                 <th data-data="kelas.name">@lang("Kelas")</th>
+                <th data-data="tahun_ajaran">@lang("Tahun Ajaran")</th>
                 @elseif(\Request::get('role') === 'SISWA' && @\Request::get('is_pengunjung'))
                 <th data-data="jenjang.name">@lang("Jenjang")</th>
                 @else

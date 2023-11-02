@@ -51,7 +51,7 @@ class ExternalUser extends Authenticatable implements MustVerifyEmail
         'password',
         'remember_token',
     ];
-
+    
     /**
      * The attributes that should be cast to native types.
      *
@@ -119,6 +119,14 @@ class ExternalUser extends Authenticatable implements MustVerifyEmail
     public function mataPelajaranGuests()
     {
         return $this->belongsToMany('App\Models\MataPelajaran', 'guest_mata_pelajarans', 'guest_id', 'mata_pelajaran_id');
+    }
+
+    /**
+     * The kelas history that has siswa
+     */
+    public function classHistory()
+    {
+        return $this->hasMany('App\Models\KelasSiswa', "siswa_id", "id");
     }
 
     public function AauthAcessToken(){

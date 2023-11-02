@@ -49,9 +49,8 @@ class ExternalUserController extends Controller
         $isPengunjung = $request->is_pengunjung;
         $query = ExternalUser::query();
         // relation with kelas and tingkat
-        $query = $query->whereNotNull('kelas_id');
-        $query = $query->with('kelas.tingkat.jenjang', 'mataPelajarans', 'jenjang');
-
+        $query = $query->with(['kelas.tingkat.jenjang', 'mataPelajarans', 'jenjang', 'classHistory']);
+        
         if (!empty($role)) {
             $query = $query->where('role', $role);
         }
@@ -70,16 +69,23 @@ class ExternalUserController extends Controller
                 $search = @$request->search['value'];
 
                 if ($search) {
-
                     $query = $query->where('name', 'LIKE', '%' . $search . '%');
                     $query = $query->orWhere('nis', 'LIKE', '%' . $search . '%');
 
                     if (!empty($role)) {
                         $query = $query->where('role', $role);
                         if($role == "GURU"){
-                            $query = $query->orWhereHas('mataPelajarans', function ($query2) use ($search) {
-                                $query2->where('name', 'LIKE', '%' . $search . '%');
-                            });
+                            if($query->has('mataPelajarans')){
+                                $query = $query->orWhereHas('mataPelajarans', function ($query2) use ($search) {
+                                    $query2->where('name', 'LIKE', '%' . $search . '%');
+                                });
+                            }
+                        }else if($role == "SISWA"){
+                            if($query->has('classHistory')){
+                                $query = $query->orWhereHas('classHistory', function($query2) use ( $search ){
+                                    $query2->where('is_current', 1)->where('tahun_ajaran', 'LIKE', '%'. $search. '%');
+                                });
+                            }
                         }
                     }
 
@@ -116,6 +122,15 @@ class ExternalUserController extends Controller
                 $createdAt = new Carbon($data->created_at);
 
                 return $createdAt->format("d-m-Y H:i:s");
+            })
+            ->addColumn("tahun_ajaran", function ($data) {
+                $current_class = KelasSiswa::where(['siswa_id' => $data->id, 'is_current' => 1])->first();
+
+                if($current_class != null){
+                    return $current_class->tahun_ajaran;
+                }
+
+                return "";
             })
             ->addColumn("action", function ($data) {
                 $actions = [
