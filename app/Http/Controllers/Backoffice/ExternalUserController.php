@@ -694,7 +694,7 @@ class ExternalUserController extends Controller
         }
 
         // return view($this->prefix . '.next-grade', ['title' => 'Naik Kelas', 'tingkatList' => $tingkatList, 'groupContentList' => $groupContentList, 'contentIDS' => $contentIDS, 'form_mode' => 'create', 'content' => $request->query('content')]);
-        return view($this->prefix . '.next_grade', ['title' => 'Naik Kelas', 'tingkatList' => $tingkatList, 'groupKelasList' => $groupKelasList]);
+        return view($this->prefix . '.next_grade', ['title' => 'Naik Kelas', 'tingkatList' => $tingkatList, 'groupKelasList' => $groupKelasList, 'role' => 'SISWA']);
     }
     
     public function listSiswaJson(Request $request){
@@ -710,10 +710,10 @@ class ExternalUserController extends Controller
             'prev_kelas_id' => 'required',
             'next_tingkat_id' => 'required',
             'next_kelas_id' => 'required',
-            'selected_students' => 'required',
+            'selected_student_list' => 'required',
         ]);
 
-        $selected_students = $request->selected_students;
+        $selected_students = explode(',', $request->selected_student_list);
         foreach($selected_students as $selected_student){
             $current_class = KelasSiswa::where(['siswa_id' => $selected_student, 'is_current' => 1])->first();
             $siswa = ExternalUser::find($selected_student);

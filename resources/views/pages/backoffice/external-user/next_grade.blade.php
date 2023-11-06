@@ -1,76 +1,83 @@
 <x-page.form :title="__('Naik Kelas')">
-    {!! Form::open(array('route' => ['backoffice::external-users.next_grade_update'], 'method'=>'POST', 'enctype' => 'multipart/form-data')) !!}
-    @csrf
-    <div class="row">
+    <form action="{{route("backoffice::external-users.next_grade_update")}}" method="POST" class="form-horizontal" enctype="multipart/form-data" onsubmit="return checkClassMatch(this)">
+        @csrf
+        <div class="row">
 
-        {{-- Tingkat dan Kelas SEBELUMNYA --}}
-        <x-input.select :label="__('Tingkat Sebelumnya')" id="prev_tingkat_id" name="prev_tingkat_id" :sources="$tingkatList" required />
-        
-        <!-- Dropdown Kelas -->
-        <div class="col-md-12">
-            <div class="form-group">
-                <label class="form-control-label" for="input-prev-kelas">Kelas Sebelumnya (*)</label>
+            {{-- Tingkat dan Kelas SEBELUMNYA --}}
+            <x-input.select :label="__('Tingkat Sebelumnya')" id="prev_tingkat_id" name="prev_tingkat_id" :sources="$tingkatList" required />
+            
+            <!-- Dropdown Kelas -->
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="form-control-label" for="input-prev-kelas">Kelas Sebelumnya (*)</label>
 
-                <select id="prev_kelas_id" name="prev_kelas_id" class="form-control {{($errors->has('prev-kelas') ? ' is-invalid' : '')}}" required>
-                    <option value="" selected>Pilih kelas</option>
-                </select>
+                    <select id="prev_kelas_id" name="prev_kelas_id" class="form-control {{($errors->has('prev-kelas') ? ' is-invalid' : '')}}" required>
+                        <option value="" selected>Pilih kelas</option>
+                    </select>
 
-                @if($errors->has('kelas'))
-                <div class="invalid-feedback">
-                    <i class="fa fa-exclamation-circle fa-fw"></i> {{ $errors->first('prev-kelas') }}
+                    @if($errors->has('kelas'))
+                    <div class="invalid-feedback">
+                        <i class="fa fa-exclamation-circle fa-fw"></i> {{ $errors->first('prev-kelas') }}
+                    </div>
+                    @endif
                 </div>
-                @endif
+            </div>
+            {{-- end --}}
+
+            {{-- Tingkat dan Kelas SELANJUTNYA --}}
+            <x-input.select :label="__('Naik Tingkat Baru')" id="next_tingkat_id" name="next_tingkat_id" :sources="$tingkatList" required />
+            <input type="hidden" id="selected_student_list" name="selected_student_list">
+            
+            <!-- Dropdown Kelas -->
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="form-control-label" for="input-next-kelas">Naik Kelas Baru (*)</label>
+
+                    <select id="next_kelas_id" name="next_kelas_id" class="form-control {{($errors->has('next-kelas') ? ' is-invalid' : '')}}" required>
+                        <option value="" selected>Pilih kelas</option>
+                    </select>
+
+                    @if($errors->has('kelas'))
+                    <div class="invalid-feedback">
+                        <i class="fa fa-exclamation-circle fa-fw"></i> {{ $errors->first('next-kelas') }}
+                    </div>
+                    @endif
+                </div>
+            </div>
+            {{-- end --}}
+
+            
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="form-control-label" for="input-next-kelas">Daftar Siswa (*)</label>
+
+                    <select id="select_student_id" name="selected_students[]" multiple="multiple" class="form-control {{($errors->has('next-kelas') ? ' is-invalid' : '')}}" required>
+                        
+                    </select>
+
+                    @if($errors->has('kelas'))
+                    <div class="invalid-feedback">
+                        <i class="fa fa-exclamation-circle fa-fw"></i> {{ $errors->first('next-kelas') }}
+                    </div>
+                    @endif
+                </div>
+            </div>
+
+            <x-input.text :label="__('Jumlah Siswa yang Sudah Dipilih')" name="total_selected" value=0 readonly/>
+            <x-input.text :label="__('Jumlah Siswa yang Belum Dipilih')" name="total_unselected" value=0 readonly/>
+
+
+            <div class="col-xs-12 col-sm-12 col-md-12 text-right">
+                <button type="submit" class="btn btn-sm btn-primary">@lang("Save")</button>
+                <a href="{{route("backoffice::external-users.index", ['role' => $role ]) }}" class="btn btn-sm btn-secondary mr-2">@lang("Cancel")</a>
             </div>
         </div>
-        {{-- end --}}
+    </form>
 
-        {{-- Tingkat dan Kelas SELANJUTNYA --}}
-        <x-input.select :label="__('Naik Tingkat')" id="next_tingkat_id" name="next_tingkat_id" :sources="$tingkatList" required />
-        
-        <!-- Dropdown Kelas -->
-        <div class="col-md-12">
-            <div class="form-group">
-                <label class="form-control-label" for="input-next-kelas">Naik Kelas (*)</label>
-
-                <select id="next_kelas_id" name="next_kelas_id" class="form-control {{($errors->has('next-kelas') ? ' is-invalid' : '')}}" required>
-                    <option value="" selected>Pilih kelas</option>
-                </select>
-
-                @if($errors->has('kelas'))
-                <div class="invalid-feedback">
-                    <i class="fa fa-exclamation-circle fa-fw"></i> {{ $errors->first('next-kelas') }}
-                </div>
-                @endif
-            </div>
-        </div>
-        {{-- end --}}
-
-        
-        <div class="col-md-12">
-            <div class="form-group">
-                <label class="form-control-label" for="input-next-kelas">Daftar Siswa (*)</label>
-
-                <select id="select_student_id" name="selected_students[]" multiple="multiple" class="form-control {{($errors->has('next-kelas') ? ' is-invalid' : '')}}" required>
-                    
-                </select>
-
-                @if($errors->has('kelas'))
-                <div class="invalid-feedback">
-                    <i class="fa fa-exclamation-circle fa-fw"></i> {{ $errors->first('next-kelas') }}
-                </div>
-                @endif
-            </div>
-        </div>
-
-        <div class="col-xs-12 col-sm-12 col-md-12 text-right">
-            <button type="submit" class="btn btn-sm btn-primary">@lang("Save")</button>
-            <a href="{{route("backoffice::moduls.index")}}" class="btn btn-sm btn-secondary mr-2">@lang("Cancel")</a>
-        </div>
-    </div>
-    {!! Form::close() !!}
 
     @push('plugin_script')
     <script type="text/javascript">
+        var selected_student_list = [];
         $(document).ready(function() {
             $('#prev_tingkat_id').select2();
             $('#next_tingkat_id').select2();
@@ -78,6 +85,7 @@
             $('#next_kelas_id').select2();
             
             var s2 = $('#select_student_id').select2({
+                multiple: true,
                 placeholder: "Pilih siswa",
                 allowClear: true,
                 width: '100%',
@@ -85,9 +93,44 @@
             });
         });
 
+        $("#select_student_id")
+            .on("select2:selecting", function (e) {
+                var selected_idx = e.params.args.data.element.index;
+                var option = this.options[selected_idx]
+                $(option).prop("disabled", true);
+
+                selected_student_list.push(e.params.args.data.id);
+
+                var total_selected = parseInt($('#total_selected').val());
+                $('#total_selected').val(++total_selected);
+
+                var total_unselected = parseInt($('#total_unselected').val());
+                $('#total_unselected').val(--total_unselected);
+            });
+
+
+        $("#select_student_id")
+            .on("select2:unselecting", function (e) {
+                var unselected_idx = e.params.args.data.element.index;
+                var option = this.options[unselected_idx]
+                $(option).prop("disabled", false); 
+
+                selected_student_list = selected_student_list.filter(function(item) {
+                    return item !== e.params.args.data.id
+                })
+
+                var total_selected = parseInt($('#total_selected').val());
+                $('#total_selected').val(--total_selected);
+
+                var total_unselected = parseInt($('#total_unselected').val());
+                $('#total_unselected').val(++total_unselected);
+            });
+
         $('select#prev_tingkat_id').on('change', function() {
             if(this.value){
                 loadKelas(this.value, "prev_kelas_id");
+                $('#total_selected').val(0);
+                $('#total_unselected').val(0);
             }
         });
 
@@ -116,6 +159,8 @@
 
         $('select#prev_kelas_id').on('change', function() {
             if(this.value){
+                $('#total_selected').val(0);
+                $('#total_unselected').val(0);
                 loadSiswa(this.value);
             }
         });
@@ -133,8 +178,34 @@
                         var siswa = res[i];
                         $('#select_student_id').append($('<option>').val(siswa.id).text(siswa.name));
                     }
+
+                    $('#total_unselected').val(res.length);
                 }
             }); 
+        }
+
+        function checkClassMatch(form){
+            $('#selected_student_list').val(selected_student_list);
+
+            var prev_tingkat = $('#prev_tingkat_id').val();
+            var next_tingkat = $('#next_tingkat_id').val();
+
+            var prev_kelas = $('#prev_kelas_id').val();
+            var next_kelas = $('#next_kelas_id').val();
+            if((prev_tingkat == next_tingkat) || (prev_kelas == next_kelas)){
+                
+                Swal.fire({
+                    icon: 'warning',
+                    title: "Gagal!",
+                    text:  "Tingkat/Kelas Sebelum dan Tingkat/Kelas Baru Harus Berbeda!",
+                    showCloseButton: true,
+                    type: "warning",
+                    timer: 2500,
+                    showConfirmButton: false
+                })
+                return false
+            }
+            return
         }
     </script>
     @endpush
