@@ -174,6 +174,9 @@ function UploadBatchSiswa() {
                                             Kelas
                                         </th>
                                         <th width="15%">
+                                            Tahun Ajaran
+                                        </th>
+                                        <th width="15%">
                                             Email
                                         </th>
                                         <th width="5%">
@@ -190,9 +193,10 @@ function UploadBatchSiswa() {
                                     let jenjangCol = item.C;
                                     let tingkatCol = item.D;
                                     let kelasCol = item.E ? item.E : '-';
-                                    let usernameCol = item.F ? item.F : '-';
-                                    let passwordCol = item.G;
-                                    let emailCol = item.H;
+                                    let tahunAjaranCol = item.F ? item.F : '-';
+                                    let usernameCol = item.G ? item.G : '-';
+                                    let passwordCol = item.H;
+                                    let emailCol = item.I;
 
                                     return <tr key={index}>
                                         <td>
@@ -206,6 +210,9 @@ function UploadBatchSiswa() {
                                         </td>
                                         <td>
                                             {tingkatCol} {kelasCol}
+                                        </td>
+                                        <td>
+                                            {tahunAjaranCol}
                                         </td>
                                         {/* <td>
                                             <select className="form-control" onChange={(event) => {

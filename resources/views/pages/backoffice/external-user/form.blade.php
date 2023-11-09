@@ -32,7 +32,9 @@
         </div>
     </div>
     <!-- End dropdown kelas -->
+    <x-input.text :label="__('Tahun Ajaran')" name="tahun_ajaran" :data="$data" required />
     @endif
+
 
     <x-input.text :label="__('Username')" name="username" :data="$data" required />
     @if(empty(@$data['password']))

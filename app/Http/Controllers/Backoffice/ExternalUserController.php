@@ -260,7 +260,7 @@ class ExternalUserController extends Controller
             ]);
         }
 
-        $input = $request->all();
+        $input = $request->except(['tahun_ajaran']);
         $input['password'] = Hash::make($input['password']);
         $input['status'] = "AKTIF";
         $input['email_verified_at'] = now();
@@ -301,6 +301,12 @@ class ExternalUserController extends Controller
                     $guruUploader->mataPelajarans()->sync($request->mapel);
                 }
             }
+        }else if(@$request->role === "SISWA"){
+            KelasSiswa::create([
+                'kelas_id' => $request->kelas_id,
+                'siswa_id' => $user->id,
+                'tahun_ajaran' => (string) $request->tahun_ajaran
+            ]);
         }
 
         return redirect()->route($this->routePath . '.index', ['role' => $request->role])->with(
@@ -319,6 +325,16 @@ class ExternalUserController extends Controller
         $dt = ExternalUser::with('kelas')->findOrFail($id);
         $tingkatList = $this->getTingkat();
         $mapelList = $this->getMataPelajaran($id);
+
+        $dt['tahun_ajaran'] = "";
+        $current_class = KelasSiswa::where([
+            'siswa_id' => $id,
+            'is_current' => 1
+        ])->first();
+
+        if($current_class != null){
+            $dt['tahun_ajaran'] = $current_class->tahun_ajaran;
+        }
 
         $mapelIDS = [];
         foreach ($dt->mataPelajarans as $mapel) {
@@ -350,7 +366,7 @@ class ExternalUserController extends Controller
             // 'phone' => 'required|unique:external_users,phone,'.$id,
         ]);
 
-        $input = $request->all();
+        $input = $request->except(['tahun_ajaran']);
         if (!empty($input['password'])) {
             $input['password'] = Hash::make($input['password']);
         } else {
@@ -417,6 +433,30 @@ class ExternalUserController extends Controller
                     // guru
                     $user->mataPelajarans()->sync($request->mapel);
                 }
+            }
+        }else if(@$request->role === "SISWA"){
+            $current_class = KelasSiswa::where([
+                'siswa_id' => $id,
+                'is_current' => 1
+            ])->first();
+
+            if($current_class != null){
+                if($current_class->kelas_id == $user->kelas_id){
+                    $current_class->update(['tahun_ajaran' => $request->tahun_ajaran]);
+                }else{
+                    KelasSiswa::create([
+                        'kelas_id' => $user->kelas_id,
+                        'siswa_id' => $user->id,
+                        'tahun_ajaran' => (string) $request->tahun_ajaran
+                    ]);
+                    $current_class->update(['is_current' => 0]);
+                }
+            }else{
+                KelasSiswa::create([
+                    'kelas_id' => $user->kelas_id,
+                    'siswa_id' => $user->id,
+                    'tahun_ajaran' => (string) $request->tahun_ajaran
+                ]);
             }
         }
 
@@ -501,9 +541,10 @@ class ExternalUserController extends Controller
                     $jenjang = $row["C"];
                     $tingkat = $row["D"];
                     $kelas = @$row["E"];
-                    $username = @$row["F"];
-                    $password = @$row["G"];
-                    $email = $row["H"];
+                    $tahun_ajaran = @$row["F"];
+                    $username = @$row["G"];
+                    $password = @$row["H"];
+                    $email = $row["I"];
 
                     // skip existing nis
                     if (ExternalUser::where('nis', $nis)->first() !== null) {
@@ -568,6 +609,13 @@ class ExternalUserController extends Controller
                     $input['email_verified_at'] = now();
 
                     $user = ExternalUser::create($input);
+                    
+                    KelasSiswa::create([
+                        'kelas_id' => $user->kelas_id,
+                        'siswa_id' => $user->id,
+                        'tahun_ajaran' => (string) $tahun_ajaran
+                    ]);
+                    
                 }
 
                 return $this->returnData([], "Data Berhasil Di Upload");
