@@ -1,3 +1,14 @@
+@props(['filterCol' => []])
+
+<style>
+    #filter-col{
+        margin-left: 1.3rem;
+    }
+    select.form-control{
+      width: 200px;
+    }
+</style>
+<div id="filter-col" class="row"></div>
 <table {{$attributes->merge(["class" => "datatable-serverside table datatable"])}}>
     <thead>
         <tr>
@@ -44,9 +55,41 @@
 
 @push('script')
 <script>
+    var filter_col = <?php echo json_encode($filterCol); ?>;
+    filter_col = JSON.parse("[" + filter_col + "]");
+
     $(document).ready(function () {
         const datatable = initDatatable('.datatable-serverside');
+        const datatableId = datatable.table().node().id;
 
+        datatable.on('init', function ( e, settings, json ) {
+            datatable.columns( filter_col ).every( function () {
+                var column = this;
+                var columnId = "div-filter-" + column.index();
+                var columnHeader = column.header().textContent;
+
+                $('<div id="' + columnId + '" class="form-group pr-3">\
+                    <label>'+ columnHeader +'</label>')
+                    .appendTo( $('#filter-col'));
+
+                var select = $('<select class="form-control"><option value="">All</option></select>')
+                    .appendTo( $('#'+ columnId +'') )
+                    .on( 'change', function () {
+                        var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+
+                        column
+                            .search( val ? '^'+val+'$' : '', true, false )
+                            .draw();
+                    });
+
+                column.data().unique().sort().each( function ( d, j ) {
+                    select.append('<option value="'+d+'">'+d+'</option>' )
+                });
+            });
+            
+        });
         function copyToClipboard(text) {
             if (window.clipboardData && window.clipboardData.setData) {
                 // Internet Explorer-specific code path to prevent textarea being shown while dialog is visible.

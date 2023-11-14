@@ -37,13 +37,12 @@ class MataPelajaranController extends Controller{
 
         // relation with tingkat
         $query = $query->with('tingkat.jenjang');
-
+        
         return datatables()
             ->of($query)
             ->filter(function ($query) use ($request) {
 
                 $search = @$request->search['value'];
-
                 if($search){
                     $query->where('name', 'LIKE', '%'.$search.'%');
 
@@ -84,6 +83,18 @@ class MataPelajaranController extends Controller{
                     "deleteRoute" => route($this->routePath.".destroy", $data->id),
                     "editRoute" => route($this->routePath.".edit", $data->id),
                 ]);
+            })
+            ->filterColumn('jenjang', function($query, $value) {
+                $value = preg_replace('/[^A-Za-z0-9]/', '', $value);
+                $query->orWhereHas('tingkat.jenjang', function($query2)use ( $value ){
+                    $query2->where('name', 'LIKE', '%'.$value.'%');
+                });
+            })
+            ->filterColumn('tingkat', function($query, $value) {
+                $value = preg_replace('/[^A-Za-z0-9]/', '', $value);
+                $query->orWhereHas('tingkat', function($query2)use ( $value ){
+                    $query2->where('name', 'LIKE', '%'.$value.'%');
+                });
             })
             ->order(function ($query) {
                 $query->orderBy('created_at', 'desc');

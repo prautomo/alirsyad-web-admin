@@ -32,7 +32,7 @@
       </div>
       <!-- tble -->
       <div class="">
-            <x-datatable>
+            <x-datatable.table :filterCol="__('2,3,4')">
                 {{--
                     data-* is same as option columns in datatable
                     https://datatables.net/reference/option/columns
@@ -44,7 +44,7 @@
                 <th data-data="tingkat">@lang("Tingkat")</th>
                 <th data-data="created_at">@lang("Created At")</th>
                 <th data-data="action" data-orderable="false" data-searchable="false">@lang("Action")</th>
-            </x-datatable>
+            </x-datatable.table>
         </div>
       <!-- endtble -->
     </div>
