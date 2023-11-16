@@ -49,7 +49,7 @@ class ExternalUserController extends Controller
         $isPengunjung = $request->is_pengunjung;
         $query = ExternalUser::query();
         // relation with kelas and tingkat
-        $query = $query->with(['kelas.tingkat.jenjang', 'mataPelajarans', 'jenjang', 'classHistory']);
+        $query = $query->with(['kelas.tingkat.jenjang', 'mataPelajarans', 'jenjang', 'classHistory'])->select('external_users.*');
         
         if (!empty($role)) {
             $query = $query->where('role', $role);
@@ -107,16 +107,19 @@ class ExternalUserController extends Controller
                 ]);
             })
             ->addColumn('mengajar', function ($data) {
-                $mapels = $data->mataPelajarans;
+                if($data->role == 'GURU'){
+                    $mapels = $data->mataPelajarans;
 
-                $m = [];
-                foreach ($mapels as $value) {
-                    $m[] = $value->name . " (" . @$value->tingkat->name . " " . @$value->tingkat->jenjang->name . ")";
+                    $m = [];
+                    foreach ($mapels as $value) {
+                        $m[] = $value->name . " (" . @$value->tingkat->name . " " . @$value->tingkat->jenjang->name . ")";
+                    }
+    
+                    return view("components.datatable.wrapText", [
+                        "text" => (implode(', ', $m)),
+                    ]);
                 }
-
-                return view("components.datatable.wrapText", [
-                    "text" => (implode(', ', $m)),
-                ]);
+                return "";
             })
             ->addColumn("created_at", function ($data) {
                 $createdAt = new Carbon($data->created_at);
@@ -145,10 +148,30 @@ class ExternalUserController extends Controller
                 }
 
                 return view("components.datatable.actions", $actions);
+            })
+            ->filterColumn('mengajar', function($query, $value) {
+                $value = preg_replace('/[^\p{L}\p{N}\s]/u', '', $value);
+                // format eg: Tematik 1 SD -> value[0] = mapel, value[1] = tingkat, value[2] = jenjang
+                $value = explode(" ", $value);
+                $query->orWhereHas('mataPelajarans', function ($query2) use ($value) {
+                    $query2->where('name', '=',  $value[0])
+                        ->whereHas('tingkat', function ($query2) use ($value) {
+                            $query2->where('name', '=',  $value[1]);
+                        })
+                        ->whereHas('tingkat.jenjang', function ($query2) use ($value) {
+                            $query2->where('name', '=',  $value[2]);
+                        });
+                });
+            })
+            ->filterColumn('tahun_ajaran', function($query, $value) {
+                $value = preg_replace('/[^A-Za-z0-9]/', '', $value);
+                $query = $query->orWhereHas('classHistory', function($query2) use ( $value ){
+                    $query2->where('is_current', 1)->where('tahun_ajaran', 'LIKE', '%'. $value. '%');
+                });
             });
 
         $dt = $dt->order(function ($query) {
-            $query->orderBy('created_at', 'desc');
+            $query->orderBy('external_users.created_at', 'desc');
         })->toJson();
 
         return $dt;

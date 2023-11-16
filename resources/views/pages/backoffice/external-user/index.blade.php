@@ -42,7 +42,20 @@
       </div>
       <!-- tble -->
         <div class="">
-            <x-datatable>
+          
+            @php
+              $col_to_filter = "";
+              $is_multiple_col = "";
+              if(\Request::get('role') == "GURU"){
+                $col_to_filter = "3";
+                $is_multiple_col = "1";
+              }else if(\Request::get('role') == "SISWA"){
+                $col_to_filter = "6,5,4,3";
+                $is_multiple_col = "0,0,0,0";
+              }
+            @endphp
+            <p></p>
+            <x-datatable.table :filterCol="__($col_to_filter)" :isMultiple="__($is_multiple_col)">
                 {{--
                     data-* is same as option columns in datatable
                     https://datatables.net/reference/option/columns
@@ -67,7 +80,7 @@
                 @endif
                 <th data-data="show-status">@lang("Status")</th>
                 <th data-data="action" data-orderable="false" data-searchable="false">@lang("Action")</th>
-            </x-datatable>
+            </x-datatable.table>
         </div>
       <!-- endtble -->
     </div>

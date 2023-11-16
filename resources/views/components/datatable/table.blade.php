@@ -1,11 +1,26 @@
-@props(['filterCol' => []])
+@props(['filterCol' => [], 'isMultiple' => []])
 
 <style>
-    #filter-col{
-        margin-left: 1.3rem;
+    .form-group{
+      display: inline-block;
+      text-align: left;
     }
+
     select.form-control{
-      width: 200px;
+      width: 10rem;
+      height: calc(1.5em + 1.25rem + 5px);
+    }
+
+    label{
+        font-size: 10.8pt;
+        text-align: left;
+        margin-bottom: 0;
+        color: #525f7f;
+    }
+
+    .dataTables_filter{
+        width: 180%;
+        text-align: right;
     }
 </style>
 <div id="filter-col" class="row"></div>
@@ -55,8 +70,13 @@
 
 @push('script')
 <script>
+    // filterCol = idx of column that able to filter, isMultiple = consider if its multiple value or not
     var filter_col = <?php echo json_encode($filterCol); ?>;
+    var is_multiple = <?php echo json_encode($isMultiple); ?>;
+    var idx_loop = 0;
+
     filter_col = JSON.parse("[" + filter_col + "]");
+    is_multiple = JSON.parse("[" + is_multiple + "]");
 
     $(document).ready(function () {
         const datatable = initDatatable('.datatable-serverside');
@@ -69,10 +89,10 @@
                 var columnHeader = column.header().textContent;
 
                 $('<div id="' + columnId + '" class="form-group pr-3">\
-                    <label>'+ columnHeader +'</label>')
+                    <label>'+ columnHeader +':</label>')
                     .appendTo( $('#filter-col'));
 
-                var select = $('<select class="form-control"><option value="">All</option></select>')
+                var select = $('<select id="select-'+ columnId +'"class="form-control"><option value="">All</option></select>')
                     .appendTo( $('#'+ columnId +'') )
                     .on( 'change', function () {
                         var val = $.fn.dataTable.util.escapeRegex(
@@ -84,9 +104,24 @@
                             .draw();
                     });
 
+                var all_options = []
                 column.data().unique().sort().each( function ( d, j ) {
-                    select.append('<option value="'+d+'">'+d+'</option>' )
+                    d = d.replace(/<[^>]*>?/gm, '')
+                    if(is_multiple[idx_loop] == 1){
+                        var list_options = d.split(', ');
+                        list_options.forEach(element => {
+                            if(all_options.indexOf(element) == -1){
+                                select.append('<option value="'+element+'">'+element+'</option>' )
+                                all_options.push(element)
+                            }
+                        });
+                    }else{
+                        select.append('<option value="'+d+'">'+d+'</option>' )
+                    }
                 });
+
+                $("#"+ datatableId +"_filter.dataTables_filter").prepend($("#" + columnId));
+                idx_loop++;
             });
             
         });
