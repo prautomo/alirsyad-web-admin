@@ -54,8 +54,10 @@ class UpdateController extends BaseController
             
             //needs from ios, set modul_id as 0 if its null
             $updates = $updates->get()->map(function ($update, $key) {
-                if ($update->video->modul_id == null) {
-                    $update->video->modul_id = 0;
+                if($update->video != null){
+                    if ($update->video->modul_id == null) {
+                        $update->video->modul_id = 0;
+                    }
                 }
                 return $update;
             });
@@ -93,8 +95,10 @@ class UpdateController extends BaseController
             
             //needs from ios, set modul_id as 0 if its null
             $updates = $updates->get()->map(function ($update, $key) {
-                if ($update->video->modul_id == null) {
-                    $update->video->modul_id = 0;
+                if($update->video != null){
+                    if ($update->video->modul_id == null) {
+                        $update->video->modul_id = 0;
+                    }
                 }
                 return $update;
             });
