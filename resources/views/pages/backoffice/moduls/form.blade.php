@@ -47,6 +47,25 @@
         </div>
     </div>
 
+    <!-- Visibilitas Materi --> 
+    <div class="col-md-12">
+        <div class="form-group">
+            <label class="form-control-label" for="input-isVisible">Visibilitas Materi</label>
+
+            <select id="isVisible" name="is_visible" class="form-control {{($errors->has('isVisible') ? ' is-invalid' : '')}}">
+                <option value="0" {{ @$data->is_visible==0 ? "selected " : "" }}>Sembunyikan</option>
+                <option value="1" {{ @$data ? (@$data->is_visible== 1 ? "selected " : "") : "selected"}}>Tampilkan</option>
+            </select>
+
+            @if($errors->has('isVisible'))
+            <div class="invalid-feedback">
+                <i class="fa fa-exclamation-circle fa-fw"></i> {{ $errors->first('isVisible') }}
+            </div>
+            @endif
+        </div>
+    </div>
+    <!-- END Visibilitas Materi -->
+
     <x-input.images :label="__('Upload Cover Update')" wrapId="coverUpdate" name="cover_update" :data="@$update" :default="@$update->logo ? asset(@$update->logo) : asset('images/placeholder.png')" required />
 
     <div class="col-xs-12 col-sm-12 col-md-12 text-right">

@@ -13,7 +13,7 @@ class PaketSoalController extends BaseController
     public function index(Request $request)
     {
         $result_list_bab = [];
-        $list_bab = Modul::where('mata_pelajaran_id', $request->mata_pelajaran_id)->has('paket_soals')->get();
+        $list_bab = Modul::where(['is_visible' => 1, 'mata_pelajaran_id' => $request->mata_pelajaran_id])->has('paket_soals')->get();
 
         foreach($list_bab as $bab){
             $obj_bab = [
@@ -34,7 +34,7 @@ class PaketSoalController extends BaseController
 
     public function all_paket_soal(Request $request)
     {
-        $result_list_bab = PaketSoal::where('mata_pelajaran_id', $request->mata_pelajaran_id)->get();
+        $result_list_bab = PaketSoal::where(['is_visible' => 1, 'mata_pelajaran_id' => $request->mata_pelajaran_id])->get();
         return $this->sendResponse($result_list_bab, 'Paket soal retrieved successfully.');
     }
 }

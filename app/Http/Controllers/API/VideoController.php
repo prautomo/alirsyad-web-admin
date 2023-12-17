@@ -25,7 +25,7 @@ class VideoController extends BaseController
 
         // $datas = Video::search($request);
         // $datas = $datas->with('uploader', 'mataPelajaran');
-        $datas = Video::with('uploader', 'mataPelajaran');
+        $datas = Video::with('uploader', 'mataPelajaran')->where(['is_visible' => 1]);
         // // handle hak akses mapel
         // $datas = $datas->whereHas('mataPelajaran.tingkat', function($query) use ($user){
         //     if(@Auth::user()->role==="SISWA"){
@@ -70,7 +70,7 @@ class VideoController extends BaseController
     {
         $user = @Auth::user();
 
-        $data = Video::with('mataPelajaran.tingkat.jenjang');
+        $data = Video::with('mataPelajaran.tingkat.jenjang')->where(['is_visible' => 1]);
 
         // // handle hak akses mapel
         // $data = $data->whereHas('mataPelajaran.tingkat', function($query) use($user){

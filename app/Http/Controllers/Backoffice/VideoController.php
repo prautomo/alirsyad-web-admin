@@ -268,7 +268,7 @@ class VideoController extends Controller
         // default image
         $url = "images/placeholder.png";
         // temp request
-        $dataReq = $request->only(['name', 'video_url', 'icon', 'description', 'modul_id', 'mata_pelajaran_id', 'semester', 'urutan', 'visible']);
+        $dataReq = $request->only(['name', 'video_url', 'icon', 'description', 'modul_id', 'mata_pelajaran_id', 'semester', 'urutan', 'visible', 'is_visible']);
 
         $dataReq['visible'] = @$request->visible == "ya" ? 1 : 0;
 
@@ -354,7 +354,7 @@ class VideoController extends Controller
             ]);
         }
 
-        $dataReq = $request->only(['name', 'video_url', 'icon', 'description', 'modul_id', 'mata_pelajaran_id', 'semester', 'urutan', 'visible']);
+        $dataReq = $request->only(['name', 'video_url', 'icon', 'description', 'modul_id', 'mata_pelajaran_id', 'semester', 'urutan', 'visible', 'is_visible']);
 
         $dataReq['visible'] = @$request->visible == "ya" ? 1 : 0;
 

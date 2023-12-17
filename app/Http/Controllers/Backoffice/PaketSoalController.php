@@ -7,6 +7,7 @@ use App\Models\MataPelajaran;
 use App\Models\Modul;
 use App\Models\PaketSoal;
 use App\Models\Soal;
+use App\Models\UploaderMataPelajaran;
 use Illuminate\Http\Request;
 use DB;
 use Auth;
@@ -30,6 +31,12 @@ class PaketSoalController extends Controller
      */
     public function datatable(Request $request){
         $query = PaketSoal::query();
+
+        // filter if its guru uploader
+        if (!@\Auth::user()->hasRole('Superadmin')) {
+            $mapelIdsUser = $this->getMapelIdsUser();
+            $query = $query->whereIn('mata_pelajaran_id', $mapelIdsUser);
+        }
 
         $datas = $query->select('*');
 
@@ -102,6 +109,15 @@ class PaketSoalController extends Controller
         }
 
         return view($this->prefix.'.index');
+    }
+
+    private function getMapelIdsUser()
+    {
+        $userId = @\Auth::user()->id;
+        $mapelIdsUser = UploaderMataPelajaran::where('guru_uploader_id', $userId)->pluck('mata_pelajaran_id')->all();
+        $mapelIdsUser = count($mapelIdsUser) > 0 ? $mapelIdsUser : [];
+
+        return $mapelIdsUser;
     }
 
     /**
@@ -215,7 +231,7 @@ class PaketSoalController extends Controller
 
     public function store(Request $request)
     {
-        $newLatihanSoal = $request->only(['mata_pelajaran_id', 'tingkat_kesulitan', 'subbab', 'judul_subbab', 'jumlah_publish', 'nilai_kkm']);
+        $newLatihanSoal = $request->only(['mata_pelajaran_id', 'tingkat_kesulitan', 'subbab', 'judul_subbab', 'jumlah_publish', 'nilai_kkm', 'is_visible']);
         $newLatihanSoal['bab_id'] = $request->bab[0];
 
         $storeLatihanSoal = PaketSoal::create($newLatihanSoal);
@@ -248,7 +264,7 @@ class PaketSoalController extends Controller
 
     public function update(Request $request, $id){
 
-        $dataReq = $request->only(['mata_pelajaran_id', 'tingkat_kesulitan', 'subbab', 'judul_subbab', 'jumlah_publish', 'nilai_kkm']);
+        $dataReq = $request->only(['mata_pelajaran_id', 'tingkat_kesulitan', 'subbab', 'judul_subbab', 'jumlah_publish', 'nilai_kkm', 'is_visible']);
         $dataReq['bab_id'] = $request->bab[0];
 
         $dt = PaketSoal::findOrFail($id);

@@ -30,7 +30,8 @@ class Video extends Model
         'semester',
         'urutan',
         'modul_id',
-        'visible',
+        'visible', // tampilkan video
+        'is_visible', // visibilitas materi
     ];
 
     /**
