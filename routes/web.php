@@ -109,3 +109,8 @@ Route::get('/clear-cache', function () {
 Route::get('api/docs', function (){
     return view('swagger.index');
 });
+
+//Route privacy policy
+Route::get('/privacy-policy', function (){
+    return view('privacy-policy.index');
+});
