@@ -42,8 +42,10 @@
                 <th data-data="subbab">@lang("Subbab")</th>
                 <th data-data="judul_subbab">@lang("Judul Subbab")</th>
                 <th data-data="mapel">@lang("Mata Pelajaran")</th>
+                <th data-data="tingkat">@lang("Tingkat")</th>
                 <th data-data="tingkat_kesulitan">@lang("Tingkat Kesulitan")</th>
                 <th data-data="jumlah_soal">@lang("Jumlah Soal")</th>
+                <th data-data="jumlah_publish">@lang("Jumlah Publish")</th>
                 <!-- <th data-data="created_at">@lang("Created At")</th> -->
                 <th data-data="action" data-orderable="false" data-searchable="false">@lang("Action")</th>
             </x-datatable>

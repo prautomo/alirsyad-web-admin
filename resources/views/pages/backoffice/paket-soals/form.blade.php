@@ -1,4 +1,13 @@
 @csrf
+@if ($message = Session::get('failed'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <span class="alert-text"><strong>Gagal!</strong> {{ $message }}</span>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">×</span>
+    </button>
+    </div>
+@endif
+
 <div class="row">
     <x-input.select :label="__('Mata Pelajaran')" id="mata_pelajaran_id" name="mata_pelajaran_id" :sources="$mapelList" :data="$data" onchange="clickMapel(this)" required />
 

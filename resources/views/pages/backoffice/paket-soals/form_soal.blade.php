@@ -8,8 +8,6 @@
     <x-input.textarea :label="__('Pilihan 5')" id="pilihan_e" name="pilihan_e" :data="$data" :placeholder="__('Black')" required />
 
     <x-input.select :label="__('Jawaban Benar')" id="jawaban" name="jawaban" :sources="$listJawabanBenar" :data="$data" required />
-
-    <x-input.text :label="__('Sumber')" id="sumber" name="sumber" :data="$data" :placeholder="__('Wikipedia')" />
     
     <div class="col-md-12">
         <div class="form-group">

@@ -61,6 +61,9 @@ class PaketSoalController extends Controller
             ->addColumn('jumlah_soal', function($data) {
                 return count(@$data->soals);
             })
+            ->addColumn('tingkat', function($data) {
+                return @$data->mataPelajaran->tingkat->name;
+            })
             ->addColumn("mapel", function ($data) {
                 $mapel = @$data->mataPelajaran->name ? $data->mataPelajaran->name : 'none';
                 $mapelID = @$data->mataPelajaran->id ? $data->mataPelajaran->id : '';
@@ -233,6 +236,12 @@ class PaketSoalController extends Controller
     {
         $newLatihanSoal = $request->only(['mata_pelajaran_id', 'tingkat_kesulitan', 'subbab', 'judul_subbab', 'jumlah_publish', 'nilai_kkm', 'is_visible']);
         $newLatihanSoal['bab_id'] = $request->bab[0];
+        
+        if($newLatihanSoal['nilai_kkm'] > $newLatihanSoal['jumlah_publish']){
+            return redirect()->back()
+                        ->withInput()
+                        ->with('failed','Jumlah KKM tidak boleh melebihi jumlah publish.');
+        }
 
         $storeLatihanSoal = PaketSoal::create($newLatihanSoal);
 
@@ -266,6 +275,12 @@ class PaketSoalController extends Controller
 
         $dataReq = $request->only(['mata_pelajaran_id', 'tingkat_kesulitan', 'subbab', 'judul_subbab', 'jumlah_publish', 'nilai_kkm', 'is_visible']);
         $dataReq['bab_id'] = $request->bab[0];
+
+        if($dataReq['nilai_kkm'] > $dataReq['jumlah_publish']){
+            return redirect()->back()
+                        ->withInput()
+                        ->with('failed','Jumlah KKM tidak boleh melebihi jumlah publish.');
+        }
 
         $dt = PaketSoal::findOrFail($id);
         $dt->update($dataReq);
@@ -505,7 +520,7 @@ class PaketSoalController extends Controller
         //     $soal_contain_img = trim($soal_contain_img, " \t\n\r\0\x0B\xC2\xA0");
         //     $newLatihanSoal['soal'] = $soal_contain_img;
         // }
-        $newLatihanSoal = $request->only(['soal', 'pilihan_a', 'pilihan_b', 'pilihan_c', 'pilihan_d', 'pilihan_e', 'jawaban', 'sumber', 'pembahasan_option', 'link_pembahasan', 'pembahasan']);
+        $newLatihanSoal = $request->only(['soal', 'pilihan_a', 'pilihan_b', 'pilihan_c', 'pilihan_d', 'pilihan_e', 'jawaban', 'pembahasan_option', 'link_pembahasan', 'pembahasan']);
         $newLatihanSoal['paket_soal_id'] = $id;
 
         switch($newLatihanSoal['pembahasan_option']){
@@ -550,7 +565,7 @@ class PaketSoalController extends Controller
 
     public function updateSoal(Request $request, $paketId, $id){
 
-        $dataReq = $request->only(['soal', 'pilihan_a', 'pilihan_b', 'pilihan_c', 'pilihan_d', 'pilihan_e', 'jawaban', 'sumber', 'pembahasan_option', 'link_pembahasan', 'pembahasan']);
+        $dataReq = $request->only(['soal', 'pilihan_a', 'pilihan_b', 'pilihan_c', 'pilihan_d', 'pilihan_e', 'jawaban', 'pembahasan_option', 'link_pembahasan', 'pembahasan']);
 
         switch($dataReq['pembahasan_option']){
             case 0:

@@ -22,6 +22,11 @@
         width: 180%;
         text-align: right;
     }
+
+    #ps-pembahasan-value{
+        max-height: 25vh;
+        overflow: auto;
+    }
 </style>
 <div id="filter-col" class="row"></div>
 <table {{$attributes->merge(["class" => "datatable-serverside table datatable"])}}>
@@ -222,12 +227,18 @@
             event.preventDefault();
             const soal = $(this).data("soal");
 
+            console.log('soalll', soal)
             $('#ps-soal-value').html(soal.soal);
             $('#ps-pilihan1-value').html(soal.pilihan_a);
             $('#ps-pilihan2-value').html(soal.pilihan_b);
             $('#ps-pilihan3-value').html(soal.pilihan_c);
             $('#ps-pilihan4-value').html(soal.pilihan_d);
             $('#ps-pilihan5-value').html(soal.pilihan_e);
+            $('#ps-pembahasan-value').html(soal.pembahasan);
+
+            if(soal.pembahasan == null && soal.link_pembahasan != null){
+                $('#ps-pembahasan-value').append(`<a href="${soal.link_pembahasan}" target="_blank">${soal.link_pembahasan}</a>`);
+            }
 
             let jawaban = "Pilihan E";
             switch (soal.jawaban) {
@@ -255,6 +266,7 @@
                 MathJax.typeset([$("#ps-pilihan4-value")[0]]);
                 MathJax.typeset([$("#ps-pilihan5-value")[0]]);
                 MathJax.typeset([$("#ps-jawaban-value")[0]]);
+                MathJax.typeset([$("#ps-pembahasan-value")[0]]);
             })
         });
 
@@ -502,6 +514,8 @@
                 <div id="ps-pilihan5-value">-</div>
                 <h2 class="font-weight-bold">Jawaban :</h2>
                 <div id="ps-jawaban-value">-</div>
+                <h2 class="font-weight-bold mt-3">Pembahasan :</h2>
+                <div id="ps-pembahasan-value">-</div>
             </div>
         </div>
       </div>

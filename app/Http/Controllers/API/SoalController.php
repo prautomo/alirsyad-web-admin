@@ -204,8 +204,11 @@ class SoalController extends BaseController
                     'tingkat_kesulitan' => 'sedang',
                 ])->first();
                 if ($get_paket_soal) {
-                    $next_paket_soal_id = $get_paket_soal->id;
-                    $next_tingkat_kesulitan = 'sedang';
+                    $count_soal = Soal::where(['paket_soal_id' => $get_paket_soal->id])->count();
+                    if($count_soal >= $get_paket_soal->jumlah_publish){
+                        $next_paket_soal_id = $get_paket_soal->id;
+                        $next_tingkat_kesulitan = 'sedang';
+                    }
                 }
                 break;
             case 'sedang':
@@ -216,8 +219,11 @@ class SoalController extends BaseController
                     'tingkat_kesulitan' => 'sulit',
                 ])->first();
                 if ($get_paket_soal) {
-                    $next_paket_soal_id = $get_paket_soal->id;
-                    $next_tingkat_kesulitan = 'sulit';
+                    $count_soal = Soal::where(['paket_soal_id' => $get_paket_soal->id])->count();
+                    if($count_soal >= $get_paket_soal->jumlah_publish){
+                        $next_paket_soal_id = $get_paket_soal->id;
+                        $next_tingkat_kesulitan = 'sulit';
+                    }
                 }
                 break;
             case 'sulit':
