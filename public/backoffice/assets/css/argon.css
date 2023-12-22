@@ -23821,6 +23821,8 @@ textarea[resize='horizontal']
 {
     padding-right: 1.5rem; 
     padding-left: 1.5rem;
+    max-width: 300px;
+    overflow: hidden;
 }
 
 .table .custom-toggle

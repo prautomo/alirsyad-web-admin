@@ -49,9 +49,12 @@
               if(\Request::get('role') == "GURU"){
                 $col_to_filter = "3";
                 $is_multiple_col = "1";
-              }else if(\Request::get('role') == "SISWA"){
+              }else if(\Request::get('role') == "SISWA" && \Request::get('is_pengunjung') == 0){
                 $col_to_filter = "6,5,4,3";
                 $is_multiple_col = "0,0,0,0";
+              }else if(\Request::get('role') == "SISWA" && \Request::get('is_pengunjung') == 1){
+                $col_to_filter = "3";
+                $is_multiple_col = "0";
               }
             @endphp
             <p></p>

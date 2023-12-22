@@ -110,8 +110,14 @@
                     });
 
                 var all_options = []
+                
+                console.log(column.data())
                 column.data().unique().sort().each( function ( d, j ) {
                     d = d.replace(/<[^>]*>?/gm, '')
+                    if(d == ''){
+                        return true;
+                    }
+
                     if(is_multiple[idx_loop] == 1){
                         var list_options = d.split(', ');
                         list_options.forEach(element => {
