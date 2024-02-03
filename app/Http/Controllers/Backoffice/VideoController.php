@@ -131,6 +131,9 @@ class VideoController extends Controller
             ->addColumn("created_by", function ($data) {
                 return @$data->uploader->name ?? "-";
             })
+            ->addColumn("visibilitas", function ($data) {
+                return @$data->is_visible ? 'Tampilkan': 'Sembunyikan';
+            })
             ->addColumn("action", function ($data) {
                 $relModul = @$data->modul->slug ? "?rel=modul/" . @$data->modul->slug . ".html" : "";
                 $url_userdev = "https://userdev.alirsyadbandung.sch.id/";

@@ -24,6 +24,7 @@ class PaketSoalController extends BaseController
                     'bab_id' => $bab->id,
                     'tingkat_kesulitan' => 'mudah',
                     'is_active' => 1,
+                    'is_visible' => 1
                 ])->get()
             ];
             array_push($result_list_bab, $obj_bab);

@@ -89,6 +89,9 @@ class PaketSoalController extends Controller
                 }
                 return $tingkatKesulitan;
             })
+            ->addColumn("visibilitas", function ($data) {
+                return @$data->is_visible ? 'Tampilkan': 'Sembunyikan';
+            })
             ->addColumn("action", function ($data) {
                 return view("components.datatable.actions", [
                     "subbab" => $data->subbab,
