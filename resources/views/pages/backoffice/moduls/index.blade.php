@@ -32,7 +32,7 @@
       </div>
       <!-- tble -->
       <div class="">
-            <x-datatable.table :filterCol="__('4,3,2')" :isMultiple="__('0,0,0')">
+            <x-datatable.table :filterCol="__('7,4,3,2')" :isMultiple="__('0,0,0,0')">
                 {{--
                     data-* is same as option columns in datatable
                     https://datatables.net/reference/option/columns
@@ -44,6 +44,8 @@
                 <th data-data="jenjang">@lang("Jenjang")</th>
                 <th data-data="tingkat">@lang("Tingkat")</th>
                 <th data-data="semester">@lang("Semester")</th>
+                <th data-data="urutan">@lang("Urutan")</th>
+                <th data-data="visibilitas">@lang("Visibilitas")</th>
                 <th data-data="created_by">@lang("Created By")</th>
                 <!-- <th data-data="created_at">@lang("Created At")</th> -->
                 <th data-data="action" data-orderable="false" data-searchable="false">@lang("Action")</th>

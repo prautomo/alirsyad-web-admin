@@ -140,7 +140,9 @@
     });
 
     $(document).ready(function() {
-        var bab = <?php echo json_encode($groupBabList); ?>
+        var bab = <?php echo json_encode($groupBabList); ?>;
+        var data = <?php echo json_encode(@$data); ?>;
+
 
         $('#bab').prop('disabled', false);
 
@@ -149,6 +151,9 @@
         var bab_show = bab.filter(function (bab) {
             return bab.text == mata_pelajaran;
         });
+
+        console.log('bab show', bab_show)
+        console.log('data', data)
 
         $('#bab').empty();
 
@@ -159,6 +164,10 @@
             data: bab_show,
             theme: "classic",
         });
+
+        if(data != null){
+            s2.val(data.bab_id).trigger('change');
+        }
     });
 
 </script>

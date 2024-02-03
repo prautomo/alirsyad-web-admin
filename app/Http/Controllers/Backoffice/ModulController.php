@@ -112,6 +112,9 @@ class ModulController extends Controller
             ->addColumn("created_by", function ($data) {
                 return @$data->uploader->name ?? "-";
             })
+            ->addColumn("visibilitas", function ($data) {
+                return @$data->is_visible ? 'Tampilkan': 'Sembunyikan';
+            })
             ->addColumn("action", function ($data) {
                 return view("components.datatable.actions", [
                     "name" => $data->name,

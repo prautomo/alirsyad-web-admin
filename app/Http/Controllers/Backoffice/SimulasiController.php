@@ -120,6 +120,9 @@ class SimulasiController extends Controller{
 
                 return $createdAt->format("d-m-Y H:i:s");
             })
+            ->addColumn("visibilitas", function ($data) {
+                return @$data->is_visible ? 'Tampilkan': 'Sembunyikan';
+            })
             ->addColumn("action", function ($data) {
                 $relModul = @$data->modul->slug ? "?rel=modul/".@$data->modul->slug.".html" : "";
                 $url_userdev = "https://userdev.alirsyadbandung.sch.id/";
