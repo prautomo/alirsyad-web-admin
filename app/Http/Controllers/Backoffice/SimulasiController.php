@@ -120,6 +120,9 @@ class SimulasiController extends Controller{
 
                 return $createdAt->format("d-m-Y H:i:s");
             })
+            ->addColumn("visibilitas", function ($data) {
+                return @$data->is_visible ? 'Tampilkan': 'Sembunyikan';
+            })
             ->addColumn("action", function ($data) {
                 $relModul = @$data->modul->slug ? "?rel=modul/".@$data->modul->slug.".html" : "";
                 $url_userdev = "https://user.alirsyadbandung.sch.id/";
@@ -233,7 +236,7 @@ class SimulasiController extends Controller{
         // default image
         $url = "images/placeholder.png";
         // temp request
-        $dataReq = $request->only(['name', 'icon', 'description', 'modul_id', 'semester', 'urutan', 'level']);
+        $dataReq = $request->only(['name', 'icon', 'description', 'modul_id', 'semester', 'urutan', 'level', 'is_visible']);
         $dataReq['uploader_id'] = \Auth::user()->id;
 
         if ($request->hasFile('icon')) {
@@ -302,7 +305,7 @@ class SimulasiController extends Controller{
             'level' => 'required|numeric|min:1',
         ]);
 
-        $dataReq = $request->only(['name', 'icon', 'description', 'modul_id', 'slug', 'semester', 'urutan', 'level']);
+        $dataReq = $request->only(['name', 'icon', 'description', 'modul_id', 'slug', 'semester', 'urutan', 'level', 'is_visible']);
 
         if ($request->hasFile('icon')) {
             $validated = $request->validate([

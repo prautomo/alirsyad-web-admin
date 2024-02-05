@@ -8,11 +8,23 @@
     <x-input.textarea :label="__('Pilihan 5')" id="pilihan_e" name="pilihan_e" :data="$data" :placeholder="__('Black')" required />
 
     <x-input.select :label="__('Jawaban Benar')" id="jawaban" name="jawaban" :sources="$listJawabanBenar" :data="$data" required />
+    
+    <div class="col-md-12">
+        <div class="form-group">
+            <label class="form-control-label" for="input-pembahasan_option">Jenis Pembahasan</label>
 
-    <x-input.text :label="__('Sumber')" name="sumber" :data="$data" :placeholder="__('Wikipedia')" />
-    <x-input.text :label="__('Link Pembahasan')" name="link_pembahasan" :data="$data" :placeholder="__('http://sample.com/wiki')" />
-    <x-input.textarea :label="__('Pembahasan')" id="pembahasan" name="pembahasan" :data="$data" :placeholder="__('Lorem ipsum')" />
-
+            <select id="pembahasan_option" name="pembahasan_option" class="form-control {{($errors->has('pembahasan_option') ? ' is-invalid' : '')}}">
+                <option value="-1" selected>Pilih Jenis Pembahasan</option>
+                @foreach($pembahasanOption as $val => $label)
+                <option value="{{ $val }}" >{{ $label }}</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+    
+    <x-input.text :label="__('Link Video Pembahasan (Youtube)')" wrapId="linkPembahasan" name="link_pembahasan" :data="$data" :placeholder="__('https://www.youtube.com/watch?v=yAoLSRbwxL8&t=3s')" />
+    <x-input.textarea :label="__('Pembahasan')" wrapId="textPembahasan" id="pembahasan" name="pembahasan" :data="$data" :placeholder="__('Lorem ipsum')" />
+    
     <div class="col-xs-12 col-sm-12 col-md-12 text-right">
         <button type="submit" class="btn btn-sm btn-primary">@lang("Save")</button>
         <a href="{{route("backoffice::paket-soals.index-soal", $paketId)}}" class="btn btn-sm btn-secondary mr-2">@lang("Cancel")</a>
@@ -26,6 +38,42 @@
 
 @push('script')
 <script type="text/javascript">
+    $(document).ready(function() {
+
+        var videoPembahasan = $("#linkPembahasan");
+        videoPembahasan.hide();
+        
+        var textPembahasan = $("#textPembahasan");
+        textPembahasan.hide();
+        
+        @if(@$data->pembahasan != null)
+            $("#pembahasan_option option[value='1']").prop('selected',true);
+            textPembahasan.show();
+            videoPembahasan.hide();
+        @elseif(@$data->link_pembahasan != null)
+            $("#pembahasan_option option[value='0']").prop('selected',true);
+            textPembahasan.hide();
+            videoPembahasan.show();
+        @endif
+    });
+
+    $('select#pembahasan_option').on('change', function() {
+        var videoPembahasan = $("#linkPembahasan");
+        var textPembahasan = $("#textPembahasan");
+        
+        videoPembahasan.hide();
+        textPembahasan.hide();
+        if(this.value==0){
+            // show pembahasan video
+            videoPembahasan.show();
+            textPembahasan.hide();
+        }else if(this.value==1){
+            // hide upload cover update
+            videoPembahasan.hide();
+            textPembahasan.show();
+        }
+    });
+
     CKEDITOR.replace( 'soal', {
         filebrowserUploadUrl: "{{route('backoffice::upload.imageCKEditor', ['_token' => csrf_token() ])}}",
         filebrowserUploadMethod: 'form'

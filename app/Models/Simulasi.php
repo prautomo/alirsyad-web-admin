@@ -30,6 +30,7 @@ class Simulasi extends Model
         'urutan',
         'modul_id',
         'level',
+        'is_visible',
     ];
 
     public static function search($request)

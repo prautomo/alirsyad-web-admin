@@ -1,7 +1,7 @@
-@props(['name', 'label', 'value' => '', 'helper', 'data' => null, 'required'])
+@props(['name', 'label', 'value' => '', 'helper', 'data' => null, 'wrapId' => null, 'required'])
 
 <div class="col-md-12">
-    <div class="form-group">
+    <div class="form-group" id="{{@$wrapId}}">
         <label class="form-control-label" for="input-{{$name}}">{{$label}} {{@$required ? "(*)" : ""}}</label>
         <textarea id="{{$name}}" name="{{$name}}" placeholder="{{$label}}" {{ $attributes->merge(['class' => " form-control ". ($errors->has($name) ? ' is-invalid' : '')]) }}>{{old($name) ?? $data[$name] ?? $value ?? ''}}</textarea>
 

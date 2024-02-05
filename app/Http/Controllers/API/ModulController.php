@@ -27,7 +27,7 @@ class ModulController extends BaseController
 
         // $datas = Modul::search($request);
         // $datas = $datas->with('mataPelajaran');
-        $datas = Modul::with('mataPelajaran');
+        $datas = Modul::with('mataPelajaran')->where(['is_visible' => 1]);
 
         if (@$request->q_mata_pelajaran_id) {
             $datas = $datas->where('mata_pelajaran_id', $request->q_mata_pelajaran_id);
@@ -68,7 +68,7 @@ class ModulController extends BaseController
      */
     public function show($id)
     {
-        $data = Modul::with('mataPelajaran.tingkat.jenjang');
+        $data = Modul::with('mataPelajaran.tingkat.jenjang')->where(['is_visible' => 1]);
 
         $user = @Auth::user();
 

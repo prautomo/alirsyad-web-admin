@@ -101,13 +101,13 @@
                   </li>
                   @endcan
 
-                  @can('story-path-list')
+                  {{-- @can('story-path-list')
                   <li class="nav-item">
                     <a href="{{ route('backoffice::story-paths.index') }}" class="nav-link">
                       <span class="sidenav-normal"> Kelola Story Path </span>
                     </a>
                   </li>
-                  @endcan
+                  @endcan --}}
 
                   @can('paket-soal-list')
                   <li class="nav-item">

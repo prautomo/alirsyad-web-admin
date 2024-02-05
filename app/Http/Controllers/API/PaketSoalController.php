@@ -13,20 +13,25 @@ class PaketSoalController extends BaseController
     public function index(Request $request)
     {
         $result_list_bab = [];
-        $list_bab = Modul::where('mata_pelajaran_id', $request->mata_pelajaran_id)->has('paket_soals')->get();
+        $list_bab = Modul::where(['is_visible' => 1, 'mata_pelajaran_id' => $request->mata_pelajaran_id])->has('paket_soals')->get();
 
         foreach($list_bab as $bab){
-            $obj_bab = [
-                "id" => $bab->id,
-                "name" => $bab->name,
-                "icon" => $bab->icon,
-                "paket_soal" => PaketSoal::where([
-                    'bab_id' => $bab->id,
-                    'tingkat_kesulitan' => 'mudah',
-                    'is_active' => 1,
-                ])->get()
-            ];
-            array_push($result_list_bab, $obj_bab);
+            $paket_soals = PaketSoal::where([
+                'bab_id' => $bab->id,
+                'tingkat_kesulitan' => 'mudah',
+                'is_active' => 1,
+                'is_visible' => 1
+            ])->get();
+
+            if(count($paket_soals) > 0){
+                $obj_bab = [
+                    "id" => $bab->id,
+                    "name" => $bab->name,
+                    "icon" => $bab->icon,
+                    "paket_soal" => $paket_soals
+                ];
+                array_push($result_list_bab, $obj_bab);
+            }
         }
 
         return $this->sendResponse($result_list_bab, 'Paket soal retrieved successfully.');
@@ -34,7 +39,7 @@ class PaketSoalController extends BaseController
 
     public function all_paket_soal(Request $request)
     {
-        $result_list_bab = PaketSoal::where('mata_pelajaran_id', $request->mata_pelajaran_id)->get();
+        $result_list_bab = PaketSoal::where(['is_visible' => 1, 'mata_pelajaran_id' => $request->mata_pelajaran_id])->get();
         return $this->sendResponse($result_list_bab, 'Paket soal retrieved successfully.');
     }
 }

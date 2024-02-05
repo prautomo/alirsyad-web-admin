@@ -15,8 +15,11 @@
             @endif
             <!-- <a href="#" class="btn btn-sm btn-neutral">Filters</a> -->
             @if(\Request::get('role') === 'SISWA' && !@\Request::get('is_pengunjung'))
-            <a href="{{ route('backoffice::external-users.batch_create', ['role'=>\Request::get('role')]) }}" class="btn btn-sm btn-primary">
+            <a href="{{ route('backoffice::external-users.batch_create', ['role'=>\Request::get('role')]) }}" class="btn btn-sm btn-info">
               Import dari Excel
+            </a>
+            <a href="{{ route('backoffice::external-users.next_grade', ['role'=>\Request::get('role')]) }}" class="btn btn-sm btn-primary">
+              Naik Kelas
             </a>
             @endif
         </div>
@@ -39,7 +42,23 @@
       </div>
       <!-- tble -->
         <div class="">
-            <x-datatable>
+          
+            @php
+              $col_to_filter = "";
+              $is_multiple_col = "";
+              if(\Request::get('role') == "GURU"){
+                $col_to_filter = "3";
+                $is_multiple_col = "1";
+              }else if(\Request::get('role') == "SISWA" && \Request::get('is_pengunjung') == 0){
+                $col_to_filter = "6,5,4,3";
+                $is_multiple_col = "0,0,0,0";
+              }else if(\Request::get('role') == "SISWA" && \Request::get('is_pengunjung') == 1){
+                $col_to_filter = "3";
+                $is_multiple_col = "0";
+              }
+            @endphp
+            <p></p>
+            <x-datatable.table :filterCol="__($col_to_filter)" :isMultiple="__($is_multiple_col)">
                 {{--
                     data-* is same as option columns in datatable
                     https://datatables.net/reference/option/columns
@@ -56,6 +75,7 @@
                 <th data-data="kelas.tingkat.jenjang.name">@lang("Jenjang")</th>
                 <th data-data="kelas.tingkat.name">@lang("Tingkat")</th>
                 <th data-data="kelas.name">@lang("Kelas")</th>
+                <th data-data="tahun_ajaran">@lang("Tahun Ajaran")</th>
                 @elseif(\Request::get('role') === 'SISWA' && @\Request::get('is_pengunjung'))
                 <th data-data="jenjang.name">@lang("Jenjang")</th>
                 @else
@@ -63,7 +83,7 @@
                 @endif
                 <th data-data="show-status">@lang("Status")</th>
                 <th data-data="action" data-orderable="false" data-searchable="false">@lang("Action")</th>
-            </x-datatable>
+            </x-datatable.table>
         </div>
       <!-- endtble -->
     </div>

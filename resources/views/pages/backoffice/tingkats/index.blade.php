@@ -32,7 +32,7 @@
             </div>
             <!-- table -->
             <div class="">
-                <x-datatable>
+                <x-datatable.table :filterCol="__('1')" :isMultiple="__('0')">
                     {{--
                         data-* is same as option columns in datatable
                         https://datatables.net/reference/option/columns

@@ -7,6 +7,7 @@ use App\Models\MataPelajaran;
 use App\Models\Modul;
 use App\Models\PaketSoal;
 use App\Models\Soal;
+use App\Models\UploaderMataPelajaran;
 use Illuminate\Http\Request;
 use DB;
 use Auth;
@@ -31,6 +32,12 @@ class PaketSoalController extends Controller
     public function datatable(Request $request){
         $query = PaketSoal::query();
 
+        // filter if its guru uploader
+        if (!@\Auth::user()->hasRole('Superadmin')) {
+            $mapelIdsUser = $this->getMapelIdsUser();
+            $query = $query->whereIn('mata_pelajaran_id', $mapelIdsUser);
+        }
+
         $datas = $query->select('*');
 
         return datatables()
@@ -53,6 +60,9 @@ class PaketSoalController extends Controller
             ->addIndexColumn()
             ->addColumn('jumlah_soal', function($data) {
                 return count(@$data->soals);
+            })
+            ->addColumn('tingkat', function($data) {
+                return @$data->mataPelajaran->tingkat->name;
             })
             ->addColumn("mapel", function ($data) {
                 $mapel = @$data->mataPelajaran->name ? $data->mataPelajaran->name : 'none';
@@ -79,6 +89,9 @@ class PaketSoalController extends Controller
                 }
                 return $tingkatKesulitan;
             })
+            ->addColumn("visibilitas", function ($data) {
+                return @$data->is_visible ? 'Tampilkan': 'Sembunyikan';
+            })
             ->addColumn("action", function ($data) {
                 return view("components.datatable.actions", [
                     "subbab" => $data->subbab,
@@ -102,6 +115,15 @@ class PaketSoalController extends Controller
         }
 
         return view($this->prefix.'.index');
+    }
+
+    private function getMapelIdsUser()
+    {
+        $userId = @\Auth::user()->id;
+        $mapelIdsUser = UploaderMataPelajaran::where('guru_uploader_id', $userId)->pluck('mata_pelajaran_id')->all();
+        $mapelIdsUser = count($mapelIdsUser) > 0 ? $mapelIdsUser : [];
+
+        return $mapelIdsUser;
     }
 
     /**
@@ -215,8 +237,14 @@ class PaketSoalController extends Controller
 
     public function store(Request $request)
     {
-        $newLatihanSoal = $request->only(['mata_pelajaran_id', 'tingkat_kesulitan', 'subbab', 'judul_subbab', 'jumlah_publish', 'nilai_kkm']);
+        $newLatihanSoal = $request->only(['mata_pelajaran_id', 'tingkat_kesulitan', 'subbab', 'judul_subbab', 'jumlah_publish', 'nilai_kkm', 'is_visible']);
         $newLatihanSoal['bab_id'] = $request->bab[0];
+        
+        if($newLatihanSoal['nilai_kkm'] > $newLatihanSoal['jumlah_publish']){
+            return redirect()->back()
+                        ->withInput()
+                        ->with('failed','Jumlah KKM tidak boleh melebihi jumlah publish.');
+        }
 
         $storeLatihanSoal = PaketSoal::create($newLatihanSoal);
 
@@ -248,8 +276,14 @@ class PaketSoalController extends Controller
 
     public function update(Request $request, $id){
 
-        $dataReq = $request->only(['mata_pelajaran_id', 'tingkat_kesulitan', 'subbab', 'judul_subbab', 'jumlah_publish', 'nilai_kkm']);
+        $dataReq = $request->only(['mata_pelajaran_id', 'tingkat_kesulitan', 'subbab', 'judul_subbab', 'jumlah_publish', 'nilai_kkm', 'is_visible']);
         $dataReq['bab_id'] = $request->bab[0];
+
+        if($dataReq['nilai_kkm'] > $dataReq['jumlah_publish']){
+            return redirect()->back()
+                        ->withInput()
+                        ->with('failed','Jumlah KKM tidak boleh melebihi jumlah publish.');
+        }
 
         $dt = PaketSoal::findOrFail($id);
         $dt->update($dataReq);
@@ -451,9 +485,16 @@ class PaketSoalController extends Controller
     }
 
     public function createSoal(Request $request, $id){
+        
+        $pembahasanOption = [
+            0 => 'Video',
+            1 => 'Text',
+        ];
+
         $data = [
             'paketId' => $id,
             'listJawabanBenar' => $this->getJawaban(),
+            'pembahasanOption' => $pembahasanOption
         ];
 
         return view($this->prefix.'.create_soal', $data);
@@ -482,8 +523,21 @@ class PaketSoalController extends Controller
         //     $soal_contain_img = trim($soal_contain_img, " \t\n\r\0\x0B\xC2\xA0");
         //     $newLatihanSoal['soal'] = $soal_contain_img;
         // }
-        $newLatihanSoal = $request->only(['soal', 'pilihan_a', 'pilihan_b', 'pilihan_c', 'pilihan_d', 'pilihan_e', 'jawaban', 'sumber', 'link_pembahasan', 'pembahasan']);
+        $newLatihanSoal = $request->only(['soal', 'pilihan_a', 'pilihan_b', 'pilihan_c', 'pilihan_d', 'pilihan_e', 'jawaban', 'pembahasan_option', 'link_pembahasan', 'pembahasan']);
         $newLatihanSoal['paket_soal_id'] = $id;
+
+        switch($newLatihanSoal['pembahasan_option']){
+            case 0:
+                $newLatihanSoal['pembahasan'] = null;
+                break;
+            case 1:
+                $newLatihanSoal['link_pembahasan'] = null;
+                break;
+            default:
+                $newLatihanSoal['link_pembahasan'] = null;
+                $newLatihanSoal['pembahasan'] = null;
+                break;
+        }
 
         $storeLatihanSoal = Soal::create($newLatihanSoal);
 
@@ -497,10 +551,16 @@ class PaketSoalController extends Controller
     public function editSoal(Request $request, $paketId, $id){
         $dt = Soal::with('paket')->findOrFail($id);
 
+        $pembahasanOption = [
+            0 => 'Video',
+            1 => 'Text',
+        ];
+
         $data = [
             'data' => $dt,
             'paketId' => $paketId,
             'listJawabanBenar' => $this->getJawaban(),
+            'pembahasanOption' => $pembahasanOption
         ];
 
         return view($this->prefix.'.edit_soal', $data);
@@ -508,7 +568,20 @@ class PaketSoalController extends Controller
 
     public function updateSoal(Request $request, $paketId, $id){
 
-        $dataReq = $request->only(['soal', 'pilihan_a', 'pilihan_b', 'pilihan_c', 'pilihan_d', 'pilihan_e', 'jawaban', 'sumber', 'link_pembahasan', 'pembahasan']);
+        $dataReq = $request->only(['soal', 'pilihan_a', 'pilihan_b', 'pilihan_c', 'pilihan_d', 'pilihan_e', 'jawaban', 'pembahasan_option', 'link_pembahasan', 'pembahasan']);
+
+        switch($dataReq['pembahasan_option']){
+            case 0:
+                $dataReq['pembahasan'] = null;
+                break;
+            case 1:
+                $dataReq['link_pembahasan'] = null;
+                break;
+            default:
+                $dataReq['link_pembahasan'] = null;
+                $dataReq['pembahasan'] = null;
+                break;
+        }
 
         $dt = Soal::findOrFail($id);
         $dt->update($dataReq);

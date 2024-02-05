@@ -112,6 +112,9 @@ class ModulController extends Controller
             ->addColumn("created_by", function ($data) {
                 return @$data->uploader->name ?? "-";
             })
+            ->addColumn("visibilitas", function ($data) {
+                return @$data->is_visible ? 'Tampilkan': 'Sembunyikan';
+            })
             ->addColumn("action", function ($data) {
                 return view("components.datatable.actions", [
                     "name" => $data->name,
@@ -211,7 +214,7 @@ class ModulController extends Controller
         // default image
         $url = "images/placeholder.png";
         // temp request
-        $dataReq = $request->only(['name', 'icon', 'description', 'mata_pelajaran_id', 'slug', 'semester', 'tahun_ajaran', 'urutan']);
+        $dataReq = $request->only(['name', 'icon', 'description', 'mata_pelajaran_id', 'slug', 'semester', 'tahun_ajaran', 'urutan', 'is_visible']);
         $dataReq['uploader_id'] = \Auth::user()->id;
 
         if ($request->hasFile('icon')) {
@@ -290,8 +293,8 @@ class ModulController extends Controller
             'urutan' => 'required|numeric|min:0',
         ]);
 
-        $dataReq = $request->only(['name', 'icon', 'description', 'mata_pelajaran_id', 'slug', 'semester', 'tahun_ajaran', 'urutan']);
-
+        $dataReq = $request->only(['name', 'icon', 'description', 'mata_pelajaran_id', 'slug', 'semester', 'tahun_ajaran', 'urutan', 'is_visible']);
+        
         if ($request->hasFile('icon')) {
             $validated = $request->validate([
                 'icon' => 'mimes:jpeg,png|max:2028',

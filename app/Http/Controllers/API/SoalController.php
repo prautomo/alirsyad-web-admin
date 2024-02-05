@@ -204,8 +204,11 @@ class SoalController extends BaseController
                     'tingkat_kesulitan' => 'sedang',
                 ])->first();
                 if ($get_paket_soal) {
-                    $next_paket_soal_id = $get_paket_soal->id;
-                    $next_tingkat_kesulitan = 'sedang';
+                    $count_soal = Soal::where(['paket_soal_id' => $get_paket_soal->id])->count();
+                    if($count_soal >= $get_paket_soal->jumlah_publish){
+                        $next_paket_soal_id = $get_paket_soal->id;
+                        $next_tingkat_kesulitan = 'sedang';
+                    }
                 }
                 break;
             case 'sedang':
@@ -216,8 +219,11 @@ class SoalController extends BaseController
                     'tingkat_kesulitan' => 'sulit',
                 ])->first();
                 if ($get_paket_soal) {
-                    $next_paket_soal_id = $get_paket_soal->id;
-                    $next_tingkat_kesulitan = 'sulit';
+                    $count_soal = Soal::where(['paket_soal_id' => $get_paket_soal->id])->count();
+                    if($count_soal >= $get_paket_soal->jumlah_publish){
+                        $next_paket_soal_id = $get_paket_soal->id;
+                        $next_tingkat_kesulitan = 'sulit';
+                    }
                 }
                 break;
             case 'sulit':
@@ -243,6 +249,7 @@ class SoalController extends BaseController
         }
     }
 
+    
     public function studies(Request $request)
     {
         $paket_soal = PaketSoal::find($request->paket_soal_id);
@@ -262,7 +269,7 @@ class SoalController extends BaseController
                 "image" => ""
             ];
 
-            $jawaban_benar = $get_soal[$get_soal['jawaban']];
+            $jawaban_benar = trim(strip_tags($get_soal[$get_soal['jawaban']]), " \t\n\r\0\x0B\xC2\xA0");
 
             // IF YOU WANT SOME CLEAN RESPONSE (WITH NO HTML)
             if (str_contains($get_soal->soal, '<img')) {
@@ -286,7 +293,18 @@ class SoalController extends BaseController
             $obj_soal['is_correct'] = $soal['jawaban'] == $jawaban_benar ? true : false;
 
             $obj_soal['pembahasan_text'] = $get_soal->pembahasan;
-            $obj_soal['pembahasan_video'] = $get_soal->link_pembahasan;
+            $obj_soal['pembahasan_video'] = null;
+
+            $link_pembahasan = $get_soal->link_pembahasan;
+            if($link_pembahasan != null){
+                $pattern = "/(e\/|v=)([A-Za-z0-9_\-]{11})/";
+                preg_match($pattern, $link_pembahasan, $matches);
+
+                if(count($matches) > 0){
+                    $obj_soal['pembahasan_video'] = substr($matches[0], 2);
+                }
+            }
+
             $length_multiple_choice = 0;
 
             array_push($list_soal_to_send, $obj_soal);
@@ -297,6 +315,8 @@ class SoalController extends BaseController
             "tingkat_kesulitan" => $paket_soal->tingkat_kesulitan,
             "list_soal" => $list_soal_to_send,
         ];
+
+        $data = mb_convert_encoding($data, 'UTF-8', 'UTF-8');
 
         return $this->sendResponse($data, 'Studies retrieved successfully.');
     }

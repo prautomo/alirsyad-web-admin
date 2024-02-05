@@ -131,6 +131,9 @@ class VideoController extends Controller
             ->addColumn("created_by", function ($data) {
                 return @$data->uploader->name ?? "-";
             })
+            ->addColumn("visibilitas", function ($data) {
+                return @$data->is_visible ? 'Tampilkan': 'Sembunyikan';
+            })
             ->addColumn("action", function ($data) {
                 $relModul = @$data->modul->slug ? "?rel=modul/" . @$data->modul->slug . ".html" : "";
                 $url_userdev = "https://user.alirsyadbandung.sch.id/";
@@ -268,7 +271,7 @@ class VideoController extends Controller
         // default image
         $url = "images/placeholder.png";
         // temp request
-        $dataReq = $request->only(['name', 'video_url', 'icon', 'description', 'modul_id', 'mata_pelajaran_id', 'semester', 'urutan', 'visible']);
+        $dataReq = $request->only(['name', 'video_url', 'icon', 'description', 'modul_id', 'mata_pelajaran_id', 'semester', 'urutan', 'visible', 'is_visible']);
 
         $dataReq['visible'] = @$request->visible == "ya" ? 1 : 0;
 
@@ -354,7 +357,7 @@ class VideoController extends Controller
             ]);
         }
 
-        $dataReq = $request->only(['name', 'video_url', 'icon', 'description', 'modul_id', 'mata_pelajaran_id', 'semester', 'urutan', 'visible']);
+        $dataReq = $request->only(['name', 'video_url', 'icon', 'description', 'modul_id', 'mata_pelajaran_id', 'semester', 'urutan', 'visible', 'is_visible']);
 
         $dataReq['visible'] = @$request->visible == "ya" ? 1 : 0;
 

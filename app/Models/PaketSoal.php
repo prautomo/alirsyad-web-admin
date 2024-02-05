@@ -11,7 +11,7 @@ class PaketSoal extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'mata_pelajaran_id', 'bab_id', 'tingkat_kesulitan', 'subbab', 'judul_subbab', 'jumlah_publish', 'nilai_kkm'
+        'mata_pelajaran_id', 'bab_id', 'tingkat_kesulitan', 'subbab', 'judul_subbab', 'jumlah_publish', 'nilai_kkm', 'is_visible'
     ];
 
     public function mataPelajaran()
