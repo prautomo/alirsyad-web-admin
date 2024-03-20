@@ -13,7 +13,7 @@ class PaketSoalController extends BaseController
     public function index(Request $request)
     {
         $result_list_bab = [];
-        $list_bab = Modul::where(['is_visible' => 1, 'mata_pelajaran_id' => $request->mata_pelajaran_id])->has('paket_soals')->get();
+        $list_bab = Modul::where(['is_visible' => 1, 'mata_pelajaran_id' => $request->mata_pelajaran_id])->has('paket_soals')->orderBy('urutan')->get();
 
         foreach($list_bab as $bab){
             $paket_soals = PaketSoal::where([
