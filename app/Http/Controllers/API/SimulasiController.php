@@ -27,7 +27,7 @@ class SimulasiController extends BaseController
 
         $user = @Auth::user();
 
-        $datas = Simulasi::with('uploader', 'mataPelajaran');
+        $datas = Simulasi::with('uploader', 'mataPelajaran')->where(['is_visible' => 1]);
 
         // // handle hak akses mapel
         // $user = Auth::user();
@@ -76,7 +76,7 @@ class SimulasiController extends BaseController
     {
         $user = @Auth::user();
 
-        $data = Simulasi::with('mataPelajaran.tingkat.jenjang');
+        $data = Simulasi::with('mataPelajaran.tingkat.jenjang')->where(['is_visible' => 1]);
 
         // // handle hak akses mapel
         // $data = $data->whereHas('mataPelajaran.tingkat', function($query) use ($user){

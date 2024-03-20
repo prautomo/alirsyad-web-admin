@@ -37560,7 +37560,7 @@ window.initDatatable = function (tableSelector) {
     },
     autoWidth: true,
     searching: true,
-    serverSide: true,
+    serverSide: false, // set to false -> to make sure all options are shown in dropdown dilter
     processing: true,
     deferRender: true,
     ajax: {

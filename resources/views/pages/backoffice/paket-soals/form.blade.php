@@ -1,4 +1,13 @@
 @csrf
+@if ($message = Session::get('failed'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <span class="alert-text"><strong>Gagal!</strong> {{ $message }}</span>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">×</span>
+    </button>
+    </div>
+@endif
+
 <div class="row">
     <x-input.select :label="__('Mata Pelajaran')" id="mata_pelajaran_id" name="mata_pelajaran_id" :sources="$mapelList" :data="$data" onchange="clickMapel(this)" required />
 
@@ -38,6 +47,25 @@
 
     <x-input.text type="number" :label="__('Jumlah Publish')" name="jumlah_publish" :data="$data" />
     <x-input.text type="number" :label="__('Nilai KKM')" name="nilai_kkm" :data="$data" required />
+    
+    <!-- Visibilitas Materi --> 
+    <div class="col-md-12">
+        <div class="form-group">
+            <label class="form-control-label" for="input-isVisible">Visibilitas Materi</label>
+
+            <select id="isVisible" name="is_visible" class="form-control {{($errors->has('isVisible') ? ' is-invalid' : '')}}">
+                <option value="0" {{ @$data->is_visible==0 ? "selected " : "" }}>Sembunyikan</option>
+                <option value="1" {{ @$data ? (@$data->is_visible== 1 ? "selected " : "") : "selected"}}>Tampilkan</option>
+            </select>
+
+            @if($errors->has('isVisible'))
+            <div class="invalid-feedback">
+                <i class="fa fa-exclamation-circle fa-fw"></i> {{ $errors->first('isVisible') }}
+            </div>
+            @endif
+        </div>
+    </div>
+    <!-- END Visibilitas Materi -->
 
     <div class="col-xs-12 col-sm-12 col-md-12 text-right">
         <button type="submit" class="btn btn-sm btn-primary">@lang("Save")</button>
@@ -112,7 +140,9 @@
     });
 
     $(document).ready(function() {
-        var bab = <?php echo json_encode($groupBabList); ?>
+        var bab = <?php echo json_encode($groupBabList); ?>;
+        var data = <?php echo json_encode(@$data); ?>;
+
 
         $('#bab').prop('disabled', false);
 
@@ -121,6 +151,9 @@
         var bab_show = bab.filter(function (bab) {
             return bab.text == mata_pelajaran;
         });
+
+        console.log('bab show', bab_show)
+        console.log('data', data)
 
         $('#bab').empty();
 
@@ -131,6 +164,10 @@
             data: bab_show,
             theme: "classic",
         });
+
+        if(data != null){
+            s2.val(data.bab_id).trigger('change');
+        }
     });
 
 </script>

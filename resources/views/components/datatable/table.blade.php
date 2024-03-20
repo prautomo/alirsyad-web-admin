@@ -1,3 +1,34 @@
+@props(['filterCol' => [], 'isMultiple' => []])
+
+<style>
+    .form-group{
+      display: inline-block;
+      text-align: left;
+    }
+
+    select.form-control{
+      width: 10rem;
+      height: calc(1.5em + 1.25rem + 5px);
+    }
+
+    label{
+        font-size: 10.8pt;
+        text-align: left;
+        margin-bottom: 0;
+        color: #525f7f;
+    }
+
+    .dataTables_filter{
+        width: 180%;
+        text-align: right;
+    }
+
+    #ps-pembahasan-value{
+        max-height: 25vh;
+        overflow: auto;
+    }
+</style>
+<div id="filter-col" class="row"></div>
 <table {{$attributes->merge(["class" => "datatable-serverside table datatable"])}}>
     <thead>
         <tr>
@@ -44,9 +75,67 @@
 
 @push('script')
 <script>
+    // filterCol = idx of column that able to filter, isMultiple = consider if its multiple value or not
+    var filter_col = <?php echo json_encode($filterCol); ?>;
+    var is_multiple = <?php echo json_encode($isMultiple); ?>;
+    var idx_loop = 0;
+
+    filter_col = JSON.parse("[" + filter_col + "]");
+    is_multiple = JSON.parse("[" + is_multiple + "]");
+
     $(document).ready(function () {
         const datatable = initDatatable('.datatable-serverside');
+        const datatableId = datatable.table().node().id;
 
+        datatable.on('init', function ( e, settings, json ) {
+            datatable.columns( filter_col ).every( function () {
+                var column = this;
+                var columnId = "div-filter-" + column.index();
+                var columnHeader = column.header().textContent;
+
+                $('<div id="' + columnId + '" class="form-group pr-3">\
+                    <label>'+ columnHeader +':</label>')
+                    .appendTo( $('#filter-col'));
+
+                var select = $('<select id="select-'+ columnId +'"class="form-control"><option value="">All</option></select>')
+                    .appendTo( $('#'+ columnId +'') )
+                    .on( 'change', function () {
+                        var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+
+                        column
+                            .search( val ? '^'+val+'$' : '', true, false )
+                            .draw();
+                    });
+
+                var all_options = []
+                
+                column.data().unique().sort().each( function ( d, j ) {
+                    d = d.replace(/<[^>]*>?/gm, '')
+                    
+                    if(d == ''){
+                        return true;
+                    }
+
+                    if(is_multiple[idx_loop] == 1){
+                        var list_options = d.split(', ');
+                        list_options.forEach(element => {
+                            if(all_options.indexOf(element) == -1){
+                                select.append('<option value="'+element+'">'+element+'</option>' )
+                                all_options.push(element)
+                            }
+                        });
+                    }else{
+                        select.append('<option value="'+d+'">'+d+'</option>' )
+                    }
+                });
+
+                $("#"+ datatableId +"_filter.dataTables_filter").prepend($("#" + columnId));
+                idx_loop++;
+            });
+            
+        });
         function copyToClipboard(text) {
             if (window.clipboardData && window.clipboardData.setData) {
                 // Internet Explorer-specific code path to prevent textarea being shown while dialog is visible.
@@ -144,12 +233,18 @@
             event.preventDefault();
             const soal = $(this).data("soal");
 
+            console.log('soalll', soal)
             $('#ps-soal-value').html(soal.soal);
             $('#ps-pilihan1-value').html(soal.pilihan_a);
             $('#ps-pilihan2-value').html(soal.pilihan_b);
             $('#ps-pilihan3-value').html(soal.pilihan_c);
             $('#ps-pilihan4-value').html(soal.pilihan_d);
             $('#ps-pilihan5-value').html(soal.pilihan_e);
+            $('#ps-pembahasan-value').html(soal.pembahasan);
+
+            if(soal.pembahasan == null && soal.link_pembahasan != null){
+                $('#ps-pembahasan-value').append(`<a href="${soal.link_pembahasan}" target="_blank">${soal.link_pembahasan}</a>`);
+            }
 
             let jawaban = "Pilihan E";
             switch (soal.jawaban) {
@@ -177,6 +272,7 @@
                 MathJax.typeset([$("#ps-pilihan4-value")[0]]);
                 MathJax.typeset([$("#ps-pilihan5-value")[0]]);
                 MathJax.typeset([$("#ps-jawaban-value")[0]]);
+                MathJax.typeset([$("#ps-pembahasan-value")[0]]);
             })
         });
 
@@ -424,6 +520,8 @@
                 <div id="ps-pilihan5-value">-</div>
                 <h2 class="font-weight-bold">Jawaban :</h2>
                 <div id="ps-jawaban-value">-</div>
+                <h2 class="font-weight-bold mt-3">Pembahasan :</h2>
+                <div id="ps-pembahasan-value">-</div>
             </div>
         </div>
       </div>

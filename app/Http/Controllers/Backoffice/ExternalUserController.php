@@ -17,6 +17,7 @@ use App\Models\Jenjang;
 use App\Models\Tingkat;
 use App\Models\Kelas;
 use App\Models\GuruMataPelajaran;
+use App\Models\KelasSiswa;
 use App\Services\UploadService;
 use DB;
 use Hash;
@@ -48,13 +49,15 @@ class ExternalUserController extends Controller
         $isPengunjung = $request->is_pengunjung;
         $query = ExternalUser::query();
         // relation with kelas and tingkat
-        $query = $query->with('kelas.tingkat.jenjang', 'mataPelajarans', 'jenjang');
-
+        $query = $query->with(['kelas.tingkat.jenjang', 'mataPelajarans', 'jenjang', 'classHistory'])->select('external_users.*');
+        
         if (!empty($role)) {
             $query = $query->where('role', $role);
         }
 
         $query = $query->where('is_pengunjung', @$isPengunjung ?? 0);
+
+        // return response()->json($query->get(), 200);
 
         $dt = datatables()
             ->of($query)
@@ -66,19 +69,27 @@ class ExternalUserController extends Controller
                 $search = @$request->search['value'];
 
                 if ($search) {
-
-                    $query->where('name', 'LIKE', '%' . $search . '%');
-                    $query->orWhere('nis', 'LIKE', '%' . $search . '%');
-
-                    $query->orWhereHas('mataPelajarans', function ($query2) use ($search) {
-                        $query2->where('name', 'LIKE', '%' . $search . '%');
-                    });
+                    $query = $query->where('name', 'LIKE', '%' . $search . '%');
+                    $query = $query->orWhere('nis', 'LIKE', '%' . $search . '%');
 
                     if (!empty($role)) {
-                        $query->where('role', $role);
+                        $query = $query->where('role', $role);
+                        if($role == "GURU"){
+                            if($query->has('mataPelajarans')){
+                                $query = $query->orWhereHas('mataPelajarans', function ($query2) use ($search) {
+                                    $query2->where('name', 'LIKE', '%' . $search . '%');
+                                });
+                            }
+                        }else if($role == "SISWA"){
+                            if($query->has('classHistory')){
+                                $query = $query->orWhereHas('classHistory', function($query2) use ( $search ){
+                                    $query2->where('is_current', 1)->where('tahun_ajaran', 'LIKE', '%'. $search. '%');
+                                });
+                            }
+                        }
                     }
 
-                    $query->where('is_pengunjung', @$isPengunjung ?? 0);
+                    $query = $query->where('is_pengunjung', @$isPengunjung ?? 0);
                 }
             })
             ->addIndexColumn()
@@ -96,21 +107,33 @@ class ExternalUserController extends Controller
                 ]);
             })
             ->addColumn('mengajar', function ($data) {
-                $mapels = $data->mataPelajarans;
+                if($data->role == 'GURU'){
+                    $mapels = $data->mataPelajarans;
 
-                $m = [];
-                foreach ($mapels as $value) {
-                    $m[] = $value->name . " (" . @$value->tingkat->name . " " . @$value->tingkat->jenjang->name . ")";
+                    $m = [];
+                    foreach ($mapels as $value) {
+                        $m[] = $value->name . " (" . @$value->tingkat->name . " " . @$value->tingkat->jenjang->name . ")";
+                    }
+    
+                    return view("components.datatable.wrapText", [
+                        "text" => (implode(', ', $m)),
+                    ]);
                 }
-
-                return view("components.datatable.wrapText", [
-                    "text" => (implode(', ', $m)),
-                ]);
+                return "";
             })
             ->addColumn("created_at", function ($data) {
                 $createdAt = new Carbon($data->created_at);
 
                 return $createdAt->format("d-m-Y H:i:s");
+            })
+            ->addColumn("tahun_ajaran", function ($data) {
+                $current_class = KelasSiswa::where(['siswa_id' => $data->id, 'is_current' => 1])->first();
+
+                if($current_class != null){
+                    return $current_class->tahun_ajaran;
+                }
+
+                return "";
             })
             ->addColumn("action", function ($data) {
                 $actions = [
@@ -125,10 +148,30 @@ class ExternalUserController extends Controller
                 }
 
                 return view("components.datatable.actions", $actions);
+            })
+            ->filterColumn('mengajar', function($query, $value) {
+                $value = preg_replace('/[^\p{L}\p{N}\s]/u', '', $value);
+                // format eg: Tematik 1 SD -> value[0] = mapel, value[1] = tingkat, value[2] = jenjang
+                $value = explode(" ", $value);
+                $query->orWhereHas('mataPelajarans', function ($query2) use ($value) {
+                    $query2->where('name', '=',  $value[0])
+                        ->whereHas('tingkat', function ($query2) use ($value) {
+                            $query2->where('name', '=',  $value[1]);
+                        })
+                        ->whereHas('tingkat.jenjang', function ($query2) use ($value) {
+                            $query2->where('name', '=',  $value[2]);
+                        });
+                });
+            })
+            ->filterColumn('tahun_ajaran', function($query, $value) {
+                $value = preg_replace('/[^A-Za-z0-9]/', '', $value);
+                $query = $query->orWhereHas('classHistory', function($query2) use ( $value ){
+                    $query2->where('is_current', 1)->where('tahun_ajaran', 'LIKE', '%'. $value. '%');
+                });
             });
 
         $dt = $dt->order(function ($query) {
-            $query->orderBy('created_at', 'desc');
+            $query->orderBy('external_users.created_at', 'desc');
         })->toJson();
 
         return $dt;
@@ -240,7 +283,7 @@ class ExternalUserController extends Controller
             ]);
         }
 
-        $input = $request->all();
+        $input = $request->except(['tahun_ajaran']);
         $input['password'] = Hash::make($input['password']);
         $input['status'] = "AKTIF";
         $input['email_verified_at'] = now();
@@ -281,6 +324,12 @@ class ExternalUserController extends Controller
                     $guruUploader->mataPelajarans()->sync($request->mapel);
                 }
             }
+        }else if(@$request->role === "SISWA"){
+            KelasSiswa::create([
+                'kelas_id' => $request->kelas_id,
+                'siswa_id' => $user->id,
+                'tahun_ajaran' => (string) $request->tahun_ajaran
+            ]);
         }
 
         return redirect()->route($this->routePath . '.index', ['role' => $request->role])->with(
@@ -299,6 +348,16 @@ class ExternalUserController extends Controller
         $dt = ExternalUser::with('kelas')->findOrFail($id);
         $tingkatList = $this->getTingkat();
         $mapelList = $this->getMataPelajaran($id);
+
+        $dt['tahun_ajaran'] = "";
+        $current_class = KelasSiswa::where([
+            'siswa_id' => $id,
+            'is_current' => 1
+        ])->first();
+
+        if($current_class != null){
+            $dt['tahun_ajaran'] = $current_class->tahun_ajaran;
+        }
 
         $mapelIDS = [];
         foreach ($dt->mataPelajarans as $mapel) {
@@ -330,7 +389,7 @@ class ExternalUserController extends Controller
             // 'phone' => 'required|unique:external_users,phone,'.$id,
         ]);
 
-        $input = $request->all();
+        $input = $request->except(['tahun_ajaran']);
         if (!empty($input['password'])) {
             $input['password'] = Hash::make($input['password']);
         } else {
@@ -397,6 +456,30 @@ class ExternalUserController extends Controller
                     // guru
                     $user->mataPelajarans()->sync($request->mapel);
                 }
+            }
+        }else if(@$request->role === "SISWA"){
+            $current_class = KelasSiswa::where([
+                'siswa_id' => $id,
+                'is_current' => 1
+            ])->first();
+
+            if($current_class != null){
+                if($current_class->kelas_id == $user->kelas_id){
+                    $current_class->update(['tahun_ajaran' => $request->tahun_ajaran]);
+                }else{
+                    KelasSiswa::create([
+                        'kelas_id' => $user->kelas_id,
+                        'siswa_id' => $user->id,
+                        'tahun_ajaran' => (string) $request->tahun_ajaran
+                    ]);
+                    $current_class->update(['is_current' => 0]);
+                }
+            }else{
+                KelasSiswa::create([
+                    'kelas_id' => $user->kelas_id,
+                    'siswa_id' => $user->id,
+                    'tahun_ajaran' => (string) $request->tahun_ajaran
+                ]);
             }
         }
 
@@ -481,9 +564,10 @@ class ExternalUserController extends Controller
                     $jenjang = $row["C"];
                     $tingkat = $row["D"];
                     $kelas = @$row["E"];
-                    $username = @$row["F"];
-                    $password = @$row["G"];
-                    $email = $row["H"];
+                    $tahun_ajaran = @$row["F"];
+                    $username = @$row["G"];
+                    $password = @$row["H"];
+                    $email = $row["I"];
 
                     // skip existing nis
                     if (ExternalUser::where('nis', $nis)->first() !== null) {
@@ -548,6 +632,13 @@ class ExternalUserController extends Controller
                     $input['email_verified_at'] = now();
 
                     $user = ExternalUser::create($input);
+                    
+                    KelasSiswa::create([
+                        'kelas_id' => $user->kelas_id,
+                        'siswa_id' => $user->id,
+                        'tahun_ajaran' => (string) $tahun_ajaran
+                    ]);
+                    
                 }
 
                 return $this->returnData([], "Data Berhasil Di Upload");
@@ -634,5 +725,105 @@ class ExternalUserController extends Controller
         return redirect()->route($this->routePath . '.index', ['role' => 'SISWA', 'is_pengunjung' => 1])->with(
             $this->success(__("External User updated successfully"), $user)
         );
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function nextGrade()
+    {
+        // dd("test");
+        $tingkatList = $this->getTingkat();
+
+        $listKelas = Kelas::orderBy('tingkat_id')->get();
+
+        $groupKelasList = [];
+        foreach ($listKelas as $kelas) {
+            $textTingkat = "Tingkat " . @$kelas->tingkat->name. " " . @$kelas->tingkat->jenjang->name;
+
+            $idxSearch = array_search(@$textTingkat, array_column($groupKelasList, 'text'));
+
+            // belum ada
+            if ($idxSearch === false) {
+                array_push($groupKelasList, [
+                    'id' => $kelas->tingkat->id,
+                    'text' => $textTingkat,
+                    'children' => [[
+                        'id' => $kelas->id,
+                        'text' => @$kelas->name,
+                    ]],
+                ]);
+            } else {
+                // udah ada
+                array_push($groupKelasList[$idxSearch]['children'], [
+                    'id' => $kelas->id,
+                    'text' => @$kelas->name,
+                ]);
+            }
+        }
+
+        // return view($this->prefix . '.next-grade', ['title' => 'Naik Kelas', 'tingkatList' => $tingkatList, 'groupContentList' => $groupContentList, 'contentIDS' => $contentIDS, 'form_mode' => 'create', 'content' => $request->query('content')]);
+        return view($this->prefix . '.next_grade', ['title' => 'Naik Kelas', 'tingkatList' => $tingkatList, 'groupKelasList' => $groupKelasList, 'role' => 'SISWA']);
+    }
+    
+    public function listSiswaJson(Request $request){
+        $datas = ExternalUser::where('kelas_id', $request->q_kelas_id)->get();
+
+        return response()->json($datas, 200);
+    }
+
+    public function nextGradeUpdate(Request $request)
+    {
+        $this->validate($request, [
+            'prev_tingkat_id' => 'required',
+            'prev_kelas_id' => 'required',
+            'next_tingkat_id' => 'required',
+            'next_kelas_id' => 'required',
+            'selected_student_list' => 'required',
+        ]);
+
+        $selected_students = explode(',', $request->selected_student_list);
+        foreach($selected_students as $selected_student){
+            $current_class = KelasSiswa::where(['siswa_id' => $selected_student, 'is_current' => 1])->first();
+            $siswa = ExternalUser::find($selected_student);
+
+            if($current_class != null){
+                $new_school_year = ((int) $current_class->tahun_ajaran) + 1;
+                
+                KelasSiswa::create([
+                    'kelas_id' => $request->next_kelas_id,
+                    'siswa_id' => $selected_student,
+                    'tahun_ajaran' => (string) $new_school_year
+                ]);
+                
+                $current_class->update(['is_current' => 0]);
+                $siswa->update(['kelas_id' => $request->next_kelas_id]);
+            }
+        }
+
+        return redirect()->route($this->routePath . '.index', ['role' => 'SISWA'])->with(
+            $this->success(__("Next graded successfully"))
+        );
+    }
+
+    // development purpose only (just ONE hit)
+    public function initKelasSiswa(Request $request){
+        $datas = ExternalUser::where('role', "SISWA")->whereNotNull('kelas_id')->get();
+
+        if($request->secret_key != null){
+            if($request->secret_key == "@dev_Dib_naik_kelas_secret_key_432589"){
+                foreach($datas as $data){
+                    KelasSiswa::create([
+                        'kelas_id' => $data->kelas_id,
+                        'siswa_id' => $data->id,
+                        'tahun_ajaran' => "2022"
+                    ]);
+                }
+        
+                return response()->json("Success init data kelas siswa.", 200);
+            }
+        }
     }
 }

@@ -1,7 +1,7 @@
-@props(['name', 'type', 'step', 'label', 'value', 'placeholder' => '', 'helper', 'data' => null, 'required'])
+@props(['name', 'type', 'step', 'label', 'value', 'placeholder' => '', 'helper', 'data' => null, 'wrapId' => null, 'required'])
 
 @if(@$type!=='hidden')
-<div class="col-md-12">
+<div class="col-md-12" id="{{@$wrapId}}">
     <div class="form-group">
         <label class="form-control-label" for="input-{{$name}}">{{$label}} {{@$required ? "(*)" : ""}}</label>
         <input id="{{$name}}" type="{{@$type?$type:'text'}}" {!! @!empty($step) ? 'step="'.$step.'"' : "" !!} name="{{$name}}" placeholder="{{ @$placeholder ? $placeholder : $label}}" value="{{old($name) ?? $data[$name] ?? $value ?? ''}}" {{ $attributes->merge(['class' => " form-control ". ($errors->has($name) ? ' is-invalid' : '')]) }}>
