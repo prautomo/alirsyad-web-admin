@@ -144,6 +144,7 @@ class AuthController extends BaseController
             'role' => "SISWA",
             'is_pengunjung' => true,
             'jenjang_id' => $data['jenjang_id'],
+            'uuid' => (string) Str::uuid()
         ]);
 
         $details = [

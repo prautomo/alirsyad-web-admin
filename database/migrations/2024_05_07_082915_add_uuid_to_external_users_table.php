@@ -16,7 +16,7 @@ class AddUuidToExternalUsersTable extends Migration
     public function up()
     {
         Schema::table('external_users', function (Blueprint $table) {
-            $table->string('uuid')->default(DB::raw('(UUID())'));
+            $table->string('uuid')->nullable();
         });
     }
 
@@ -28,7 +28,7 @@ class AddUuidToExternalUsersTable extends Migration
     public function down()
     {
         Schema::table('external_users', function (Blueprint $table) {
-            $table->string('uuid');
+            $table->string('uuid')->nullable();
         });
     }
 }

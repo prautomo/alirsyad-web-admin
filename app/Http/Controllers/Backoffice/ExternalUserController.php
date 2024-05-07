@@ -291,6 +291,7 @@ class ExternalUserController extends Controller
         $input['status'] = "AKTIF";
         $input['email_verified_at'] = now();
         $input['phone_verified_at'] = now();
+        $input['uuid'] = (string) Str::uuid();
 
         if ($request->hasFile('photo')) {
 
@@ -633,6 +634,7 @@ class ExternalUserController extends Controller
                     $input['status'] = "AKTIF";
                     $input['role'] = "SISWA";
                     $input['email_verified_at'] = now();
+                    $input['uuid'] = (string) Str::uuid();
 
                     $user = ExternalUser::create($input);
                     
