@@ -3,22 +3,23 @@
       <!-- Brand -->
       <div class="sidenav-header  align-items-center">
         <a class="navbar-brand" href="javascript:void(0)">
-          <!-- <img src="{{ asset('images/logo.png') }}" class="navbar-brand-img" alt="..."> -->
-          {{ config('app.name', 'Digital Interactive Book') }}
+          <img src="{{ asset('backoffice/assets/img/logo_alirsyad.png') }}" class="navbar-brand-img" alt="{{ config('app.name', 'Digital Interactive Book') }}" title="{{ config('app.name', 'Digital Interactive Book') }}">
+          <br/>
+          <span class="navbar-brand-text">{{ config('app.name', 'Digital Interactive Book') }}</span>
         </a>
       </div>
       <div class="navbar-inner">
         <!-- Collapse -->
         <div class="collapse navbar-collapse" id="sidenav-collapse-main">
           <!-- Heading -->
-          <h6 class="navbar-heading p-0 text-muted">
+          <!-- <h6 class="navbar-heading p-0 text-muted">
             <span class="docs-normal">MAIN MENU</span>
-          </h6>
+          </h6> -->
           <!-- Nav items -->
           <ul class="navbar-nav">
             <li class="nav-item">
               <a class="nav-link{{ request()->is('home') ? ' active' : '' }}" href="{{ route('backoffice::dashboard') }}">
-                <i class="ni ni-tv-2 text-dark-green"></i>
+                <i class="ni ni-tv-2 text-light"></i>
                 <span class="nav-link-text">Home</span>
               </a>
             </li>
@@ -26,7 +27,7 @@
             @canany(['jenjang-list', 'tingkat-list', 'kelas-list', 'mata_pelajaran-list'])
             <li class="nav-item">
               <a class="nav-link{{ request()->is('backoffice/jenjangs*', 'backoffice/tingkats*', 'backoffice/kelas*', 'backoffice/mata_pelajarans*', 'backoffice/promos*') ? ' active' : ' collapsed' }}" href="#navbar-master" data-toggle="collapse" role="button" aria-expanded="{{ request()->is('backoffice/jenjangs*', 'backoffice/tingkats*', 'backoffice/kelas*', 'backoffice/mata_pelajarans*') ? 'true' : 'false' }}" aria-controls="navbar-master">
-                <i class="ni ni-ungroup text-dark-green"></i>
+                <i class="ni ni-ungroup text-light"></i>
                 <span class="nav-link-text">Master</span>
               </a>
               <div class="collapse{{ request()->is('backoffice/jenjangs*', 'backoffice/tingkats*', 'backoffice/kelas*', 'backoffice/mata_pelajarans*', 'backoffice/promos*') ? ' show' : '' }}" id="navbar-master" style="">
@@ -71,7 +72,7 @@
             @canany(['modul-list', 'video-list', 'simulasi-list', 'story-path-list', 'paket-soal-list'])
             <li class="nav-item">
               <a class="nav-link{{ request()->is('backoffice/simulasis*', 'backoffice/videos*', 'backoffice/moduls*', 'backoffice/story-paths*', 'backoffice/paket-soals*') ? ' active' : ' collapsed' }}" href="#navbar-konten" data-toggle="collapse" role="button" aria-expanded="{{ request()->is('backoffice/simulasis*', 'backoffice/videos*', 'backoffice/moduls*', 'backoffice/story-paths*', 'backoffice/paket-soals*') ? 'true' : 'false' }}" aria-controls="navbar-konten">
-                <i class="ni ni-atom text-dark-green"></i>
+                <i class="ni ni-atom text-light"></i>
                 <span class="nav-link-text">Kelola Konten</span>
               </a>
               <div class="collapse{{ request()->is('backoffice/simulasis*', 'backoffice/videos*', 'backoffice/moduls*', 'backoffice/story-paths*', 'backoffice/paket-soals*') ? ' show' : '' }}" id="navbar-konten" style="">
@@ -125,7 +126,7 @@
             @canany(['user-list', 'external-user-list'])
             <li class="nav-item">
               <a class="nav-link{{ request()->is('backoffice/users*', 'backoffice/external-users*') ? ' active' : ' collapsed' }}" href="#navbar-exus" data-toggle="collapse" role="button" aria-expanded="{{ request()->is('backoffice/users*', 'backoffice/external-users*') ? 'true' : 'false' }}" aria-controls="navbar-exus">
-                <i class="ni ni-circle-08 text-dark-green"></i>
+                <i class="ni ni-circle-08 text-light"></i>
                 <span class="nav-link-text">Pengguna</span>
               </a>
               <div class="collapse{{ request()->is('backoffice/users*', 'backoffice/external-users*') ? ' show' : '' }}" id="navbar-exus" style="">
@@ -166,7 +167,7 @@
 
             <li class="nav-item">
               <a class="nav-link{{ request()->is('backoffice/manage-external-users*') ? ' active' : ' collapsed' }}" href="#navbar-manage-exus" data-toggle="collapse" role="button" aria-expanded="{{ request()->is('backoffice/manage-external-users*') ? 'true' : 'false' }}" aria-controls="navbar-manage-exus">
-                <i class="ni ni-single-02 text-dark-green"></i>
+                <i class="ni ni-single-02 text-light"></i>
                 <span class="nav-link-text">Kelola Pengunjung</span>
               </a>
               <div class="collapse{{ request()->is('backoffice/manage-external-users*') ? ' show' : '' }}" id="navbar-manage-exus" style="">
@@ -194,7 +195,7 @@
             @canany(['user-list', 'external-user-list'])
               <li class="nav-item">
                 <a class="nav-link{{ request()->is('backoffice/password-reset-students*') ? ' active' : '' }}" href="{{ route('backoffice::password-reset-students.index') }}">
-                  <i class="ni ni-key-25 text-dark-green"></i>
+                  <i class="ni ni-key-25 text-light"></i>
                   <span class="nav-link-text">Reset Password Siswa</span>
                 </a>
               </li>
@@ -203,7 +204,7 @@
             @can('banner-list')
             <li class="nav-item">
               <a class="nav-link{{ request()->is('banners*') ? ' active' : '' }}" href="{{ route('backoffice::banners.index') }}">
-                <i class="ni ni-image text-dark-green"></i>
+                <i class="ni ni-image text-light"></i>
                 <span class="nav-link-text">Kelola Banner</span>
               </a>
             </li>
@@ -212,7 +213,7 @@
             @can('role-list')
             <li class="nav-item">
               <a class="nav-link{{ request()->is('roles*') ? ' active' : '' }}" href="{{ route('backoffice::roles.index') }}">
-                <i class="ni ni-tag text-dark-green"></i>
+                <i class="ni ni-tag text-light"></i>
                 <span class="nav-link-text">Kelola Role</span>
               </a>
             </li>
@@ -220,7 +221,7 @@
     
             <!-- <li class="nav-item">
               <a class="nav-link{{ request()->is('backoffice/mitra*', 'backoffice/reports*') ? ' active' : ' collapsed' }}" href="#navbar-report" data-toggle="collapse" role="button" aria-expanded="{{ request()->is('backoffice/mitra*', 'backoffice/reports*') ? 'true' : 'false' }}" aria-controls="navbar-report">
-                <i class="ni ni-ungroup text-dark-green"></i>
+                <i class="ni ni-ungroup text-light"></i>
                 <span class="nav-link-text">Reports</span>
               </a>
               <div class="collapse{{ request()->is('backoffice/mitra*', 'backoffice/reports*') ? ' show' : '' }}" id="navbar-report" style="">
@@ -244,7 +245,7 @@
                   onclick="event.preventDefault();
                   document.getElementById('logout-form').submit();"
                 >
-                  <i class="ni ni-button-power text-dark-green"></i>
+                  <i class="ni ni-button-power text-light"></i>
                   <span class="nav-link-text">{{ __('Logout') }}</span>
                 </a>
             </li>

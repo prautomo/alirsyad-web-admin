@@ -34,7 +34,7 @@
   <!-- Main content -->
   <div class="main-content" id="panel">
     <!-- Topnav -->
-    <nav class="navbar navbar-top navbar-expand navbar-dark bg-ijo border-bottom">
+    <nav class="navbar navbar-top navbar-expand navbar-dark bg-transparent border-bottom">
       <div class="container-fluid">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <!-- Search form -->
@@ -231,7 +231,7 @@
             </li>
             --}}
           </ul>
-          <ul class="navbar-nav align-items-center  ml-auto ml-md-0 ">
+          <ul class="navbar-nav align-items-center ml-auto ml-md-0 navbar-account">
             <li class="nav-item dropdown">
               <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
                 aria-expanded="false">
@@ -240,10 +240,10 @@
                     @php
                     $userDetail = \App\Models\ExternalUser::where("email", @Auth::user()->email)->first();
                     @endphp
-                    <img alt="{{ Auth::user()->name }}" src="{{ @$userDetail->photo ? asset(@$userDetail->photo) : asset('images/user-logo.png') }}">
+                    <img alt="{{ Auth::user()->name }}" src="{{ @$userDetail->photo ? asset(@$userDetail->photo) : asset('backoffice/assets/img/icons/akun.png') }}">
                   </span>
                   <div class="media-body  ml-2  d-none d-lg-block">
-                    <span class="mb-0 text-sm  font-weight-bold">{{ Auth::user()->name }}</span>
+                    <span class="mb-0 text-sm font-weight-500">{{ Auth::user()->name }}</span>
                   </div>
                 </div>
               </a>
@@ -288,7 +288,7 @@
     </nav>
     <!-- Header -->
     <!-- Header -->
-    <div class="header bg-ijo pb-6">
+    <div class="header bg-transparent pb-6">
       <div class="container-fluid">
         <div class="header-body">
             @yield('header')
