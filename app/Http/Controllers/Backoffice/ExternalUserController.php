@@ -851,7 +851,7 @@ class ExternalUserController extends Controller
         $data = [
             'name' => $user->name, 
             'nis' => $user->nis, 
-            'tingkat' => $user->kelas->tingkat->name . $user->kelas->name,
+            'tingkat' => $user->kelas_id ? $user->kelas->tingkat->name . $user->kelas->name : '',
             'qrcode' => (string) $qrcode
         ];
         $data = json_encode($data);
