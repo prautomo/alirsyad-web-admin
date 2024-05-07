@@ -40,6 +40,7 @@ class ExternalUser extends Authenticatable implements MustVerifyEmail
         'is_pengunjung',
         'jenjang_id',
         'is_uploader',
+        'uuid'
     ];
 
     /**

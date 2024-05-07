@@ -23,6 +23,8 @@ use DB;
 use Hash;
 use Illuminate\Support\Arr;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ExternalUserController extends Controller
 {
@@ -139,6 +141,7 @@ class ExternalUserController extends Controller
                 $actions = [
                     "name" => $data->name,
                     "deleteRoute" => route($this->routePath . ".destroy", $data->id),
+                    "generateQR" => $this->generateQRCode($data->id),
                 ];
 
                 if ($data->is_pengunjung) {
@@ -825,5 +828,32 @@ class ExternalUserController extends Controller
                 return response()->json("Success init data kelas siswa.", 200);
             }
         }
+    }
+
+    public function generate_uuid(){
+        $external_users = ExternalUser::all();
+
+        foreach($external_users as $user){
+            $new_id = (string) Str::uuid();
+            $user->update(['uuid' => $new_id]);
+        }
+        
+        return response()->json("Success generate uuid.", 200);
+    }
+
+    public function generateQRCode ($id)
+    {
+        $user = ExternalUser::findOrFail($id);
+        $qrcode = QrCode::size(400)->generate(json_encode(['uuid' => $user->uuid]));
+
+        $data = [
+            'name' => $user->name, 
+            'nis' => $user->nis, 
+            'tingkat' => $user->kelas->tingkat->name . $user->kelas->name,
+            'qrcode' => (string) $qrcode
+        ];
+        $data = json_encode($data);
+
+        return $data;
     }
 }

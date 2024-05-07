@@ -72,6 +72,50 @@ class AuthController extends BaseController
         }
     }
 
+    /**
+     * Login api with uuid
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function loginUuid(Request $request)
+    {
+
+        $user = ExternalUser::where('uuid', $request->uuid)->first();
+
+        if($user == null){
+            return $this->sendError('Invalid.', ['error' => "Invalid uuid"]);
+        }
+
+        if (Auth::loginUsingId($user->id)) {
+            $user = Auth::user();
+
+            $generateToken = $user->createToken('MyAppDigiBook308');
+            $success['token'] = @$generateToken->accessToken;
+            $success['expires_at'] = @$generateToken->token->expires_at;
+            $success['nis'] = @$user->nis;
+            $success['name'] = @$user->name;
+            $success['photo'] = @$user->photo ? asset($user->photo) : '';
+            $success['email'] = @$user->email;
+            $success['role'] = @$user->role;
+            $success['kelas'] = @$user->kelas->name;
+            $success['is_pengunjung'] = @$user->is_pengunjung;
+            $success['tingkat'] = @$user->kelas->tingkat->name;
+            $success['jenjang'] = @$user->kelas->tingkat->jenjang->name ?? @$user->jenjang->name;
+            $success['tingkat_id'] = @$user->kelas->tingkat->id;
+            $success['jenjang_id'] = @$user->kelas->tingkat->jenjang->id ?? @$user->jenjang->id;
+            $success['status'] = @$user->status;
+            $success['user_id'] = @$user->id;
+
+            return $this->sendResponse($success, 'User login successfully.');
+            // handle status belum aktif
+            // if($user->status === 'AKTIF'){
+            // }else {
+            //     return $this->sendError('Maaf, status akun kamu : '.(str_replace('_', ' ', @$user->status)).'. Silahkan kontak administrator/guru.', ['error'=>'Unauthorised']);
+            // }
+        } else {
+            return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
+        }
+    }
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [

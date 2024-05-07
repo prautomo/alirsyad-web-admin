@@ -70,8 +70,11 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
         Route::get('external-users/next-grade',  "ExternalUserController@nextGrade")->name('external-users.next_grade');
         Route::post('external-users/next-grade', 'ExternalUserController@nextGradeUpdate')->name('external-users.next_grade_update');
         Route::get('external-users/next-grade/list-siswa', 'ExternalUserController@listSiswaJson')->name('external-users.listSiswaJson');
+        Route::get('external-users/generate-qr-code/{id}', 'ExternalUserController@generateQRCode')->name('external-users.generateQRCode');
+
         // begin - development purpose only
         Route::get('external-users/next-grade/add-init-kelas-siswa', 'ExternalUserController@initKelasSiswa')->name('external-users.initKelasSiswa');
+        Route::get('external-users/generate-uuid-external-users', 'ExternalUserController@generate_uuid'); //Temp route to generate uuid external users
         // end
         Route::resource('external-users', 'ExternalUserController');
         Route::post('external-users/update-status/{id}', 'ExternalUserController@updateStatus')->name('external-users.update-status');

@@ -69,6 +69,16 @@
     @endif
 @endcan
 
+@can(@$permissionName.'-list')
+    @if(@$generateQR)
+    {{-- <a href="{{ $generateQR }}" class="btn btn-sm btn-icon btn-info" data-role="form-modal"> --}}
+    <a href="#" data-toggle="modal" data-target="#viewQRModal" class="btn btn-sm btn-icon btn-success datatable-viewQR-btn" data-qr='{{ $generateQR ?? ""}}' >
+        <i class="fa fa-qrcode"></i>
+        {{__("Generate QR")}}
+    </a>
+    @endif
+@endcan
+
 @if(isset($statusRequestDanaRoute))
 <a href="{{$statusRequestDanaRoute}}" data-name="{{$name ?? ""}}" data-status="{{$status ?? ""}}" class="btn btn-sm btn-icon btn-primary datatable-status-dana-btn">
     <i class="fa fa-pencil-alt"></i>

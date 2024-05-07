@@ -276,6 +276,16 @@
             })
         });
 
+        $(document).on('click', '.datatable-viewQR-btn', function(event) {
+            event.preventDefault();
+            const qr_data = $(this).data("qr");
+
+            $('#previewQRCode').html(qr_data.qrcode);
+            $('#previewQRCodeName').html(qr_data.name);
+            $('#previewQRCodeNis').html(qr_data.nis);
+            $('#previewQRCodeTingkat').html(qr_data.tingkat);
+        });
+
         $(document).on('click', '.datatable-status-dana-btn', function(event) {
             event.preventDefault();
             const url = $(this).attr("href");
@@ -522,6 +532,34 @@
                 <div id="ps-jawaban-value">-</div>
                 <h2 class="font-weight-bold mt-3">Pembahasan :</h2>
                 <div id="ps-pembahasan-value">-</div>
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="viewQRModal" tabindex="-1" role="dialog" aria-labelledby="viewQRLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title" id="viewQRLabel">Genarate QR Code</h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body pt-0">
+        <div class="row mt-2 text-center">
+            <div class="col-md-12">
+                <div id="previewQRCode" class="mb-3"></div>
+                <p class="font-weight-bold">
+                    <span id="previewQRCodeName">-</span> /
+                    <span id="previewQRCodeNis">-</span> /
+                    <span id="previewQRCodeTingkat">-</span>
+                </p>
             </div>
         </div>
       </div>

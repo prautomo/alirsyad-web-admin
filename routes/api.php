@@ -18,6 +18,7 @@ use App\Http\Controllers\API\ExternalUserController;
 */
 
 Route::post('login', [AuthController::class, 'login']);
+Route::post('login-uuid', [AuthController::class, 'loginUuid']);
 Route::get("login", function (Request $request) {
     return "ok";
 });
