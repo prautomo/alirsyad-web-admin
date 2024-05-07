@@ -8,6 +8,10 @@
     background-color: #00594d !important;
 }
 
+.bg-transparent {
+    background-color: transparent !important;
+}
+
 .text-dark-green {
     color: #00594d !important;
 }
@@ -46,3 +50,35 @@
 .select2-container .select2-selection--single {
     height: 50px !important;
 }
+
+.navbar-light .navbar-nav .show > .nav-link, .navbar-light .navbar-nav .active > .nav-link, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .nav-link.active {
+    color: white !important;
+    font-weight: bolder !important;
+}
+
+.navbar-vertical .navbar-nav .nav-link[data-toggle='collapse'][aria-expanded='true']:after {
+    transform: rotate(90deg);
+    color: white !important;
+}
+
+.navbar-account {
+    box-sizing: border-box;
+    width: 150px;
+    height: 48px;
+    background: rgba(246, 208, 161, 0.5);
+    /* Seocndary/50 */
+    border: 1px solid #E98A15;
+    border-radius: 100px;
+    color: black !important;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: #E98A15 !important;
+}
+
+.avatar {
+    width: 20px !important;
+    height: 20px !important;
+    background-color: transparent !important;
+}
+
