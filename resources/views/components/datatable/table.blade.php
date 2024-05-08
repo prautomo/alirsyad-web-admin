@@ -1,4 +1,4 @@
-@props(['filterCol' => [], 'isMultiple' => []])
+@props(['filterCol' => [], 'isMultiple' => [], 'customSearch' => 0])
 
 <style>
     .form-group{
@@ -78,15 +78,23 @@
     // filterCol = idx of column that able to filter, isMultiple = consider if its multiple value or not
     var filter_col = <?php echo json_encode($filterCol); ?>;
     var is_multiple = <?php echo json_encode($isMultiple); ?>;
+    var is_custom_search = <?php echo $customSearch; ?>;
     var idx_loop = 0;
 
     filter_col = JSON.parse("[" + filter_col + "]");
     is_multiple = JSON.parse("[" + is_multiple + "]");
 
     $(document).ready(function () {
-        const datatable = initDatatable('.datatable-serverside', {
+
+        const options = {
             paging: false,
-        });
+        }
+
+        if (is_custom_search) {
+            options.dom = 'ltrip'
+        }
+
+        const datatable = initDatatable('.datatable-serverside', options);
         const datatableId = datatable.table().node().id;
 
         datatable.on('init', function ( e, settings, json ) {
@@ -162,9 +170,8 @@
             }
         }
 
-
+        // Custom Search
         $('#search-dt-table').keyup(function(){
-            console.log($(this).val()); 
             datatable.search($(this).val()).draw() ;
         })
 

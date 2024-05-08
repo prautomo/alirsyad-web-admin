@@ -126,6 +126,6 @@ th:last-child {
 }
 
 /* Hide default filter & search datatable */
-.dataTables_filter {
+/* .dataTables_filter {
     display: none;
-}
+} */

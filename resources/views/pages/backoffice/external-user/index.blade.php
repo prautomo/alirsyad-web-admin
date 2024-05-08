@@ -73,7 +73,7 @@
               }
             @endphp
             <p></p>
-            <x-datatable.table :filterCol="__($col_to_filter)" :isMultiple="__($is_multiple_col)">
+            <x-datatable.table :filterCol="__($col_to_filter)" :isMultiple="__($is_multiple_col)" :customSearch="__(1)">
                 {{--
                     data-* is same as option columns in datatable
                     https://datatables.net/reference/option/columns
