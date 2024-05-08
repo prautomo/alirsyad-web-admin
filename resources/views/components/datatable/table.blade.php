@@ -162,6 +162,12 @@
             }
         }
 
+
+        $('#search-dt-table').keyup(function(){
+            console.log($(this).val()); 
+            datatable.search($(this).val()).draw() ;
+        })
+
         // copy slug
         $(document).on('click', '#datatable-copy-btn', function(event) {
             event.preventDefault();

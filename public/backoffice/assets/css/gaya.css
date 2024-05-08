@@ -124,3 +124,8 @@ td:last-child,
 th:last-child {
     border-radius: 0 10px 10px 0;
 }
+
+/* Hide default filter & search datatable */
+.dataTables_filter {
+    display: none;
+}
