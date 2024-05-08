@@ -84,7 +84,9 @@
     is_multiple = JSON.parse("[" + is_multiple + "]");
 
     $(document).ready(function () {
-        const datatable = initDatatable('.datatable-serverside');
+        const datatable = initDatatable('.datatable-serverside', {
+            paging: false,
+        });
         const datatableId = datatable.table().node().id;
 
         datatable.on('init', function ( e, settings, json ) {

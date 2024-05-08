@@ -37,6 +37,7 @@
     <nav class="navbar navbar-top navbar-expand navbar-dark bg-transparent border-bottom">
       <div class="container-fluid">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <h6 class="h2 text-dark d-inline-block mb-0" id="page-title-nav">@yield('title')</h6>
           <!-- Search form -->
           <!-- <form class="navbar-search navbar-search-light form-inline mr-sm-3" id="navbar-search-main">
             <div class="form-group mb-0">
@@ -300,7 +301,7 @@
         @yield('content')
         
         <!-- Footer -->
-        @include('layouts.partials.backoffice.footer')
+        <!-- @include('layouts.partials.backoffice.footer') -->
     </div>
   </div>
   <!-- Argon Scripts -->
