@@ -44,7 +44,7 @@
 
 @can(@$permissionName.'-edit')
     @if(@$editRoute)
-    <a href="{{ $editRoute }}" class="btn btn-sm btn-icon btn-primary" data-role="form-modal">
+    <a href="{{ $editRoute }}" class="btn btn-sm btn-icon btn-info" data-role="form-modal">
         <i class="fa fa-pencil-alt"></i>
         {{__("Edit")}}
     </a>
@@ -72,9 +72,9 @@
 @can(@$permissionName.'-list')
     @if(@$generateQR)
     {{-- <a href="{{ $generateQR }}" class="btn btn-sm btn-icon btn-info" data-role="form-modal"> --}}
-    <a href="#" data-toggle="modal" data-target="#viewQRModal" class="btn btn-sm btn-icon btn-success datatable-viewQR-btn" data-qr='{{ $generateQR ?? ""}}' >
+    <a href="#" data-toggle="modal" data-target="#viewQRModal" class="btn btn-sm btn-icon btn-warning datatable-viewQR-btn" data-qr='{{ $generateQR ?? ""}}' >
         <i class="fa fa-qrcode"></i>
-        {{__("Generate QR")}}
+        {{__("QR Code")}}
     </a>
     @endif
 @endcan

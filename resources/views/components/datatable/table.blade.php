@@ -1,4 +1,4 @@
-@props(['filterCol' => [], 'isMultiple' => []])
+@props(['filterCol' => [], 'isMultiple' => [], 'customSearch' => 0])
 
 <style>
     .form-group{
@@ -28,7 +28,6 @@
         overflow: auto;
     }
 </style>
-<div id="filter-col" class="row"></div>
 <table {{$attributes->merge(["class" => "datatable-serverside table datatable"])}}>
     <thead>
         <tr>
@@ -78,13 +77,23 @@
     // filterCol = idx of column that able to filter, isMultiple = consider if its multiple value or not
     var filter_col = <?php echo json_encode($filterCol); ?>;
     var is_multiple = <?php echo json_encode($isMultiple); ?>;
+    var is_custom_search = <?php echo $customSearch; ?>;
     var idx_loop = 0;
 
     filter_col = JSON.parse("[" + filter_col + "]");
     is_multiple = JSON.parse("[" + is_multiple + "]");
 
     $(document).ready(function () {
-        const datatable = initDatatable('.datatable-serverside');
+
+        const options = {
+            paging: false,
+        }
+
+        if (is_custom_search) {
+            options.dom = 'ltrip'
+        }
+
+        const datatable = initDatatable('.datatable-serverside', options);
         const datatableId = datatable.table().node().id;
 
         datatable.on('init', function ( e, settings, json ) {
@@ -93,7 +102,7 @@
                 var columnId = "div-filter-" + column.index();
                 var columnHeader = column.header().textContent;
 
-                $('<div id="' + columnId + '" class="form-group pr-3">\
+                $('<div id="' + columnId + '" class="form-group col-3">\
                     <label>'+ columnHeader +':</label>')
                     .appendTo( $('#filter-col'));
 
@@ -159,6 +168,11 @@
                 }
             }
         }
+
+        // Custom Search
+        $('#search-dt-table').keyup(function(){
+            datatable.search($(this).val()).draw() ;
+        })
 
         // copy slug
         $(document).on('click', '#datatable-copy-btn', function(event) {
@@ -560,6 +574,29 @@
                     <span id="previewQRCodeNis">-</span> /
                     <span id="previewQRCodeTingkat">-</span>
                 </p>
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title" id="filterLabel">Filter</h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body pt-0">
+        <div class="row mt-2 text-center">
+            <div class="col-md-12">
+                <div id="filter-col" class="row"></div>
             </div>
         </div>
       </div>
