@@ -54,6 +54,23 @@
 .navbar-light .navbar-nav .show > .nav-link, .navbar-light .navbar-nav .active > .nav-link, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .nav-link.active {
     color: white !important;
     font-weight: bolder !important;
+    margin-right: .5rem;
+    margin-left: .5rem;
+    padding-right: 1rem;
+    padding-left: 1rem;
+    border-radius: .375rem;
+    background: #024102;
+}
+
+.navbar-light .navbar-nav .show > .nav-link, .navbar-light .navbar-nav .active-sub > .nav-link, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .nav-link.active-sub {
+    color: #024102 !important;
+    font-weight: bolder !important;
+    margin-right: .5rem;
+    margin-left: .5rem;
+    padding-right: 1rem;
+    padding-left: 1rem;
+    border-radius: .375rem;
+    background: rgba(154, 179, 154, 0.2);
 }
 
 .navbar-vertical .navbar-nav .nav-link[data-toggle='collapse'][aria-expanded='true']:after {
@@ -129,3 +146,14 @@ th:last-child {
 /* .dataTables_filter {
     display: none;
 } */
+
+.bootstrap-select .dropdown-toggle:focus, .bootstrap-select>select.mobile-device:focus+.dropdown-toggle {
+    outline: none !important;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus
+{
+    color: #024102 !important;
+    background-color: #e3f0e4 !important;
+}

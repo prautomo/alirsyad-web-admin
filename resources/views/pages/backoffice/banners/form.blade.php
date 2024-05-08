@@ -28,8 +28,8 @@
     <div class="col-md-12">
         <div class="form-group">
             <label class="form-control-label" for="input-activeStatus">Show Banner</label>
-
-            <select id="activeStatus" name="activeStatus" class="form-control {{($errors->has('activeStatus') ? ' is-invalid' : '')}}">
+            <br/>
+            <select id="activeStatus" name="activeStatus" data-style="btn-light" class="selectpicker {{($errors->has('activeStatus') ? ' is-invalid' : '')}}">
                 @foreach($activeStatus as $val => $label)
                 <option value="{{ $val }}" {{ ((int)$val==(int) @$data['activeStatus']) ? ' selected' : '' }}>{{ $label }}</option>
                 @endforeach
