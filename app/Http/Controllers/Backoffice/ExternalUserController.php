@@ -846,7 +846,7 @@ class ExternalUserController extends Controller
     public function generateQRCode ($id)
     {
         $user = ExternalUser::findOrFail($id);
-        $qrcode = QrCode::size(400)->generate(json_encode(['uuid' => $user->uuid]));
+        $qrcode = QrCode::size(250)->generate(json_encode(['uuid' => $user->uuid]));
 
         $data = [
             'name' => $user->name, 

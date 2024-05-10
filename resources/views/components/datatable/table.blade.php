@@ -308,6 +308,48 @@
             $('#previewQRCodeTingkat').html(qr_data.tingkat);
         });
 
+        function svgDataURL(svgString) {
+            return "data:image/svg+xml," + encodeURIComponent(svgString);
+        }
+
+        $(document).on('click', '.datatable-downloadQR-btn', function(event) {
+            event.preventDefault();
+            const previewQRCode = $('#previewQRCode');
+            var dataURL = svgDataURL(previewQRCode.html())
+            var dl = document.createElement("a");
+            document.body.appendChild(dl); // This line makes it work in Firefox.
+            dl.setAttribute("href", dataURL);
+            dl.setAttribute("download", "test.svg");
+            dl.click();
+        });
+
+        $(document).on('click', '.datatable-printQR-btn', function(event) {
+            event.preventDefault();
+            var popUpAndPrint = function()
+            {
+                var svgQR = $('#previewQRCode');
+                var name = $('#previewQRCodeName').html();
+                var nis = $('#previewQRCodeNis').html();
+                var tingkat = $('#previewQRCodeTingkat').html();
+                var width = parseFloat(850)
+                var height = parseFloat(850)
+                var printWindow = window.open('', 'PrintMap',
+                'width=' + width + ',height=' + height);
+
+                html = '<center>';
+                html += $(svgQR).html()
+                html += '<br/>'
+                html += '<br/>'
+                html += name + ' / ' + nis + ' / ' + tingkat
+                html += '</center>'
+
+                printWindow.document.writeln(html);
+                printWindow.document.close();
+                printWindow.print();
+            };
+            setTimeout(popUpAndPrint, 500);
+        });
+
         $(document).on('click', '.datatable-status-dana-btn', function(event) {
             event.preventDefault();
             const url = $(this).attr("href");
@@ -565,7 +607,7 @@
 </div>
 
 <div class="modal fade" id="viewQRModal" tabindex="-1" role="dialog" aria-labelledby="viewQRLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-dialog modal-md" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title" id="viewQRLabel">Genarate QR Code</h1>
@@ -585,8 +627,9 @@
             </div>
         </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      <div class="modal-footer" style="justify-content: center;">
+        <button type="button" class="btn btn-md btn-outline-primary datatable-printQR-btn">Cetak QR</button>
+        <button type="button" class="btn btn-md btn-primary datatable-downloadQR-btn">Unduh QR</button>
       </div>
     </div>
   </div>
