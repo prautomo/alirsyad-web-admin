@@ -35,7 +35,7 @@
                 <ul class="nav nav-sm flex-column">
                   @can('jenjang-list')
                   <li class="nav-item">
-                    <a href="{{ route('backoffice::jenjangs.index') }}" class="nav-link">
+                    <a href="{{ route('backoffice::jenjangs.index') }}" class="nav-link{{ (request()->is('backoffice/jenjangs*')) ? ' active-sub' : '' }}">
                       <span class="sidenav-normal"> Jenjang Pendidikan </span>
                     </a>
                   </li>
@@ -43,7 +43,7 @@
 
                   @can('tingkat-list')
                   <li class="nav-item">
-                    <a href="{{ route('backoffice::tingkats.index') }}" class="nav-link">
+                    <a href="{{ route('backoffice::tingkats.index') }}" class="nav-link{{ (request()->is('backoffice/tingkats*')) ? ' active-sub' : '' }}">
                       <span class="sidenav-normal"> Tingkat </span>
                     </a>
                   </li>
@@ -51,7 +51,7 @@
                   
                   @can('kelas-list')
                   <li class="nav-item">
-                    <a href="{{ route('backoffice::kelas.index') }}" class="nav-link">
+                    <a href="{{ route('backoffice::kelas.index') }}" class="nav-link{{ (request()->is('backoffice/kelas*')) ? ' active-sub' : '' }}">
                       <span class="sidenav-normal"> Kelas </span>
                     </a>
                   </li>
@@ -59,7 +59,7 @@
 
                   @can('mata_pelajaran-list')
                   <li class="nav-item">
-                    <a href="{{ route('backoffice::mata_pelajarans.index') }}" class="nav-link">
+                    <a href="{{ route('backoffice::mata_pelajarans.index') }}" class="nav-link{{ (request()->is('backoffice/mata_pelajarans*')) ? ' active-sub' : '' }}">
                       <span class="sidenav-normal"> Mata Pelajaran </span>
                     </a>
                   </li>
@@ -81,7 +81,7 @@
 
                   @can('modul-list')
                   <li class="nav-item">
-                    <a href="{{ route('backoffice::moduls.index') }}" class="nav-link">
+                    <a href="{{ route('backoffice::moduls.index') }}" class="nav-link{{ (request()->is('backoffice/moduls*')) ? ' active-sub' : '' }}">
                       <span class="sidenav-normal"> Modul </span>
                     </a>
                   </li>
@@ -89,7 +89,7 @@
                   
                   @can('video-list')
                   <li class="nav-item">
-                    <a href="{{ route('backoffice::videos.index') }}" class="nav-link">
+                    <a href="{{ route('backoffice::videos.index') }}" class="nav-link{{ (request()->is('backoffice/videos*')) ? ' active-sub' : '' }}">
                       <span class="sidenav-normal"> Video </span>
                     </a>
                   </li>
@@ -97,7 +97,7 @@
 
                   @can('simulasi-list')
                   <li class="nav-item">
-                    <a href="{{ route('backoffice::simulasis.index') }}" class="nav-link">
+                    <a href="{{ route('backoffice::simulasis.index') }}" class="nav-link{{ (request()->is('backoffice/simulasis*')) ? ' active-sub' : '' }}">
                       <span class="sidenav-normal"> Simulasi </span>
                     </a>
                   </li>
@@ -105,7 +105,7 @@
 
                   {{-- @can('story-path-list')
                   <li class="nav-item">
-                    <a href="{{ route('backoffice::story-paths.index') }}" class="nav-link">
+                    <a href="{{ route('backoffice::story-paths.index') }}" class="nav-link{{ (request()->is('backoffice/story-paths*')) ? ' active-sub' : '' }}">
                       <span class="sidenav-normal"> Story Path </span>
                     </a>
                   </li>
@@ -113,7 +113,7 @@
 
                   @can('paket-soal-list')
                   <li class="nav-item">
-                    <a href="{{ route('backoffice::paket-soals.index') }}" class="nav-link">
+                    <a href="{{ route('backoffice::paket-soals.index') }}" class="nav-link{{ (request()->is('backoffice/paket-soals*')) ? ' active-sub' : '' }}">
                       <span class="sidenav-normal"> Paket Soal </span>
                     </a>
                   </li>
@@ -133,27 +133,27 @@
               <div class="collapse{{ request()->is('backoffice/users*', 'backoffice/external-users*') ? ' show' : '' }}" id="navbar-exus" style="">
                 <ul class="nav nav-sm flex-column">
                   <li class="nav-item">
-                    <a href="{{ route('backoffice::users.index', ['role'=>'Superadmin']) }}" class="nav-link">
+                    <a href="{{ route('backoffice::users.index', ['role'=>'Superadmin']) }}" class="nav-link{{ (request()->query('role') === 'Superadmin') ? ' active-sub' : '' }}">
                       <span class="sidenav-normal"> Superadmin </span>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="{{ route('backoffice::users.index', ['role'=>'Guru']) }}" class="nav-link">
+                    <a href="{{ route('backoffice::users.index', ['role'=>'Guru']) }}" class="nav-link{{ (request()->query('role') === 'Guru') ? ' active-sub' : '' }}">
                       <span class="sidenav-normal"> Guru Uploader </span>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="{{ route('backoffice::external-users.index', ['role'=>'GURU']) }}" class="nav-link">
+                    <a href="{{ route('backoffice::external-users.index', ['role'=>'GURU']) }}" class="nav-link{{ (request()->query('role') === 'GURU') ? ' active-sub' : '' }}">
                       <span class="sidenav-normal"> Guru </span>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="{{ route('backoffice::external-users.index', ['role'=>'SISWA', 'is_pengunjung' => false]) }}" class="nav-link">
+                    <a href="{{ route('backoffice::external-users.index', ['role'=>'SISWA', 'is_pengunjung' => false]) }}" class="nav-link{{ (request()->query('role') === 'SISWA' && request()->query('is_pengunjung') == 0) ? ' active-sub' : '' }}">
                       <span class="sidenav-normal"> Siswa </span>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="{{ route('backoffice::external-users.index', ['role'=>'SISWA', 'is_pengunjung' => true]) }}" class="nav-link">
+                    <a href="{{ route('backoffice::external-users.index', ['role'=>'SISWA', 'is_pengunjung' => true]) }}" class="nav-link{{ (request()->query('role') === 'SISWA' && request()->query('is_pengunjung') == 1) ? ' active-sub' : '' }}">
                       <span class="sidenav-normal"> Pengunjung </span>
                     </a>
                   </li>
@@ -174,17 +174,17 @@
               <div class="collapse{{ request()->is('backoffice/manage-external-users*') ? ' show' : '' }}" id="navbar-manage-exus" style="">
                 <ul class="nav nav-sm flex-column">
                   <li class="nav-item">
-                    <a href="{{ route('backoffice::manage-external-users.index', ['content'=>'modul']) }}" class="nav-link">
+                    <a href="{{ route('backoffice::manage-external-users.index', ['content'=>'modul']) }}" class="nav-link{{ (request()->query('content') === 'modul') ? ' active-sub' : '' }}">
                       <span class="sidenav-normal"> Akses Modul Pengunjung </span>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="{{ route('backoffice::manage-external-users.index', ['content'=>'video']) }}" class="nav-link">
+                    <a href="{{ route('backoffice::manage-external-users.index', ['content'=>'video']) }}" class="nav-link{{ (request()->query('content') === 'video') ? ' active-sub' : '' }}">
                       <span class="sidenav-normal"> Akses Video Pengunjung </span>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="{{ route('backoffice::manage-external-users.index', ['content'=>'simulasi']) }}" class="nav-link">
+                    <a href="{{ route('backoffice::manage-external-users.index', ['content'=>'simulasi']) }}" class="nav-link{{ (request()->query('content') === 'simulasi') ? ' active-sub' : '' }}">
                       <span class="sidenav-normal"> Akses Simulasi Pengunjung </span>
                     </a>
                   </li>

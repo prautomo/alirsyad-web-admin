@@ -86,11 +86,19 @@
     $(document).ready(function () {
 
         const options = {
-            paging: false,
+            paging: true,
+            pageLength: 10,
+            language: {
+                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data.",
+                paginate: {
+                    previous: "<i class='fa fa-chevron-left'></i>",
+                    next: "<i class='fa fa-chevron-right'></i>",
+                },
+            },
         }
 
         if (is_custom_search) {
-            options.dom = 'ltrip'
+            options.dom = 'trip'
         }
 
         const datatable = initDatatable('.datatable-serverside', options);

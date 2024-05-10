@@ -142,6 +142,11 @@ th:last-child {
     border-radius: 0 10px 10px 0;
 }
 
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    border-radius: 50% !important;
+    padding: 0.3em 0.5em !important;
+ }
+
 /* Hide default filter & search datatable */
 /* .dataTables_filter {
     display: none;
@@ -193,4 +198,19 @@ th:last-child {
 
 .navbar-light .navbar-nav .nav-link {
     color: #9E9E9E !important;
+}
+
+.btn-blue-pastel {
+    color: #3C5BFF !important;
+    background: rgba(228, 233, 255, 1) !important;
+}
+
+.btn-red-pastel {
+    color: #C52421 !important;
+    background: rgba(255, 218, 218, 1) !important;
+}
+
+.btn-yellow-pastel {
+    color: #E98A15 !important;
+    background: rgba(255, 236, 214, 1) !important;
 }
