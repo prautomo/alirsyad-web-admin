@@ -8,4 +8,4 @@
     }
 @endphp
 
-<span class="badge badge-{{$badge}}" onClick="changeStatus({{$id}}, '{{$role}}', '{{$route}}')" style="cursor: pointer;" title="Change Status">{{$text}}</span>
+<span class="btn btn-sm btn-{{$badge}}" onClick="changeStatus({{$id}}, '{{$role}}', '{{$route}}')" style="cursor: pointer;" title="Change Status">{{$text}}</span>

@@ -20,11 +20,13 @@
   <link rel="stylesheet" href="{{ asset('backoffice/assets/vendor/nucleo/css/nucleo.css') }}" type="text/css">
   <link rel="stylesheet" href="{{ asset('backoffice/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css') }}" type="text/css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@8.19.0/dist/sweetalert2.min.css">
-  
+  <!-- Select Style -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
   <!-- Argon CSS -->
   <link rel="stylesheet" href="{{ asset('backoffice/assets/css/argon.css?v=1.2.0') }}" type="text/css">
   <!-- Page plugins -->
   <link rel="stylesheet" href="{{ asset('backoffice/assets/css/gaya.css') }}" type="text/css">
+  <link rel="stylesheet" href="{{ asset('backoffice/assets/css/icon.css') }}" type="text/css">
   @stack('plugin_css')
 </head>
 
@@ -35,7 +37,7 @@
   <div class="main-content" id="panel">
     <!-- Topnav -->
     <nav class="navbar navbar-top navbar-expand navbar-dark bg-transparent border-bottom">
-      <div class="container-fluid">
+      <div class="container-fluid header-nav">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <h6 class="h2 text-dark d-inline-block mb-0" id="page-title-nav">@yield('title')</h6>
           <!-- Search form -->
@@ -315,6 +317,9 @@
   <!-- Argon JS -->
   <script src="{{ asset('backoffice/assets/js/argon.js?v=1.2.0') }}"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8.19.0/dist/sweetalert2.min.js"></script>
+
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
   
   @stack('plugin_script')
 
