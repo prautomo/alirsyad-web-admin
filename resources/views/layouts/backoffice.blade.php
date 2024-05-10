@@ -26,6 +26,7 @@
   <link rel="stylesheet" href="{{ asset('backoffice/assets/css/argon.css?v=1.2.0') }}" type="text/css">
   <!-- Page plugins -->
   <link rel="stylesheet" href="{{ asset('backoffice/assets/css/gaya.css') }}" type="text/css">
+  <link rel="stylesheet" href="{{ asset('backoffice/assets/css/icon.css') }}" type="text/css">
   @stack('plugin_css')
 </head>
 
@@ -36,7 +37,7 @@
   <div class="main-content" id="panel">
     <!-- Topnav -->
     <nav class="navbar navbar-top navbar-expand navbar-dark bg-transparent border-bottom">
-      <div class="container-fluid">
+      <div class="container-fluid header-nav">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <h6 class="h2 text-dark d-inline-block mb-0" id="page-title-nav">@yield('title')</h6>
           <!-- Search form -->
