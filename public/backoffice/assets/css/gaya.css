@@ -157,3 +157,22 @@ th:last-child {
     color: #024102 !important;
     background-color: #e3f0e4 !important;
 }
+
+.search-main .form-control, .search-main .input-group-text {
+    background-color: transparent !important;
+}
+
+.input-group-alternative {
+    box-shadow: none !important;
+    border: 1px solid rgba(154, 179, 154, 1) !important;
+    border-radius: 10px !important;
+}
+
+.search-bar-filter {
+    width: 500px !important;
+}
+
+.btn-green-pastel {
+    color: #024104 !important;
+    background: rgba(154, 179, 154, 0.2) !important;
+}
