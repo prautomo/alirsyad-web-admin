@@ -32,8 +32,6 @@
             <a href="{{ route('backoffice::external-users.next_grade', ['role'=>\Request::get('role')]) }}" class="btn btn-md btn-outline-primary">
               Naik Kelas
             </a>
-<<<<<<< Updated upstream
-=======
             <a href="{{ route('backoffice::external-users.batch_create', ['role'=>\Request::get('role')]) }}" class="btn btn-md btn-outline-primary">
               Unggah XLSX
             </a>
@@ -46,7 +44,6 @@
             <a href="{{ route('backoffice::external-users.create', ['role'=>\Request::get('role')]) }}" class="btn btn-md btn-primary">
               <i class="fa fa-plus text-light"></i>&nbsp;&nbsp;Tambah Data
             </a>
->>>>>>> Stashed changes
             @endif
         </div>
         @endcan

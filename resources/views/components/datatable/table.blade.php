@@ -308,8 +308,6 @@
             $('#previewQRCodeTingkat').html(qr_data.tingkat);
         });
 
-<<<<<<< Updated upstream
-=======
         function svgDataURL(svgString) {
             return "data:image/svg+xml," + encodeURIComponent(svgString);
         }
@@ -365,7 +363,6 @@
             setTimeout(popUpAndPrint, 500);
         });
 
->>>>>>> Stashed changes
         $(document).on('click', '.datatable-status-dana-btn', function(event) {
             event.preventDefault();
             const url = $(this).attr("href");
