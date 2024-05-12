@@ -32,10 +32,12 @@
             <a href="{{ route('backoffice::external-users.next_grade', ['role'=>\Request::get('role')]) }}" class="btn btn-md btn-outline-primary">
               Naik Kelas
             </a>
+<<<<<<< Updated upstream
+=======
             <a href="{{ route('backoffice::external-users.batch_create', ['role'=>\Request::get('role')]) }}" class="btn btn-md btn-outline-primary">
               Unggah XLSX
             </a>
-            <a href="#" class="btn btn-md btn-secondary">
+            <a href="{{ route('backoffice::external-users.generateQRCodeBulk') }}" class="btn btn-md btn-secondary" id="btn-generate-qr">
               Generate QR Code
             </a>
             @endif
@@ -44,6 +46,7 @@
             <a href="{{ route('backoffice::external-users.create', ['role'=>\Request::get('role')]) }}" class="btn btn-md btn-primary">
               <i class="fa fa-plus text-light"></i>&nbsp;&nbsp;Tambah Data
             </a>
+>>>>>>> Stashed changes
             @endif
         </div>
         @endcan
@@ -110,3 +113,25 @@
 </div>
 
 @endsection
+
+@push('script')
+<script>
+   $(document).on('click', '#btn-generate-qr', function(event) {
+        event.preventDefault();
+        console.log('click before go')
+
+        // TODO: need changes after redevelop table filter
+        var selectedKelasId = 'select-div-filter-5' 
+        var selectedKelas = $(`#${selectedKelasId}`).find(":selected").text();
+        var selectedTingkatId = 'select-div-filter-4' 
+        var selectedTingkat = $(`#${selectedTingkatId}`).find(":selected").text();
+
+        var linkGenerateQR = `external-users/generate-qr-code-bulk?kelas=${selectedKelas}&tingkat=${selectedTingkat}`
+        $('#btn-generate-qr').attr("href", linkGenerateQR)
+        
+        // console.log('linkGenerateQR', linkGenerateQR)
+        location.href = linkGenerateQR;
+
+    });
+</script>
+@endpush

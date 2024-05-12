@@ -137,12 +137,15 @@ class ExternalUserController extends Controller
 
                 return "";
             })
-            ->addColumn("action", function ($data) {
+            ->addColumn("action", function ($data) use ($request) {
                 $actions = [
                     "name" => $data->name,
                     "deleteRoute" => route($this->routePath . ".destroy", $data->id),
-                    "generateQR" => $this->generateQRCode($data->id),
                 ];
+
+                if ($request->role == 'SISWA' && !$request->isPengunjung) {
+                    $actions["generateQR"] = $this->generateQRCode($data->id);
+                }
 
                 if ($data->is_pengunjung) {
                     $actions["enableMapelRoute"] = route($this->routePath . ".enableMapel", $data->id) . (\Request::get('role') ? "?role=" . \Request::get('role') : "");
@@ -843,19 +846,67 @@ class ExternalUserController extends Controller
         return response()->json("Success generate uuid.", 200);
     }
 
-    public function generateQRCode ($id)
+    public function generateQRCode ($id, $size = 250, $return_as_json = true)
     {
         $user = ExternalUser::findOrFail($id);
-        $qrcode = QrCode::size(250)->generate(json_encode(['uuid' => $user->uuid]));
+        $qrcode = QrCode::size($size)->generate(json_encode(['uuid' => $user->uuid]));
 
         $data = [
             'name' => $user->name, 
             'nis' => $user->nis, 
             'tingkat' => $user->kelas_id ? $user->kelas->tingkat->name . $user->kelas->name : '',
-            'qrcode' => (string) $qrcode
         ];
-        $data = json_encode($data);
 
+        if(!$return_as_json){
+            $data['qrcode'] = $qrcode;
+            return $data;
+        }
+
+        $data['qrcode'] = (string) $qrcode;
+        $data = json_encode($data);
         return $data;
+    }
+
+    public function generateQRCodeBulk (Request $request)
+    {
+        // TODO: need changes after redevelop table filter
+
+        $this->validate($request, [
+            'kelas' => 'required',
+            'tingkat' => 'required'
+        ]);
+
+        $get_kelas = Kelas::where(['name' => $request->kelas])
+                ->whereHas('tingkat', function ($q2) use ($request) {
+                    $q2->where('name', $request->tingkat);
+                })->first();
+
+        if(!$get_kelas){
+            return view($this->prefix . '.generate_qr_bulk', ['title' => 'Generate QR Code', 'data' => []]);
+        }
+
+        $list_siswa = KelasSiswa::where(['kelas_id' => $get_kelas->id, 'is_current' => 1])->pluck('siswa_id')->toArray();
+
+        $query = ExternalUser::query();
+
+        // relation with kelas and tingkat
+        $query = $query->with(['kelas.tingkat.jenjang', 'mataPelajarans', 'jenjang', 'classHistory'])->select('external_users.*');
+        $query = $query->whereIn('id', $list_siswa);
+        $data = $query->get();
+        
+        foreach($data as $item){
+            $current_class = KelasSiswa::where(['siswa_id' => $item->id, 'is_current' => 1])->first();
+
+            $item['tahun_ajaran'] = "";
+            if($current_class != null){
+                $item['tahun_ajaran'] = $current_class->tahun_ajaran;
+            }
+
+            $item['qr'] = $this->generateQRCode($item->id, 300, false);
+        }
+
+        // dd($data->first());
+
+        return view($this->prefix . '.generate_qr_bulk', ['title' => 'Generate QR Code', 'data' => $data]);
     }
 }

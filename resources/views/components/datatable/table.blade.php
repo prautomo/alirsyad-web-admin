@@ -308,19 +308,34 @@
             $('#previewQRCodeTingkat').html(qr_data.tingkat);
         });
 
+<<<<<<< Updated upstream
+=======
         function svgDataURL(svgString) {
             return "data:image/svg+xml," + encodeURIComponent(svgString);
         }
 
         $(document).on('click', '.datatable-downloadQR-btn', function(event) {
             event.preventDefault();
-            const previewQRCode = $('#previewQRCode');
-            var dataURL = svgDataURL(previewQRCode.html())
-            var dl = document.createElement("a");
-            document.body.appendChild(dl); // This line makes it work in Firefox.
-            dl.setAttribute("href", dataURL);
-            dl.setAttribute("download", "test.svg");
-            dl.click();
+
+            const captureElement = document.querySelector('#bodyPreviewQR')
+            const qrItemName = $('#previewQRCodeName').text()
+            const qrItemNis = $('#previewQRCodeNis').text()
+            const qrItemTingkat = $('#previewQRCodeTingkat').text()
+
+            html2canvas(captureElement)
+                .then(canvas => {
+                    canvas.style.display = 'none'
+                    document.body.appendChild(canvas)
+                    return canvas
+                })
+                .then(canvas => {
+                    const image = canvas.toDataURL('image/png')
+                    const a = document.createElement('a')
+                    a.setAttribute('download', 'QR '+ qrItemName + ' ' + qrItemNis + ' ' + qrItemTingkat + '.png')
+                    a.setAttribute('href', image)
+                    a.click()
+                    canvas.remove()
+                })
         });
 
         $(document).on('click', '.datatable-printQR-btn', function(event) {
@@ -350,6 +365,7 @@
             setTimeout(popUpAndPrint, 500);
         });
 
+>>>>>>> Stashed changes
         $(document).on('click', '.datatable-status-dana-btn', function(event) {
             event.preventDefault();
             const url = $(this).attr("href");
@@ -610,15 +626,15 @@
   <div class="modal-dialog modal-md" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title" id="viewQRLabel">Genarate QR Code</h1>
+        <h1 class="modal-title" id="viewQRLabel">Generate QR Code</h1>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body pt-0">
         <div class="row mt-2 text-center">
-            <div class="col-md-12">
-                <div id="previewQRCode" class="mb-3"></div>
+            <div class="col-md-12" id="bodyPreviewQR">
+                <div id="previewQRCode" class="mb-3 mt-4"></div>
                 <p class="font-weight-bold">
                     <span id="previewQRCodeName">-</span> /
                     <span id="previewQRCodeNis">-</span> /
