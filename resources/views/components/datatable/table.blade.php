@@ -349,12 +349,37 @@
                 var printWindow = window.open('', 'PrintMap',
                 'width=' + width + ',height=' + height);
 
-                html = '<center>';
+                var html = '';
+                html += "<style>\
+                    @import url('https://fonts.googleapis.com/css?family=Poppins');\
+                    *{\
+                        font-family: 'Poppins', sans-serif;\
+                    }\
+                    .text-title{\
+                        margin-bottom: 0;\
+                    }\
+                    .text-sub-title{\
+                        margin-top: 5px;\
+                        font-weight: 400;\
+                        margin-bottom: 25px;\
+                    }\
+                    .text-identity{\
+                        margin-top: 0;\
+                    }\
+                    </style>"
+
+                html += '<div style="display: flex; justify-content: center; align-items: center; height: 100%">';
+                html += '<center>';
+                html += "<h1 class='text-title'>Bismillah</h1>"
+                html += "<h3 class='text-sub-title'>Silahkan Scan QR dibawah untuk login</h3>"
                 html += $(svgQR).html()
                 html += '<br/>'
                 html += '<br/>'
-                html += name + ' / ' + nis + ' / ' + tingkat
+                html += '<h3 class="text-identity">' + name + ' / ' + nis + ' / ' + tingkat + '</h3>'
                 html += '</center>'
+                html += '</div>';
+
+                console.log('html', html)
 
                 printWindow.document.writeln(html);
                 printWindow.document.close();
