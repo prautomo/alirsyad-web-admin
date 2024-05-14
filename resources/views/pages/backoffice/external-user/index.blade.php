@@ -4,9 +4,7 @@
 
 @section('header')
   @parent
-    <div class="row align-items-center py-4">
-        <div class="col-lg-6 col-7">
-          <div class="d-flex align-items-center">
+      <div class="d-flex align-items-center">
             <form class="form-inline mr-sm-3 search-main" id="search-main">
               <div class="form-group mb-0">
                 <div class="input-group input-group-alternative input-group-merge search-bar-filter">
@@ -18,36 +16,35 @@
               </div>
             </form>
 
-            <div class="dropdown">
+            <div class="dropdown mr-3">
               <button class="btn btn-green-pastel dropdown-toggle" type="button" data-toggle="modal" data-target="#filterModal" aria-haspopup="true" aria-expanded="false">
                 {{__("Filter")}}
               </button>
             </div>
-          </div>
-        </div>
-        @can('external-user-create')
-        <div class="col-lg-6 col-5 text-right">
-            <!-- <a href="#" class="btn btn-sm btn-neutral">Filters</a> -->
-            @if(\Request::get('role') === 'SISWA' && !@\Request::get('is_pengunjung'))
-            <a href="{{ route('backoffice::external-users.next_grade', ['role'=>\Request::get('role')]) }}" class="btn btn-md btn-outline-primary">
-              Naik Kelas
-            </a>
-            <a href="{{ route('backoffice::external-users.batch_create', ['role'=>\Request::get('role')]) }}" class="btn btn-md btn-outline-primary">
-              Unggah XLSX
-            </a>
-            <a href="{{ route('backoffice::external-users.generateQRCodeBulk') }}" class="btn btn-md btn-secondary" id="btn-generate-qr">
-              Generate QR Code
-            </a>
-            @endif
 
-            @if(!@\Request::get('is_pengunjung'))
-            <a href="{{ route('backoffice::external-users.create', ['role'=>\Request::get('role')]) }}" class="btn btn-md btn-primary">
-              <i class="fa fa-plus text-light"></i>&nbsp;&nbsp;Tambah Data
-            </a>
-            @endif
-        </div>
-        @endcan
-    </div>
+            @can('external-user-create')
+            <div style="margin-left: auto;">
+              @if(\Request::get('role') === 'SISWA' && !@\Request::get('is_pengunjung'))
+              <a href="{{ route('backoffice::external-users.next_grade', ['role'=>\Request::get('role')]) }}" class="btn btn-md btn-outline-primary">
+                Naik Kelas
+              </a>
+              <a href="{{ route('backoffice::external-users.batch_create', ['role'=>\Request::get('role')]) }}" class="btn btn-md btn-outline-primary">
+                Unggah XLSX
+              </a>
+              <a href="{{ route('backoffice::external-users.generateQRCodeBulk') }}" class="btn btn-md btn-secondary" id="btn-generate-qr">
+                Generate QR Code
+              </a>
+              @endif
+
+              @if(!@\Request::get('is_pengunjung'))
+              <a href="{{ route('backoffice::external-users.create', ['role'=>\Request::get('role')]) }}" class="btn btn-md btn-primary">
+                <i class="fa fa-plus text-light"></i>&nbsp;&nbsp;Tambah Data
+              </a>
+              @endif
+            </div>
+            @endcan
+      </div>
+    
 @endsection
 
 @section('content')
