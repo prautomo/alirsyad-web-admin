@@ -32,6 +32,6 @@ class DashboardController extends Controller {
     {
         $data = [];
 
-        return view('pages.backoffice.dashboard', $data);
+        return view('pages.backoffice.dashboard.guru_mapel', $data);
     }
 }
