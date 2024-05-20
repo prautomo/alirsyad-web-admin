@@ -95,6 +95,7 @@
                     next: "<i class='fa fa-chevron-right'></i>",
                 },
             },
+            serverSide: filter_col.length == 0 ? true : false // temporary, needs to permanently changed to true
         }
 
         if (is_custom_search) {
@@ -690,6 +691,7 @@
         </div>
       </div>
       <div class="modal-footer">
+        <a href="#" class="btn btn-primary" id="btn-submit-filter">Filter</a>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>

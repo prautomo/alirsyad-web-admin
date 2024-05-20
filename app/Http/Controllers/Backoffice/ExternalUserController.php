@@ -68,11 +68,51 @@ class ExternalUserController extends Controller
                 $role = $request->role;
                 $isPengunjung = $request->is_pengunjung;
 
+                $tahun_ajaran = $request->tahun_ajaran;
+                $jenjang_id = $request->jenjang_id;
+                $tingkat_id = $request->tingkat_id;
+                $kelas_id = $request->kelas_id;
+
+                $mengajar = $request->mengajar;
+
+
                 $search = @$request->search['value'];
 
+                if($mengajar){
+                    $query = $query->whereHas('mataPelajarans', function ($query2) use ($mengajar) {
+                        $query2->where('mata_pelajaran_id', '=',  $mengajar);
+                    });
+                }
+
+                if($tahun_ajaran){
+                    $query = $query->whereHas('classHistory', function($query2) use ($tahun_ajaran){
+                        $query2->where('is_current', 1)->where('tahun_ajaran', 'LIKE', '%'. $tahun_ajaran. '%');
+                    });
+                }
+
+                if($jenjang_id){
+                    $query = $query->whereHas('kelas.tingkat.jenjang', function ($query2) use ($jenjang_id) {
+                        $query2->where('id', '=',  $jenjang_id);
+                    });
+                }
+
+                if($tingkat_id){
+                    $query = $query->whereHas('kelas.tingkat', function ($query2) use ($tingkat_id) {
+                        $query2->where('id', '=',  $tingkat_id);
+                    });
+                }
+                
+                if($kelas_id){
+                    $query = $query->whereHas('kelas', function ($query2) use ($kelas_id) {
+                        $query2->where('name', '=',  $kelas_id);
+                    });
+                }
+
                 if ($search) {
-                    $query = $query->where('name', 'LIKE', '%' . $search . '%');
-                    $query = $query->orWhere('nis', 'LIKE', '%' . $search . '%');
+                    $query = $query->where(function($q) use ($search) {
+                        $q->where('name', 'LIKE', '%' . $search . '%')
+                          ->orWhere('nis', 'LIKE', '%' . $search . '%');
+                    });
 
                     if (!empty($role)) {
                         $query = $query->where('role', $role);
@@ -872,20 +912,26 @@ class ExternalUserController extends Controller
         // TODO: need changes after redevelop table filter
 
         $this->validate($request, [
-            'kelas' => 'required',
-            'tingkat' => 'required'
+            'kelas_id' => 'required',
+            'tingkat_id' => 'required'
         ]);
 
-        $get_kelas = Kelas::where(['name' => $request->kelas])
+        $get_kelas = Kelas::where(['name' => $request->kelas_id])
                 ->whereHas('tingkat', function ($q2) use ($request) {
-                    $q2->where('name', $request->tingkat);
+                    $q2->where('name', $request->tingkat_id);
                 })->first();
 
         if(!$get_kelas){
             return view($this->prefix . '.generate_qr_bulk', ['title' => 'Generate QR Code', 'data' => []]);
         }
 
-        $list_siswa = KelasSiswa::where(['kelas_id' => $get_kelas->id, 'is_current' => 1])->pluck('siswa_id')->toArray();
+        $list_siswa = KelasSiswa::where(['kelas_id' => $get_kelas->id, 'is_current' => 1]);
+
+        if($request->tahun_ajaran != ""){
+            $list_siswa = $list_siswa->where(['tahun_ajaran' => $request->tahun_ajaran]);
+        }
+
+        $list_siswa = $list_siswa->pluck('siswa_id')->toArray();
 
         $query = ExternalUser::query();
 
@@ -909,4 +955,64 @@ class ExternalUserController extends Controller
 
         return view($this->prefix . '.generate_qr_bulk', ['title' => 'Generate QR Code', 'data' => $data]);
     }
+
+    public function filterCol(Request $request)
+    {
+        $role = $request->role;
+        if($role == 'SISWA'){
+            $params_origin = '?role=SISWA&is_pengunjung=0';
+            $data = [
+                [
+                    'label' => 'Tahun Ajaran',
+                    'name' => 'tahun_ajaran',
+                    'param' => 'tahun_ajaran',
+                    'data' => KelasSiswa::distinct()->orderBy('tahun_ajaran')->get(['tahun_ajaran AS val', 'tahun_ajaran AS name'])->unique('name')
+                ],
+                [
+                    'label' => 'Jenjang',
+                    'name' => 'jenjangs',
+                    'param' => 'jenjang_id',
+                    'data' => Jenjang::where('show_for_guest', 1)->get(['id AS val', 'name'])
+                ],
+                [
+                    'label' => 'Tingkat',
+                    'name' => 'tingkats',
+                    'param' => 'tingkat_id',
+                    'data' => Tingkat::get(['id AS val', 'name'])
+                ],
+                [
+                    'label' => 'Kelas',
+                    'name' => 'kelas',
+                    'param' => 'kelas_id',
+                    'data' => Kelas::distinct()->orderBy('name')->get(['name AS val', 'name'])->unique('name')
+                ],
+            ];
+        }else if($role == 'GURU'){
+            
+            $mapels = MataPelajaran::get();
+
+            $mapelList = [];
+
+            foreach ($mapels as $mapel) {
+                $mapel_obj = [
+                    'val' => $mapel->id,
+                    'name' => $mapel->name . " (Tingkat " . @$mapel->tingkat->name . " " . @$mapel->tingkat->jenjang->name . ")"
+                ];
+                array_push($mapelList, $mapel_obj);
+            }
+            
+            $params_origin = '?role=GURU';
+            $data = [
+                [
+                    'label' => 'Mengajar',
+                    'name' => 'mengajar',
+                    'param' => 'mengajar',
+                    'data' => $mapelList
+                ]
+            ];
+        }
+    
+        return response()->json(['message' => 'success', 'data' => $data, 'params_origin' => $params_origin]);
+    }
+   
 }

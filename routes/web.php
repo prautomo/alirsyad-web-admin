@@ -72,6 +72,7 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
         Route::get('external-users/next-grade/list-siswa', 'ExternalUserController@listSiswaJson')->name('external-users.listSiswaJson');
         Route::get('external-users/generate-qr-code/{id}', 'ExternalUserController@generateQRCode')->name('external-users.generateQRCode');
         Route::get('external-users/generate-qr-code-bulk', 'ExternalUserController@generateQRCodeBulk')->name('external-users.generateQRCodeBulk');
+        Route::get('external-users/filter-col', 'ExternalUserController@filterCol')->name('external-users.filterCol');
 
         // begin - development purpose only
         Route::get('external-users/next-grade/add-init-kelas-siswa', 'ExternalUserController@initKelasSiswa')->name('external-users.initKelasSiswa');
@@ -86,6 +87,10 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
         // JSON Response
         Route::get("/json/tingkats/{id}", "\App\Http\Controllers\API\TingkatController@show")->name('json.tingkat.detail');
         Route::get("/json/moduls", "\App\Http\Controllers\API\ModulController@index")->name('json.modul');
+
+        Route::get("/json/kelas", "\App\Http\Controllers\API\KelasController@index");
+        Route::get("/json/tingkats", "\App\Http\Controllers\API\TingkatController@index");
+        Route::get("/json/jenjangs", "\App\Http\Controllers\API\JenjangController@index");
 
         Route::resource('paket-soals', 'PaketSoalController');
         Route::get('paket-soals/{id}/soal', 'PaketSoalController@indexSoal')->name('paket-soals.index-soal');

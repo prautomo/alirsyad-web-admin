@@ -59,7 +59,7 @@
       <!-- tble -->
         <div class="">
           
-            @php
+            {{-- @php
               $col_to_filter = "";
               $is_multiple_col = "";
               if(\Request::get('role') == "GURU"){
@@ -72,9 +72,10 @@
                 $col_to_filter = "3";
                 $is_multiple_col = "0";
               }
-            @endphp
+            @endphp --}}
             <p></p>
-            <x-datatable.table :filterCol="__($col_to_filter)" :isMultiple="__($is_multiple_col)" :customSearch="__(1)">
+            {{-- <x-datatable.table :filterCol="__($col_to_filter)" :isMultiple="__($is_multiple_col)" :customSearch="__(1)"> --}}
+              <x-datatable.table :customSearch="__(1)">
                 {{--
                     data-* is same as option columns in datatable
                     https://datatables.net/reference/option/columns
@@ -115,17 +116,76 @@
         console.log('click before go')
 
         // TODO: need changes after redevelop table filter
-        var selectedKelasId = 'select-div-filter-5' 
-        var selectedKelas = $(`#${selectedKelasId}`).find(":selected").text();
-        var selectedTingkatId = 'select-div-filter-4' 
-        var selectedTingkat = $(`#${selectedTingkatId}`).find(":selected").text();
+        var selectedTahunId = 'select-tahun_ajaran' 
+        var selectedTahun = $(`#${selectedTahunId}`).find(":selected").val();
+        var selectedKelasId = 'select-kelas' 
+        var selectedKelas = $(`#${selectedKelasId}`).find(":selected").val();
+        var selectedTingkatId = 'select-tingkats' 
+        var selectedTingkat = $(`#${selectedTingkatId}`).find(":selected").val();
 
-        var linkGenerateQR = `external-users/generate-qr-code-bulk?kelas=${selectedKelas}&tingkat=${selectedTingkat}`
+        var linkGenerateQR = `external-users/generate-qr-code-bulk?tahun_ajaran=${selectedTahun}&kelas_id=${selectedKelas}&tingkat_id=${selectedTingkat}`
         $('#btn-generate-qr').attr("href", linkGenerateQR)
         
-        // console.log('linkGenerateQR', linkGenerateQR)
         location.href = linkGenerateQR;
 
     });
+
+    $(document).ready(function(){
+      
+      var url_params = new URLSearchParams(window.location.search);
+      var role = url_params.get('role');
+
+      var filter_col = ""
+
+      $.ajaxSetup({
+        async: false,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            type:'GET',
+            url:'/backoffice/external-users/filter-col?role=' + role,
+            success:function(response){
+                console.log('response', response)
+                $('#btn-submit-filter').attr("href", window.location.pathname + response.params_origin);
+
+                
+                filter_col = response.data
+                filter_col.forEach(filter => {
+                          
+                    var col_name = filter.name
+                    var html_select = '<div id="filter-jenjangs" class="form-group col">\
+                        <label>'+ filter.label +'</label>\
+                        <select id="select-'+ col_name +'"class="form-control"><option value="">All</option>'
+
+                    // var url_params = new URLSearchParams(window.location.search);
+                    var selected_val = url_params.get(filter.param);
+
+                    var data = filter.data
+                    data.forEach(element => {
+                      html_select += '<option value="'+ element.val +'" '+ (selected_val == element.val ? 'selected' : '') +'>'+element.name+'</option>'
+                    });
+
+                    html_select += '</select>\
+                        </div>'
+
+                    $('#filter-col').append(html_select);
+                });
+            },
+        });
+
+        $('#btn-submit-filter').click(function() {
+          var query_params = ""
+          filter_col.forEach(filter => {
+            var selected_val = $(`#select-${filter.name}`).find(":selected").val();
+
+            if(selected_val != "")
+              query_params += `&${filter.param}=${selected_val}`
+          });
+          $(this).attr("href", this.href + query_params);
+        });
+  });
+
 </script>
 @endpush
