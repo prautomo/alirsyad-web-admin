@@ -3,6 +3,22 @@ const mix = require('laravel-mix');
 mix.webpackConfig({
     output:{
         chunkFilename:'js/digital_app/[name].js',
+    },
+    module: {
+        rules: [
+            {
+                test: /\.js$/,
+                include: /node_modules\/chart\.js/,
+                use: [
+                    {
+                        loader: 'babel-loader',
+                        options: {
+                            presets: ['@babel/preset-env']
+                        }
+                    }
+                ]
+            }
+        ]
     }
 });
 /*
