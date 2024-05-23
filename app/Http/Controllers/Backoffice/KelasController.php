@@ -108,7 +108,7 @@ class KelasController extends Controller{
         // get list guru
         $role = "GURU";
         $guru = ExternalUser::where("role", $role);
-        $guru = $guru->whereNotIn('id', Kelas::whereNotNull('wali_kelas_id')->pluck('wali_kelas_id'));
+        $guru = $guru->whereNotIn('id', Kelas::whereNotNull('wali_kelas_id')->where(['deleted_at' => null])->pluck('wali_kelas_id'));
         $guru = $guru->orderBy("name")->get();
         $guruList = [];
         $guruList[""] = "Pilih Wali Kelas";
@@ -141,6 +141,12 @@ class KelasController extends Controller{
         ]);
 
         $data = Kelas::create($request->only(['description', 'name', 'tingkat_id', 'wali_kelas_id']));
+        
+        if($request->wali_kelas_id){
+            $guru = ExternalUser::find($request->wali_kelas_id);
+            $user = User::where(['email' => $guru->email])->first();
+            $user->assignRole("Wali Kelas");
+        }
 
         return redirect()->route($this->routePath.'.index')->with(
             $this->success(__("Success to create Kelas"), $data)
@@ -176,7 +182,30 @@ class KelasController extends Controller{
         ]);
         
         $dt = Kelas::findOrFail($id);
+        $existing_guru_id = null;
+        if($dt->wali_kelas_id){
+            $existing_guru = ExternalUser::find($dt->wali_kelas_id);
+            $existing_guru_id = $existing_guru->id;
+            $existing_user = User::where(['email' => $existing_guru->email, 'deleted_at' => null])->first();
+        }
+
         $dt->update($request->only(['description', 'name', 'tingkat_id', 'wali_kelas_id']));
+        
+        if($request->wali_kelas_id){
+            if($existing_guru_id != $request->wali_kelas_id){
+                $guru = ExternalUser::find($request->wali_kelas_id);
+                $user = User::where(['email' => $guru->email])->first();
+                $user->assignRole("Wali Kelas");
+
+                if($existing_guru_id != null){
+                    $existing_user->removeRole("Wali Kelas");
+                }
+            }
+        }else{
+            if($existing_guru_id != null){
+                $existing_user->removeRole("Wali Kelas");
+            }
+        }
 
         return redirect()->route($this->routePath.'.index')->with(
             $this->success(__("Success to update Kelas"), $dt)

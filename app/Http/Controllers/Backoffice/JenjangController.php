@@ -105,7 +105,7 @@ class JenjangController extends Controller{
         // get list guru
         $role = "GURU";
         $guru = ExternalUser::where("role", $role);
-        $guru = $guru->whereNotIn('id', Jenjang::whereNotNull('kepala_sekolah_id')->pluck('kepala_sekolah_id'));
+        $guru = $guru->whereNotIn('id', Jenjang::whereNotNull('kepala_sekolah_id')->where(['deleted_at' => null])->pluck('kepala_sekolah_id'));
         $guru = $guru->orderBy("name")->get();
         $guruList = [];
         $guruList[""] = "Pilih Kepala Sekolah";
@@ -136,6 +136,12 @@ class JenjangController extends Controller{
 
         $data = Jenjang::create($request->only(['description', 'name', 'uploader_id', 'show_for_guest', 'kepala_sekolah_id']));
 
+        if($request->kepala_sekolah_id){
+            $guru = ExternalUser::find($request->kepala_sekolah_id);
+            $user = User::where(['email' => $guru->email, 'deleted_at' => null])->first();
+            $user->assignRole("Kepala Sekolah");
+        }
+
         return redirect()->route($this->routePath.'.index')->with(
             $this->success(__("Success to create Jenjang"), $data)
         );
@@ -165,9 +171,33 @@ class JenjangController extends Controller{
             'name' => 'required|string',
             'uploader_id' => 'required',
         ]);
-        
+
         $dt = Jenjang::findOrFail($id);
+
+        $existing_guru_id = null;
+        if($dt->kepala_sekolah_id){
+            $existing_guru = ExternalUser::find($dt->kepala_sekolah_id);
+            $existing_guru_id = $existing_guru->id;
+            $existing_user = User::where(['email' => $existing_guru->email, 'deleted_at' => null])->first();
+        }
+
         $dt->update($request->only(['description', 'name', 'uploader_id', 'show_for_guest', 'kepala_sekolah_id']));
+
+        if($request->kepala_sekolah_id){
+            if($existing_guru_id != $request->kepala_sekolah_id){
+                $guru = ExternalUser::find($request->kepala_sekolah_id);
+                $user = User::where(['email' => $guru->email])->first();
+                $user->assignRole("Kepala Sekolah");
+
+                if($existing_guru_id != null){
+                    $existing_user->removeRole("Kepala Sekolah");
+                }
+            }
+        }else{
+            if($existing_guru_id != null){
+                $existing_user->removeRole("Kepala Sekolah");
+            }
+        }
 
         return redirect()->route($this->routePath.'.index')->with(
             $this->success(__("Success to update Jenjang"), $dt)

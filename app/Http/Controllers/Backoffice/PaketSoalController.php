@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Backoffice;
 
 use App\Http\Controllers\Controller;
+use App\Models\ExternalUser;
+use App\Models\GuruMataPelajaran;
 use App\Models\MataPelajaran;
 use App\Models\Modul;
 use App\Models\PaketSoal;
@@ -119,8 +121,14 @@ class PaketSoalController extends Controller
 
     private function getMapelIdsUser()
     {
-        $userId = @\Auth::user()->id;
-        $mapelIdsUser = UploaderMataPelajaran::where('guru_uploader_id', $userId)->pluck('mata_pelajaran_id')->all();
+        // WH 23/05/24 - Covered guru uploader as guru mapel
+        // $userId = @\Auth::user()->id;
+        // $mapelIdsUser = UploaderMataPelajaran::where('guru_uploader_id', $userId)->pluck('mata_pelajaran_id')->all();
+        
+        $userEmail = @\Auth::user()->email;
+        $user = ExternalUser::where(['email' => $userEmail, 'deleted_at' => null])->first();
+
+        $mapelIdsUser = GuruMataPelajaran::where('guru_id', $user->id)->pluck('mata_pelajaran_id')->all();
         $mapelIdsUser = count($mapelIdsUser) > 0 ? $mapelIdsUser : [];
 
         return $mapelIdsUser;

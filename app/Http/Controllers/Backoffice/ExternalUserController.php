@@ -18,8 +18,6 @@ use App\Models\Tingkat;
 use App\Models\Kelas;
 use App\Models\GuruMataPelajaran;
 use App\Models\KelasSiswa;
-use App\Models\Role;
-use App\Models\UserRole;
 use App\Services\UploadService;
 use DB;
 use Hash;
@@ -152,11 +150,18 @@ class ExternalUserController extends Controller
             })
             ->addColumn('mengajar', function ($data) {
                 if($data->role == 'GURU'){
-                    $mapels = $data->mataPelajarans;
+                    // WH 23/05/24 - Covered guru uploader as guru mapel
+                    // $mapels = $data->mataPelajarans;
+                    // $m = [];
+                    // foreach ($mapels as $value) {
+                    //     $m[] = $value->name . " (" . @$value->tingkat->name . @$value->tingkat->name . " " . @$value->tingkat->jenjang->name . ")";
+                    // }
+
+                    $mapels = $data->mataPelajaranKelas;
 
                     $m = [];
                     foreach ($mapels as $value) {
-                        $m[] = $value->name . " (" . @$value->tingkat->name . " " . @$value->tingkat->jenjang->name . ")";
+                        $m[] = $value->mataPelajaran->name . " (" . @$value->mataPelajaran->tingkat->name . @$value->kelas->name . " " . @$value->mataPelajaran->tingkat->jenjang->name . ")";
                     }
     
                     return view("components.datatable.wrapText", [
@@ -380,19 +385,13 @@ class ExternalUserController extends Controller
 
             // insert as guru mapel if mapel > 0
             if (@$request->mapel && count($request->mapel) > 0) {
-                $inputUploader['name'] = $input['name'];
-                $inputUploader['username'] = $input['nis'];
-                $inputUploader['email'] = $input['email'];
-                $inputUploader['password'] = $input['password'];
+                $new_user['name'] = $input['name'];
+                $new_user['username'] = $input['nis'];
+                $new_user['email'] = $input['email'];
+                $new_user['password'] = $input['password'];
 
-                $login_user = User::create($inputUploader);
+                $login_user = User::create($new_user);
                 $login_user->assignRole("Guru Mata Pelajaran");
-
-                $role = Role::where(['key' => 'GURUMAPEL'])->first();
-                UserRole::create([
-                    'user_id' => $login_user->id,
-                    'role_id' => $role->id,
-                ]);
 
                 foreach($request->mapel as $mapel){
                     $mapel_key = explode("/", $mapel);
@@ -495,51 +494,95 @@ class ExternalUserController extends Controller
 
         $user = ExternalUser::find($id);
 
-        if (@$request->role === "GURU") {
-            // update ke table user jadi guru uploader
-            if ($request->is_uploader || @$user->is_uploader) {
-                $gu = User::where('username', $user->nis)->first();
+        // WH 23/05/24 - Covered guru uploader as guru mapel
+        // if (@$request->role === "GURU") {
+        //     // update ke table user jadi guru uploader
+        //     if ($request->is_uploader || @$user->is_uploader) {
+        //         $gu = User::where('username', $user->nis)->first();
 
-                $this->validate($request, [
-                    'nis' => 'required|unique:users,username,' . @$gu->id,
-                    'name' => 'required',
-                    'email' => 'required|email|unique:users,email,' . @$gu->id,
-                    // 'phone' => 'required|unique:external_users,phone,'.$gu->id,
-                ]);
+        //         $this->validate($request, [
+        //             'nis' => 'required|unique:users,username,' . @$gu->id,
+        //             'name' => 'required',
+        //             'email' => 'required|email|unique:users,email,' . @$gu->id,
+        //             // 'phone' => 'required|unique:external_users,phone,'.$gu->id,
+        //         ]);
 
-                $inputUploader['name'] = $input['name'];
-                $inputUploader['username'] = $input['nis'];
-                $inputUploader['email'] = $input['email'];
+        //         $inputUploader['name'] = $input['name'];
+        //         $inputUploader['username'] = $input['nis'];
+        //         $inputUploader['email'] = $input['email'];
 
-                if (!empty($input['password'])) {
-                    $inputUploader['password'] = $input['password'];
-                }
+        //         if (!empty($input['password'])) {
+        //             $inputUploader['password'] = $input['password'];
+        //         }
 
-                $guruUploader = User::find(@$gu->id);
-                if ($guruUploader) {
-                    $guruUploader->update($inputUploader);
-                } else {
-                    $inputUploader['password'] = $user->password;
-                    $guruUploader = User::create($inputUploader);
-                    $guruUploader->assignRole("Guru Uploader");
-                }
+        //         $guruUploader = User::find(@$gu->id);
+        //         if ($guruUploader) {
+        //             $guruUploader->update($inputUploader);
+        //         } else {
+        //             $inputUploader['password'] = $user->password;
+        //             $guruUploader = User::create($inputUploader);
+        //             $guruUploader->assignRole("Guru Uploader");
+        //         }
 
-                if (@$request->mapel) {
-                    if (count(@$request->mapel) > 0) {
-                        // giuru uplaoder
-                        $guruUploader->mataPelajarans()->sync($request->mapel);
-                    }
-                }
-            }
-        }
+        //         if (@$request->mapel) {
+        //             if (count(@$request->mapel) > 0) {
+        //                 // giuru uplaoder
+        //                 $guruUploader->mataPelajarans()->sync($request->mapel);
+        //             }
+        //         }
+        //     }
+        // }
 
         $user->update($input);
 
         if (@$request->role === "GURU") {
             if (@$request->mapel) {
                 if (count(@$request->mapel) > 0) {
-                    // guru
-                    $user->mataPelajarans()->sync($request->mapel);
+                    $gu = User::where('username', $user->nis)->first();
+
+                    $this->validate($request, [
+                        'nis' => 'required|unique:users,username,' . @$gu->id,
+                        'name' => 'required',
+                        'email' => 'required|email|unique:users,email,' . @$gu->id,
+                        // 'phone' => 'required|unique:external_users,phone,'.$gu->id,
+                    ]);
+
+                    $update_user['name'] = $input['name'];
+                    $update_user['username'] = $input['nis'];
+                    $update_user['email'] = $input['email'];
+
+                    if (!empty($input['password'])) {
+                        $update_user['password'] = $input['password'];
+                    }
+
+                    $login_user = User::find(@$gu->id);
+                    $login_user->update($update_user);
+                    
+                    $existing_mapel = [];
+                    // WH 23/05/24 - Covered guru uploader as guru mapel
+                    foreach ($user->mataPelajaranKelas as $mapel) {
+                        $existing_mapel[] = $mapel->mata_pelajaran_id . "/" . $mapel->kelas_id;
+                    }
+
+                    $deleted_mapel = array_diff($existing_mapel, $request->mapel);
+                    $new_mapel = array_diff($request->mapel, $existing_mapel);
+                    foreach($deleted_mapel as $mapel){
+                        $mapel_key = explode("/", $mapel);
+                        GuruMataPelajaran::where([
+                            'guru_id' => $user->id,
+                            'mata_pelajaran_id' => $mapel_key[0],
+                            'kelas_id' => $mapel_key[1],
+                        ])->delete();
+                    }
+                    
+                    foreach($new_mapel as $mapel){
+                        $mapel_key = explode("/", $mapel);
+                        GuruMataPelajaran::create([
+                            'guru_id' => $user->id,
+                            'mata_pelajaran_id' => $mapel_key[0],
+                            'kelas_id' => $mapel_key[1],
+                        ]);
+                    }
                 }
             }
         }else if(@$request->role === "SISWA"){
@@ -923,18 +966,79 @@ class ExternalUserController extends Controller
         
         return response()->json("Success generate uuid.", 200);
     }
-
     
-    // public function set_roles(){
-    //     $external_users = ExternalUser::all();
+    public function set_kelas_id_guru_mapel(){
+        $guru_mapels = GuruMataPelajaran::all();
 
-    //     foreach($external_users as $user){
-    //         if($user->mataPelajaranGuests())
-    //         $user->update(['uuid' => $new_id]);
-    //     }
+        foreach($guru_mapels as $mapel){
+            $tingkat_id = $mapel->mataPelajaran->tingkat->id;
+            $kelas = Kelas::where(['tingkat_id' => $tingkat_id])->first();
+
+            $mapel['kelas_id'] = $kelas->id;
+            $mapel->update();
+        }
         
-    //     return response()->json("Success generate uuid.", 200);
-    // }
+        return response()->json("Success set detault kelas id guru mapel.", 200);
+    }
+    
+    public function set_user_roles(){
+        
+        $external_users = ExternalUser::all();
+
+        foreach($external_users as $user){
+            if(count($user->mataPelajaranKelas) > 0){
+
+                $login_user = User::where(['email' => $user->email, 'deleted_at' => null])->first();
+
+                if($login_user == null){
+                    $new_user['name'] = $user['name'];
+                    $new_user['username'] = $user['nis'];
+                    $new_user['email'] = $user['email'];
+                    $new_user['password'] = $user['password'];
+
+                    $login_user = User::create($new_user);
+                }
+
+                $login_user->assignRole("Guru Mata Pelajaran");
+            }
+        }
+
+        $kepala_sekolah_ids = Jenjang::whereNotNull('kepala_sekolah_id')->pluck('kepala_sekolah_id')->toArray();
+        foreach($kepala_sekolah_ids as $kepala_sekolah_id){
+            $external_user = ExternalUser::find($kepala_sekolah_id);
+            $login_user = User::where(['email' => $external_user->email, 'deleted_at' => null])->first();
+
+            if($login_user == null){
+                $new_user['name'] = $user['name'];
+                $new_user['username'] = $user['nis'];
+                $new_user['email'] = $user['email'];
+                $new_user['password'] = $user['password'];
+
+                $login_user = User::create($new_user);
+            }
+
+            $login_user->assignRole("Kepala Sekolah");
+        }
+        
+        $wali_kelas_ids = Kelas::whereNotNull('wali_kelas_id')->pluck('wali_kelas_id')->toArray();
+        foreach($wali_kelas_ids as $wali_kelas_id){
+            $external_user = ExternalUser::find($wali_kelas_id);
+            $login_user = User::where(['email' => $external_user->email, 'deleted_at' => null])->first();
+
+            if($login_user == null){
+                $new_user['name'] = $user['name'];
+                $new_user['username'] = $user['nis'];
+                $new_user['email'] = $user['email'];
+                $new_user['password'] = $user['password'];
+
+                $login_user = User::create($new_user);
+            }
+
+            $login_user->assignRole("Wali Kelas");
+        }
+        
+        return response()->json("Success set roles.", 200);
+    }
 
     public function generateQRCode ($id, $size = 250, $return_as_json = true)
     {

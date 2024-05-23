@@ -77,6 +77,8 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
         // begin - development purpose only
         Route::get('external-users/next-grade/add-init-kelas-siswa', 'ExternalUserController@initKelasSiswa')->name('external-users.initKelasSiswa');
         Route::get('external-users/generate-uuid-external-users', 'ExternalUserController@generate_uuid'); //Temp route to generate uuid external users
+        Route::get('external-users/set-kelas-id-guru-mapel', 'ExternalUserController@set_kelas_id_guru_mapel'); //Temp route to set default kelas id on guru mapel (first found kelas of tingkat)
+        Route::get('external-users/set-user-roles', 'ExternalUserController@set_user_roles'); //Temp route to set user roles (on table model_has_roles)
         // end
         Route::resource('external-users', 'ExternalUserController');
         Route::post('external-users/update-status/{id}', 'ExternalUserController@updateStatus')->name('external-users.update-status');
@@ -103,6 +105,8 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
         Route::delete('paket-soals/{paketId}/soal/{id}/delete', 'PaketSoalController@destroySoal')->name('paket-soals.destroy-soal');
 
         Route::get('soals/create', 'SoalController@create')->name('soals.create');
+
+        Route::resource('e-raport', 'ERaportController');
 
         Route::resource('password-reset-students', 'PasswordResetStudentController');
         Route::post('password-reset-students/update-status/{id}', 'PasswordResetStudentController@updateStatus')->name('password-reset-students.update-status');

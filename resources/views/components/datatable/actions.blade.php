@@ -86,6 +86,15 @@
 </a>
 @endif
 
+@can(@$permissionName.'-list')
+    @if(@$viewRoute)
+    <a href="{{$viewRoute}}" data-name="{{$name ?? ""}}" class="btn btn-sm btn-icon btn-blue-pastel">
+        <i class="fa fa-eye"></i>
+        {{ $viewBtnText }}
+    </a>
+    @endif
+@endcan
+
 @if(isset($saldoRoute) || isset($productRoute))
 <!-- gakepake -->
 <div class="btn-group" role="group">

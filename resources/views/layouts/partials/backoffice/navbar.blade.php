@@ -219,6 +219,15 @@
               </a>
             </li>
             @endcan
+
+            @can('e-raport-list')
+            <li class="nav-item">
+              <a class="nav-link{{ request()->is('backoffice/e-raport*') ? ' active' : '' }}" href="{{ route('backoffice::e-raport.index') }}">
+                <i class="ni ni-cust-raport{{ request()->is('backoffice/roles*') ? '-active' : '' }} text-light"></i>
+                <span class="nav-link-text">Raport ADL</span>
+              </a>
+            </li>
+            @endcan
     
             <!-- <li class="nav-item">
               <a class="nav-link{{ request()->is('backoffice/mitra*', 'backoffice/reports*') ? ' active' : ' collapsed' }}" href="#navbar-report" data-toggle="collapse" role="button" aria-expanded="{{ request()->is('backoffice/mitra*', 'backoffice/reports*') ? 'true' : 'false' }}" aria-controls="navbar-report">
