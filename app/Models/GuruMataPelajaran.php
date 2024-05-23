@@ -18,6 +18,7 @@ class GuruMataPelajaran extends Model
     protected $fillable = [
         'guru_id',
         'mata_pelajaran_id',
+        'kelas_id',
     ];
 
     public static function search($request)
@@ -26,6 +27,7 @@ class GuruMataPelajaran extends Model
         $data = self::appendSearchQuery($data, $request, [
             "guru_id" => "=",
             "mata_pelajaran_id" => "=",
+            "kelas_id" => "=",
         ]);
 
         return $data;
@@ -39,5 +41,10 @@ class GuruMataPelajaran extends Model
     public function mataPelajaran()
     {
         return $this->belongsTo("App\Models\MataPelajaran",  "mata_pelajaran_id", "id")->withTrashed();
+    }
+
+    public function kelas()
+    {
+        return $this->belongsTo("App\Models\Kelas",  "kelas_id", "id")->withTrashed();
     }
 }

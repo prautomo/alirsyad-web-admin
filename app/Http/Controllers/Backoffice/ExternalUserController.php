@@ -18,6 +18,8 @@ use App\Models\Tingkat;
 use App\Models\Kelas;
 use App\Models\GuruMataPelajaran;
 use App\Models\KelasSiswa;
+use App\Models\Role;
+use App\Models\UserRole;
 use App\Services\UploadService;
 use DB;
 use Hash;
@@ -282,7 +284,10 @@ class ExternalUserController extends Controller
         $mapelList = [];
 
         foreach ($mapels as $mapel) {
-            $mapelList[$mapel->id] = $mapel->name . " (Tingkat " . @$mapel->tingkat->name . " " . @$mapel->tingkat->jenjang->name . ")";
+            foreach($mapel->tingkat->kelas as $kelas){
+                $key = $mapel->id . '/' . $kelas->id;
+                $mapelList[$key] = $mapel->name . " (Tingkat " . @$mapel->tingkat->name . " Kelas " . $kelas->name . " " . @$mapel->tingkat->jenjang->name . ")";
+            }
         }
 
         return $mapelList;
@@ -352,23 +357,50 @@ class ExternalUserController extends Controller
 
         if (@$request->role === "GURU") {
 
-            if ($request->is_uploader) {
-                // insert ke table user jadi guru uploader
+            // WH 23/05/24 - Covered guru uploader as guru mapel
+            // if ($request->is_uploader) {
+            //     // insert ke table user jadi guru uploader
+            //     $inputUploader['name'] = $input['name'];
+            //     $inputUploader['username'] = $input['nis'];
+            //     $inputUploader['email'] = $input['email'];
+            //     $inputUploader['password'] = $input['password'];
+
+            //     $guruUploader = User::create($inputUploader);
+            //     $guruUploader->assignRole("Guru Uploader");
+            // }
+
+            // if (@$request->mapel && count($request->mapel) > 0) {
+            //     // guru
+            //     $user->mataPelajarans()->sync($request->mapel);
+            //     // giuru uplaoder
+            //     if ($request->is_uploader) {
+            //         $guruUploader->mataPelajarans()->sync($request->mapel);
+            //     }
+            // }
+
+            // insert as guru mapel if mapel > 0
+            if (@$request->mapel && count($request->mapel) > 0) {
                 $inputUploader['name'] = $input['name'];
                 $inputUploader['username'] = $input['nis'];
                 $inputUploader['email'] = $input['email'];
                 $inputUploader['password'] = $input['password'];
 
-                $guruUploader = User::create($inputUploader);
-                $guruUploader->assignRole("Guru Uploader");
-            }
+                $login_user = User::create($inputUploader);
+                $login_user->assignRole("Guru Mata Pelajaran");
 
-            if (@$request->mapel && count($request->mapel) > 0) {
-                // guru
-                $user->mataPelajarans()->sync($request->mapel);
-                // giuru uplaoder
-                if ($request->is_uploader) {
-                    $guruUploader->mataPelajarans()->sync($request->mapel);
+                $role = Role::where(['key' => 'GURUMAPEL'])->first();
+                UserRole::create([
+                    'user_id' => $login_user->id,
+                    'role_id' => $role->id,
+                ]);
+
+                foreach($request->mapel as $mapel){
+                    $mapel_key = explode("/", $mapel);
+                    GuruMataPelajaran::create([
+                        'guru_id' => $user->id,
+                        'mata_pelajaran_id' => $mapel_key[0],
+                        'kelas_id' => $mapel_key[1],
+                    ]);
                 }
             }
         }else if(@$request->role === "SISWA"){
@@ -407,9 +439,15 @@ class ExternalUserController extends Controller
         }
 
         $mapelIDS = [];
-        foreach ($dt->mataPelajarans as $mapel) {
-            $mapelIDS[] = $mapel->id;
+        // WH 23/05/24 - Covered guru uploader as guru mapel
+        // foreach ($dt->mataPelajarans as $mapel) {
+        //     $mapelIDS[] = $mapel->id;
+        // }
+        foreach ($dt->mataPelajaranKelas as $mapel) {
+            $mapelIDS[] = $mapel->mata_pelajaran_id . "/" . $mapel->kelas_id;
         }
+
+        // dd($dt->mataPelajaranKelas);
 
         $isUploader = [
             1 => 'Ya',
@@ -885,6 +923,18 @@ class ExternalUserController extends Controller
         
         return response()->json("Success generate uuid.", 200);
     }
+
+    
+    // public function set_roles(){
+    //     $external_users = ExternalUser::all();
+
+    //     foreach($external_users as $user){
+    //         if($user->mataPelajaranGuests())
+    //         $user->update(['uuid' => $new_id]);
+    //     }
+        
+    //     return response()->json("Success generate uuid.", 200);
+    // }
 
     public function generateQRCode ($id, $size = 250, $return_as_json = true)
     {

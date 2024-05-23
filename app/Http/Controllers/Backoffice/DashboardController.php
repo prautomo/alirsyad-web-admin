@@ -10,7 +10,8 @@ namespace App\Http\Controllers\Backoffice;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
-    
+use Illuminate\Support\Facades\Auth;
+
 class DashboardController extends Controller {
 
     /**
@@ -31,6 +32,7 @@ class DashboardController extends Controller {
     public function index(Request $request)
     {
         $data = [];
+        // dd(Auth::user()->roles->pluck('name'));
 
         return view('pages.backoffice.dashboard.guru_mapel', $data);
     }

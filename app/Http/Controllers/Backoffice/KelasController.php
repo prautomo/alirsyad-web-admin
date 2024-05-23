@@ -109,7 +109,7 @@ class KelasController extends Controller{
         $role = "GURU";
         $guru = ExternalUser::where("role", $role);
         $guru = $guru->whereNotIn('id', Kelas::whereNotNull('wali_kelas_id')->pluck('wali_kelas_id'));
-        $guru = $guru->get();
+        $guru = $guru->orderBy("name")->get();
         $guruList = [];
         $guruList[""] = "Pilih Wali Kelas";
         foreach($guru as $guru){

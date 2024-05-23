@@ -3,6 +3,7 @@
     <x-input.text :label="__('Name')" name="name" :data="$data" required />
     <x-input.textarea :label="__('Description')" name="description" :data="$data" />
     <x-input.select :label="__('Guru Uploader')" id="uploader_id" name="uploader_id" :sources="$uploaderList" :data="$data" />
+    <x-input.select :label="__('Kepala Sekolah')" id="kepala_sekolah_id" name="kepala_sekolah_id" :sources="$guruList" :data="$data" />
     
     <div class="col-md-12">
         <div class="form-group">

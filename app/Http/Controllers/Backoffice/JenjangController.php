@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Backoffice;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\ExternalUser;
 use Validator;
 use Auth;
 use DB;
@@ -57,6 +58,9 @@ class JenjangController extends Controller{
             ->addColumn("uploader", function ($data) {
                 return @$data->uploader_id ? $data->uploader->name : "not set";
             })
+            ->addColumn("kepala_sekolah", function ($data) {
+                return @$data->kepalaSekolah ? $data->kepalaSekolah->name : 'not set';
+            })
             ->addColumn("created_at", function ($data) {
                 $createdAt = new Carbon($data->created_at);
 
@@ -94,6 +98,24 @@ class JenjangController extends Controller{
         return $uploaderList;
     }
     
+    /**
+     * Get Guru List
+     */
+    private function getGuruList(){
+        // get list guru
+        $role = "GURU";
+        $guru = ExternalUser::where("role", $role);
+        $guru = $guru->whereNotIn('id', Jenjang::whereNotNull('kepala_sekolah_id')->pluck('kepala_sekolah_id'));
+        $guru = $guru->orderBy("name")->get();
+        $guruList = [];
+        $guruList[""] = "Pilih Kepala Sekolah";
+        foreach($guru as $guru){
+            $guruList[$guru->id] = $guru->name;
+        }
+
+        return $guruList;
+    }
+    
     public function create(){
         $uploaderList = $this->getGuruUploader();
         $showForGuest = [
@@ -101,7 +123,9 @@ class JenjangController extends Controller{
             0 => 'Tidak',
         ];
 
-        return view($this->prefix.'.create', ['uploaderList' => $uploaderList, 'showForGuest' => $showForGuest]);
+        $guruList = $this->getGuruList();
+
+        return view($this->prefix.'.create', ['uploaderList' => $uploaderList, 'showForGuest' => $showForGuest, 'guruList'=> $guruList]);
     }
 
     public function store(Request $request){
@@ -110,7 +134,7 @@ class JenjangController extends Controller{
             'name' => 'required|string',
         ]);
 
-        $data = Jenjang::create($request->only(['description', 'name', 'uploader_id', 'show_for_guest']));
+        $data = Jenjang::create($request->only(['description', 'name', 'uploader_id', 'show_for_guest', 'kepala_sekolah_id']));
 
         return redirect()->route($this->routePath.'.index')->with(
             $this->success(__("Success to create Jenjang"), $data)
@@ -125,7 +149,14 @@ class JenjangController extends Controller{
             0 => 'Tidak',
         ];
 
-        return view($this->prefix.'.edit', ['data'=>$dt, 'uploaderList' => $uploaderList, 'showForGuest' => $showForGuest]);
+        $guruList = $this->getGuruList();
+        // get wali kelas info
+        if($dt->kepala_sekolah_id){
+            $guru = $dt->kepalaSekolah;
+            $guruList[$guru->id] = $guru->name;
+        }
+
+        return view($this->prefix.'.edit', ['data'=>$dt, 'uploaderList' => $uploaderList, 'showForGuest' => $showForGuest, 'guruList'=> $guruList]);
     }
 
     public function update(Request $request, $id){
@@ -136,7 +167,7 @@ class JenjangController extends Controller{
         ]);
         
         $dt = Jenjang::findOrFail($id);
-        $dt->update($request->only(['description', 'name', 'uploader_id', 'show_for_guest']));
+        $dt->update($request->only(['description', 'name', 'uploader_id', 'show_for_guest', 'kepala_sekolah_id']));
 
         return redirect()->route($this->routePath.'.index')->with(
             $this->success(__("Success to update Jenjang"), $dt)

@@ -69,7 +69,8 @@
         </div>
     </div>
 
-    <div class="col-md-12">
+    {{-- WH 23/05/24 - Covered guru uploader as guru mapel --}}
+    {{-- <div class="col-md-12">
         <div class="form-group">
             <label class="form-control-label" for="input-is_uploader">Guru Uploader</label>
 
@@ -85,7 +86,7 @@
             </div>
             @endif
         </div>
-    </div>
+    </div> --}}
     @endif
     <x-input.text :label="__('Phone')" name="phone" :data="$data" />
     <x-input.textarea :label="__('Address')" name="address" :data="$data" />
