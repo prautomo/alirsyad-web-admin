@@ -6,9 +6,9 @@
   @parent
 
   <div class="row align-items-center py-4">
-    <div class="col-lg-6 col-7">
+    <!-- <div class="col-lg-6 col-7">
       <h6 class="h2 text-dark d-inline-block mb-0">@yield('title')</h6>
-    </div>
+    </div> -->
     <!-- @can('role-create')
     <div class="col-lg-6 col-5 text-right">
       <a href="{{ route('backoffice::roles.create') }}" class="btn btn-sm btn-neutral">New</a>
@@ -37,11 +37,7 @@
         </button>
       </div>
     @endif
-    <div class="card">
-      <!-- Card header -->
-      <div class="card-header border-0">
-        <h3 class="mb-0">Data</h3>
-      </div>
+    <div class="card bg-transparent">
       <!-- tble -->
       <div class="table-responsive">
         <table class="table align-items-center table-flush">
@@ -57,7 +53,7 @@
             @foreach ($roles as $key => $role)
               <tr>
                 <td>{{ ++$i }}</td>
-                <th scope="row">{{ $role->name }}</th>
+                <td>{{ $role->name }}</td>
                 <td>
                     @can('role-edit')
                         <a class="btn btn-primary btn-sm" href="{{ route('backoffice::roles.edit',$role->id) }}">Edit</a>

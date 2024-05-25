@@ -105,7 +105,7 @@ function DashboardGuruMapel() {
         <div className="row mb-4">
             <div className="col-12">
                 <div style={{ display: 'flex', alignItems: 'center'}}>
-                    <div style={{ marginLeft: 'auto'  }}>
+                    <div style={{ marginLeft: 'auto' }} class="dashboard-filter">
                         <label className="my-auto mr-2" style={{ color: "#9E9E9E"}}>Filter By</label>
                         <select id="mapel" name="mapel" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Mata Pelajaran">
                             <option value="">Mata Pelajaran</option>
