@@ -111,6 +111,8 @@
                 var columnId = "div-filter-" + column.index();
                 var columnHeader = column.header().textContent;
 
+                console.log('columnId', columnId)
+
                 $('<div id="' + columnId + '" class="form-group col-3">\
                     <label>'+ columnHeader +':</label>')
                     .appendTo( $('#filter-col'));
