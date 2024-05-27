@@ -7,6 +7,7 @@ use App\Models\ERaport;
 use App\Models\ExternalUser;
 use App\Models\KelasSiswa;
 use App\Models\MataPelajaran;
+use App\Models\Modul;
 use App\Models\PaketSoal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -128,9 +129,25 @@ class ERaportController extends Controller
 
                 return $total_subbab;
             })
-            ->addColumn("action", function ($data) {
+            ->addColumn('final_score', function($data) use ($id) {
+                $total = 0;
+                $paket_soal_ids = PaketSoal::where(['mata_pelajaran_id' => $data->id, 'deleted_at' => null])->distinct()->pluck('id')->toArray();
+
+                foreach ($paket_soal_ids as $paket_soal_id) {
+                    $paket_soal = PaketSoal::find($paket_soal_id);
+                    $score = ERaport::where(['user_id' => $id, 'paket_soal_id' => $paket_soal_id])->orderBy('created_at', 'DESC')->first();
+                    $total_benar = 0;
+                    if($score){
+                        $total_benar = $score->total_benar;
+                    }
+
+                    $total += $this->getScoreFinal($total_benar, $paket_soal->tingkat_kesulitan);
+                }
+                return $total;
+            })
+            ->addColumn("action", function ($data) use ($user) {
                 return view("components.datatable.actions", [
-                    "viewRoute" => route($this->routePath.".show", $data->id),
+                    "viewRoute" => route($this->routePath.".show-detail-mapel", [$user->id, $data->id]),
                     "viewBtnText" => "Detail Mapel"
                 ]);
             })
@@ -153,6 +170,97 @@ class ERaportController extends Controller
         ];
 
         return view($this->prefix.'.show', $data);
+    }
 
+    public function getMapel($tingkat_id){
+        $query = MataPelajaran::query();
+        $data = $query->where(['tingkat_id' => $tingkat_id])->orderBy('urutan', 'asc')->get();
+
+        return $data;
+    }
+
+    public function showDetailMapel($id, $mapelId)
+    {
+        $user = ExternalUser::find($id);
+        $mapel = MataPelajaran::find($mapelId);
+        $bab_ids = PaketSoal::where(['mata_pelajaran_id' => $mapelId, 'deleted_at' => null])->distinct()->pluck('bab_id')->toArray();
+        $result = [
+            "name" => $mapel->name,
+            "mudah" => 0,
+            "sedang" => 0,
+            "sulit" => 0,
+            "total" => 0,
+            "babs" => [],
+        ];
+        
+        foreach($bab_ids as $bab_id){
+            $modul = Modul::find($bab_id);
+            $subbabs = PaketSoal::where(['bab_id' => $bab_id, 'deleted_at' => null])->distinct()->pluck('subbab')->toArray();
+            // $subbabs = PaketSoal::where(['bab_id' => $bab_id, 'deleted_at' => null])->get();
+            $total_score = [
+                "mudah" => 0,
+                "sedang" => 0,
+                "sulit" => 0,
+                "total" => 0,
+            ];
+            $result_subbab = [];
+            
+            foreach($subbabs as $subbab){
+                $subbab_paket_soals = PaketSoal::where(['bab_id' => $bab_id, 'subbab' => $subbab, 'deleted_at' => null])->get();
+                $subbab_obj = [
+                    "name" => "",
+                    "mudah" => 0,
+                    "sedang" => 0,
+                    "sulit" => 0
+                ];
+                $total_per_subbab = 0;
+
+                foreach($subbab_paket_soals as $paket_soal){
+                    $subbab_obj['name'] = $paket_soal->judul_subbab;
+
+                    $score = ERaport::where(['user_id' => $id, 'paket_soal_id' => $paket_soal->id])->orderBy('created_at', 'DESC')->first();
+                    $total_benar = 0;
+                    if($score){
+                        $total_benar = $score->total_benar;
+                    }
+                    
+                    $subbab_obj[$paket_soal->tingkat_kesulitan] = $total_benar;
+                    $total_per_subbab += $this->getScoreFinal($total_benar, $paket_soal->tingkat_kesulitan);
+                    $total_score[$paket_soal->tingkat_kesulitan] += $total_benar;
+                    $result[$paket_soal->tingkat_kesulitan] += $total_benar;
+                }
+
+                $subbab_obj['total'] = $total_per_subbab;
+                $total_score['total'] += $total_per_subbab;
+                $result['total'] += $total_per_subbab;
+                array_push($result_subbab, $subbab_obj);
+            }
+
+            $bab_obj = $total_score;
+            $bab_obj['name'] = $modul->name;
+            $bab_obj['subbabs'] = $result_subbab;
+            array_push($result['babs'], $bab_obj);
+        }
+
+        $mapelList = $this->getMapel($user->kelas->tingkat->id);
+        return view($this->prefix.'.show_mapel', ['data' => $result, 'mapelList' => $mapelList, 'selectedMapel' => $mapelId]);
+    }
+
+    public function getScoreFinal($total_benar, $tingkat_kesulitan){
+        $score = 0;
+        switch ($tingkat_kesulitan) {
+            case "mudah":
+                $score = $total_benar * 1;
+                break;
+            case "sedang":
+                $score = $total_benar * 2;
+                break;
+            case "sulit":
+                $score = $total_benar * 3;
+                break;
+            default:
+              //code block
+        }
+        return $score;
     }
 }
