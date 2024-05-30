@@ -108,6 +108,7 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
 
         Route::resource('e-raport', 'ERaportController');
         Route::get('e-raport/{id}/{mapelId}', 'ERaportController@showDetailMapel')->name('e-raport.show-detail-mapel');
+        Route::get('e-raport/{id}/{mapelId}/filter-col', 'ERaportController@filterColShowDetailMapel')->name('e-raport.filter-col-show-detail-mapel');
 
         Route::resource('password-reset-students', 'PasswordResetStudentController');
         Route::post('password-reset-students/update-status/{id}', 'PasswordResetStudentController@updateStatus')->name('password-reset-students.update-status');

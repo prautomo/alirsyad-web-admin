@@ -30,16 +30,16 @@
         
         <div class="row row-student-info">
           <div class="col-3">
-            Zahra Mubarok
+            {{ $user->name }}
           </div>
           <div class="col-2">
-            SD
+            {{ $user->kelas->tingkat->jenjang->name }}
           </div>
           <div class="col-2">
-            4
+            {{ $user->kelas->tingkat->name }}
           </div>
           <div class="col-2">
-            B
+            {{ $user->kelas->name }}
           </div>
           <div class="col-3">
             2019

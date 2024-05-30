@@ -48,16 +48,16 @@
         
         <div class="row row-student-info">
           <div class="col-3">
-            Zahra Mubarok
+            {{ $user->name }}
           </div>
           <div class="col-2">
-            SD
+            {{ $user->kelas->tingkat->jenjang->name }}
           </div>
           <div class="col-2">
-            4
+            {{ $user->kelas->tingkat->name }}
           </div>
           <div class="col-2">
-            B
+            {{ $user->kelas->name }}
           </div>
           <div class="col-3">
             2019
@@ -66,29 +66,24 @@
 
         <div class="row mt-3">
             <div class="col-6">
-
+                {{-- <div class="row">
+                    <div class="col-2">
+                        <p class="mb-0">View</p>
+                    </div>
+                    <div class="col-10">
+                        <button class="btn btn-primary">Table</button>
+                        <button class="btn btn-primary">Grafik</button>
+                    </div>
+                </div> --}}
             </div>
             <div class="col-6">
                 <div class="row row-filter">
                     <div class="col-3">
                         <p class="mb-0">Filter by</p>
                     </div>
-                    <div class="col-3">
-                        <select id="select-mapel" class="btn btn-green-pastel dropdown-toggle w-100">
-                            @foreach ($mapelList as $mapel)
-                                <option value="{{ $mapel->id }}" {{ $selectedMapel == $mapel->id ? 'selected' : ''}}>{{ $mapel->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-3">
-                        <select id="select-bab" class="btn btn-green-pastel dropdown-toggle w-100">
-                            <option value="">Bab</option>
-                        </select>
-                    </div>
-                    <div class="col-3">
-                        <select id="select-subbab" class="btn btn-green-pastel dropdown-toggle w-100">
-                            <option value="">Subbab</option>
-                        </select>
+                    <div class="col-9">
+                        <div id="filter-col" class="row">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -104,7 +99,6 @@
                     <th scope="col">Medium</th>
                     <th scope="col">Hard</th>
                     <th scope="col">Final Score</th>
-                    {{-- {{ dd($data['name'])}} --}}
                 </tr>
                 </thead>
                 <tbody class="list">
@@ -141,5 +135,82 @@
     </div>
   </div>
 </div>
-
 @endsection
+
+@push('script')
+<script>
+    $(document).ready(function(){
+      
+        var url_params = new URLSearchParams(window.location.search);
+        var current_url = window.location.pathname
+        var selected_mapel = "<?php echo $selectedMapel; ?>";
+        console.log('current_url', current_url)
+
+        var filter_col = ""
+
+        $.ajaxSetup({
+        async: false,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            type:'GET',
+            url: current_url +'/filter-col',
+            success:function(response){
+                console.log('response', response)
+                // $('#btn-submit-filter').attr("href", window.location.pathname + response.params_origin);
+
+                
+                filter_col = response.data
+                filter_col.forEach(filter => {
+                        
+                    var col_name = filter.name
+                    var html_select = '<div class="col">\
+                        <select id="select-'+ col_name +'"class="btn btn-green-pastel dropdown-toggle w-100 filter-dropdown"><option value="">'+ filter.label +'</option>'
+
+                    // var url_params = new URLSearchParams(window.location.search);
+                    var selected_val = url_params.get(filter.param);
+
+                    var data = filter.data
+                    data.forEach(element => {
+                    html_select += '<option value="'+ element.val +'" '+ (selected_val == element.val ? 'selected' : '') +'>'+element.name+'</option>'
+                    });
+
+                    html_select += '</select>\
+                        </div>'
+
+                    $('#filter-col').append(html_select);
+                });
+
+                $('#select-mapel').val(selected_mapel);
+            },
+        });
+
+        $(".filter-dropdown").change(function () {
+            console.log('this.value', this.value)
+            var changed_filter = this.id.split('-')[1];
+
+            if(changed_filter == 'mapel'){
+                var pathname_user = current_url.split('/');
+                window.location.href = window.location.origin + '/' + pathname_user[1] + '/' + pathname_user[2] + '/' + pathname_user[3] + '/' + this.value
+            }else{
+                var query_params = ""
+                filter_col.forEach(filter => {
+                    if(filter.name == 'mapel')
+                        return;
+
+                    var selected_val = $(`#select-${filter.name}`).find(":selected").val();
+
+                    if(selected_val != "")
+                    query_params += `&${filter.param}=${selected_val}`
+                });
+
+                window.location.href = current_url + '?filter=true' + query_params
+            }
+
+        });
+    });
+</script>
+@endpush
+

@@ -169,7 +169,9 @@ class ERaportController extends Controller
             // 'id' => $id,
         ];
 
-        return view($this->prefix.'.show', $data);
+        $user = ExternalUser::find($id);
+
+        return view($this->prefix.'.show', ['data' => $data, 'user' => $user]);
     }
 
     public function getMapel($tingkat_id){
@@ -179,11 +181,24 @@ class ERaportController extends Controller
         return $data;
     }
 
-    public function showDetailMapel($id, $mapelId)
+    public function showDetailMapel(Request $request, $id, $mapelId)
     {
+        $req_bab_id = $request->bab;
+        $req_subbab_id = $request->subbab;
+
         $user = ExternalUser::find($id);
         $mapel = MataPelajaran::find($mapelId);
         $bab_ids = PaketSoal::where(['mata_pelajaran_id' => $mapelId, 'deleted_at' => null])->distinct()->pluck('bab_id')->toArray();
+        
+        if($req_bab_id){
+            $bab_ids = [$req_bab_id];
+        }
+
+        if($req_subbab_id){
+            $paket_soal = PaketSoal::find($req_subbab_id);
+            $bab_ids = [$paket_soal->bab_id];
+        }
+
         $result = [
             "name" => $mapel->name,
             "mudah" => 0,
@@ -196,7 +211,12 @@ class ERaportController extends Controller
         foreach($bab_ids as $bab_id){
             $modul = Modul::find($bab_id);
             $subbabs = PaketSoal::where(['bab_id' => $bab_id, 'deleted_at' => null])->distinct()->pluck('subbab')->toArray();
-            // $subbabs = PaketSoal::where(['bab_id' => $bab_id, 'deleted_at' => null])->get();
+                
+            if($req_subbab_id){
+                $paket_soal = PaketSoal::find($req_subbab_id);
+                $subbabs = [$paket_soal->subbab];
+            }
+
             $total_score = [
                 "mudah" => 0,
                 "sedang" => 0,
@@ -243,7 +263,7 @@ class ERaportController extends Controller
         }
 
         $mapelList = $this->getMapel($user->kelas->tingkat->id);
-        return view($this->prefix.'.show_mapel', ['data' => $result, 'mapelList' => $mapelList, 'selectedMapel' => $mapelId]);
+        return view($this->prefix.'.show_mapel', ['data' => $result, 'mapelList' => $mapelList, 'selectedMapel' => $mapelId, 'user' => $user]);
     }
 
     public function getScoreFinal($total_benar, $tingkat_kesulitan){
@@ -262,5 +282,56 @@ class ERaportController extends Controller
               //code block
         }
         return $score;
+    }
+
+    public function filterColShowDetailMapel($id, $mapelId)
+    {
+        $user = ExternalUser::find($id);
+
+        $mapelQuery = MataPelajaran::query();
+        $mapelList = $mapelQuery->where(['tingkat_id' => $user->kelas->tingkat->id])->orderBy('urutan', 'asc')->get(['id AS val', 'name']);
+
+        $bab_ids = PaketSoal::where(['mata_pelajaran_id' => $mapelId, 'deleted_at' => null])->distinct()->pluck('bab_id')->toArray();
+        $babs = Modul::whereIn('id', $bab_ids)->get();
+
+        $babList = [];
+        foreach($babs as $bab){
+            array_push($babList, [
+                'val' => $bab->id,
+                'name' => $bab->name,
+            ]);
+        }
+        
+        $subbabs = PaketSoal::whereIn('bab_id', $bab_ids)->where(['deleted_at' => null])->groupBy('bab_id', 'subbab')->distinct()->get();
+        $subbabList = [];
+        foreach($subbabs as $subbab){
+            array_push($subbabList, [
+                'val' => $subbab->id,
+                'name' => $subbab->judul_subbab,
+            ]);
+        }
+
+        $data = [
+            [
+                'label' => 'Mata Pelajaran',
+                'name' => 'mapel',
+                'param' => 'mapel',
+                'data' => $mapelList
+            ],
+            [
+                'label' => 'Bab',
+                'name' => 'bab',
+                'param' => 'bab',
+                'data' => $babList
+            ],
+            [
+                'label' => 'Subbab',
+                'name' => 'subbab',
+                'param' => 'subbab',
+                'data' => $subbabList
+            ]
+        ];
+    
+        return response()->json(['message' => 'success', 'data' => $data]);
     }
 }
