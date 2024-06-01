@@ -111,6 +111,7 @@ class ERaportController extends Controller
             })
             ->addColumn("action", function ($data) {
                 return view("components.datatable.actions", [
+                    "permissionName" => 'e-raport',
                     "viewRoute" => route($this->routePath.".show", $data->external_user->id),
                     "viewBtnText" => "View"
                 ]);
@@ -179,6 +180,7 @@ class ERaportController extends Controller
             })
             ->addColumn("action", function ($data) use ($user) {
                 return view("components.datatable.actions", [
+                    "permissionName" => 'e-raport',
                     "viewRoute" => route($this->routePath.".show-detail-mapel", [$user->id, $data->id]),
                     "viewBtnText" => "Detail Mapel"
                 ]);
