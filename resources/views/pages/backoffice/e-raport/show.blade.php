@@ -42,7 +42,7 @@
             {{ $user->kelas->name }}
           </div>
           <div class="col-3">
-            2019
+            {{ $user->tahun_ajaran }}
           </div>
         </div>
         <x-datatable.table :customSearch="__(1)">

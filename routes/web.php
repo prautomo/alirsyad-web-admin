@@ -107,9 +107,12 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
         Route::get('soals/create', 'SoalController@create')->name('soals.create');
 
         Route::resource('e-raport', 'ERaportController');
+        Route::get('json/e-raport/filter-col', 'ERaportController@filterCol')->name('e-raport.filter-col-show-detail-mapel');
         Route::get('e-raport/{id}/{mapelId}', 'ERaportController@showDetailMapel')->name('e-raport.show-detail-mapel');
         Route::get('e-raport/{id}/{mapelId}/filter-col', 'ERaportController@filterColShowDetailMapel')->name('e-raport.filter-col-show-detail-mapel');
 
+        Route::get("/json/e-raport/grafik/{id}/{mapelId}", "ERaportController@showDetailMapelGrafik");
+        
         Route::resource('password-reset-students', 'PasswordResetStudentController');
         Route::post('password-reset-students/update-status/{id}', 'PasswordResetStudentController@updateStatus')->name('password-reset-students.update-status');
 

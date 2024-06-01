@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Backoffice;
 use App\Http\Controllers\Controller;
 use App\Models\ERaport;
 use App\Models\ExternalUser;
+use App\Models\Jenjang;
+use App\Models\Kelas;
 use App\Models\KelasSiswa;
 use App\Models\MataPelajaran;
 use App\Models\Modul;
 use App\Models\PaketSoal;
+use App\Models\Tingkat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -42,6 +45,35 @@ class ERaportController extends Controller
             ->filter(function ($query) use ($request) {
 
                 $search = @$request->search['value'];
+                
+                $tahun_ajaran = $request->tahun_ajaran;
+                $jenjang_id = $request->jenjang_id;
+                $tingkat_id = $request->tingkat_id;
+                $kelas_id = $request->kelas_id;
+
+                if($tahun_ajaran){
+                    $query = $query->whereHas('external_user.classHistory', function($query2) use ($tahun_ajaran){
+                        $query2->where('is_current', 1)->where('tahun_ajaran', 'LIKE', '%'. $tahun_ajaran. '%');
+                    });
+                }
+
+                if($jenjang_id){
+                    $query = $query->whereHas('external_user.kelas.tingkat.jenjang', function ($query2) use ($jenjang_id) {
+                        $query2->where('id', '=',  $jenjang_id);
+                    });
+                }
+
+                if($tingkat_id){
+                    $query = $query->whereHas('external_user.kelas.tingkat', function ($query2) use ($tingkat_id) {
+                        $query2->where('id', '=',  $tingkat_id);
+                    });
+                }
+                
+                if($kelas_id){
+                    $query = $query->whereHas('external_user.kelas', function ($query2) use ($kelas_id) {
+                        $query2->where('name', '=',  $kelas_id);
+                    });
+                }
 
                 if($search){
                     $query->where(function($query) use ($search){
@@ -162,16 +194,15 @@ class ERaportController extends Controller
         if ($request->ajax()) {
             return $this->datatableShow($request, $id);
         }
-        // $paketSoal = PaketSoal::with('mataPelajaran', 'bab')->findOrFail($id);
-
-        $data = [
-            // 'paket_soal' => $paketSoal,
-            // 'id' => $id,
-        ];
 
         $user = ExternalUser::find($id);
 
-        return view($this->prefix.'.show', ['data' => $data, 'user' => $user]);
+        $current_class = KelasSiswa::where(['siswa_id' => $user->id, 'is_current' => 1])->first();
+        if($current_class != null){
+            $user['tahun_ajaran'] = $current_class->tahun_ajaran;
+        }
+
+        return view($this->prefix.'.show', ['user' => $user]);
     }
 
     public function getMapel($tingkat_id){
@@ -187,6 +218,14 @@ class ERaportController extends Controller
         $req_subbab_id = $request->subbab;
 
         $user = ExternalUser::find($id);
+        $user['tahun_ajaran'] = "";
+
+        $current_class = KelasSiswa::where(['siswa_id' => $user->id, 'is_current' => 1])->first();
+        
+        if($current_class != null){
+            $user['tahun_ajaran'] = $current_class->tahun_ajaran;
+        }
+        
         $mapel = MataPelajaran::find($mapelId);
         $bab_ids = PaketSoal::where(['mata_pelajaran_id' => $mapelId, 'deleted_at' => null])->distinct()->pluck('bab_id')->toArray();
         
@@ -266,6 +305,80 @@ class ERaportController extends Controller
         return view($this->prefix.'.show_mapel', ['data' => $result, 'mapelList' => $mapelList, 'selectedMapel' => $mapelId, 'user' => $user]);
     }
 
+    public function showDetailMapelGrafik(Request $request, $id, $mapelId)
+    {
+        $req_bab_id = $request->bab;
+        $req_subbab_id = $request->subbab;
+
+        $user = ExternalUser::find($id);
+        $mapel = MataPelajaran::find($mapelId);
+        $bab_ids = PaketSoal::where(['mata_pelajaran_id' => $mapelId, 'deleted_at' => null])->distinct()->pluck('bab_id')->toArray();
+        
+        if($req_bab_id){
+            $bab_ids = [$req_bab_id];
+        }
+
+        if($req_subbab_id){
+            $paket_soal = PaketSoal::find($req_subbab_id);
+            $bab_ids = [$paket_soal->bab_id];
+        }
+
+        $result = [
+            "label" => $mapel->name,
+            "score" => 0,
+            "babs" => [],
+        ];
+        
+        foreach($bab_ids as $bab_id){
+            $modul = Modul::find($bab_id);
+            $subbabs = PaketSoal::where(['bab_id' => $bab_id, 'deleted_at' => null])->distinct()->pluck('subbab')->toArray();
+                
+            if($req_subbab_id){
+                $paket_soal = PaketSoal::find($req_subbab_id);
+                $subbabs = [$paket_soal->subbab];
+            }
+
+            $total_score = 0;
+            $result_subbab = [];
+            
+            foreach($subbabs as $subbab){
+                $subbab_paket_soals = PaketSoal::where(['bab_id' => $bab_id, 'subbab' => $subbab, 'deleted_at' => null])->get();
+                $subbab_obj = [
+                    "label" => ""
+                ];
+                $total_per_subbab = 0;
+
+                foreach($subbab_paket_soals as $paket_soal){
+                    $subbab_obj['label'] = $paket_soal->judul_subbab;
+
+                    $score = ERaport::where(['user_id' => $id, 'paket_soal_id' => $paket_soal->id])->orderBy('created_at', 'DESC')->first();
+                    $total_benar = 0;
+                    if($score){
+                        $total_benar = $score->total_benar;
+                    }
+                    
+                    $total_per_subbab += $this->getScoreFinal($total_benar, $paket_soal->tingkat_kesulitan);
+                }
+
+                $subbab_obj['score'] = $total_per_subbab;
+                $total_score += $total_per_subbab;
+                $result['score'] += $total_per_subbab;
+                array_push($result_subbab, $subbab_obj);
+            }
+
+            $bab_obj['label'] = $modul->name;
+            $bab_obj['score'] = $total_score;
+            $bab_obj['subbabs'] = $result_subbab;
+            array_push($result['babs'], $bab_obj);
+        }
+        // dd($result);
+
+        $mapelList = $this->getMapel($user->kelas->tingkat->id);
+        // return view($this->prefix.'.show_mapel', ['data' => $result, 'mapelList' => $mapelList, 'selectedMapel' => $mapelId, 'user' => $user]);
+        return response()->json(['message' => 'success', 'data' => $result]);
+
+    }
+
     public function getScoreFinal($total_benar, $tingkat_kesulitan){
         $score = 0;
         switch ($tingkat_kesulitan) {
@@ -282,6 +395,39 @@ class ERaportController extends Controller
               //code block
         }
         return $score;
+    }
+
+    public function filterCol(Request $request)
+    {
+        $params_origin = '';
+        $data = [
+            [
+                'label' => 'Tahun Ajaran',
+                'name' => 'tahun_ajaran',
+                'param' => 'tahun_ajaran',
+                'data' => KelasSiswa::distinct()->orderBy('tahun_ajaran')->get(['tahun_ajaran AS val', 'tahun_ajaran AS name'])->unique('name')
+            ],
+            [
+                'label' => 'Jenjang',
+                'name' => 'jenjangs',
+                'param' => 'jenjang_id',
+                'data' => Jenjang::where('show_for_guest', 1)->get(['id AS val', 'name'])
+            ],
+            [
+                'label' => 'Tingkat',
+                'name' => 'tingkats',
+                'param' => 'tingkat_id',
+                'data' => Tingkat::get(['id AS val', 'name'])
+            ],
+            [
+                'label' => 'Kelas',
+                'name' => 'kelas',
+                'param' => 'kelas_id',
+                'data' => Kelas::distinct()->orderBy('name')->get(['name AS val', 'name'])->unique('name')
+            ],
+        ];
+    
+        return response()->json(['message' => 'success', 'data' => $data, 'params_origin' => $params_origin]);
     }
 
     public function filterColShowDetailMapel($id, $mapelId)
@@ -333,5 +479,13 @@ class ERaportController extends Controller
         ];
     
         return response()->json(['message' => 'success', 'data' => $data]);
+    }
+    
+    public function showGrafik(Request $request)
+    {
+        $data = [];
+        // dd(Auth::user()->roles->pluck('name'));
+
+        return view('pages.backoffice.e-raport.show_grafik', $data);
     }
 }

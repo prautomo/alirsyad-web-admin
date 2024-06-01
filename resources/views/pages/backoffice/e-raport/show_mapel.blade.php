@@ -60,21 +60,18 @@
             {{ $user->kelas->name }}
           </div>
           <div class="col-3">
-            2019
+            {{ $user->tahun_ajaran }}
           </div>
         </div>
 
         <div class="row mt-3">
             <div class="col-6">
-                {{-- <div class="row">
-                    <div class="col-2">
-                        <p class="mb-0">View</p>
+                <div class="row">
+                    <div class="col-12">
+                        <button id="btn-table" type="button" class="btn btn-primary">Table</button>
+                        <button id="btn-grafik" type="button" class="btn btn-outline-primary">Grafik</button>
                     </div>
-                    <div class="col-10">
-                        <button class="btn btn-primary">Table</button>
-                        <button class="btn btn-primary">Grafik</button>
-                    </div>
-                </div> --}}
+                </div>
             </div>
             <div class="col-6">
                 <div class="row row-filter">
@@ -89,8 +86,7 @@
             </div>
         </div>
        
-        <!-- tble -->
-        <div class="table table-responsive">
+        <div class="table table-responsive" id="raport-table">
             <table class="table align-items-center table-flush">
                 <thead class="thead-light">
                 <tr>
@@ -130,8 +126,11 @@
                 </tbody>
             </table>
         </div>
+
+        <div id="raport-grafik" style="display: none">
+            <div id="grafik-eraport" siswa-id="{{ $user->id }}" mapel-id="{{ $selectedMapel }}"></div>
+        </div>
       </div>
-      <!-- endtble -->
     </div>
   </div>
 </div>
@@ -211,6 +210,20 @@
 
         });
     });
+
+    $("#btn-table").click(function(){
+        $("#raport-table").show();
+        $("#raport-grafik").hide();
+        $("#btn-table").attr('class', 'btn btn-primary');
+        $("#btn-grafik").attr('class', 'btn btn-outline-primary');
+    }); 
+
+    $("#btn-grafik").click(function(){
+        $("#raport-table").hide();
+        $("#raport-grafik").show();
+        $("#btn-table").attr('class', 'btn btn-outline-primary');
+        $("#btn-grafik").attr('class', 'btn btn-primary');
+    }); 
 </script>
 @endpush
 
