@@ -383,14 +383,15 @@ class ExternalUserController extends Controller
             //     }
             // }
 
+            $new_user['name'] = $input['name'];
+            $new_user['username'] = $input['nis'];
+            $new_user['email'] = $input['email'];
+            $new_user['password'] = $input['password'];
+
+            $login_user = User::create($new_user);
+
             // insert as guru mapel if mapel > 0
             if (@$request->mapel && count($request->mapel) > 0) {
-                $new_user['name'] = $input['name'];
-                $new_user['username'] = $input['nis'];
-                $new_user['email'] = $input['email'];
-                $new_user['password'] = $input['password'];
-
-                $login_user = User::create($new_user);
                 $login_user->assignRole("Guru Mata Pelajaran");
 
                 foreach($request->mapel as $mapel){
@@ -536,6 +537,18 @@ class ExternalUserController extends Controller
         $user->update($input);
 
         if (@$request->role === "GURU") {
+
+            $update_user['name'] = $input['name'];
+            $update_user['username'] = $input['nis'];
+            $update_user['email'] = $input['email'];
+
+            if (!empty($input['password'])) {
+                $update_user['password'] = $input['password'];
+            }
+
+            $login_user = User::find(@$gu->id);
+            $login_user->update($update_user);
+
             if (@$request->mapel) {
                 if (count(@$request->mapel) > 0) {
                     $gu = User::where('username', $user->nis)->first();
@@ -546,17 +559,6 @@ class ExternalUserController extends Controller
                         'email' => 'required|email|unique:users,email,' . @$gu->id,
                         // 'phone' => 'required|unique:external_users,phone,'.$gu->id,
                     ]);
-
-                    $update_user['name'] = $input['name'];
-                    $update_user['username'] = $input['nis'];
-                    $update_user['email'] = $input['email'];
-
-                    if (!empty($input['password'])) {
-                        $update_user['password'] = $input['password'];
-                    }
-
-                    $login_user = User::find(@$gu->id);
-                    $login_user->update($update_user);
                     
                     $existing_mapel = [];
                     // WH 23/05/24 - Covered guru uploader as guru mapel
