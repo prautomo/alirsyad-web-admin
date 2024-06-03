@@ -30,7 +30,7 @@ class ERaportController extends Controller
      * @return void
      */
     public function datatable(Request $request){
-        $query = ERaport::query();
+        $query = ExternalUser::query();
 
         // filter if its guru uploader
         if (!@\Auth::user()->hasRole('Superadmin')) {
@@ -38,7 +38,7 @@ class ERaportController extends Controller
             // $query = $query->whereIn('mata_pelajaran_id', $mapelIdsUser);
         }
 
-        $datas = $query->groupBy('user_id')->select('*');
+        $datas = $query->where(['role' => 'SISWA', 'is_pengunjung' => 0, 'deleted_at' => NULL])->select('*');
 
         return datatables()
             ->of($datas)
@@ -52,25 +52,25 @@ class ERaportController extends Controller
                 $kelas_id = $request->kelas_id;
 
                 if($tahun_ajaran){
-                    $query = $query->whereHas('external_user.classHistory', function($query2) use ($tahun_ajaran){
+                    $query = $query->whereHas('classHistory', function($query2) use ($tahun_ajaran){
                         $query2->where('is_current', 1)->where('tahun_ajaran', 'LIKE', '%'. $tahun_ajaran. '%');
                     });
                 }
 
                 if($jenjang_id){
-                    $query = $query->whereHas('external_user.kelas.tingkat.jenjang', function ($query2) use ($jenjang_id) {
+                    $query = $query->whereHas('kelas.tingkat.jenjang', function ($query2) use ($jenjang_id) {
                         $query2->where('id', '=',  $jenjang_id);
                     });
                 }
 
                 if($tingkat_id){
-                    $query = $query->whereHas('external_user.kelas.tingkat', function ($query2) use ($tingkat_id) {
+                    $query = $query->whereHas('kelas.tingkat', function ($query2) use ($tingkat_id) {
                         $query2->where('id', '=',  $tingkat_id);
                     });
                 }
                 
                 if($kelas_id){
-                    $query = $query->whereHas('external_user.kelas', function ($query2) use ($kelas_id) {
+                    $query = $query->whereHas('kelas', function ($query2) use ($kelas_id) {
                         $query2->where('name', '=',  $kelas_id);
                     });
                 }
@@ -86,22 +86,22 @@ class ERaportController extends Controller
             })
             ->addIndexColumn()
             ->addColumn('nis', function($data) {
-                return @$data->external_user->nis;
+                return @$data->nis;
             })
             ->addColumn('name', function($data) {
-                return @$data->external_user->name;
+                return @$data->name;
             })
             ->addColumn('jenjang', function($data) {
-                return @$data->external_user->kelas->tingkat->jenjang->name;
+                return @$data->kelas->tingkat->jenjang->name;
             })
             ->addColumn('tingkat', function($data) {
-                return @$data->external_user->kelas->tingkat->name;
+                return @$data->kelas->tingkat->name;
             })
             ->addColumn('kelas', function($data) {
-                return @$data->external_user->kelas->name;
+                return @$data->kelas->name;
             })
             ->addColumn("tahun_ajaran", function ($data) {
-                $current_class = KelasSiswa::where(['siswa_id' => $data->external_user->id, 'is_current' => 1])->first();
+                $current_class = KelasSiswa::where(['siswa_id' => $data->id, 'is_current' => 1])->first();
 
                 if($current_class != null){
                     return $current_class->tahun_ajaran;
@@ -112,7 +112,7 @@ class ERaportController extends Controller
             ->addColumn("action", function ($data) {
                 return view("components.datatable.actions", [
                     "permissionName" => 'e-raport',
-                    "viewRoute" => route($this->routePath.".show", $data->external_user->id),
+                    "viewRoute" => route($this->routePath.".show", $data->id),
                     "viewBtnText" => "View"
                 ]);
             })
