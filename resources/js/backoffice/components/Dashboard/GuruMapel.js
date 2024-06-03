@@ -9,7 +9,7 @@ import {
     Title,
     Tooltip,
     Legend,
-} from 'chart.js/auto';
+} from 'chart.js/auto/auto.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Bar } from 'react-chartjs-2';
 ChartJS.register(

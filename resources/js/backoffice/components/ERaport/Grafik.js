@@ -9,7 +9,7 @@ import {
     Title,
     Tooltip,
     Legend,
-} from 'chart.js/auto';
+} from 'chart.js/auto/auto.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Bar } from 'react-chartjs-2';
 ChartJS.register(
@@ -62,20 +62,46 @@ function GrafikERaport({ siswa_id, mapel_id }) {
 
     const [configData, setConfigData] = useState(data);
     const [datas, setDatas] = useState([]);
+    const [title, setTitle] = useState({});
 
     useEffect(() => {
+        const searchParams = new URLSearchParams(window.location.search);
+
         if (datas.length < 1) {
             // get data from /json/e-raport/grafik/{id}/{mapelId}; id = siswa_id
-            setDatas([
-                {
-                    label: "5A",
-                    score: 1376,
-                },
-                {
-                    label: "5B",
-                    score: 1518,
+            window.axios.get(`/backoffice/json/e-raport/grafik/${siswa_id}/${mapel_id}`).then(function (response) {
+                const data_babs = response.data.data.babs;
+                let result;
+
+                console.log(response.data.data)
+
+                if(searchParams.has('bab')){
+                    const bab_id = searchParams.get('bab')
+                    const data_subbabs = data_babs.find((element) => {
+                        return element.id == bab_id
+                    })
+
+                    result = data_subbabs.subbabs.map((element) => {
+                        return {
+                          'label' : element.label,
+                          'score' : element.score
+                        }
+                    })
+                }else{
+                    result = data_babs.map((element) => {
+                        return {
+                          'label' : element.label,
+                          'score' : element.score
+                        }
+                    })
                 }
-            ])
+
+                setDatas(result)
+                setTitle({
+                    'label': 'IPA',
+                    'total_score': 898
+                })
+            });
         }
     }, []);
 
@@ -103,58 +129,20 @@ function GrafikERaport({ siswa_id, mapel_id }) {
     }, [datas]);
 
     return (<>
-        <div className="row mb-4">
-            <div className="col-12">
-                <div style={{ display: 'flex', alignItems: 'center'}}>
-                    <div style={{ marginLeft: 'auto' }} class="dashboard-filter">
-                        <label className="my-auto mr-2" style={{ color: "#9E9E9E"}}>Filter By</label>
-                        <select id="mapel" name="mapel" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Mata Pelajaran">
-                            <option value="">Mata Pelajaran</option>
-                            <option value="matematika">MTK</option>
-                        </select>
-                        <select id="jenjang" name="jenjang" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Jenjang">
-                            <option value="">Semua Jenjang</option>
-                            <option value="sd">SD</option>
-                        </select>
-                        <select id="tingkat" name="tingkat" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Tingkat">
-                            <option value="">Semua Tingkat</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                        </select>
-                        <select id="kelas" name="kelas" data-style="btn-green-pastel" multiple class="selectpicker mr-2" placeholder="Kelas">
-                            <option value="">Semua Kelas</option>
-                            <option value="5a">5 A</option>
-                            <option value="5b">5 B</option>
-                        </select>
-                        <select id="module" name="module" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Module">
-                            <option value="">Semua Module</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                        </select>
-                        <select id="submodule" name="submodule" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Sub-Module">
-                            <option value="">Semua Sub-Module</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div className="row">
+        <div className="row mt-4">
             <div className="col-12">
                 <div className="card">
                     <div className="card-body">
                         <div style={{ display: 'flex', alignItems: 'center' }} className="mb-3">
-                            <span className="text-primary">Matematika</span>
+                            <span className="text-primary">{title.label}</span>
 
                             <div className="dashboard-final-score" style={{ marginLeft: 'auto' }}>
-                                <span>Final Score 5A : 1376</span>
-                                <span style={{
+                                <span>{title.label} : {title.total_score}</span>
+                                {/* <span style={{
                                     borderLeft: "1px solid #F6D0A1",
                                     marginLeft: "5px",
                                     marginRight: "5px",                               
-                                }}></span>
-                                <span>Final Score 5B : 1518</span>
+                                }}></span> */}
                             </div>
                         </div>
 

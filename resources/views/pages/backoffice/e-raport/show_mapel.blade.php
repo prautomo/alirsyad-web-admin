@@ -68,8 +68,9 @@
             <div class="col-6">
                 <div class="row">
                     <div class="col-12">
-                        <button id="btn-table" type="button" class="btn btn-primary">Table</button>
-                        <button id="btn-grafik" type="button" class="btn btn-outline-primary">Grafik</button>
+                        <input type="hidden" name="view_type" id="view_type" value="{{ $viewType }}">
+                        <button id="btn-table" type="button" class="btn btn-{{ $viewType == 'table' ? 'primary' : 'outline-primary'}}">Table</button>
+                        <button id="btn-grafik" type="button" class="btn btn-{{ $viewType == 'grafik' ? 'primary' : 'outline-primary'}}">Grafik</button>
                     </div>
                 </div>
             </div>
@@ -86,7 +87,7 @@
             </div>
         </div>
        
-        <div class="table table-responsive" id="raport-table">
+        <div class="table table-responsive" id="raport-table" style="display: {{ $viewType == 'table' ? 'block' : 'none'}}">
             <table class="table align-items-center table-flush">
                 <thead class="thead-light">
                 <tr>
@@ -127,7 +128,7 @@
             </table>
         </div>
 
-        <div id="raport-grafik" style="display: none">
+        <div id="raport-grafik" style="display: {{ $viewType == 'grafik' ? 'block' : 'none'}}">
             <div id="grafik-eraport" siswa-id="{{ $user->id }}" mapel-id="{{ $selectedMapel }}"></div>
         </div>
       </div>
@@ -189,6 +190,7 @@
         $(".filter-dropdown").change(function () {
             console.log('this.value', this.value)
             var changed_filter = this.id.split('-')[1];
+            var view_type = $('#view_type').val();
 
             if(changed_filter == 'mapel'){
                 var pathname_user = current_url.split('/');
@@ -205,7 +207,7 @@
                     query_params += `&${filter.param}=${selected_val}`
                 });
 
-                window.location.href = current_url + '?filter=true' + query_params
+                window.location.href = current_url + '?view_type=' + view_type + query_params
             }
 
         });
@@ -216,6 +218,8 @@
         $("#raport-grafik").hide();
         $("#btn-table").attr('class', 'btn btn-primary');
         $("#btn-grafik").attr('class', 'btn btn-outline-primary');
+
+        $('#view_type').val('table');
     }); 
 
     $("#btn-grafik").click(function(){
@@ -223,6 +227,8 @@
         $("#raport-grafik").show();
         $("#btn-table").attr('class', 'btn btn-outline-primary');
         $("#btn-grafik").attr('class', 'btn btn-primary');
+
+        $('#view_type').val('grafik');
     }); 
 </script>
 @endpush

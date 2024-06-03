@@ -12,7 +12,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, ".label-progress {\n    font-size: 15px;\n    font-weight: 300;\n}", ""]);
+exports.push([module.i, ".label-progress {\r\n    font-size: 15px;\r\n    font-weight: 300;\r\n}", ""]);
 
 // exports
 

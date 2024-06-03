@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backoffice;
 use App\Http\Controllers\Controller;
 use App\Models\ERaport;
 use App\Models\ExternalUser;
+use App\Models\GuruMataPelajaran;
 use App\Models\Jenjang;
 use App\Models\Kelas;
 use App\Models\KelasSiswa;
@@ -13,6 +14,7 @@ use App\Models\Modul;
 use App\Models\PaketSoal;
 use App\Models\Tingkat;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ERaportController extends Controller
@@ -32,12 +34,32 @@ class ERaportController extends Controller
     public function datatable(Request $request){
         $query = ExternalUser::query();
 
-        // filter if its guru uploader
-        if (!@\Auth::user()->hasRole('Superadmin')) {
-            // $mapelIdsUser = $this->getMapelIdsUser();
-            // $query = $query->whereIn('mata_pelajaran_id', $mapelIdsUser);
-        }
+        // filter if its other roles than superadmin
+        $auth_user_roles = Auth::user()->roles->pluck('name')->toArray();
+        if (in_array("Guru Mata Pelajaran", $auth_user_roles)) {
+            $guru = ExternalUser::where(['email' => Auth::user()->email])->first();
+            $kelas_ids = GuruMataPelajaran::where([
+                'guru_id' => $guru->id
+            ])->pluck('kelas_id');
+            
+            $query = $query->whereIn('kelas_id', $kelas_ids);
+        }else if(in_array("Wali Kelas", $auth_user_roles)){
+            $guru = ExternalUser::where(['email' => Auth::user()->email])->first();
+            $kelas = Kelas::where(['wali_kelas_id' => $guru->id])->first();
 
+            if($kelas){
+                $query = $query->where('kelas_id', $kelas->id);
+            }
+        }else if(in_array("Kepala Sekolah", $auth_user_roles)){
+            $guru = ExternalUser::where(['email' => Auth::user()->email])->first();
+            $jenjang = Jenjang::where(['kepala_sekolah_id' => $guru->id])->first();
+
+            if($jenjang){
+                $query = $query->whereHas('kelas.tingkat.jenjang', function ($query2) use ($jenjang) {
+                    $query2->where('id', '=',  $jenjang->id);
+                });
+            }
+        }
         $datas = $query->where(['role' => 'SISWA', 'is_pengunjung' => 0, 'deleted_at' => NULL])->select('*');
 
         return datatables()
@@ -218,6 +240,11 @@ class ERaportController extends Controller
     {
         $req_bab_id = $request->bab;
         $req_subbab_id = $request->subbab;
+        $req_view_type = 'table';
+
+        if($request->view_type){
+            $req_view_type = $request->view_type;
+        }
 
         $user = ExternalUser::find($id);
         $user['tahun_ajaran'] = "";
@@ -304,7 +331,7 @@ class ERaportController extends Controller
         }
 
         $mapelList = $this->getMapel($user->kelas->tingkat->id);
-        return view($this->prefix.'.show_mapel', ['data' => $result, 'mapelList' => $mapelList, 'selectedMapel' => $mapelId, 'user' => $user]);
+        return view($this->prefix.'.show_mapel', ['data' => $result, 'mapelList' => $mapelList, 'selectedMapel' => $mapelId, 'user' => $user, 'viewType' => $req_view_type]);
     }
 
     public function showDetailMapelGrafik(Request $request, $id, $mapelId)
@@ -346,11 +373,13 @@ class ERaportController extends Controller
             foreach($subbabs as $subbab){
                 $subbab_paket_soals = PaketSoal::where(['bab_id' => $bab_id, 'subbab' => $subbab, 'deleted_at' => null])->get();
                 $subbab_obj = [
+                    "id" => "",
                     "label" => ""
                 ];
                 $total_per_subbab = 0;
 
                 foreach($subbab_paket_soals as $paket_soal){
+                    $subbab_obj['id'] = $paket_soal->id;
                     $subbab_obj['label'] = $paket_soal->judul_subbab;
 
                     $score = ERaport::where(['user_id' => $id, 'paket_soal_id' => $paket_soal->id])->orderBy('created_at', 'DESC')->first();
@@ -368,6 +397,7 @@ class ERaportController extends Controller
                 array_push($result_subbab, $subbab_obj);
             }
 
+            $bab_obj['id'] = $modul->id;
             $bab_obj['label'] = $modul->name;
             $bab_obj['score'] = $total_score;
             $bab_obj['subbabs'] = $result_subbab;

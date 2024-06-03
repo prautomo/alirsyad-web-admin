@@ -546,12 +546,14 @@ class ExternalUserController extends Controller
                 $update_user['password'] = $input['password'];
             }
 
+            $gu = User::where('username', $user->nis)->first();
+
             $login_user = User::find(@$gu->id);
             $login_user->update($update_user);
 
             if (@$request->mapel) {
                 if (count(@$request->mapel) > 0) {
-                    $gu = User::where('username', $user->nis)->first();
+                    $login_user->assignRole("Guru Mata Pelajaran");
 
                     $this->validate($request, [
                         'nis' => 'required|unique:users,username,' . @$gu->id,
@@ -586,6 +588,12 @@ class ExternalUserController extends Controller
                         ]);
                     }
                 }
+            }else{
+                $login_user->removeRole("Guru Mata Pelajaran");
+
+                GuruMataPelajaran::where([
+                    'guru_id' => $user->id
+                ])->delete();
             }
         }else if(@$request->role === "SISWA"){
             $current_class = KelasSiswa::where([
