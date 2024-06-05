@@ -236,17 +236,43 @@
           </ul>
           <ul class="navbar-nav align-items-center ml-auto ml-md-0 navbar-account">
             <li class="nav-item dropdown">
-              <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
+              <a class="nav-link pr-3" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
                 aria-expanded="false">
                 <div class="media align-items-center">
                   <span class="avatar avatar-sm rounded-circle">
                     @php
                     $userDetail = \App\Models\ExternalUser::where("email", @Auth::user()->email)->first();
+                    $activeRole = Session::get('activeRole');
+                    $otherRole = Session::get('otherRole');
+
+                    if($activeRole == null){
+                      $authUserRole = Auth::user()->roles->pluck('name')->toArray();
+                      $defaultRole = "";
+                      
+                      if (in_array("Guru Mata Pelajaran", $authUserRole)) {
+                        $defaultRole = "Guru Mata Pelajaran";
+                      }else if(in_array("Wali Kelas", $authUserRole)){
+                        $defaultRole = "Wali Kelas";
+                      }else if(in_array("Kepala Sekolah", $authUserRole)){
+                        $defaultRole = "Kepala Sekolah";
+                      }else{
+                        $defaultRole = "Superadmin";
+                      }
+
+                      $roles = array_diff($authUserRole, array($defaultRole));
+                      
+                      Session::put('activeRole', $defaultRole);
+                      Session::put('otherRole', $roles);
+                      $activeRole = $defaultRole;
+                      $otherRole = $roles;
+                    }
+                    
+                    // dd($otherRole);
                     @endphp
                     <img alt="{{ Auth::user()->name }}" src="{{ @$userDetail->photo ? asset(@$userDetail->photo) : asset('backoffice/assets/img/icons/akun.png') }}">
                   </span>
                   <div class="media-body  ml-2  d-none d-lg-block">
-                    <span class="mb-0 text-sm font-weight-500">{{ Auth::user()->name }}</span>
+                    <span class="mb-0 text-sm font-weight-500"><b>{{ Auth::user()->name }}</b> ({{ $activeRole }})</span>
                   </div>
                 </div>
               </a>
@@ -268,6 +294,14 @@
                 </a>
                 
                 <div class="dropdown-divider"></div> -->
+                @foreach($otherRole as $role)
+
+                  <a href="/backoffice/profile/change-active-role/{{ $role }}" class="dropdown-item">
+                    <i class="ni ni-badge"></i>
+                    <span>Switch as {{ $role }}</span>
+                  </a>
+                @endforeach
+
                 <a href="{{ route('backoffice::akun-saya') }}" class="dropdown-item">
                   <i class="ni ni-single-02"></i>
                   <span>Profile</span>

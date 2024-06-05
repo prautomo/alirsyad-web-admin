@@ -238,4 +238,18 @@ class ProfileController extends Controller
 
         return redirect("/backoffice/profile")->with('success', "Profile Berhasil Di Ubah");
     }
+
+    public function changeActiveRole($role){
+        
+        $authUserRole = Auth::user()->roles->pluck('name')->toArray();
+
+        if(in_array($role, $authUserRole)){
+            $otherRole = array_diff($authUserRole, array($role));
+
+            Session::put('activeRole', $role);
+            Session::put('otherRole', $otherRole);
+        }
+
+        return redirect("/backoffice/e-raport")->with('success', "Berhasil switch role!");
+    }
 }

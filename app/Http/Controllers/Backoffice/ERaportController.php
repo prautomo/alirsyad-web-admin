@@ -16,6 +16,7 @@ use App\Models\Tingkat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class ERaportController extends Controller
 {
@@ -35,22 +36,22 @@ class ERaportController extends Controller
         $query = ExternalUser::query();
 
         // filter if its other roles than superadmin
-        $auth_user_roles = Auth::user()->roles->pluck('name')->toArray();
-        if (in_array("Guru Mata Pelajaran", $auth_user_roles)) {
+        $activeRole = Session::get('activeRole');
+        if ($activeRole == "Guru Mata Pelajaran") {
             $guru = ExternalUser::where(['email' => Auth::user()->email])->first();
             $kelas_ids = GuruMataPelajaran::where([
                 'guru_id' => $guru->id
             ])->pluck('kelas_id');
             
             $query = $query->whereIn('kelas_id', $kelas_ids);
-        }else if(in_array("Wali Kelas", $auth_user_roles)){
+        }else if($activeRole == "Wali Kelas"){
             $guru = ExternalUser::where(['email' => Auth::user()->email])->first();
             $kelas = Kelas::where(['wali_kelas_id' => $guru->id])->first();
 
             if($kelas){
                 $query = $query->where('kelas_id', $kelas->id);
             }
-        }else if(in_array("Kepala Sekolah", $auth_user_roles)){
+        }else if($activeRole == "Kepala Sekolah"){
             $guru = ExternalUser::where(['email' => Auth::user()->email])->first();
             $jenjang = Jenjang::where(['kepala_sekolah_id' => $guru->id])->first();
 
@@ -60,6 +61,7 @@ class ERaportController extends Controller
                 });
             }
         }
+        
         $datas = $query->where(['role' => 'SISWA', 'is_pengunjung' => 0, 'deleted_at' => NULL])->select('*');
 
         return datatables()
@@ -148,17 +150,22 @@ class ERaportController extends Controller
         if ($request->ajax()) {
             return $this->datatable($request);
         }
-
         return view($this->prefix.'.index');
     }
 
     public function datatableShow(Request $request, $id){
         $query = MataPelajaran::query();
 
-        // filter if its guru uploader
-        if (!@\Auth::user()->hasRole('Superadmin')) {
-            // $mapelIdsUser = $this->getMapelIdsUser();
-            // $query = $query->whereIn('mata_pelajaran_id', $mapelIdsUser);
+        $activeRole = Session::get('activeRole');
+
+        // filter if its other roles than superadmin
+        if ($activeRole == "Guru Mata Pelajaran") {
+            $guru = ExternalUser::where(['email' => Auth::user()->email])->first();
+            $mapel_ids = GuruMataPelajaran::where([
+                'guru_id' => $guru->id
+            ])->pluck('mata_pelajaran_id');
+            
+            $query = $query->whereIn('id', $mapel_ids);
         }
 
         $user = ExternalUser::find($id);
@@ -241,6 +248,12 @@ class ERaportController extends Controller
         $req_bab_id = $request->bab;
         $req_subbab_id = $request->subbab;
         $req_view_type = 'table';
+
+        $auth_user_roles = Auth::user()->roles->pluck('name')->toArray();
+        $is_guru_mapel = false;
+        if (in_array("Guru Mata Pelajaran", $auth_user_roles)) {
+            $is_guru_mapel = true;
+        }
 
         if($request->view_type){
             $req_view_type = $request->view_type;
@@ -331,7 +344,7 @@ class ERaportController extends Controller
         }
 
         $mapelList = $this->getMapel($user->kelas->tingkat->id);
-        return view($this->prefix.'.show_mapel', ['data' => $result, 'mapelList' => $mapelList, 'selectedMapel' => $mapelId, 'user' => $user, 'viewType' => $req_view_type]);
+        return view($this->prefix.'.show_mapel', ['data' => $result, 'mapelList' => $mapelList, 'selectedMapel' => $mapelId, 'user' => $user, 'viewType' => $req_view_type, 'isGuruMapel' => $is_guru_mapel]);
     }
 
     public function showDetailMapelGrafik(Request $request, $id, $mapelId)

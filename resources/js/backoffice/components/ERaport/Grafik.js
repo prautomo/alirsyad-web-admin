@@ -70,10 +70,9 @@ function GrafikERaport({ siswa_id, mapel_id }) {
         if (datas.length < 1) {
             // get data from /json/e-raport/grafik/{id}/{mapelId}; id = siswa_id
             window.axios.get(`/backoffice/json/e-raport/grafik/${siswa_id}/${mapel_id}`).then(function (response) {
-                const data_babs = response.data.data.babs;
+                const data = response.data.data;
+                const data_babs = data.babs;
                 let result;
-
-                console.log(response.data.data)
 
                 if(searchParams.has('bab')){
                     const bab_id = searchParams.get('bab')
@@ -98,8 +97,8 @@ function GrafikERaport({ siswa_id, mapel_id }) {
 
                 setDatas(result)
                 setTitle({
-                    'label': 'IPA',
-                    'total_score': 898
+                    'label': data.label,
+                    'total_score': data.score
                 })
             });
         }

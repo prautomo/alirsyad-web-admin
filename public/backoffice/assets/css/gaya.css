@@ -80,7 +80,7 @@
 
 .navbar-account {
     box-sizing: border-box;
-    width: 150px;
+    /* width: 150px; */
     height: 48px;
     background: rgba(246, 208, 161, 0.5);
     /* Seocndary/50 */

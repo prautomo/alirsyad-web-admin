@@ -44,6 +44,7 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
         Route::post('/profile/photo', "ProfileController@profilePhoto")->name('akun-saya.photo');
         Route::get('/profile/password-edit', "ProfileController@passwordEdit")->name('akun-saya.password-edit');
         Route::post('/profile/password-edit', "ProfileController@passwordUpdate")->name('akun-saya.password-update');
+        Route::get('/profile/change-active-role/{role}', "ProfileController@changeActiveRole")->name('akun-saya.change-active-role');
 
         Route::resource('jenjangs', 'JenjangController');
         Route::resource('tingkats', 'TingkatController');

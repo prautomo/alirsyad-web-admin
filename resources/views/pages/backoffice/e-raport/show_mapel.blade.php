@@ -144,7 +144,9 @@
         var url_params = new URLSearchParams(window.location.search);
         var current_url = window.location.pathname
         var selected_mapel = "<?php echo $selectedMapel; ?>";
+        var is_guru_mapel = "<?php echo $isGuruMapel; ?>";
         console.log('current_url', current_url)
+        console.log('is_guru_mapel', is_guru_mapel)
 
         var filter_col = ""
 
@@ -158,11 +160,15 @@
             type:'GET',
             url: current_url +'/filter-col',
             success:function(response){
-                console.log('response', response)
-                // $('#btn-submit-filter').attr("href", window.location.pathname + response.params_origin);
-
                 
                 filter_col = response.data
+                if(is_guru_mapel){
+                    console.log(filter_col)
+                    filter_col = filter_col.filter(function( obj ) {
+                        return obj.name != 'mapel';
+                    });
+                }
+                
                 filter_col.forEach(filter => {
                         
                     var col_name = filter.name
@@ -186,6 +192,7 @@
                 $('#select-mapel').val(selected_mapel);
             },
         });
+
 
         $(".filter-dropdown").change(function () {
             console.log('this.value', this.value)
