@@ -533,4 +533,43 @@ class ERaportController extends Controller
 
         return view('pages.backoffice.e-raport.show_grafik', $data);
     }
+    
+    public function generateDummyScore(){
+        $class_ids = [18, 19]; // id dev
+        $mapel_ids = [103, 120]; // id dev
+
+
+        foreach($mapel_ids as $mapel_id){
+            $paket_soals = PaketSoal::where(['mata_pelajaran_id' => $mapel_id])->orderBy('id')->get();
+            foreach($class_ids as $class_id){
+                $user_ids = ExternalUser::where(['kelas_id' => $class_id])->pluck('id')->toArray();
+
+                foreach($user_ids as $user_id){
+                    $max_score = 10;
+                    foreach($paket_soals as $paket_soal){
+                        $rand_score = rand(1, $max_score);
+                        if($paket_soal->tingkat_kesulitan == 'mudah'){
+                            $rand_score = rand(5, 10);
+                            $max_score = $rand_score;
+                        }else if($paket_soal->tingkat_kesulitan == 'sedang'){
+                            $max_score = $rand_score;
+                        }
+    
+                        ERaport::create([
+                            'user_id' => $user_id,
+                            'paket_soal_id' => $paket_soal->id,
+                            'total_terjawab' => 10,
+                            'total_benar' => $rand_score,
+                            'list_id_soal_terjawab' => '[]',
+                            'list_id_soal_benar' => '[]',
+                            'tipe' => 'subbab'
+                        ]);
+                    }
+                }
+            }
+
+        }
+        
+        return response()->json("Success generate dummy score.", 200);
+    }
 }
