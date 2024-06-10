@@ -33,7 +33,8 @@ class DashboardController extends Controller {
     {
         $data = [];
         // dd(Auth::user()->roles->pluck('name'));
+        return view('pages.backoffice.dashboard.superadmin', $data);
 
-        return view('pages.backoffice.dashboard.guru_mapel', $data);
+        // return view('pages.backoffice.dashboard.guru_mapel', $data);
     }
 }
