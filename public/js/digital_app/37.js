@@ -1,9 +1,9 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[37],{
 
-/***/ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./resources/js/backoffice/components/Dashboard/index.css":
-/*!************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader??ref--6-1!./node_modules/postcss-loader/src??ref--6-2!./resources/js/backoffice/components/Dashboard/index.css ***!
-  \************************************************************************************************************************************************/
+/***/ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./resources/js/backoffice/components/ERaport/index.css":
+/*!**********************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/postcss-loader/src??ref--6-2!./resources/js/backoffice/components/ERaport/index.css ***!
+  \**********************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19,10 +19,10 @@ exports.push([module.i, ".dashboard-final-score {\r\n    background: #F6D0A14D;\
 
 /***/ }),
 
-/***/ "./resources/js/backoffice/components/Dashboard/Superadmin.js":
-/*!********************************************************************!*\
-  !*** ./resources/js/backoffice/components/Dashboard/Superadmin.js ***!
-  \********************************************************************/
+/***/ "./resources/js/backoffice/components/ERaport/Grafik.js":
+/*!**************************************************************!*\
+  !*** ./resources/js/backoffice/components/ERaport/Grafik.js ***!
+  \**************************************************************/
 /*! exports provided: options, data, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -34,7 +34,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _index_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./index.css */ "./resources/js/backoffice/components/Dashboard/index.css");
+/* harmony import */ var _index_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./index.css */ "./resources/js/backoffice/components/ERaport/index.css");
 /* harmony import */ var _index_css__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_index_css__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var chart_js_auto_auto_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! chart.js/auto/auto.js */ "./node_modules/chart.js/auto/auto.js");
 /* harmony import */ var chart_js_auto_auto_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(chart_js_auto_auto_js__WEBPACK_IMPORTED_MODULE_3__);
@@ -75,9 +75,6 @@ var options = {
         }
       }
     }
-  },
-  onHover: function onHover(event, chartElement) {
-    event["native"].target.style.cursor = chartElement[0] ? 'pointer' : 'default';
   }
 };
 var data = {
@@ -88,261 +85,124 @@ var data = {
     backgroundColor: 'rgba(2, 65, 2, 1)'
   }]
 };
-function DashboardSuperadmin() {
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+function GrafikERaport(_ref) {
+  var siswa_id = _ref.siswa_id,
+    mapel_id = _ref.mapel_id;
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(data),
     _useState2 = _slicedToArray(_useState, 2),
-    listConfigData = _useState2[0],
-    setListConfigData = _useState2[1];
+    configData = _useState2[0],
+    setConfigData = _useState2[1];
   var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
     _useState4 = _slicedToArray(_useState3, 2),
-    listDatas = _useState4[0],
-    setListDatas = _useState4[1];
+    datas = _useState4[0],
+    setDatas = _useState4[1];
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({}),
+    _useState6 = _slicedToArray(_useState5, 2),
+    title = _useState6[0],
+    setTitle = _useState6[1];
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    if (listDatas.length < 1) {
-      setListDatas([[{
-        label: "TK",
-        score: 1376
-      }, {
-        label: "SD",
-        score: 580
-      }, {
-        label: "SMP",
-        score: 1500
-      }, {
-        label: "SMA",
-        score: 1125
-      }]]);
+    var searchParams = new URLSearchParams(window.location.search);
+    if (datas.length < 1) {
+      // get data from /json/e-raport/grafik/{id}/{mapelId}; id = siswa_id
+      window.axios.get("/backoffice/json/e-raport/grafik/".concat(siswa_id, "/").concat(mapel_id)).then(function (response) {
+        var data = response.data.data;
+        var data_babs = data.babs;
+        var result;
+        if (searchParams.has('bab')) {
+          var bab_id = searchParams.get('bab');
+          var data_subbabs = data_babs.find(function (element) {
+            return element.id == bab_id;
+          });
+          result = data_subbabs.subbabs.map(function (element) {
+            return {
+              'label': element.label,
+              'score': element.score
+            };
+          });
+        } else {
+          result = data_babs.map(function (element) {
+            return {
+              'label': element.label,
+              'score': element.score
+            };
+          });
+        }
+        setDatas(result);
+        setTitle({
+          'label': data.label,
+          'total_score': data.score
+        });
+      });
     }
   }, []);
-  var spanBorderRight = {
-    borderLeft: "1px solid #F6D0A1",
-    marginLeft: "5px",
-    marginRight: "5px"
-  };
-  options['onClick'] = graphClickEvent;
-  function graphClickEvent(event, clickedElements) {
-    console.log('sss');
-    if (clickedElements.length === 0) return;
-    var _clickedElements$0$el = clickedElements[0].element.$context,
-      dataIndex = _clickedElements$0$el.dataIndex,
-      raw = _clickedElements$0$el.raw;
-    var data = event.chart.data;
-    var barLabel = event.chart.data.labels[dataIndex];
-    console.log('click dataIndex', dataIndex);
-    console.log('click data', data);
-    console.log('click', barLabel);
-    setListDatas([[{
-      label: "TK 1",
-      score: 1376
-    }, {
-      label: "TK 2",
-      score: 580
-    }], [{
-      label: "SD 1",
-      score: 1376
-    }, {
-      label: "SD 2",
-      score: 580
-    }, {
-      label: "SD 3",
-      score: 1500
-    }, {
-      label: "SD 4",
-      score: 1126
-    }, {
-      label: "SD 5",
-      score: 1518
-    }, {
-      label: "SD 6",
-      score: 480
-    }], [{
-      label: "SMP 1",
-      score: 1376
-    }, {
-      label: "SMP 2",
-      score: 1200
-    }, {
-      label: "SMP 3",
-      score: 555
-    }], [{
-      label: "SMA 1",
-      score: 1376
-    }, {
-      label: "SMA 2",
-      score: 1200
-    }, {
-      label: "SMA 3",
-      score: 1512
-    }]]);
-  }
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    var listConfig = [];
-    var _loop = function _loop() {
-        var labels = [];
-        var tempScores = [];
-        listDatas[i].forEach(function (element) {
-          var data = element;
-          labels.push(data.label);
-          tempScores.push(data.score);
-        });
-        objConfig = {
-          labels: labels,
-          datasets: [{
-            label: 'Score',
-            data: tempScores,
-            backgroundColor: 'rgba(2, 65, 2, 1)',
-            borderRadius: 10,
-            minBarLength: 1,
-            barThickness: 120
-          }]
-        };
-        listConfig.push(objConfig);
-      },
-      objConfig;
-    for (var i = 0; i < listDatas.length; i++) {
-      _loop();
+    var labels = [];
+    var tempScores = [];
+    for (var i = 0; i < datas.length; i++) {
+      var _data = datas[i];
+      labels.push(_data.label);
+      tempScores.push(_data.score);
     }
-    console.log(listConfig);
-    setListConfigData(listConfig);
-  }, [listDatas]);
+    setConfigData({
+      labels: labels,
+      datasets: [{
+        label: 'Score',
+        data: tempScores,
+        backgroundColor: 'rgba(2, 65, 2, 1)',
+        borderRadius: 10,
+        minBarLength: 1,
+        barThickness: 120
+      }]
+    });
+  }, [datas]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "row mb-4"
+    className: "row mt-4"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "col-12"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "card-body"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     style: {
       display: 'flex',
       alignItems: 'center'
-    }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    },
+    className: "mb-3"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "text-primary"
+  }, title.label), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "dashboard-final-score",
     style: {
       marginLeft: 'auto'
-    },
-    "class": "dashboard-filter"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-    className: "my-auto mr-2",
-    style: {
-      color: "#9E9E9E"
     }
-  }, "Filter By"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-    id: "mapel",
-    name: "mapel",
-    "data-style": "btn-green-pastel",
-    "class": "selectpicker mr-2",
-    placeholder: "Mata Pelajaran"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-    value: ""
-  }, "Mata Pelajaran"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-    value: "matematika"
-  }, "MTK")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-    id: "jenjang",
-    name: "jenjang",
-    "data-style": "btn-green-pastel",
-    "class": "selectpicker mr-2",
-    placeholder: "Jenjang"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-    value: ""
-  }, "Semua Jenjang"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-    value: "sd"
-  }, "SD")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-    id: "tingkat",
-    name: "tingkat",
-    "data-style": "btn-green-pastel",
-    "class": "selectpicker mr-2",
-    placeholder: "Tingkat"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-    value: ""
-  }, "Semua Tingkat"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-    value: "5"
-  }, "5"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-    value: "6"
-  }, "6")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-    id: "kelas",
-    name: "kelas",
-    "data-style": "btn-green-pastel",
-    multiple: true,
-    "class": "selectpicker mr-2",
-    placeholder: "Kelas"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-    value: ""
-  }, "Semua Kelas"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-    value: "5a"
-  }, "5 A"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-    value: "5b"
-  }, "5 B")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-    id: "module",
-    name: "module",
-    "data-style": "btn-green-pastel",
-    "class": "selectpicker mr-2",
-    placeholder: "Module"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-    value: ""
-  }, "Semua Module"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-    value: "5"
-  }, "5"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-    value: "6"
-  }, "6")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-    id: "submodule",
-    name: "submodule",
-    "data-style": "btn-green-pastel",
-    "class": "selectpicker mr-2",
-    placeholder: "Sub-Module"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-    value: ""
-  }, "Semua Sub-Module"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-    value: "5"
-  }, "5"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-    value: "6"
-  }, "6")))))), listConfigData && listConfigData.map(function (data) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "row"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "col-12"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "card"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "card-body"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      style: {
-        display: 'flex',
-        alignItems: 'center'
-      },
-      className: "mb-3"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
-      className: "text-primary"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "Ringkasan Grafik")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "dashboard-final-score",
-      style: {
-        marginLeft: 'auto'
-      }
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "TK : ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "1376")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-      style: spanBorderRight
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "SD : ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "580")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-      style: spanBorderRight
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "SMP : ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "1500")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-      style: spanBorderRight
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "SMA : ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "1125")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_chartjs_2__WEBPACK_IMPORTED_MODULE_5__["Bar"], {
-      options: options,
-      data: data
-    })))));
-  }));
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, title.label, " : ", title.total_score))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_chartjs_2__WEBPACK_IMPORTED_MODULE_5__["Bar"], {
+    options: options,
+    data: configData
+  }))))));
 }
-/* harmony default export */ __webpack_exports__["default"] = (DashboardSuperadmin);
-if (document.getElementById('dashboard-superadmin')) {
-  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DashboardSuperadmin, null), document.getElementById('dashboard-superadmin'));
+/* harmony default export */ __webpack_exports__["default"] = (GrafikERaport);
+var container = document.getElementById("grafik-eraport");
+if (container) {
+  var siswaId = container.getAttribute("siswa-id");
+  var mapelId = container.getAttribute("mapel-id");
+  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(GrafikERaport, {
+    siswa_id: siswaId,
+    mapel_id: mapelId
+  }), container);
 }
 
 /***/ }),
 
-/***/ "./resources/js/backoffice/components/Dashboard/index.css":
-/*!****************************************************************!*\
-  !*** ./resources/js/backoffice/components/Dashboard/index.css ***!
-  \****************************************************************/
+/***/ "./resources/js/backoffice/components/ERaport/index.css":
+/*!**************************************************************!*\
+  !*** ./resources/js/backoffice/components/ERaport/index.css ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../../../../../node_modules/css-loader??ref--6-1!../../../../../node_modules/postcss-loader/src??ref--6-2!./index.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./resources/js/backoffice/components/Dashboard/index.css");
+var content = __webpack_require__(/*! !../../../../../node_modules/css-loader??ref--6-1!../../../../../node_modules/postcss-loader/src??ref--6-2!./index.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./resources/js/backoffice/components/ERaport/index.css");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 

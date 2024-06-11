@@ -115,6 +115,9 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
         Route::get('e-raport/{id}/{mapelId}/filter-col', 'ERaportController@filterColShowDetailMapel')->name('e-raport.filter-col-show-detail-mapel');
 
         Route::get("/json/e-raport/grafik/{id}/{mapelId}", "ERaportController@showDetailMapelGrafik");
+        Route::post('/json/dashboard/jenjang', 'DashboardController@allJenjang')->name('dashboard.all-jenjang');
+        Route::post('/json/dashboard/tingkat', 'DashboardController@getDataTingkat')->name('dashboard.get-data-tingkat');
+        Route::post('/json/dashboard/kelas', 'DashboardController@getDataKelas')->name('dashboard.get-data-kelas');
         
         Route::resource('password-reset-students', 'PasswordResetStudentController');
         Route::post('password-reset-students/update-status/{id}', 'PasswordResetStudentController@updateStatus')->name('password-reset-students.update-status');

@@ -535,8 +535,8 @@ class ERaportController extends Controller
     }
     
     public function generateDummyScore(){
-        $class_ids = [18, 19]; // id dev
-        $mapel_ids = [103, 120]; // id dev
+        $class_ids = [25]; // id dev
+        $mapel_ids = [55]; // id dev
 
 
         foreach($mapel_ids as $mapel_id){

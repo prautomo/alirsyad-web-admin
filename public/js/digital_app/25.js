@@ -75,6 +75,9 @@ var options = {
         }
       }
     }
+  },
+  onHover: function onHover(event, chartElement) {
+    event["native"].target.style.cursor = chartElement[0] ? 'pointer' : 'default';
   }
 };
 var data = {
@@ -86,45 +89,122 @@ var data = {
   }]
 };
 function DashboardSuperadmin() {
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(data),
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
     _useState2 = _slicedToArray(_useState, 2),
-    configData = _useState2[0],
-    setConfigData = _useState2[1];
+    listConfigData = _useState2[0],
+    setListConfigData = _useState2[1];
   var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
     _useState4 = _slicedToArray(_useState3, 2),
-    datas = _useState4[0],
-    setDatas = _useState4[1];
+    listDatas = _useState4[0],
+    setListDatas = _useState4[1];
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    if (datas.length < 1) {
-      setDatas([{
-        label: "5A",
+    if (listDatas.length < 1) {
+      setListDatas([[{
+        label: "TK",
         score: 1376
       }, {
-        label: "5B",
-        score: 1518
-      }]);
+        label: "SD",
+        score: 580
+      }, {
+        label: "SMP",
+        score: 1500
+      }, {
+        label: "SMA",
+        score: 1125
+      }]]);
     }
   }, []);
+  var spanBorderRight = {
+    borderLeft: "1px solid #F6D0A1",
+    marginLeft: "5px",
+    marginRight: "5px"
+  };
+  options['onClick'] = graphClickEvent;
+  function graphClickEvent(event, clickedElements) {
+    console.log('sss');
+    if (clickedElements.length === 0) return;
+    var _clickedElements$0$el = clickedElements[0].element.$context,
+      dataIndex = _clickedElements$0$el.dataIndex,
+      raw = _clickedElements$0$el.raw;
+    var data = event.chart.data;
+    var barLabel = event.chart.data.labels[dataIndex];
+    console.log('click dataIndex', dataIndex);
+    console.log('click data', data);
+    console.log('click', barLabel);
+    setListDatas([[{
+      label: "TK 1",
+      score: 1376
+    }, {
+      label: "TK 2",
+      score: 580
+    }], [{
+      label: "SD 1",
+      score: 1376
+    }, {
+      label: "SD 2",
+      score: 580
+    }, {
+      label: "SD 3",
+      score: 1500
+    }, {
+      label: "SD 4",
+      score: 1126
+    }, {
+      label: "SD 5",
+      score: 1518
+    }, {
+      label: "SD 6",
+      score: 480
+    }], [{
+      label: "SMP 1",
+      score: 1376
+    }, {
+      label: "SMP 2",
+      score: 1200
+    }, {
+      label: "SMP 3",
+      score: 555
+    }], [{
+      label: "SMA 1",
+      score: 1376
+    }, {
+      label: "SMA 2",
+      score: 1200
+    }, {
+      label: "SMA 3",
+      score: 1512
+    }]]);
+  }
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    var labels = [];
-    var tempScores = [];
-    for (var i = 0; i < datas.length; i++) {
-      var _data = datas[i];
-      labels.push(_data.label);
-      tempScores.push(_data.score);
+    var listConfig = [];
+    var _loop = function _loop() {
+        var labels = [];
+        var tempScores = [];
+        listDatas[i].forEach(function (element) {
+          var data = element;
+          labels.push(data.label);
+          tempScores.push(data.score);
+        });
+        objConfig = {
+          labels: labels,
+          datasets: [{
+            label: 'Score',
+            data: tempScores,
+            backgroundColor: 'rgba(2, 65, 2, 1)',
+            borderRadius: 10,
+            minBarLength: 1,
+            barThickness: 120
+          }]
+        };
+        listConfig.push(objConfig);
+      },
+      objConfig;
+    for (var i = 0; i < listDatas.length; i++) {
+      _loop();
     }
-    setConfigData({
-      labels: labels,
-      datasets: [{
-        label: 'Score',
-        data: tempScores,
-        backgroundColor: 'rgba(2, 65, 2, 1)',
-        borderRadius: 10,
-        minBarLength: 1,
-        barThickness: 120
-      }]
-    });
-  }, [datas]);
+    console.log(listConfig);
+    setListConfigData(listConfig);
+  }, [listDatas]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "row mb-4"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -213,37 +293,39 @@ function DashboardSuperadmin() {
     value: "5"
   }, "5"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
     value: "6"
-  }, "6")))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "row"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "col-12"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "card"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "card-body"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    style: {
-      display: 'flex',
-      alignItems: 'center'
-    },
-    className: "mb-3"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-    className: "text-primary"
-  }, "Matematika"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "dashboard-final-score",
-    style: {
-      marginLeft: 'auto'
-    }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "Final Score 5A : 1376"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-    style: {
-      borderLeft: "1px solid #F6D0A1",
-      marginLeft: "5px",
-      marginRight: "5px"
-    }
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "Final Score 5B : 1518"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_chartjs_2__WEBPACK_IMPORTED_MODULE_5__["Bar"], {
-    options: options,
-    data: configData
-  }))))));
+  }, "6")))))), listConfigData && listConfigData.map(function (data) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "row"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "col-12"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "card"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "card-body"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center'
+      },
+      className: "mb-3"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
+      className: "text-primary"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "Ringkasan Grafik")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "dashboard-final-score",
+      style: {
+        marginLeft: 'auto'
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "TK : ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "1376")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      style: spanBorderRight
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "SD : ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "580")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      style: spanBorderRight
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "SMP : ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "1500")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      style: spanBorderRight
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "SMA : ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "1125")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_chartjs_2__WEBPACK_IMPORTED_MODULE_5__["Bar"], {
+      options: options,
+      data: data
+    })))));
+  }));
 }
 /* harmony default export */ __webpack_exports__["default"] = (DashboardSuperadmin);
 if (document.getElementById('dashboard-superadmin')) {

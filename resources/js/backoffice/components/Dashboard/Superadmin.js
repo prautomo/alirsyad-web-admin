@@ -61,66 +61,33 @@ export const data = {
     ],
 };
 
-function DashboardSuperadmin() {
-
-    const [listConfigData, setListConfigData] = useState([]);
-    const [listDatas, setListDatas] = useState([]);
-
-    useEffect(() => {
-        if (listDatas.length < 1) {
-            setListDatas([
-                [
-                    {
-                        label: "TK",
-                        score: 1376,
-                    },
-                    {
-                        label: "SD",
-                        score: 580,
-                    },
-                    {
-                        label: "SMP",
-                        score: 1500,
-                    },
-                    {
-                        label: "SMA",
-                        score: 1125,
-                    }
-                ]
-            ])
-        }
-    }, []);
-
-    const spanBorderRight = {
-        borderLeft: "1px solid #F6D0A1",
-        marginLeft: "5px",
-        marginRight: "5px"
-    }
-    
-    options['onClick'] = graphClickEvent
-
-    function graphClickEvent(event, clickedElements){
-        console.log('sss')
-        if (clickedElements.length === 0) return
-
-        const { dataIndex, raw } = clickedElements[0].element.$context
-        const data = event.chart.data
-        const barLabel = event.chart.data.labels[dataIndex]
-        console.log('click dataIndex', dataIndex)
-        console.log('click data', data)
-        console.log('click', barLabel)
-
-        setListDatas([
+export const chartLevel = [
+    {
+        level: 'jenjang',
+        data: [
             [
                 {
-                    label: "TK 1",
+                    label: "TK",
                     score: 1376,
                 },
                 {
-                    label: "TK 2",
+                    label: "SD",
                     score: 580,
+                },
+                {
+                    label: "SMP",
+                    score: 1500,
+                },
+                {
+                    label: "SMA",
+                    score: 1125,
                 }
-            ],
+            ]
+        ]
+    },
+    {
+        level: 'tingkat',
+        data: [
             [
                 {
                     label: "SD 1",
@@ -146,40 +113,88 @@ function DashboardSuperadmin() {
                     label: "SD 6",
                     score: 480,
                 }
-            ],
-            [
-                {
-                    label: "SMP 1",
-                    score: 1376,
-                },
-                {
-                    label: "SMP 2",
-                    score: 1200,
-                },
-                {
-                    label: "SMP 3",
-                    score: 555,
-                }
-            ],
-            [
-                {
-                    label: "SMA 1",
-                    score: 1376,
-                },
-                {
-                    label: "SMA 2",
-                    score: 1200,
-                },
-                {
-                    label: "SMA 3",
-                    score: 1512,
-                }
             ]
-        ])
+        ]
+    }
+]
+
+function DashboardSuperadmin() {
+
+    const [listConfigData, setListConfigData] = useState([]);
+    const [listDatas, setListDatas] = useState([]);
+    const [listDataIds, setListDataIds] = useState([]);
+    const [nextApi, setNextApi] = useState({});
+    const [selectedBarIdx, setSelectedBarIdx] = useState(-1);
+    const [currentLevelIdx, setCurrentLevelIdx] = useState(0);
+
+    useEffect(() => {
+        if (listDatas.length < 1) {
+            window.axios.post("/backoffice/json/dashboard/jenjang").then((response) => {
+                var data = response.data.data
+
+                var chartData = data.data
+                var chartDataId = data.data_id
+                var nextApi = data.next_api
+
+                setNextApi(nextApi)
+                setListDatas(chartData)
+                setListDataIds(chartDataId)
+            }).catch((err) => {
+                console.log(err)
+            })
+        }
+    }, []);
+
+    const spanBorderRight = {
+        borderLeft: "1px solid #F6D0A1",
+        marginLeft: "5px",
+        marginRight: "5px"
+    }
+    
+    options['onClick'] = graphClickEvent
+
+    function graphClickEvent(event, clickedElements){
+        console.log('sss')
+        if (clickedElements.length === 0) return
+        console.log(listDatas)
+        console.log(listDataIds)
+
+        const { dataIndex, raw } = clickedElements[0].element.$context
+        const data = event.chart.data
+        const barLabel = event.chart.data.labels[dataIndex]
+        // const selectedIdx = listDataIds[dataIndex]
+        const selectedIdx = dataIndex
+        setSelectedBarIdx(selectedIdx)
+
     }
 
     useEffect(() => {
+        console.log('change selected bar', selectedBarIdx)
+
+        console.log('listDataIds', listDataIds)
+        console.log('nextApi', nextApi)
+        
+        var selectedId = listDataIds[selectedBarIdx]
+        window.axios.post(`/backoffice/json/dashboard/${nextApi.name}`, {  [nextApi.param] : selectedId}).then((response) => {
+            console.log('response', response.data)
+            var data = response.data.data
+
+            var chartData = data.data
+            var chartDataId = data.data_id
+            var nextApi = data.next_api
+
+            setNextApi(nextApi)
+            setListDataIds(chartDataId)
+            setListDatas(chartData)
+        }).catch((err) => {
+            console.log(err)
+        })
+
+    }, [selectedBarIdx]);
+
+    useEffect(() => {
         const listConfig = [];
+        console.log('change list data')
         for (let i=0; i<listDatas.length; i++) {
             const labels = [];
             const tempScores = [];
@@ -206,7 +221,6 @@ function DashboardSuperadmin() {
 
             listConfig.push(objConfig)
         }
-        console.log(listConfig)
         setListConfigData(listConfig);
     }, [listDatas]);
     return (<>
