@@ -23,13 +23,14 @@ exports.push([module.i, ".dashboard-final-score {\r\n    background: #F6D0A14D;\
 /*!********************************************************************!*\
   !*** ./resources/js/backoffice/components/Dashboard/Superadmin.js ***!
   \********************************************************************/
-/*! exports provided: options, data, default */
+/*! exports provided: options, data, chartLevel, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "options", function() { return options; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "data", function() { return data; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "chartLevel", function() { return chartLevel; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
@@ -40,6 +41,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var chart_js_auto_auto_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(chart_js_auto_auto_js__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var chartjs_plugin_datalabels__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! chartjs-plugin-datalabels */ "./node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.esm.js");
 /* harmony import */ var react_chartjs_2__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-chartjs-2 */ "./node_modules/react-chartjs-2/dist/index.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -88,6 +93,43 @@ var data = {
     backgroundColor: 'rgba(2, 65, 2, 1)'
   }]
 };
+var chartLevel = [{
+  level: 'jenjang',
+  data: [[{
+    label: "TK",
+    score: 1376
+  }, {
+    label: "SD",
+    score: 580
+  }, {
+    label: "SMP",
+    score: 1500
+  }, {
+    label: "SMA",
+    score: 1125
+  }]]
+}, {
+  level: 'tingkat',
+  data: [[{
+    label: "SD 1",
+    score: 1376
+  }, {
+    label: "SD 2",
+    score: 580
+  }, {
+    label: "SD 3",
+    score: 1500
+  }, {
+    label: "SD 4",
+    score: 1126
+  }, {
+    label: "SD 5",
+    score: 1518
+  }, {
+    label: "SD 6",
+    score: 480
+  }]]
+}];
 function DashboardSuperadmin() {
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
     _useState2 = _slicedToArray(_useState, 2),
@@ -97,21 +139,35 @@ function DashboardSuperadmin() {
     _useState4 = _slicedToArray(_useState3, 2),
     listDatas = _useState4[0],
     setListDatas = _useState4[1];
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+    _useState6 = _slicedToArray(_useState5, 2),
+    listDataIds = _useState6[0],
+    setListDataIds = _useState6[1];
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({}),
+    _useState8 = _slicedToArray(_useState7, 2),
+    nextApi = _useState8[0],
+    setNextApi = _useState8[1];
+  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({}),
+    _useState10 = _slicedToArray(_useState9, 2),
+    selectedBarIdx = _useState10[0],
+    setSelectedBarIdx = _useState10[1];
+  var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+    _useState12 = _slicedToArray(_useState11, 2),
+    kelasId = _useState12[0],
+    setKelasId = _useState12[1];
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     if (listDatas.length < 1) {
-      setListDatas([[{
-        label: "TK",
-        score: 1376
-      }, {
-        label: "SD",
-        score: 580
-      }, {
-        label: "SMP",
-        score: 1500
-      }, {
-        label: "SMA",
-        score: 1125
-      }]]);
+      window.axios.post("/backoffice/json/dashboard/jenjang").then(function (response) {
+        var data = response.data.data;
+        var chartData = data.data;
+        var chartDataId = data.data_id;
+        var nextApi = data.next_api;
+        setNextApi(nextApi);
+        setListDatas(chartData);
+        setListDataIds(chartDataId);
+      })["catch"](function (err) {
+        console.log(err);
+      });
     }
   }, []);
   var spanBorderRight = {
@@ -128,55 +184,42 @@ function DashboardSuperadmin() {
       raw = _clickedElements$0$el.raw;
     var data = event.chart.data;
     var barLabel = event.chart.data.labels[dataIndex];
-    console.log('click dataIndex', dataIndex);
-    console.log('click data', data);
-    console.log('click', barLabel);
-    setListDatas([[{
-      label: "TK 1",
-      score: 1376
-    }, {
-      label: "TK 2",
-      score: 580
-    }], [{
-      label: "SD 1",
-      score: 1376
-    }, {
-      label: "SD 2",
-      score: 580
-    }, {
-      label: "SD 3",
-      score: 1500
-    }, {
-      label: "SD 4",
-      score: 1126
-    }, {
-      label: "SD 5",
-      score: 1518
-    }, {
-      label: "SD 6",
-      score: 480
-    }], [{
-      label: "SMP 1",
-      score: 1376
-    }, {
-      label: "SMP 2",
-      score: 1200
-    }, {
-      label: "SMP 3",
-      score: 555
-    }], [{
-      label: "SMA 1",
-      score: 1376
-    }, {
-      label: "SMA 2",
-      score: 1200
-    }, {
-      label: "SMA 3",
-      score: 1512
-    }]]);
+    var selectedIdx = dataIndex;
+    setSelectedBarIdx({
+      label: barLabel,
+      idx: selectedIdx
+    });
   }
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    // console.log('change selected bar', selectedBarIdx)
+
+    // console.log('listDataIds', listDataIds)
+    // console.log('nextApi', nextApi)
+
+    var selectedId = listDataIds[selectedBarIdx.idx];
+    var params = _defineProperty({}, nextApi.param, selectedId);
+    if (kelasId != 0) {
+      params['kelas_id'] = kelasId;
+    }
+    window.axios.post("/backoffice/json/dashboard/".concat(nextApi.name), params).then(function (response) {
+      console.log('response', response.data);
+      var data = response.data.data;
+      var chartData = data.data;
+      var chartDataId = data.data_id;
+      var nextApi = data.next_api;
+      if (data.kelas_id) {
+        setKelasId(data.kelas_id);
+      }
+      setNextApi(nextApi);
+      setListDataIds(chartDataId);
+      setListDatas(chartData);
+    })["catch"](function (err) {
+      console.log(err);
+    });
+  }, [selectedBarIdx]);
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     var listConfig = [];
+    console.log('change list data');
     var _loop = function _loop() {
         var labels = [];
         var tempScores = [];
@@ -202,7 +245,6 @@ function DashboardSuperadmin() {
     for (var i = 0; i < listDatas.length; i++) {
       _loop();
     }
-    console.log(listConfig);
     setListConfigData(listConfig);
   }, [listDatas]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {

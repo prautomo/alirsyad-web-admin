@@ -118,6 +118,10 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
         Route::post('/json/dashboard/jenjang', 'DashboardController@allJenjang')->name('dashboard.all-jenjang');
         Route::post('/json/dashboard/tingkat', 'DashboardController@getDataTingkat')->name('dashboard.get-data-tingkat');
         Route::post('/json/dashboard/kelas', 'DashboardController@getDataKelas')->name('dashboard.get-data-kelas');
+        Route::post('/json/dashboard/mapel', 'DashboardController@getDataMapel')->name('dashboard.get-data-mapel');
+        Route::post('/json/dashboard/bab', 'DashboardController@getDataBab')->name('dashboard.get-data-bab');
+        Route::post('/json/dashboard/subbab', 'DashboardController@getDataSubbab')->name('dashboard.get-data-subbab');
+        Route::post('/json/dashboard/siswa', 'DashboardController@getDataSiswa')->name('dashboard.get-data-siswa');
         
         Route::resource('password-reset-students', 'PasswordResetStudentController');
         Route::post('password-reset-students/update-status/{id}', 'PasswordResetStudentController@updateStatus')->name('password-reset-students.update-status');

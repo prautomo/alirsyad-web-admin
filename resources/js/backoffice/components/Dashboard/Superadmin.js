@@ -124,8 +124,10 @@ function DashboardSuperadmin() {
     const [listDatas, setListDatas] = useState([]);
     const [listDataIds, setListDataIds] = useState([]);
     const [nextApi, setNextApi] = useState({});
-    const [selectedBarIdx, setSelectedBarIdx] = useState(-1);
-    const [currentLevelIdx, setCurrentLevelIdx] = useState(0);
+    const [selectedBarIdx, setSelectedBarIdx] = useState({});
+    const [kelasId, setKelasId] = useState(0);
+    const [babId, setBabId] = useState(0);
+    const [graphicTitle, setGraphicTitle] = useState("");
 
     useEffect(() => {
         if (listDatas.length < 1) {
@@ -135,7 +137,9 @@ function DashboardSuperadmin() {
                 var chartData = data.data
                 var chartDataId = data.data_id
                 var nextApi = data.next_api
+                var graphicTitle = data.graphic_title
 
+                setGraphicTitle(graphicTitle)
                 setNextApi(nextApi)
                 setListDatas(chartData)
                 setListDataIds(chartDataId)
@@ -156,33 +160,51 @@ function DashboardSuperadmin() {
     function graphClickEvent(event, clickedElements){
         console.log('sss')
         if (clickedElements.length === 0) return
-        console.log(listDatas)
-        console.log(listDataIds)
-
+        
         const { dataIndex, raw } = clickedElements[0].element.$context
         const data = event.chart.data
         const barLabel = event.chart.data.labels[dataIndex]
-        // const selectedIdx = listDataIds[dataIndex]
         const selectedIdx = dataIndex
-        setSelectedBarIdx(selectedIdx)
+        setSelectedBarIdx({
+            label: barLabel,
+            idx: selectedIdx
+        })
 
     }
 
     useEffect(() => {
-        console.log('change selected bar', selectedBarIdx)
-
-        console.log('listDataIds', listDataIds)
-        console.log('nextApi', nextApi)
         
-        var selectedId = listDataIds[selectedBarIdx]
-        window.axios.post(`/backoffice/json/dashboard/${nextApi.name}`, {  [nextApi.param] : selectedId}).then((response) => {
+        var selectedId = listDataIds[selectedBarIdx.idx]
+        var params = {
+            [nextApi.param] : selectedId
+        }
+
+        if(kelasId != 0){
+            params['kelas_id'] = kelasId
+        }
+
+        if(babId != 0){
+            params['bab_id'] = babId
+        }
+
+        window.axios.post(`/backoffice/json/dashboard/${nextApi.name}`, params).then((response) => {
             console.log('response', response.data)
             var data = response.data.data
 
             var chartData = data.data
             var chartDataId = data.data_id
             var nextApi = data.next_api
+            var graphicTitle = data.graphic_title
 
+            if(data.kelas_id){
+                setKelasId(data.kelas_id)
+            }
+
+            if(data.bab_id){
+                setBabId(data.bab_id)
+            }
+
+            setGraphicTitle(graphicTitle)
             setNextApi(nextApi)
             setListDataIds(chartDataId)
             setListDatas(chartData)
@@ -221,6 +243,7 @@ function DashboardSuperadmin() {
 
             listConfig.push(objConfig)
         }
+        console.log('listConfig', listConfig)
         setListConfigData(listConfig);
     }, [listDatas]);
     return (<>
@@ -261,24 +284,21 @@ function DashboardSuperadmin() {
                 </div>
             </div>
         </div>
-        {listConfigData && listConfigData.map((data) => (
-            
+        {listConfigData && listConfigData.map((data, idxData) => (
             <div className="row">
                 <div className="col-12">
                     <div className="card">
                         <div className="card-body">
                             <div style={{ display: 'flex', alignItems: 'center' }} className="mb-3">
-                                <h2 className="text-primary"><b>Ringkasan Grafik</b></h2>
+                                <h2 className="text-primary"><b>{graphicTitle}</b></h2>
 
                                 <div className="dashboard-final-score" style={{ marginLeft: 'auto' }}>
-                                    <span>TK : <b>1376</b></span>
-                                    <span style={spanBorderRight}></span>
-                                    <span>SD : <b>580</b></span>
-                                    <span style={spanBorderRight}></span>
-                                    <span>SMP : <b>1500</b></span>
-                                    <span style={spanBorderRight}></span>
-                                    <span>SMA : <b>1125</b></span>
-
+                                    {data.datasets[0].data.length < 15 && data.datasets[0].data.map((value, idx) => (
+                                        <>
+                                            <span>{data.labels[idx]} : <b>{value}</b></span>
+                                            <span style={spanBorderRight}></span>
+                                        </>
+                                    ))}
                                 </div>
                             </div>
 
