@@ -12,6 +12,7 @@ import {
 } from 'chart.js/auto/auto.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Bar } from 'react-chartjs-2';
+import { ThreeCircles } from 'react-loader-spinner'
 ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -125,12 +126,15 @@ function DashboardSuperadmin() {
     const [listDataIds, setListDataIds] = useState([]);
     const [nextApi, setNextApi] = useState({});
     const [selectedBarIdx, setSelectedBarIdx] = useState({});
+    const [filterJenjang, setFilterJenjang] = useState([]);
     const [kelasId, setKelasId] = useState(0);
     const [babId, setBabId] = useState(0);
     const [graphicTitle, setGraphicTitle] = useState("");
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         if (listDatas.length < 1) {
+            
             window.axios.post("/backoffice/json/dashboard/jenjang").then((response) => {
                 var data = response.data.data
 
@@ -139,6 +143,7 @@ function DashboardSuperadmin() {
                 var nextApi = data.next_api
                 var graphicTitle = data.graphic_title
 
+                setIsLoading(false)
                 setGraphicTitle(graphicTitle)
                 setNextApi(nextApi)
                 setListDatas(chartData)
@@ -146,6 +151,7 @@ function DashboardSuperadmin() {
             }).catch((err) => {
                 console.log(err)
             })
+
         }
     }, []);
 
@@ -159,12 +165,15 @@ function DashboardSuperadmin() {
 
     function graphClickEvent(event, clickedElements){
         console.log('sss')
+        console.log('filterJenjang click', filterJenjang)
         if (clickedElements.length === 0) return
         
         const { dataIndex, raw } = clickedElements[0].element.$context
         const data = event.chart.data
         const barLabel = event.chart.data.labels[dataIndex]
         const selectedIdx = dataIndex
+
+        setIsLoading(true)
         setSelectedBarIdx({
             label: barLabel,
             idx: selectedIdx
@@ -173,7 +182,15 @@ function DashboardSuperadmin() {
     }
 
     useEffect(() => {
-        
+        window.axios.get("/backoffice/json/jenjangs").then((response) => {
+            var data = response.data.data
+            setFilterJenjang(data)
+        }).catch((err) => {
+            console.log(err)
+        })
+    }, [filterJenjang]);
+
+    useEffect(() => {
         var selectedId = listDataIds[selectedBarIdx.idx]
         var params = {
             [nextApi.param] : selectedId
@@ -204,6 +221,7 @@ function DashboardSuperadmin() {
                 setBabId(data.bab_id)
             }
 
+            setIsLoading(false)
             setGraphicTitle(graphicTitle)
             setNextApi(nextApi)
             setListDataIds(chartDataId)
@@ -211,7 +229,6 @@ function DashboardSuperadmin() {
         }).catch((err) => {
             console.log(err)
         })
-
     }, [selectedBarIdx]);
 
     useEffect(() => {
@@ -252,13 +269,12 @@ function DashboardSuperadmin() {
                 <div style={{ display: 'flex', alignItems: 'center'}}>
                     <div style={{ marginLeft: 'auto' }} class="dashboard-filter">
                         <label className="my-auto mr-2" style={{ color: "#9E9E9E"}}>Filter By</label>
-                        <select id="mapel" name="mapel" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Mata Pelajaran">
-                            <option value="">Mata Pelajaran</option>
-                            <option value="matematika">MTK</option>
-                        </select>
                         <select id="jenjang" name="jenjang" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Jenjang">
                             <option value="">Semua Jenjang</option>
-                            <option value="sd">SD</option>
+                            {filterJenjang.map((data) => {
+                                <option>test</option>
+                                // <option value={data.id}>{data.name}</option>
+                            })}
                         </select>
                         <select id="tingkat" name="tingkat" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Tingkat">
                             <option value="">Semua Tingkat</option>
@@ -269,6 +285,10 @@ function DashboardSuperadmin() {
                             <option value="">Semua Kelas</option>
                             <option value="5a">5 A</option>
                             <option value="5b">5 B</option>
+                        </select>
+                        <select id="mapel" name="mapel" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Mata Pelajaran">
+                            <option value="">Mata Pelajaran</option>
+                            <option value="matematika">MTK</option>
                         </select>
                         <select id="module" name="module" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Module">
                             <option value="">Semua Module</option>
@@ -284,30 +304,49 @@ function DashboardSuperadmin() {
                 </div>
             </div>
         </div>
-        {listConfigData && listConfigData.map((data, idxData) => (
-            <div className="row">
-                <div className="col-12">
-                    <div className="card">
-                        <div className="card-body">
-                            <div style={{ display: 'flex', alignItems: 'center' }} className="mb-3">
-                                <h2 className="text-primary"><b>{graphicTitle}</b></h2>
 
-                                <div className="dashboard-final-score" style={{ marginLeft: 'auto' }}>
-                                    {data.datasets[0].data.length < 15 && data.datasets[0].data.map((value, idx) => (
-                                        <>
-                                            <span>{data.labels[idx]} : <b>{value}</b></span>
-                                            <span style={spanBorderRight}></span>
-                                        </>
-                                    ))}
+        {!isLoading ? (
+            listConfigData && listConfigData.map((data, idxData) => (
+                <div className="row">
+                    <div className="col-12">
+                        <div className="card">
+                            <div className="card-body">
+                                <div style={{ display: 'flex', alignItems: 'center' }} className="mb-3">
+                                    <h2 className="text-primary"><b>{graphicTitle}</b></h2>
+    
+                                    <div className="dashboard-final-score" style={{ marginLeft: 'auto' }}>
+                                        {data.datasets[0].data.length < 15 && data.datasets[0].data.map((value, idx) => (
+                                            <>
+                                                <span>{data.labels[idx]} : <b>{value}</b></span>
+                                                <span style={spanBorderRight}></span>
+                                            </>
+                                        ))}
+                                    </div>
                                 </div>
+    
+                                <Bar options={options} data={data} />
                             </div>
-
-                            <Bar options={options} data={data} />
                         </div>
                     </div>
+                </div>  
+            ))    
+        ) : (
+            <div className="row" style={{ height: '70vh', width:'100%' }}>
+                <div className="col-12 d-flex justify-content-center align-items-center" style={{ flexDirection: 'column' }}>
+                    <ThreeCircles
+                        visible={true}
+                        height="100"
+                        width="100"
+                        color="#024102"
+                        ariaLabel="three-circles-loading"
+                        wrapperStyle={{}}
+                        wrapperClass=""
+                    />
+                    <h2 class="mt-2">Mohon tunggu...</h2>
                 </div>
             </div>  
-        ))}          
+        )}
+             
     </>);
 }
 

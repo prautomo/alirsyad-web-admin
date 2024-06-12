@@ -1,4 +1,4 @@
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[25],{
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[40],{
 
 /***/ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./resources/js/backoffice/components/Dashboard/index.css":
 /*!************************************************************************************************************************************************!*\
@@ -41,6 +41,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var chart_js_auto_auto_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(chart_js_auto_auto_js__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var chartjs_plugin_datalabels__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! chartjs-plugin-datalabels */ "./node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.esm.js");
 /* harmony import */ var react_chartjs_2__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-chartjs-2 */ "./node_modules/react-chartjs-2/dist/index.js");
+/* harmony import */ var react_loader_spinner__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-loader-spinner */ "./node_modules/react-loader-spinner/dist/module.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
@@ -51,6 +52,7 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -151,18 +153,26 @@ function DashboardSuperadmin() {
     _useState10 = _slicedToArray(_useState9, 2),
     selectedBarIdx = _useState10[0],
     setSelectedBarIdx = _useState10[1];
-  var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+  var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
     _useState12 = _slicedToArray(_useState11, 2),
-    kelasId = _useState12[0],
-    setKelasId = _useState12[1];
+    filterJenjang = _useState12[0],
+    setFilterJenjang = _useState12[1];
   var _useState13 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
     _useState14 = _slicedToArray(_useState13, 2),
-    babId = _useState14[0],
-    setBabId = _useState14[1];
-  var _useState15 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(""),
+    kelasId = _useState14[0],
+    setKelasId = _useState14[1];
+  var _useState15 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
     _useState16 = _slicedToArray(_useState15, 2),
-    graphicTitle = _useState16[0],
-    setGraphicTitle = _useState16[1];
+    babId = _useState16[0],
+    setBabId = _useState16[1];
+  var _useState17 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(""),
+    _useState18 = _slicedToArray(_useState17, 2),
+    graphicTitle = _useState18[0],
+    setGraphicTitle = _useState18[1];
+  var _useState19 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(true),
+    _useState20 = _slicedToArray(_useState19, 2),
+    isLoading = _useState20[0],
+    setIsLoading = _useState20[1];
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     if (listDatas.length < 1) {
       window.axios.post("/backoffice/json/dashboard/jenjang").then(function (response) {
@@ -171,6 +181,7 @@ function DashboardSuperadmin() {
         var chartDataId = data.data_id;
         var nextApi = data.next_api;
         var graphicTitle = data.graphic_title;
+        setIsLoading(false);
         setGraphicTitle(graphicTitle);
         setNextApi(nextApi);
         setListDatas(chartData);
@@ -188,6 +199,7 @@ function DashboardSuperadmin() {
   options['onClick'] = graphClickEvent;
   function graphClickEvent(event, clickedElements) {
     console.log('sss');
+    console.log('filterJenjang click', filterJenjang);
     if (clickedElements.length === 0) return;
     var _clickedElements$0$el = clickedElements[0].element.$context,
       dataIndex = _clickedElements$0$el.dataIndex,
@@ -195,11 +207,20 @@ function DashboardSuperadmin() {
     var data = event.chart.data;
     var barLabel = event.chart.data.labels[dataIndex];
     var selectedIdx = dataIndex;
+    setIsLoading(true);
     setSelectedBarIdx({
       label: barLabel,
       idx: selectedIdx
     });
   }
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    window.axios.get("/backoffice/json/jenjangs").then(function (response) {
+      var data = response.data.data;
+      setFilterJenjang(data);
+    })["catch"](function (err) {
+      console.log(err);
+    });
+  }, [filterJenjang]);
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     var selectedId = listDataIds[selectedBarIdx.idx];
     var params = _defineProperty({}, nextApi.param, selectedId);
@@ -222,6 +243,7 @@ function DashboardSuperadmin() {
       if (data.bab_id) {
         setBabId(data.bab_id);
       }
+      setIsLoading(false);
       setGraphicTitle(graphicTitle);
       setNextApi(nextApi);
       setListDataIds(chartDataId);
@@ -281,16 +303,6 @@ function DashboardSuperadmin() {
       color: "#9E9E9E"
     }
   }, "Filter By"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-    id: "mapel",
-    name: "mapel",
-    "data-style": "btn-green-pastel",
-    "class": "selectpicker mr-2",
-    placeholder: "Mata Pelajaran"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-    value: ""
-  }, "Mata Pelajaran"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-    value: "matematika"
-  }, "MTK")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
     id: "jenjang",
     name: "jenjang",
     "data-style": "btn-green-pastel",
@@ -298,9 +310,10 @@ function DashboardSuperadmin() {
     placeholder: "Jenjang"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
     value: ""
-  }, "Semua Jenjang"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-    value: "sd"
-  }, "SD")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+  }, "Semua Jenjang"), filterJenjang.map(function (data) {
+    /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", null, "test");
+    // <option value={data.id}>{data.name}</option>
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
     id: "tingkat",
     name: "tingkat",
     "data-style": "btn-green-pastel",
@@ -326,6 +339,16 @@ function DashboardSuperadmin() {
   }, "5 A"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
     value: "5b"
   }, "5 B")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+    id: "mapel",
+    name: "mapel",
+    "data-style": "btn-green-pastel",
+    "class": "selectpicker mr-2",
+    placeholder: "Mata Pelajaran"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+    value: ""
+  }, "Mata Pelajaran"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+    value: "matematika"
+  }, "MTK")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
     id: "module",
     name: "module",
     "data-style": "btn-green-pastel",
@@ -349,7 +372,7 @@ function DashboardSuperadmin() {
     value: "5"
   }, "5"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
     value: "6"
-  }, "6")))))), listConfigData && listConfigData.map(function (data, idxData) {
+  }, "6")))))), !isLoading ? listConfigData && listConfigData.map(function (data, idxData) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "row"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -379,7 +402,28 @@ function DashboardSuperadmin() {
       options: options,
       data: data
     })))));
-  }));
+  }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "row",
+    style: {
+      height: '70vh',
+      width: '100%'
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "col-12 d-flex justify-content-center align-items-center",
+    style: {
+      flexDirection: 'column'
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_loader_spinner__WEBPACK_IMPORTED_MODULE_6__["ThreeCircles"], {
+    visible: true,
+    height: "100",
+    width: "100",
+    color: "#024102",
+    ariaLabel: "three-circles-loading",
+    wrapperStyle: {},
+    wrapperClass: ""
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
+    "class": "mt-2"
+  }, "Mohon tunggu..."))));
 }
 /* harmony default export */ __webpack_exports__["default"] = (DashboardSuperadmin);
 if (document.getElementById('dashboard-superadmin')) {
