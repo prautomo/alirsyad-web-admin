@@ -126,7 +126,12 @@ function DashboardSuperadmin() {
     const [listDataIds, setListDataIds] = useState([]);
     const [nextApi, setNextApi] = useState({});
     const [selectedBarIdx, setSelectedBarIdx] = useState({});
-    const [filterJenjang, setFilterJenjang] = useState([]);
+    const [filterLevel, setfilterLevel] = useState([]);
+    const [filters, setFilters] = useState({
+        jenjang: [],
+        tingkat: [],
+        kelas: [],
+    });
     const [kelasId, setKelasId] = useState(0);
     const [babId, setBabId] = useState(0);
     const [graphicTitle, setGraphicTitle] = useState("");
@@ -152,6 +157,13 @@ function DashboardSuperadmin() {
                 console.log(err)
             })
 
+            
+            window.axios.post("/backoffice/json/dashboard/filter/level").then((response) => {
+                var data = response.data.data
+                setfilterLevel(data)
+            }).catch((err) => {
+                console.log(err)
+            })
         }
     }, []);
 
@@ -164,8 +176,6 @@ function DashboardSuperadmin() {
     options['onClick'] = graphClickEvent
 
     function graphClickEvent(event, clickedElements){
-        console.log('sss')
-        console.log('filterJenjang click', filterJenjang)
         if (clickedElements.length === 0) return
         
         const { dataIndex, raw } = clickedElements[0].element.$context
@@ -176,22 +186,32 @@ function DashboardSuperadmin() {
         setIsLoading(true)
         setSelectedBarIdx({
             label: barLabel,
-            idx: selectedIdx
+            idx: selectedIdx,
+            isClick: true
         })
-
     }
 
     useEffect(() => {
-        window.axios.get("/backoffice/json/jenjangs").then((response) => {
-            var data = response.data.data
-            setFilterJenjang(data)
-        }).catch((err) => {
-            console.log(err)
-        })
-    }, [filterJenjang]);
+        if(filters.jenjang.length < 1){
+
+            window.axios.get("/backoffice/json/jenjangs").then((response) => {
+                var data = response.data.data
+                setFilters({
+                    ...filters, 
+                    jenjang: data
+                })
+
+                $("#jenjang").selectpicker("refresh");
+            }).catch((err) => {
+                console.log(err)
+            })
+        }
+
+    }, []);
 
     useEffect(() => {
-        var selectedId = listDataIds[selectedBarIdx.idx]
+        var selectedId = selectedBarIdx.isClick ? listDataIds[selectedBarIdx.idx] : selectedBarIdx.idx
+
         var params = {
             [nextApi.param] : selectedId
         }
@@ -205,13 +225,12 @@ function DashboardSuperadmin() {
         }
 
         window.axios.post(`/backoffice/json/dashboard/${nextApi.name}`, params).then((response) => {
-            console.log('response', response.data)
             var data = response.data.data
 
             var chartData = data.data
             var chartDataId = data.data_id
-            var nextApi = data.next_api
             var graphicTitle = data.graphic_title
+            var nextApi = data.next_api
 
             if(data.kelas_id){
                 setKelasId(data.kelas_id)
@@ -233,7 +252,6 @@ function DashboardSuperadmin() {
 
     useEffect(() => {
         const listConfig = [];
-        console.log('change list data')
         for (let i=0; i<listDatas.length; i++) {
             const labels = [];
             const tempScores = [];
@@ -260,31 +278,72 @@ function DashboardSuperadmin() {
 
             listConfig.push(objConfig)
         }
-        console.log('listConfig', listConfig)
         setListConfigData(listConfig);
     }, [listDatas]);
+
+    const handleChange = (e) => {
+        console.log('e value', e.target.value)
+        var getLevel = filterLevel.filter(function (el) {
+            return el.option == e.target.id
+        });
+        
+        if(getLevel.length == 0){
+            return;
+        }
+
+        var level = getLevel[0]
+        setNextApi(level.next_api)
+
+        console.log('level', level)
+
+        var params = {
+            [level.next_api.param] : e.target.value
+        }
+
+        window.axios.post(`/backoffice/json/dashboard/filter/${level.next_api.name}`, params).then((response) => {
+            var data = response.data.data
+
+            setFilters({
+                ...filters, 
+                [level.next_api.name]: data
+            })
+
+            $(`#${level.next_api.name}`).selectpicker("refresh");
+        }).catch((err) => {
+            console.log(err)
+        })
+
+        setIsLoading(true)
+        setSelectedBarIdx({
+            label: e.target.id,
+            idx: e.target.value,
+            isClick: false
+        })
+    }
+    
     return (<>
         <div className="row mb-4">
             <div className="col-12">
                 <div style={{ display: 'flex', alignItems: 'center'}}>
                     <div style={{ marginLeft: 'auto' }} class="dashboard-filter">
                         <label className="my-auto mr-2" style={{ color: "#9E9E9E"}}>Filter By</label>
-                        <select id="jenjang" name="jenjang" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Jenjang">
+                        <select id="jenjang" name="jenjang" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Jenjang" onChange={handleChange}>
                             <option value="">Semua Jenjang</option>
-                            {filterJenjang.map((data) => {
-                                <option>test</option>
-                                // <option value={data.id}>{data.name}</option>
-                            })}
+                            {filters.jenjang.length > 0 && filters.jenjang.map((data) => (
+                                <option value={data.id}>{data.name}</option>
+                            ))}
                         </select>
-                        <select id="tingkat" name="tingkat" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Tingkat">
+                        <select id="tingkat" name="tingkat" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Tingkat" onChange={handleChange}>
                             <option value="">Semua Tingkat</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
+                            {filters.tingkat.length > 0 && filters.tingkat.map((data) => (
+                                <option value={data.id}>{data.name}</option>
+                            ))}
                         </select>
-                        <select id="kelas" name="kelas" data-style="btn-green-pastel" multiple class="selectpicker mr-2" placeholder="Kelas">
+                        <select id="kelas" name="kelas" data-style="btn-green-pastel" multiple class="selectpicker mr-2" placeholder="Kelas" onChange={handleChange}>
                             <option value="">Semua Kelas</option>
-                            <option value="5a">5 A</option>
-                            <option value="5b">5 B</option>
+                            {filters.kelas.length > 0 && filters.kelas.map((data) => (
+                                <option value={data.id}>{data.name}</option>
+                            ))}
                         </select>
                         <select id="mapel" name="mapel" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Mata Pelajaran">
                             <option value="">Mata Pelajaran</option>

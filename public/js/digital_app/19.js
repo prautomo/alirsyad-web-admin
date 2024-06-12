@@ -1,9 +1,9 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[19],{
 
-/***/ "./resources/js/backoffice/pages/Soal/index.js":
-/*!*****************************************************!*\
-  !*** ./resources/js/backoffice/pages/Soal/index.js ***!
-  \*****************************************************/
+/***/ "./resources/js/backoffice/components/ExternalUser/index.js":
+/*!******************************************************************!*\
+  !*** ./resources/js/backoffice/components/ExternalUser/index.js ***!
+  \******************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -19,8 +19,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var xlsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! xlsx */ "./node_modules/xlsx/xlsx.js");
 /* harmony import */ var xlsx__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(xlsx__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
-/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
-/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var validator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! validator */ "./node_modules/validator/index.js");
+/* harmony import */ var validator__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(validator__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_7__);
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -39,8 +41,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
-function UploadBatchSoal(_ref) {
-  var id = _ref.id;
+
+function UploadBatchSiswa() {
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({}),
     _useState2 = _slicedToArray(_useState, 2),
     queryParams = _useState2[0],
@@ -53,6 +55,10 @@ function UploadBatchSoal(_ref) {
     _useState6 = _slicedToArray(_useState5, 2),
     excelData = _useState6[0],
     setExcelData = _useState6[1];
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+    _useState8 = _slicedToArray(_useState7, 2),
+    tingkats = _useState8[0],
+    setTingkats = _useState8[1];
   var onDrop = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (acceptedFiles) {
     acceptedFiles.forEach(function (file) {
       var reader = new FileReader();
@@ -81,6 +87,8 @@ function UploadBatchSoal(_ref) {
         /* Update state */
         data.splice(0, 1);
         console.log("Data>>>", data);
+        // load tingkat
+        getTingkats();
         // set excel data
         setExcelData(data);
       };
@@ -94,17 +102,17 @@ function UploadBatchSoal(_ref) {
     getInputProps = _useDropzone.getInputProps;
   var doUploadBatch = function doUploadBatch() {
     if (excelData.length < 1) {
-      sweetalert2__WEBPACK_IMPORTED_MODULE_6___default.a.fire("Gagal Mengupload", "Data masih kosong!");
+      sweetalert2__WEBPACK_IMPORTED_MODULE_7___default.a.fire("Gagal Mengupload", "Data masih kosong!");
       return;
     }
-    window.axios.post("/backoffice/paket-soals/".concat(id, "/soal/import"), {
+    window.axios.post("/backoffice/external-users/import", {
       data: excelData,
       params: params
     }).then(function (response) {
       console.log(response.data.data);
       // Swal.fire("Berhasil Mengupload", response.data.message)
 
-      sweetalert2__WEBPACK_IMPORTED_MODULE_6___default.a.fire({
+      sweetalert2__WEBPACK_IMPORTED_MODULE_7___default.a.fire({
         title: 'Berhasil Mengupload',
         showDenyButton: false,
         showCancelButton: false,
@@ -112,19 +120,50 @@ function UploadBatchSoal(_ref) {
       }).then(function (result) {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
-          window.location.href = "/backoffice/paket-soals/".concat(id, "/soal");
+          window.location.href = '/backoffice/external-users?role=SISWA';
         }
       });
     })["catch"](function (err) {
-      sweetalert2__WEBPACK_IMPORTED_MODULE_6___default.a.fire("Gagal Mengupload", err.response.data.message);
+      sweetalert2__WEBPACK_IMPORTED_MODULE_7___default.a.fire("Gagal Mengupload", err.response.data.message);
     });
+  };
+
+  // const onUploadSuccess = (index, url) => {
+  //     const currentItem = Object.assign({}, excelData[index]);
+  //     currentItem.default_image = url
+  //     excelData[index] = currentItem
+  //     console.log(excelData)
+  //     setExcelData(excelData)
+  // }
+
+  var onTingkatChange = function onTingkatChange(index, val) {
+    var currentItem = Object.assign({}, excelData[index]);
+    currentItem.G = val;
+    excelData[index] = currentItem;
+    setExcelData(excelData);
+  };
+  var onKelasChange = function onKelasChange(index, val) {
+    var currentItem = Object.assign({}, excelData[index]);
+    currentItem.H = val;
+    excelData[index] = currentItem;
+    setExcelData(excelData);
   };
   var handleRemove = function handleRemove(index) {
     return function () {
       var rows = _toConsumableArray(excelData);
       rows.splice(index, 1);
       setExcelData(rows);
+
+      // use nis
+      // let items = excelData.filter(row => row.A != item.A);
+      // setExcelData(items);
     };
+  };
+  var getTingkats = function getTingkats() {
+    window.axios.get("/backoffice/tingkats").then(function (response) {
+      console.log("dika", response.data);
+      setTingkats(response.data.data);
+    });
   };
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     var params = query_string__WEBPACK_IMPORTED_MODULE_2___default.a.parse(location.search);
@@ -146,7 +185,7 @@ function UploadBatchSoal(_ref) {
     className: "btn-info",
     size: "sm",
     onClick: function onClick() {
-      window.location.href = '/uploads/template_batch_soal.xlsx';
+      window.location.href = '/uploads/template_batch_siswa.xlsx';
     }
   }, "Download Template")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "layer w-100 p-20 mt-2"
@@ -170,43 +209,42 @@ function UploadBatchSoal(_ref) {
     className: "btn-secondary",
     size: "sm",
     onClick: function onClick() {
-      window.location.href = "/backoffice/paket-soals/".concat(id, "/soal");
+      window.location.href = '/backoffice/external-users?role=SISWA';
     }
   }, "Cancel")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "layer w-100 p-20 mt-2"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Preview Data"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
-    className: "table table-bordered table-responsive"
+    className: "table table-bordered"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
-    width: "5%"
-  }, "No"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
-    width: "20%"
-  }, "Soal"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
     width: "15%"
-  }, "Pilihan A"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+  }, "NIS"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
     width: "15%"
-  }, "Pilihan B"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+  }, "Name"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
     width: "15%"
-  }, "Pilihan C"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
-    width: "10%"
-  }, "Pilihan D"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
-    width: "10%"
-  }, "Pilihan E"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
-    width: "5%"
-  }, "Jawaban"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+  }, "Jenjang Pendidikan"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+    width: "15%"
+  }, "Kelas"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+    width: "15%"
+  }, "Tahun Ajaran"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+    width: "15%"
+  }, "Email"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
     width: "5%"
   }, "Aksi"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, excelData.map(function (item, index) {
     // init var
-    var no = item.A;
-    var soal = item.B;
-    var pilihanA = item.C;
-    var pilihanB = item.D;
-    var pilihanC = item.E;
-    var pilihanD = item.F;
-    var pilihanE = item.G ? item.G : '-';
-    var jawaban = item.H.replace("1", "A").replace("2", "B").replace("3", "C").replace("4", "D").replace("5", "E");
+    var nisCol = item.A;
+    var nameCol = item.B;
+    var jenjangCol = item.C;
+    var tingkatCol = item.D;
+    var kelasCol = item.E ? item.E : '-';
+    var tahunAjaranCol = item.F ? item.F : '-';
+    var usernameCol = item.G ? item.G : '-';
+    var passwordCol = item.H;
+    var emailCol = item.I;
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
       key: index
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, no), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, soal), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, pilihanA), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, pilihanB), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, pilihanC), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, pilihanD), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, pilihanE), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, jawaban), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, nisCol), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, nameCol), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, jenjangCol), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, tingkatCol, " ", kelasCol), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, tahunAjaranCol), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, emailCol, !validator__WEBPACK_IMPORTED_MODULE_6___default.a.isEmail(emailCol) && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("small", {
+      className: "text-danger"
+    }, "Email not valid."))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
       onClick: handleRemove(index),
       style: {
         cursor: "pointer"
@@ -216,13 +254,9 @@ function UploadBatchSoal(_ref) {
     colSpan: "7"
   }, "No data."))))))));
 }
-/* harmony default export */ __webpack_exports__["default"] = (UploadBatchSoal);
-var container = document.getElementById("batch-soal");
-if (container) {
-  var idPaket = container.getAttribute("paket-soal-id");
-  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(UploadBatchSoal, {
-    id: idPaket
-  }), container);
+/* harmony default export */ __webpack_exports__["default"] = (UploadBatchSiswa);
+if (document.getElementById('uploadsiswa-list')) {
+  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(UploadBatchSiswa, null), document.getElementById('uploadsiswa-list'));
 }
 
 /***/ }),

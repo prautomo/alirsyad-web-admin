@@ -519,5 +519,61 @@ class DashboardController extends Controller {
         ];
         return response()->json(['message' => 'success', 'data' => $data]);
     }
+
+    
+    public function filterLevel(Request $request)
+    {
+        $data = [
+            [
+                'option' => 'jenjang',
+                'next_api' => [
+                    'name' => 'tingkat',
+                    'param' => 'jenjang_id'
+                ]
+            ],
+            [
+                'option' => 'tingkat',
+                'next_api' => [
+                    'name' => 'kelas',
+                    'param' => 'tingkat_id'
+                ]
+            ],
+            [
+                'option' => 'kelas',
+                'next_api' => [
+                    'name' => 'mapel',
+                    'param' => 'kelas_id'
+                ]
+            ]
+        ];
+        
+        return response()->json(['message' => 'success', 'data' => $data]);
+    }
+    
+    public function filterTingkat(Request $request)
+    {
+        $tingkats = Tingkat::query();
+
+        if($request->jenjang_id){
+            $tingkats = $tingkats->where(['jenjang_id' => $request->jenjang_id]);
+        }
+
+        $data = $tingkats->where(['deleted_at' => NULL])->get();
+        
+        return response()->json(['message' => 'success', 'data' => $data]);
+    }
+    
+    public function filterKelas(Request $request)
+    {
+        $classes = Kelas::query();
+
+        if($request->tingkat_id){
+            $classes = $classes->where(['tingkat_id' => $request->tingkat_id]);
+        }
+
+        $data = $classes->where(['deleted_at' => NULL])->get();
+        
+        return response()->json(['message' => 'success', 'data' => $data]);
+    }
     
 }
