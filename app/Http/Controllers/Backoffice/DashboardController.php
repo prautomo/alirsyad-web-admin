@@ -51,42 +51,20 @@ class DashboardController extends Controller {
         $result = [];
         $result_ids = [];
 
-        $jenjangs = Jenjang::where(['deleted_at' => NULL, 'show_for_guest' => 1])->get();
-        $tingkat_kesulitans = [
-            [
-                "level" => "mudah",
-                "bobot" => 1
-            ],
-            [
-                "level" => "sedang",
-                "bobot" => 2
-            ],
-            [
-                "level" => "sulit",
-                "bobot" => 3
-            ]
-        ];
+        $result_from_db = DB::select('select jenjang_id, jenjang_name, tingkat_kesulitan, sum(total_benar) from (select j.id as jenjang_id, j.name as jenjang_name, e.paket_soal_id as paket_soal_id, ps.tingkat_kesulitan, e.user_id as user_id, e.total_benar from jenjangs j
+        join tingkats t on j.id = t.jenjang_id
+        join mata_pelajarans mp on t.id = mp.tingkat_id
+        join paket_soals ps on mp.id = ps.mata_pelajaran_id
+        join e_raport e on ps.id = e.paket_soal_id
+        join external_users eu on e.user_id = eu.id
+        where eu.deleted_at is null and j.deleted_at is null and ps.deleted_at is null
+        group by ps.id, ps.tingkat_kesulitan, e.user_id
+        order by e.created_at desc) grouped
+        group by jenjang_id, tingkat_kesulitan');
 
-        foreach($jenjangs as $jenjang){
-            $count_score = 0;
-            foreach($tingkat_kesulitans as $tingkat_kesulitan){
-                $paket_soals = PaketSoal::whereHas('mataPelajaran.tingkat.jenjang', function ($query2) use ($jenjang) {
-                    $query2->where('id', '=',  $jenjang->id);
-                })->where(['tingkat_kesulitan' => $tingkat_kesulitan['level'], 'deleted_at' => NULL])->get();
-                foreach($paket_soals as $paket_soal){
-                    $siswa_ids = ERaport::where(['paket_soal_id' => $paket_soal->id])->distinct()->pluck('user_id')->toArray();
-                    foreach($siswa_ids as $siswa_id){
-                        $eraport = ERaport::where(['paket_soal_id' => $paket_soal->id, 'user_id' => $siswa_id])->orderBy('created_at')->first();
-                        $count_score += $eraport->total_benar * $tingkat_kesulitan['bobot'];
-                    }
-                }
-            }
-            array_push($result, [
-                "label" => $jenjang->name,
-                "score" => $count_score
-            ]);
-            array_push($result_ids, $jenjang->id);
-        }
+
+
+        return response()->json(['message' => 'success', 'data' => $get_from_db]);
 
         $next_api = [
             "name" => "tingkat",
