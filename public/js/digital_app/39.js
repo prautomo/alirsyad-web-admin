@@ -162,7 +162,10 @@ function DashboardSuperadmin() {
   var _useState13 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
       jenjang: [],
       tingkat: [],
-      kelas: []
+      kelas: [],
+      mapel: [],
+      bab: [],
+      subbab: []
     }),
     _useState14 = _slicedToArray(_useState13, 2),
     filters = _useState14[0],
@@ -179,10 +182,14 @@ function DashboardSuperadmin() {
     _useState20 = _slicedToArray(_useState19, 2),
     graphicTitle = _useState20[0],
     setGraphicTitle = _useState20[1];
-  var _useState21 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(true),
+  var _useState21 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(""),
     _useState22 = _slicedToArray(_useState21, 2),
-    isLoading = _useState22[0],
-    setIsLoading = _useState22[1];
+    currentLevel = _useState22[0],
+    setCurrentLevel = _useState22[1];
+  var _useState23 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(true),
+    _useState24 = _slicedToArray(_useState23, 2),
+    isLoading = _useState24[0],
+    setIsLoading = _useState24[1];
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     if (listDatas.length < 1) {
       window.axios.post("/backoffice/json/dashboard/jenjang").then(function (response) {
@@ -191,8 +198,10 @@ function DashboardSuperadmin() {
         var chartDataId = data.data_id;
         var nextApi = data.next_api;
         var graphicTitle = data.graphic_title;
+        var currentLevel = data.level;
         setIsLoading(false);
         setGraphicTitle(graphicTitle);
+        setCurrentLevel(currentLevel);
         setNextApi(nextApi);
         setListDatas(chartData);
         setListDataIds(chartDataId);
@@ -256,6 +265,7 @@ function DashboardSuperadmin() {
       var chartDataId = data.data_id;
       var graphicTitle = data.graphic_title;
       var nextApi = data.next_api;
+      var currentLevel = data.level;
       if (data.kelas_id) {
         setKelasId(data.kelas_id);
       }
@@ -264,6 +274,7 @@ function DashboardSuperadmin() {
       }
       setIsLoading(false);
       setGraphicTitle(graphicTitle);
+      setCurrentLevel(currentLevel);
       setNextApi(nextApi);
       setListDataIds(chartDataId);
       setListDatas(chartData);
@@ -312,6 +323,9 @@ function DashboardSuperadmin() {
     setNextApi(level.next_api);
     console.log('level', level);
     var params = _defineProperty({}, level.next_api.param, e.target.value);
+    if (kelasId != 0) {
+      params['kelas_id'] = kelasId;
+    }
     window.axios.post("/backoffice/json/dashboard/filter/".concat(level.next_api.name), params).then(function (response) {
       var data = response.data.data;
       setFilters(_objectSpread(_objectSpread({}, filters), {}, _defineProperty({}, level.next_api.name, data)));
@@ -390,36 +404,41 @@ function DashboardSuperadmin() {
     name: "mapel",
     "data-style": "btn-green-pastel",
     "class": "selectpicker mr-2",
-    placeholder: "Mata Pelajaran"
+    placeholder: "Mata Pelajaran",
+    onChange: handleChange
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
     value: ""
-  }, "Mata Pelajaran"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-    value: "matematika"
-  }, "MTK")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-    id: "module",
-    name: "module",
+  }, "Semua Mata Pelajaran"), filters.mapel.length > 0 && filters.mapel.map(function (data) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: data.id
+    }, data.name);
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+    id: "bab",
+    name: "bab",
     "data-style": "btn-green-pastel",
     "class": "selectpicker mr-2",
-    placeholder: "Module"
+    placeholder: "Module",
+    onChange: handleChange
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
     value: ""
-  }, "Semua Module"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-    value: "5"
-  }, "5"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-    value: "6"
-  }, "6")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-    id: "submodule",
-    name: "submodule",
+  }, "Semua Module"), filters.bab.length > 0 && filters.bab.map(function (data) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: data.id
+    }, data.name);
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+    id: "subbab",
+    name: "subbab",
     "data-style": "btn-green-pastel",
     "class": "selectpicker mr-2",
-    placeholder: "Sub-Module"
+    placeholder: "Sub-Module",
+    onChange: handleChange
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
     value: ""
-  }, "Semua Sub-Module"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-    value: "5"
-  }, "5"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-    value: "6"
-  }, "6")))))), !isLoading ? listConfigData && listConfigData.map(function (data, idxData) {
+  }, "Semua Sub-Module"), filters.subbab.length > 0 && filters.subbab.map(function (data) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: data.id
+    }, data.name);
+  })))))), !isLoading ? listConfigData && listConfigData.map(function (data, idxData) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "row"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {

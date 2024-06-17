@@ -51,20 +51,37 @@ class DashboardController extends Controller {
         $result = [];
         $result_ids = [];
 
-        $result_from_db = DB::select('select jenjang_id, jenjang_name, tingkat_kesulitan, sum(total_benar) from (select j.id as jenjang_id, j.name as jenjang_name, e.paket_soal_id as paket_soal_id, ps.tingkat_kesulitan, e.user_id as user_id, e.total_benar from jenjangs j
+        $jenjangs = Jenjang::where(['deleted_at' => NULL, 'show_for_guest' => 1])->get();
+
+        $result_from_db = DB::select('select jenjang_id, jenjang_name, tingkat_kesulitan, sum(total_benar) as total_benar from (select j.id as jenjang_id, j.name as jenjang_name, e.paket_soal_id as paket_soal_id, ps.tingkat_kesulitan, e.total_benar from jenjangs j
         join tingkats t on j.id = t.jenjang_id
         join mata_pelajarans mp on t.id = mp.tingkat_id
         join paket_soals ps on mp.id = ps.mata_pelajaran_id
         join e_raport e on ps.id = e.paket_soal_id
         join external_users eu on e.user_id = eu.id
-        where eu.deleted_at is null and j.deleted_at is null and ps.deleted_at is null
-        group by ps.id, ps.tingkat_kesulitan, e.user_id
-        order by e.created_at desc) grouped
+        where eu.deleted_at is null and j.deleted_at is null and ps.deleted_at is null) grouped
         group by jenjang_id, tingkat_kesulitan');
 
+        $count_scores = [];
+        foreach($result_from_db as $item){
+            if(!array_key_exists($item->jenjang_id, $count_scores)){
+                $count_scores[$item->jenjang_id] = 0;
+            }
 
+            $count_scores[$item->jenjang_id] += $this->getScoreFinal($item->total_benar, $item->tingkat_kesulitan);
+        }
 
-        return response()->json(['message' => 'success', 'data' => $get_from_db]);
+        foreach($jenjangs as $jenjang){
+            $score = 0;
+            if(array_key_exists($jenjang->id, $count_scores)){
+                $score = $count_scores[$jenjang->id];
+            }
+            array_push($result, [
+                "label" => $jenjang->name,
+                "score" => $score
+            ]);
+            array_push($result_ids, $jenjang->id);
+        }
 
         $next_api = [
             "name" => "tingkat",
@@ -81,6 +98,25 @@ class DashboardController extends Controller {
         return response()->json(['message' => 'success', 'data' => $data]);
     }
 
+    
+    public function getScoreFinal($total_benar, $tingkat_kesulitan){
+        $score = 0;
+        switch ($tingkat_kesulitan) {
+            case "mudah":
+                $score = $total_benar * 1;
+                break;
+            case "sedang":
+                $score = $total_benar * 2;
+                break;
+            case "sulit":
+                $score = $total_benar * 3;
+                break;
+            default:
+              //code block
+        }
+        return $score;
+    }
+
     public function getDataTingkat(Request $request)
     {
         $jenjang_id = 0;
@@ -92,38 +128,33 @@ class DashboardController extends Controller {
         $result_ids = [];
 
         $tingkats = Tingkat::where(['deleted_at' => NULL, 'jenjang_id' => $jenjang_id])->get();
-        $tingkat_kesulitans = [
-            [
-                "level" => "mudah",
-                "bobot" => 1
-            ],
-            [
-                "level" => "sedang",
-                "bobot" => 2
-            ],
-            [
-                "level" => "sulit",
-                "bobot" => 3
-            ]
-        ];
+        
+        $result_from_db = DB::select('select tingkat_id, tingkat_name, tingkat_kesulitan, sum(total_benar) as total_benar from (
+        select t.id as tingkat_id, t.name as tingkat_name, e.paket_soal_id as paket_soal_id, ps.tingkat_kesulitan, e.total_benar from tingkats t
+        join mata_pelajarans mp on t.id = mp.tingkat_id
+        join paket_soals ps on mp.id = ps.mata_pelajaran_id
+        join e_raport e on ps.id = e.paket_soal_id
+        join external_users eu on e.user_id = eu.id
+        where eu.deleted_at is null and t.deleted_at is null and ps.deleted_at is null and t.jenjang_id = ?) grouped
+        group by tingkat_id, tingkat_kesulitan', array($jenjang_id));
+
+        $count_scores = [];
+        foreach($result_from_db as $item){
+            if(!array_key_exists($item->tingkat_id, $count_scores)){
+                $count_scores[$item->tingkat_id] = 0;
+            }
+
+            $count_scores[$item->tingkat_id] += $this->getScoreFinal($item->total_benar, $item->tingkat_kesulitan);
+        }
 
         foreach($tingkats as $tingkat){
-            $count_score = 0;
-            foreach($tingkat_kesulitans as $tingkat_kesulitan){
-                $paket_soals = PaketSoal::whereHas('mataPelajaran.tingkat', function ($query2) use ($tingkat) {
-                    $query2->where('id', '=',  $tingkat->id);
-                })->where(['tingkat_kesulitan' => $tingkat_kesulitan['level'], 'deleted_at' => NULL])->get();
-                foreach($paket_soals as $paket_soal){
-                    $siswa_ids = ERaport::where(['paket_soal_id' => $paket_soal->id])->distinct()->pluck('user_id')->toArray();
-                    foreach($siswa_ids as $siswa_id){
-                        $eraport = ERaport::where(['paket_soal_id' => $paket_soal->id, 'user_id' => $siswa_id])->orderBy('created_at')->first();
-                        $count_score += $eraport->total_benar * $tingkat_kesulitan['bobot'];
-                    }
-                }
+            $score = 0;
+            if(array_key_exists($tingkat->id, $count_scores)){
+                $score = $count_scores[$tingkat->id];
             }
             array_push($result, [
                 "label" => $tingkat->jenjang->name . " " . $tingkat->name,
-                "score" => $count_score
+                "score" => $score
             ]);
             array_push($result_ids, $tingkat->id);
         }
@@ -155,41 +186,34 @@ class DashboardController extends Controller {
         $result_ids = [];
 
         $classes = Kelas::where(['deleted_at' => NULL, 'tingkat_id' => $tingkat_id])->get();
-        $tingkat_kesulitans = [
-            [
-                "level" => "mudah",
-                "bobot" => 1
-            ],
-            [
-                "level" => "sedang",
-                "bobot" => 2
-            ],
-            [
-                "level" => "sulit",
-                "bobot" => 3
-            ]
-        ];
+
+        $result_from_db = DB::select('select kelas_id, kelas_name, tingkat_kesulitan, sum(total_benar) as total_benar from (
+        select k.id as kelas_id, k.name as kelas_name, e.paket_soal_id as paket_soal_id, ps.tingkat_kesulitan, e.total_benar from kelas k
+        join tingkats t on k.tingkat_id = t.id
+        join mata_pelajarans mp on t.id = mp.tingkat_id
+        join paket_soals ps on mp.id = ps.mata_pelajaran_id
+        join e_raport e on ps.id = e.paket_soal_id
+        join external_users eu on e.user_id = eu.id and eu.kelas_id = k.id
+        where eu.deleted_at is null and k.deleted_at is null and ps.deleted_at is null and k.tingkat_id = ?) grouped
+        group by kelas_id, tingkat_kesulitan', array($tingkat_id));
+    
+        $count_scores = [];
+        foreach($result_from_db as $item){
+            if(!array_key_exists($item->kelas_id, $count_scores)){
+                $count_scores[$item->kelas_id] = 0;
+            }
+
+            $count_scores[$item->kelas_id] += $this->getScoreFinal($item->total_benar, $item->tingkat_kesulitan);
+        }
 
         foreach($classes as $class){
-            $count_score = 0;
-            foreach($tingkat_kesulitans as $tingkat_kesulitan){
-                $paket_soals = PaketSoal::whereHas('mataPelajaran.tingkat', function ($query2) use ($class) {
-                    $query2->where('id', '=',  $class->tingkat->id);
-                })->where(['tingkat_kesulitan' => $tingkat_kesulitan['level'], 'deleted_at' => NULL])->get();
-                foreach($paket_soals as $paket_soal){
-                    $siswa_ids = ERaport::where(['paket_soal_id' => $paket_soal->id])->whereHas('external_user.kelas', function ($query2) use ($class) {
-                        $query2->where('id', '=',  $class->id);
-                    })->distinct()->pluck('user_id')->toArray();
-                            
-                    foreach($siswa_ids as $siswa_id){
-                        $eraport = ERaport::where(['paket_soal_id' => $paket_soal->id, 'user_id' => $siswa_id])->orderBy('created_at')->first();
-                        $count_score += $eraport->total_benar * $tingkat_kesulitan['bobot'];
-                    }
-                }
+            $score = 0;
+            if(array_key_exists($class->id, $count_scores)){
+                $score = $count_scores[$class->id];
             }
             array_push($result, [
                 "label" => $class->tingkat->jenjang->name . " " . $class->tingkat->name . $class->name,
-                "score" => $count_score
+                "score" => $score
             ]);
             array_push($result_ids, $class->id);
         }
@@ -222,41 +246,32 @@ class DashboardController extends Controller {
 
         $tingkat_id = Kelas::find($kelas_id)->tingkat_id;
         $mata_pelajarans = MataPelajaran::where(['deleted_at' => NULL, 'tingkat_id' => $tingkat_id])->orderBy('urutan')->get();
-        $tingkat_kesulitans = [
-            [
-                "level" => "mudah",
-                "bobot" => 1
-            ],
-            [
-                "level" => "sedang",
-                "bobot" => 2
-            ],
-            [
-                "level" => "sulit",
-                "bobot" => 3
-            ]
-        ];
+        
+        $result_from_db = DB::select('select mata_pelajaran_id, mata_pelajaran_name, tingkat_kesulitan, sum(total_benar) as total_benar from (
+        select mp.id as mata_pelajaran_id, mp.name as mata_pelajaran_name, e.paket_soal_id as paket_soal_id, ps.tingkat_kesulitan, e.total_benar from mata_pelajarans mp
+        join paket_soals ps on mp.id = ps.mata_pelajaran_id
+        join e_raport e on ps.id = e.paket_soal_id
+        join external_users eu on e.user_id = eu.id and eu.kelas_id = ?
+        where eu.deleted_at is null and mp.deleted_at is null and ps.deleted_at is null) grouped
+        group by mata_pelajaran_id, tingkat_kesulitan', array($kelas_id));
+        
+        $count_scores = [];
+        foreach($result_from_db as $item){
+            if(!array_key_exists($item->mata_pelajaran_id, $count_scores)){
+                $count_scores[$item->mata_pelajaran_id] = 0;
+            }
+
+            $count_scores[$item->mata_pelajaran_id] += $this->getScoreFinal($item->total_benar, $item->tingkat_kesulitan);
+        }
 
         foreach($mata_pelajarans as $mata_pelajaran){
-            $count_score = 0;
-            foreach($tingkat_kesulitans as $tingkat_kesulitan){
-                $paket_soals = PaketSoal::whereHas('mataPelajaran', function ($query2) use ($mata_pelajaran) {
-                    $query2->where('id', '=',  $mata_pelajaran->id);
-                })->where(['tingkat_kesulitan' => $tingkat_kesulitan['level'], 'deleted_at' => NULL])->get();
-                foreach($paket_soals as $paket_soal){
-                    $siswa_ids = ERaport::where(['paket_soal_id' => $paket_soal->id])->whereHas('external_user.kelas', function ($query2) use ($kelas_id) {
-                        $query2->where('id', '=',  $kelas_id);
-                    })->distinct()->pluck('user_id')->toArray();
-                            
-                    foreach($siswa_ids as $siswa_id){
-                        $eraport = ERaport::where(['paket_soal_id' => $paket_soal->id, 'user_id' => $siswa_id])->orderBy('created_at')->first();
-                        $count_score += $eraport->total_benar * $tingkat_kesulitan['bobot'];
-                    }
-                }
+            $score = 0;
+            if(array_key_exists($mata_pelajaran->id, $count_scores)){
+                $score = $count_scores[$mata_pelajaran->id];
             }
             array_push($result, [
                 "label" => $mata_pelajaran->name,
-                "score" => $count_score
+                "score" => $score
             ]);
             array_push($result_ids, $mata_pelajaran->id);
         }
@@ -295,39 +310,33 @@ class DashboardController extends Controller {
         $result_ids = [];
 
         $babs = Modul::where(['deleted_at' => NULL, 'mata_pelajaran_id' => $mapel_id])->orderBy('urutan')->get();
-        $tingkat_kesulitans = [
-            [
-                "level" => "mudah",
-                "bobot" => 1
-            ],
-            [
-                "level" => "sedang",
-                "bobot" => 2
-            ],
-            [
-                "level" => "sulit",
-                "bobot" => 3
-            ]
-        ];
+        
+        $result_from_db = DB::select('select bab_id, bab_name, tingkat_kesulitan, sum(total_benar) as total_benar from (
+        select b.id as bab_id, b.name as bab_name, e.paket_soal_id as paket_soal_id, ps.tingkat_kesulitan, e.total_benar from moduls b
+        join mata_pelajarans mp on b.mata_pelajaran_id = mp.id
+        join paket_soals ps on mp.id = ps.mata_pelajaran_id and ps.bab_id = b.id
+        join e_raport e on ps.id = e.paket_soal_id
+        join external_users eu on e.user_id = eu.id and eu.kelas_id = ?
+        where eu.deleted_at is null and b.deleted_at is null and ps.deleted_at is null and mp.id = ?) grouped
+        group by bab_id, tingkat_kesulitan', array($kelas_id, $mapel_id));
+            
+        $count_scores = [];
+        foreach($result_from_db as $item){
+            if(!array_key_exists($item->bab_id, $count_scores)){
+                $count_scores[$item->bab_id] = 0;
+            }
+
+            $count_scores[$item->bab_id] += $this->getScoreFinal($item->total_benar, $item->tingkat_kesulitan);
+        }
 
         foreach($babs as $bab){
-            $count_score = 0;
-            foreach($tingkat_kesulitans as $tingkat_kesulitan){
-                $paket_soals = PaketSoal::where(['bab_id' => $bab->id, 'tingkat_kesulitan' => $tingkat_kesulitan['level'], 'deleted_at' => NULL])->get();
-                foreach($paket_soals as $paket_soal){
-                    $siswa_ids = ERaport::where(['paket_soal_id' => $paket_soal->id])->whereHas('external_user.kelas', function ($query2) use ($kelas_id) {
-                        $query2->where('id', '=',  $kelas_id);
-                    })->distinct()->pluck('user_id')->toArray();
-                            
-                    foreach($siswa_ids as $siswa_id){
-                        $eraport = ERaport::where(['paket_soal_id' => $paket_soal->id, 'user_id' => $siswa_id])->orderBy('created_at')->first();
-                        $count_score += $eraport->total_benar * $tingkat_kesulitan['bobot'];
-                    }
-                }
+            $score = 0;
+            if(array_key_exists($bab->id, $count_scores)){
+                $score = $count_scores[$bab->id];
             }
             array_push($result, [
                 "label" => $bab->name,
-                "score" => $count_score
+                "score" => $score
             ]);
             array_push($result_ids, $bab->id);
         }
@@ -367,42 +376,35 @@ class DashboardController extends Controller {
         $result_ids = [];
 
         $subbab_ids = PaketSoal::where(['deleted_at' => NULL, 'bab_id' => $bab_id])->distinct()->pluck('subbab')->toArray();
-        $tingkat_kesulitans = [
-            [
-                "level" => "mudah",
-                "bobot" => 1
-            ],
-            [
-                "level" => "sedang",
-                "bobot" => 2
-            ],
-            [
-                "level" => "sulit",
-                "bobot" => 3
-            ]
-        ];
+        
+        $result_from_db = DB::select('select subbab_id, subbab_name, tingkat_kesulitan, sum(total_benar) as total_benar from (
+        select ps.subbab subbab_id, ps.judul_subbab as subbab_name, e.paket_soal_id as paket_soal_id, ps.tingkat_kesulitan, e.total_benar from paket_soals ps
+        join e_raport e on ps.id = e.paket_soal_id
+        join external_users eu on e.user_id = eu.id and eu.kelas_id = ?
+        where eu.deleted_at is null and ps.deleted_at is null and ps.deleted_at is null and ps.bab_id = ?) grouped
+        group by subbab_id, tingkat_kesulitan', array($kelas_id, $bab_id));
+                
+        $count_scores = [];
+        foreach($result_from_db as $item){
+            if(!array_key_exists($item->subbab_id, $count_scores)){
+                $count_scores[$item->subbab_id] = 0;
+            }
+
+            $count_scores[$item->subbab_id] += $this->getScoreFinal($item->total_benar, $item->tingkat_kesulitan);
+        }
 
         foreach($subbab_ids as $subbab_id){
-            $count_score = 0;
-            foreach($tingkat_kesulitans as $tingkat_kesulitan){
-                $paket_soals = PaketSoal::where(['subbab' => $subbab_id, 'bab_id' => $bab_id, 'tingkat_kesulitan' => $tingkat_kesulitan['level'], 'deleted_at' => NULL])->get();
-                foreach($paket_soals as $paket_soal){
-                    $siswa_ids = ERaport::where(['paket_soal_id' => $paket_soal->id])->whereHas('external_user.kelas', function ($query2) use ($kelas_id) {
-                        $query2->where('id', '=',  $kelas_id);
-                    })->distinct()->pluck('user_id')->toArray();
-                            
-                    foreach($siswa_ids as $siswa_id){
-                        $eraport = ERaport::where(['paket_soal_id' => $paket_soal->id, 'user_id' => $siswa_id])->orderBy('created_at')->first();
-                        $count_score += $eraport->total_benar * $tingkat_kesulitan['bobot'];
-                    }
-                }
+            $score = 0;
+            if(array_key_exists($subbab_id, $count_scores)){
+                $score = $count_scores[$subbab_id];
             }
+
             $subbab = PaketSoal::where(['subbab' => $subbab_id, 'bab_id' => $bab_id, 'deleted_at' => NULL])->first();
             array_push($result, [
                 "label" => $subbab->judul_subbab,
-                "score" => $count_score
+                "score" => $score
             ]);
-            array_push($result_ids, $subbab->subbab);
+            array_push($result_ids, $subbab_id);
         }
 
         $next_api = [
@@ -445,39 +447,37 @@ class DashboardController extends Controller {
         $result = [];
         $result_ids = [];
 
-        $tingkat_id = Kelas::find($kelas_id)->tingkat_id;
         $siswas =  ExternalUser::where(['kelas_id' => $kelas_id, 'deleted_at' => NULL])->get();
-        $tingkat_kesulitans = [
-            [
-                "level" => "mudah",
-                "bobot" => 1
-            ],
-            [
-                "level" => "sedang",
-                "bobot" => 2
-            ],
-            [
-                "level" => "sulit",
-                "bobot" => 3
-            ]
-        ];
+        
+        $result_from_db = DB::select('select user_id, user_name, tingkat_kesulitan, sum(total_benar) as total_benar from (
+        select eu.id user_id, eu.name as user_name, e.paket_soal_id as paket_soal_id, ps.tingkat_kesulitan, e.total_benar from paket_soals ps
+        join e_raport e on ps.id = e.paket_soal_id
+        join external_users eu on e.user_id = eu.id and eu.kelas_id = ?
+        where eu.deleted_at is null and ps.deleted_at is null and ps.deleted_at is null and ps.bab_id = ? and ps.subbab = ?) grouped
+        group by user_id, tingkat_kesulitan', array($kelas_id, $bab_id, $subbab_number));
+                    
+        $count_scores = [];
+        foreach($result_from_db as $item){
+            if(!array_key_exists($item->user_id, $count_scores)){
+                $count_scores[$item->user_id] = 0;
+            }
+
+            $count_scores[$item->user_id] += $this->getScoreFinal($item->total_benar, $item->tingkat_kesulitan);
+        }
 
         foreach($siswas as $siswa){
-            $count_score = 0;
-            foreach($tingkat_kesulitans as $tingkat_kesulitan){
-                $paket_soals = PaketSoal::where(['bab_id' => $bab_id, 'subbab' => $subbab_number, 'tingkat_kesulitan' => $tingkat_kesulitan['level'], 'deleted_at' => NULL])->get();
-                foreach($paket_soals as $paket_soal){
-                    $eraport = ERaport::where(['paket_soal_id' => $paket_soal->id, 'user_id' => $siswa->id])->orderBy('created_at')->first();
-                    $count_score += $eraport->total_benar * $tingkat_kesulitan['bobot'];
-                }
+            $score = 0;
+            if(array_key_exists($siswa->id, $count_scores)){
+                $score = $count_scores[$siswa->id];
             }
+
             array_push($result, [
                 "label" => $siswa->name,
-                "score" => $count_score
+                "score" => $score
             ]);
             array_push($result_ids, $siswa->id);
         }
-
+        
         $next_api = [
             "name" => "",
             "param" => "",
@@ -522,6 +522,27 @@ class DashboardController extends Controller {
                     'name' => 'mapel',
                     'param' => 'kelas_id'
                 ]
+            ],
+            [
+                'option' => 'mapel',
+                'next_api' => [
+                    'name' => 'bab',
+                    'param' => 'mapel_id'
+                ]
+            ],
+            [
+                'option' => 'bab',
+                'next_api' => [
+                    'name' => 'subbab',
+                    'param' => 'bab_id'
+                ]
+            ],
+            [
+                'option' => 'subbab',
+                'next_api' => [
+                    'name' => 'siswa',
+                    'param' => 'subbab_number'
+                ]
             ]
         ];
         
@@ -550,6 +571,46 @@ class DashboardController extends Controller {
         }
 
         $data = $classes->where(['deleted_at' => NULL])->get();
+        
+        return response()->json(['message' => 'success', 'data' => $data]);
+    }
+    
+    public function filterMapel(Request $request)
+    {
+        $mapel = MataPelajaran::query();
+
+        if($request->kelas_id){
+            $kelas = Kelas::find($request->kelas_id);
+            $mapel = $mapel->where(['tingkat_id' => $kelas->tingkat_id]);
+        }
+
+        $data = $mapel->where(['deleted_at' => NULL])->orderBy('urutan')->get();
+        
+        return response()->json(['message' => 'success', 'data' => $data]);
+    }
+    
+    public function filterBab(Request $request)
+    {
+        $bab = Modul::query();
+
+        if($request->mapel_id){
+            $bab = $bab->where(['mata_pelajaran_id' => $request->mapel_id]);
+        }
+
+        $data = $bab->where(['deleted_at' => NULL])->orderBy('urutan')->get();
+        
+        return response()->json(['message' => 'success', 'data' => $data]);
+    }
+    
+    public function filterSubbab(Request $request)
+    {
+        $subbab = PaketSoal::query();
+
+        if($request->bab_id){
+            $subbab = $subbab->where(['bab_id' => $request->bab_id]);
+        }
+
+        $data = $subbab->where(['deleted_at' => NULL])->select(['subbab AS id', 'judul_subbab AS name'])->distinct()->get();
         
         return response()->json(['message' => 'success', 'data' => $data]);
     }

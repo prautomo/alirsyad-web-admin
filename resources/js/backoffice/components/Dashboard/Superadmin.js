@@ -131,10 +131,14 @@ function DashboardSuperadmin() {
         jenjang: [],
         tingkat: [],
         kelas: [],
+        mapel: [],
+        bab: [],
+        subbab: [],
     });
     const [kelasId, setKelasId] = useState(0);
     const [babId, setBabId] = useState(0);
     const [graphicTitle, setGraphicTitle] = useState("");
+    const [currentLevel, setCurrentLevel] = useState("");
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -147,9 +151,11 @@ function DashboardSuperadmin() {
                 var chartDataId = data.data_id
                 var nextApi = data.next_api
                 var graphicTitle = data.graphic_title
+                var currentLevel = data.level
 
                 setIsLoading(false)
                 setGraphicTitle(graphicTitle)
+                setCurrentLevel(currentLevel)
                 setNextApi(nextApi)
                 setListDatas(chartData)
                 setListDataIds(chartDataId)
@@ -231,6 +237,7 @@ function DashboardSuperadmin() {
             var chartDataId = data.data_id
             var graphicTitle = data.graphic_title
             var nextApi = data.next_api
+            var currentLevel = data.level
 
             if(data.kelas_id){
                 setKelasId(data.kelas_id)
@@ -242,6 +249,7 @@ function DashboardSuperadmin() {
 
             setIsLoading(false)
             setGraphicTitle(graphicTitle)
+            setCurrentLevel(currentLevel)
             setNextApi(nextApi)
             setListDataIds(chartDataId)
             setListDatas(chartData)
@@ -299,6 +307,10 @@ function DashboardSuperadmin() {
         var params = {
             [level.next_api.param] : e.target.value
         }
+        
+        if(kelasId != 0){
+            params['kelas_id'] = kelasId
+        }
 
         window.axios.post(`/backoffice/json/dashboard/filter/${level.next_api.name}`, params).then((response) => {
             var data = response.data.data
@@ -345,19 +357,23 @@ function DashboardSuperadmin() {
                                 <option value={data.id}>{data.name}</option>
                             ))}
                         </select>
-                        <select id="mapel" name="mapel" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Mata Pelajaran">
-                            <option value="">Mata Pelajaran</option>
-                            <option value="matematika">MTK</option>
+                        <select id="mapel" name="mapel" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Mata Pelajaran" onChange={handleChange}>
+                            <option value="">Semua Mata Pelajaran</option>
+                            {filters.mapel.length > 0 && filters.mapel.map((data) => (
+                                <option value={data.id}>{data.name}</option>
+                            ))}
                         </select>
-                        <select id="module" name="module" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Module">
+                        <select id="bab" name="bab" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Module" onChange={handleChange}>
                             <option value="">Semua Module</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
+                            {filters.bab.length > 0 && filters.bab.map((data) => (
+                                <option value={data.id}>{data.name}</option>
+                            ))}
                         </select>
-                        <select id="submodule" name="submodule" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Sub-Module">
+                        <select id="subbab" name="subbab" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Sub-Module" onChange={handleChange}>
                             <option value="">Semua Sub-Module</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
+                            {filters.subbab.length > 0 && filters.subbab.map((data) => (
+                                <option value={data.id}>{data.name}</option>
+                            ))}
                         </select>
                     </div>
                 </div>

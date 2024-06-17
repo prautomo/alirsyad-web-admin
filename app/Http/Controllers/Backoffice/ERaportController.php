@@ -197,10 +197,10 @@ class ERaportController extends Controller
 
                 foreach ($paket_soal_ids as $paket_soal_id) {
                     $paket_soal = PaketSoal::find($paket_soal_id);
-                    $score = ERaport::where(['user_id' => $id, 'paket_soal_id' => $paket_soal_id])->orderBy('created_at', 'DESC')->first();
+                    $score = ERaport::where(['user_id' => $id, 'paket_soal_id' => $paket_soal_id])->sum('total_benar');
                     $total_benar = 0;
                     if($score){
-                        $total_benar = $score->total_benar;
+                        $total_benar = $score;
                     }
 
                     $total += $this->getScoreFinal($total_benar, $paket_soal->tingkat_kesulitan);
@@ -319,10 +319,10 @@ class ERaportController extends Controller
                 foreach($subbab_paket_soals as $paket_soal){
                     $subbab_obj['name'] = $paket_soal->judul_subbab;
 
-                    $score = ERaport::where(['user_id' => $id, 'paket_soal_id' => $paket_soal->id])->orderBy('created_at', 'DESC')->first();
+                    $score = ERaport::where(['user_id' => $id, 'paket_soal_id' => $paket_soal->id])->sum('total_benar');
                     $total_benar = 0;
                     if($score){
-                        $total_benar = $score->total_benar;
+                        $total_benar = $score;
                     }
                     
                     $subbab_obj[$paket_soal->tingkat_kesulitan] = $total_benar;
@@ -395,10 +395,10 @@ class ERaportController extends Controller
                     $subbab_obj['id'] = $paket_soal->id;
                     $subbab_obj['label'] = $paket_soal->judul_subbab;
 
-                    $score = ERaport::where(['user_id' => $id, 'paket_soal_id' => $paket_soal->id])->orderBy('created_at', 'DESC')->first();
+                    $score = ERaport::where(['user_id' => $id, 'paket_soal_id' => $paket_soal->id])->sum('total_benar');
                     $total_benar = 0;
                     if($score){
-                        $total_benar = $score->total_benar;
+                        $total_benar = $score;
                     }
                     
                     $total_per_subbab += $this->getScoreFinal($total_benar, $paket_soal->tingkat_kesulitan);

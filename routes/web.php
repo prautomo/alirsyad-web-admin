@@ -126,6 +126,9 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
         Route::post("/json/dashboard/filter/level", 'DashboardController@filterLevel')->name('dashboard.filter-level');
         Route::post("/json/dashboard/filter/tingkat", 'DashboardController@filterTingkat')->name('dashboard.filter-tingkat');
         Route::post("/json/dashboard/filter/kelas", 'DashboardController@filterKelas')->name('dashboard.filter-kelas');
+        Route::post("/json/dashboard/filter/mapel", 'DashboardController@filterMapel')->name('dashboard.filter-mapel');
+        Route::post("/json/dashboard/filter/bab", 'DashboardController@filterBab')->name('dashboard.filter-bab');
+        Route::post("/json/dashboard/filter/subbab", 'DashboardController@filterSubbab')->name('dashboard.filter-subbab');
 
         Route::resource('password-reset-students', 'PasswordResetStudentController');
         Route::post('password-reset-students/update-status/{id}', 'PasswordResetStudentController@updateStatus')->name('password-reset-students.update-status');
