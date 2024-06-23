@@ -1,4 +1,4 @@
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[29],{
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[42],{
 
 /***/ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./resources/js/backoffice/components/Dashboard/index.css":
 /*!************************************************************************************************************************************************!*\
@@ -19,10 +19,10 @@ exports.push([module.i, ".dashboard-final-score {\r\n    background: #F6D0A14D;\
 
 /***/ }),
 
-/***/ "./resources/js/backoffice/components/Dashboard/WaliKelas.js":
-/*!*******************************************************************!*\
-  !*** ./resources/js/backoffice/components/Dashboard/WaliKelas.js ***!
-  \*******************************************************************/
+/***/ "./resources/js/backoffice/components/Dashboard/Superadmin.js":
+/*!********************************************************************!*\
+  !*** ./resources/js/backoffice/components/Dashboard/Superadmin.js ***!
+  \********************************************************************/
 /*! exports provided: options, data, chartLevel, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -134,7 +134,7 @@ var chartLevel = [{
     score: 480
   }]]
 }];
-function DashboardWaliKelas() {
+function DashboardSuperadmin() {
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
     _useState2 = _slicedToArray(_useState, 2),
     listConfigData = _useState2[0],
@@ -160,6 +160,7 @@ function DashboardWaliKelas() {
     filterLevel = _useState12[0],
     setfilterLevel = _useState12[1];
   var _useState13 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
+      jenjang: [],
       tingkat: [],
       kelas: [],
       mapel: [],
@@ -191,7 +192,7 @@ function DashboardWaliKelas() {
     setIsLoading = _useState24[1];
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     if (listDatas.length < 1) {
-      window.axios.post("/backoffice/json/dashboard/tingkat").then(function (response) {
+      window.axios.post("/backoffice/json/dashboard/jenjang").then(function (response) {
         var data = response.data.data;
         var chartData = data.data;
         var chartDataId = data.data_id;
@@ -237,13 +238,13 @@ function DashboardWaliKelas() {
     });
   }
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    if (filters.tingkat.length < 1) {
-      window.axios.post("/backoffice/json/dashboard/filter/tingkat").then(function (response) {
+    if (filters.jenjang.length < 1) {
+      window.axios.get("/backoffice/json/jenjangs").then(function (response) {
         var data = response.data.data;
         setFilters(_objectSpread(_objectSpread({}, filters), {}, {
-          tingkat: data
+          jenjang: data
         }));
-        $("#tingkat").selectpicker("refresh");
+        $("#jenjang").selectpicker("refresh");
       })["catch"](function (err) {
         console.log(err);
       });
@@ -359,6 +360,19 @@ function DashboardWaliKelas() {
       color: "#9E9E9E"
     }
   }, "Filter By"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+    id: "jenjang",
+    name: "jenjang",
+    "data-style": "btn-green-pastel",
+    "class": "selectpicker mr-2",
+    placeholder: "Jenjang",
+    onChange: handleChange
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+    value: ""
+  }, "Semua Jenjang"), filters.jenjang.length > 0 && filters.jenjang.map(function (data) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: data.id
+    }, data.name);
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
     id: "tingkat",
     name: "tingkat",
     "data-style": "btn-green-pastel",
@@ -477,9 +491,9 @@ function DashboardWaliKelas() {
     "class": "mt-2"
   }, "Mohon tunggu..."))));
 }
-/* harmony default export */ __webpack_exports__["default"] = (DashboardWaliKelas);
-if (document.getElementById('dashboard-wali-kelas')) {
-  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DashboardWaliKelas, null), document.getElementById('dashboard-wali-kelas'));
+/* harmony default export */ __webpack_exports__["default"] = (DashboardSuperadmin);
+if (document.getElementById('dashboard-superadmin')) {
+  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DashboardSuperadmin, null), document.getElementById('dashboard-superadmin'));
 }
 
 /***/ }),

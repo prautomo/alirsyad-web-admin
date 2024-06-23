@@ -119,7 +119,7 @@ export const chartLevel = [
     }
 ]
 
-function DashboardGuruMapel() {
+function DashboardKepalaSekolah() {
 
     const [listConfigData, setListConfigData] = useState([]);
     const [listDatas, setListDatas] = useState([]);
@@ -128,12 +128,13 @@ function DashboardGuruMapel() {
     const [selectedBarIdx, setSelectedBarIdx] = useState({});
     const [filterLevel, setfilterLevel] = useState([]);
     const [filters, setFilters] = useState({
-        mengajar: [],
+        tingkat: [],
+        kelas: [],
+        mapel: [],
         bab: [],
         subbab: [],
     });
     const [kelasId, setKelasId] = useState(0);
-    const [mapelId, setMapelId] = useState(0);
     const [babId, setBabId] = useState(0);
     const [graphicTitle, setGraphicTitle] = useState("");
     const [currentLevel, setCurrentLevel] = useState("");
@@ -142,7 +143,7 @@ function DashboardGuruMapel() {
     useEffect(() => {
         if (listDatas.length < 1) {
             
-            window.axios.post("/backoffice/json/dashboard/bab").then((response) => {
+            window.axios.post("/backoffice/json/dashboard/tingkat").then((response) => {
                 var data = response.data.data
 
                 var chartData = data.data
@@ -196,26 +197,16 @@ function DashboardGuruMapel() {
     }
 
     useEffect(() => {
-        if(filters.mengajar.length < 1){
+        if(filters.tingkat.length < 1){
 
-            window.axios.post("/backoffice/json/dashboard/filter/mengajar").then((response) => {
-                var data = response.data
+            window.axios.post("/backoffice/json/dashboard/filter/tingkat").then((response) => {
+                var data = response.data.data
                 setFilters({
                     ...filters, 
-                    mengajar: data.data
+                    tingkat: data
                 })
-                
-                if(data.kelas_id){
-                    setKelasId(data.kelas_id)
-                }
 
-                if(data.mapel_id){
-                    setMapelId(data.mapel_id)
-                }
-
-                $("#mengajar").selectpicker("refresh");
-                $("#mengajar").val(`${data.mapel_id + '/' + data.kelas_id}`);
-                $("#mengajar").selectpicker("refresh");
+                $("#tingkat").selectpicker("refresh");
             }).catch((err) => {
                 console.log(err)
             })
@@ -299,7 +290,6 @@ function DashboardGuruMapel() {
 
     const handleChange = (e) => {
         console.log('e value', e.target.value)
-        console.log('e value id', e.target.value)
         var getLevel = filterLevel.filter(function (el) {
             return el.option == e.target.id
         });
@@ -348,9 +338,21 @@ function DashboardGuruMapel() {
                 <div style={{ display: 'flex', alignItems: 'center'}}>
                     <div style={{ marginLeft: 'auto' }} class="dashboard-filter">
                         <label className="my-auto mr-2" style={{ color: "#9E9E9E"}}>Filter By</label>
-                        <select id="mengajar" name="mengajar" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Mata Pelajaran" onChange={handleChange}>
-                            <option value="">Mengajar</option>
-                            {filters.mengajar.length > 0 && filters.mengajar.map((data) => (
+                        <select id="tingkat" name="tingkat" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Tingkat" onChange={handleChange}>
+                            <option value="">Semua Tingkat</option>
+                            {filters.tingkat.length > 0 && filters.tingkat.map((data) => (
+                                <option value={data.id}>{data.name}</option>
+                            ))}
+                        </select>
+                        <select id="kelas" name="kelas" data-style="btn-green-pastel" multiple class="selectpicker mr-2" placeholder="Kelas" onChange={handleChange}>
+                            <option value="">Semua Kelas</option>
+                            {filters.kelas.length > 0 && filters.kelas.map((data) => (
+                                <option value={data.id}>{data.name}</option>
+                            ))}
+                        </select>
+                        <select id="mapel" name="mapel" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Mata Pelajaran" onChange={handleChange}>
+                            <option value="">Semua Mata Pelajaran</option>
+                            {filters.mapel.length > 0 && filters.mapel.map((data) => (
                                 <option value={data.id}>{data.name}</option>
                             ))}
                         </select>
@@ -416,8 +418,8 @@ function DashboardGuruMapel() {
     </>);
 }
 
-export default DashboardGuruMapel;
+export default DashboardKepalaSekolah;
 
-if (document.getElementById('dashboard-guru-mapel')) {
-    ReactDOM.render(<DashboardGuruMapel  />, document.getElementById('dashboard-guru-mapel'));
+if (document.getElementById('dashboard-kepala-sekolah')) {
+    ReactDOM.render(<DashboardKepalaSekolah  />, document.getElementById('dashboard-kepala-sekolah'));
 }

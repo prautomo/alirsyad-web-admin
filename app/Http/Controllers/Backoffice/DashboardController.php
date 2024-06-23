@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\ERaport;
 use App\Models\ExternalUser;
+use App\Models\GuruMataPelajaran;
 use App\Models\Jenjang;
 use App\Models\Kelas;
 use App\Models\MataPelajaran;
@@ -19,6 +20,7 @@ use App\Models\PaketSoal;
 use App\Models\Tingkat;
 use DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class DashboardController extends Controller {
 
@@ -41,12 +43,21 @@ class DashboardController extends Controller {
     {
         $data = [];
         // dd(Auth::user()->roles->pluck('name'));
-        return view('pages.backoffice.dashboard.superadmin', $data);
-
-        // return view('pages.backoffice.dashboard.guru_mapel', $data);
+        
+        $authUserRole = Auth::user()->roles->pluck('name')->toArray();
+        
+        if (in_array("Guru Mata Pelajaran", $authUserRole)) {
+            return view('pages.backoffice.dashboard.guru_mapel', $data);
+        }else if(in_array("Wali Kelas", $authUserRole)){
+            return view('pages.backoffice.dashboard.wali_kelas', $data);
+        }else if(in_array("Kepala Sekolah", $authUserRole)){
+            return view('pages.backoffice.dashboard.kepala_sekolah', $data);
+        }else{
+            return view('pages.backoffice.dashboard.superadmin', $data);
+        }
     }
 
-    public function allJenjang(Request $request)
+    public function getDataJenjang(Request $request)
     {
         $result = [];
         $result_ids = [];
@@ -122,6 +133,16 @@ class DashboardController extends Controller {
         $jenjang_id = 0;
         if($request->jenjang_id){
             $jenjang_id = $request->jenjang_id;
+        }
+
+        $activeRole = Session::get('activeRole');
+        if($activeRole == "Kepala Sekolah"){
+            $guru = ExternalUser::where(['email' => Auth::user()->email])->first();
+            $jenjang_kepsek = Jenjang::where(['kepala_sekolah_id' => $guru->id])->first();
+
+            if($jenjang_kepsek){
+                $jenjang_id = $jenjang_kepsek->id;
+            }
         }
         
         $result = [];
@@ -240,6 +261,16 @@ class DashboardController extends Controller {
         if($request->kelas_id){
             $kelas_id = $request->kelas_id;
         }
+
+        $activeRole = Session::get('activeRole');
+        if($activeRole == "Wali Kelas"){
+            $guru = ExternalUser::where(['email' => Auth::user()->email])->first();
+            $kelas_guru = Kelas::where(['wali_kelas_id' => $guru->id])->first();
+
+            if($kelas_guru){
+                $kelas_id = $kelas_guru->id;
+            }
+        }
         
         $result = [];
         $result_ids = [];
@@ -304,6 +335,25 @@ class DashboardController extends Controller {
 
         if($request->kelas_id){
             $kelas_id = $request->kelas_id;
+        }
+
+        if($request->mapel_id_kelas_id){
+            $params = explode("/", $request->mapel_id_kelas_id);
+            $mapel_id = $params[0];
+            $kelas_id = $params[1];
+        }
+
+        $activeRole = Session::get('activeRole');
+        if($activeRole == "Guru Mata Pelajaran" && !$request->mapel_id_kelas_id){
+            $guru = ExternalUser::where(['email' => Auth::user()->email])->first();
+            $guru_mapels = GuruMataPelajaran::where([
+                'guru_id' => $guru->id
+            ])->first();
+
+            if($guru_mapels){
+                $mapel_id = $guru_mapels->mata_pelajaran_id;
+                $kelas_id = $guru_mapels->kelas_id;
+            }
         }
         
         $result = [];
@@ -545,6 +595,33 @@ class DashboardController extends Controller {
                 ]
             ]
         ];
+
+        $activeRole = Session::get('activeRole');
+        if($activeRole == "Guru Mata Pelajaran"){
+            $data = [
+                [
+                    'option' => 'mengajar',
+                    'next_api' => [
+                        'name' => 'bab',
+                        'param' => 'mapel_id_kelas_id'
+                    ]
+                ],
+                [
+                    'option' => 'bab',
+                    'next_api' => [
+                        'name' => 'subbab',
+                        'param' => 'bab_id'
+                    ]
+                ],
+                [
+                    'option' => 'subbab',
+                    'next_api' => [
+                        'name' => 'siswa',
+                        'param' => 'subbab_number'
+                    ]
+                ]
+            ];
+        }
         
         return response()->json(['message' => 'success', 'data' => $data]);
     }
@@ -555,6 +632,16 @@ class DashboardController extends Controller {
 
         if($request->jenjang_id){
             $tingkats = $tingkats->where(['jenjang_id' => $request->jenjang_id]);
+        }
+        
+        $activeRole = Session::get('activeRole');
+        if($activeRole == "Kepala Sekolah"){
+            $guru = ExternalUser::where(['email' => Auth::user()->email])->first();
+            $jenjang_kepsek = Jenjang::where(['kepala_sekolah_id' => $guru->id])->first();
+
+            if($jenjang_kepsek){
+                $tingkats = $tingkats->where(['jenjang_id' => $jenjang_kepsek->id]);
+            }
         }
 
         $data = $tingkats->where(['deleted_at' => NULL])->get();
@@ -584,6 +671,16 @@ class DashboardController extends Controller {
             $mapel = $mapel->where(['tingkat_id' => $kelas->tingkat_id]);
         }
 
+        $activeRole = Session::get('activeRole');
+        if($activeRole == "Wali Kelas"){
+            $guru = ExternalUser::where(['email' => Auth::user()->email])->first();
+            $kelas_guru = Kelas::where(['wali_kelas_id' => $guru->id])->first();
+
+            if($kelas_guru){
+                $mapel = $mapel->where(['tingkat_id' => $kelas_guru->tingkat_id]);
+            }
+        }
+
         $data = $mapel->where(['deleted_at' => NULL])->orderBy('urutan')->get();
         
         return response()->json(['message' => 'success', 'data' => $data]);
@@ -595,6 +692,11 @@ class DashboardController extends Controller {
 
         if($request->mapel_id){
             $bab = $bab->where(['mata_pelajaran_id' => $request->mapel_id]);
+        }
+        
+        if($request->mapel_id_kelas_id){
+            $params = explode("/", $request->mapel_id_kelas_id);
+            $bab = $bab->where(['mata_pelajaran_id' => $params[0]]);
         }
 
         $data = $bab->where(['deleted_at' => NULL])->orderBy('urutan')->get();
@@ -613,6 +715,33 @@ class DashboardController extends Controller {
         $data = $subbab->where(['deleted_at' => NULL])->select(['subbab AS id', 'judul_subbab AS name'])->distinct()->get();
         
         return response()->json(['message' => 'success', 'data' => $data]);
+    }
+    
+    public function filterMengajar(Request $request)
+    {
+        $data = [];
+        $guru_mapels = GuruMataPelajaran::query();
+
+        $activeRole = Session::get('activeRole');
+        if($activeRole == "Guru Mata Pelajaran"){
+            $guru = ExternalUser::where(['email' => Auth::user()->email])->first();
+            if($guru){
+                $guru_mapels = $guru_mapels->where([
+                    'guru_id' => $guru->id
+                ]);
+            }
+        }
+
+        $list_data = $guru_mapels->get();
+        $first_data = $guru_mapels->first();
+        foreach($list_data as $item){
+            array_push($data, [
+                'id' => $item->mataPelajaran->id . "/" . $item->kelas->id,
+                'name' => $item->mataPelajaran->name . " (" . $item->mataPelajaran->tingkat->name . $item->kelas->name . ")",
+            ]);
+        }
+        
+        return response()->json(['message' => 'success', 'data' => $data, 'kelas_id' => $first_data->kelas_id, 'mapel_id' => $first_data->mata_pelajaran_id]);
     }
     
 }

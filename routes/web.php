@@ -115,7 +115,7 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
         Route::get('e-raport/{id}/{mapelId}/filter-col', 'ERaportController@filterColShowDetailMapel')->name('e-raport.filter-col-show-detail-mapel');
 
         Route::get("/json/e-raport/grafik/{id}/{mapelId}", "ERaportController@showDetailMapelGrafik");
-        Route::post('/json/dashboard/jenjang', 'DashboardController@allJenjang')->name('dashboard.all-jenjang');
+        Route::post('/json/dashboard/jenjang', 'DashboardController@getDataJenjang')->name('dashboard.get-data-jenjang');
         Route::post('/json/dashboard/tingkat', 'DashboardController@getDataTingkat')->name('dashboard.get-data-tingkat');
         Route::post('/json/dashboard/kelas', 'DashboardController@getDataKelas')->name('dashboard.get-data-kelas');
         Route::post('/json/dashboard/mapel', 'DashboardController@getDataMapel')->name('dashboard.get-data-mapel');
@@ -129,6 +129,7 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
         Route::post("/json/dashboard/filter/mapel", 'DashboardController@filterMapel')->name('dashboard.filter-mapel');
         Route::post("/json/dashboard/filter/bab", 'DashboardController@filterBab')->name('dashboard.filter-bab');
         Route::post("/json/dashboard/filter/subbab", 'DashboardController@filterSubbab')->name('dashboard.filter-subbab');
+        Route::post("/json/dashboard/filter/mengajar", 'DashboardController@filterMengajar')->name('dashboard.filter-mengajar');
 
         Route::resource('password-reset-students', 'PasswordResetStudentController');
         Route::post('password-reset-students/update-status/{id}', 'PasswordResetStudentController@updateStatus')->name('password-reset-students.update-status');

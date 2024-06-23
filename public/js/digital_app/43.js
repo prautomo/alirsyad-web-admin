@@ -1,4 +1,4 @@
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[29],{
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[43],{
 
 /***/ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./resources/js/backoffice/components/Dashboard/index.css":
 /*!************************************************************************************************************************************************!*\
@@ -160,8 +160,6 @@ function DashboardWaliKelas() {
     filterLevel = _useState12[0],
     setfilterLevel = _useState12[1];
   var _useState13 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
-      tingkat: [],
-      kelas: [],
       mapel: [],
       bab: [],
       subbab: []
@@ -191,13 +189,19 @@ function DashboardWaliKelas() {
     setIsLoading = _useState24[1];
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     if (listDatas.length < 1) {
-      window.axios.post("/backoffice/json/dashboard/tingkat").then(function (response) {
+      window.axios.post("/backoffice/json/dashboard/mapel").then(function (response) {
         var data = response.data.data;
         var chartData = data.data;
         var chartDataId = data.data_id;
         var nextApi = data.next_api;
         var graphicTitle = data.graphic_title;
         var currentLevel = data.level;
+        if (data.kelas_id) {
+          setKelasId(data.kelas_id);
+        }
+        if (data.bab_id) {
+          setBabId(data.bab_id);
+        }
         setIsLoading(false);
         setGraphicTitle(graphicTitle);
         setCurrentLevel(currentLevel);
@@ -237,13 +241,13 @@ function DashboardWaliKelas() {
     });
   }
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    if (filters.tingkat.length < 1) {
-      window.axios.post("/backoffice/json/dashboard/filter/tingkat").then(function (response) {
+    if (filters.mapel.length < 1) {
+      window.axios.post("/backoffice/json/dashboard/filter/mapel").then(function (response) {
         var data = response.data.data;
         setFilters(_objectSpread(_objectSpread({}, filters), {}, {
-          tingkat: data
+          mapel: data
         }));
-        $("#tingkat").selectpicker("refresh");
+        $("#mapel").selectpicker("refresh");
       })["catch"](function (err) {
         console.log(err);
       });
@@ -359,33 +363,6 @@ function DashboardWaliKelas() {
       color: "#9E9E9E"
     }
   }, "Filter By"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-    id: "tingkat",
-    name: "tingkat",
-    "data-style": "btn-green-pastel",
-    "class": "selectpicker mr-2",
-    placeholder: "Tingkat",
-    onChange: handleChange
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-    value: ""
-  }, "Semua Tingkat"), filters.tingkat.length > 0 && filters.tingkat.map(function (data) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: data.id
-    }, data.name);
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-    id: "kelas",
-    name: "kelas",
-    "data-style": "btn-green-pastel",
-    multiple: true,
-    "class": "selectpicker mr-2",
-    placeholder: "Kelas",
-    onChange: handleChange
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-    value: ""
-  }, "Semua Kelas"), filters.kelas.length > 0 && filters.kelas.map(function (data) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: data.id
-    }, data.name);
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
     id: "mapel",
     name: "mapel",
     "data-style": "btn-green-pastel",
