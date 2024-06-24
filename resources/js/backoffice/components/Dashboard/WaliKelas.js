@@ -295,7 +295,6 @@ function DashboardWaliKelas() {
     }, [listDatas]);
 
     const handleChange = (e) => {
-        console.log('e value', e.target.value)
         var getLevel = filterLevel.filter(function (el) {
             return el.option == e.target.id
         });
@@ -306,8 +305,6 @@ function DashboardWaliKelas() {
 
         var level = getLevel[0]
         setNextApi(level.next_api)
-
-        console.log('level', level)
 
         var params = {
             [level.next_api.param] : e.target.value

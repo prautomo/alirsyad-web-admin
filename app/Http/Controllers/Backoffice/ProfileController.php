@@ -250,6 +250,6 @@ class ProfileController extends Controller
             Session::put('otherRole', $otherRole);
         }
 
-        return redirect("/backoffice/e-raport")->with('success', "Berhasil switch role!");
+        return redirect("/backoffice/dashboard")->with('success', "Berhasil switch role!");
     }
 }

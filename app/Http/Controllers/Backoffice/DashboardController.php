@@ -45,16 +45,33 @@ class DashboardController extends Controller {
         // dd(Auth::user()->roles->pluck('name'));
         
         $authUserRole = Auth::user()->roles->pluck('name')->toArray();
-        
-        if (in_array("Guru Mata Pelajaran", $authUserRole)) {
-            return view('pages.backoffice.dashboard.guru_mapel', $data);
-        }else if(in_array("Wali Kelas", $authUserRole)){
-            return view('pages.backoffice.dashboard.wali_kelas', $data);
-        }else if(in_array("Kepala Sekolah", $authUserRole)){
-            return view('pages.backoffice.dashboard.kepala_sekolah', $data);
+        $activeRole = Session::get('activeRole');
+        $viewDashboard = "";
+
+        if($activeRole != null){
+            if ($activeRole == "Guru Mata Pelajaran") {
+                $viewDashboard = 'guru_mapel';
+            }else if($activeRole == "Wali Kelas"){
+                $viewDashboard = 'wali_kelas';
+            }else if($activeRole == "Kepala Sekolah"){
+                $viewDashboard = 'kepala_sekolah';
+            }else{
+                $viewDashboard = 'superadmin';
+            }
         }else{
-            return view('pages.backoffice.dashboard.superadmin', $data);
+            if (in_array("Guru Mata Pelajaran", $authUserRole)) {
+                $viewDashboard = 'guru_mapel';
+            }else if(in_array("Wali Kelas", $authUserRole)){
+                $viewDashboard = 'wali_kelas';
+            }else if(in_array("Kepala Sekolah", $authUserRole)){
+                $viewDashboard = 'kepala_sekolah';
+            }else{
+                $viewDashboard = 'superadmin';
+            }
         }
+
+        return view('pages.backoffice.dashboard.'. $viewDashboard, $data);
+
     }
 
     public function getDataJenjang(Request $request)
