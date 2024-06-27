@@ -62,63 +62,6 @@ export const data = {
     ],
 };
 
-export const chartLevel = [
-    {
-        level: 'jenjang',
-        data: [
-            [
-                {
-                    label: "TK",
-                    score: 1376,
-                },
-                {
-                    label: "SD",
-                    score: 580,
-                },
-                {
-                    label: "SMP",
-                    score: 1500,
-                },
-                {
-                    label: "SMA",
-                    score: 1125,
-                }
-            ]
-        ]
-    },
-    {
-        level: 'tingkat',
-        data: [
-            [
-                {
-                    label: "SD 1",
-                    score: 1376,
-                },
-                {
-                    label: "SD 2",
-                    score: 580,
-                },
-                {
-                    label: "SD 3",
-                    score: 1500,
-                },
-                {
-                    label: "SD 4",
-                    score: 1126,
-                },
-                {
-                    label: "SD 5",
-                    score: 1518,
-                },
-                {
-                    label: "SD 6",
-                    score: 480,
-                }
-            ]
-        ]
-    }
-]
-
 function DashboardWaliKelas() {
 
     const [listConfigData, setListConfigData] = useState([]);
@@ -141,29 +84,60 @@ function DashboardWaliKelas() {
     useEffect(() => {
         if (listDatas.length < 1) {
             
-            window.axios.post("/backoffice/json/dashboard/mapel").then((response) => {
+            window.axios.post("/backoffice/json/dashboard/current").then((response) => {
                 var data = response.data.data
 
-                var chartData = data.data
-                var chartDataId = data.data_id
-                var nextApi = data.next_api
-                var graphicTitle = data.graphic_title
-                var currentLevel = data.level
+                var level = data.level
+                var param = data.param
+                var param2nd = data.param2nd
+                var param3rd = data.param3rd
+
+                var params = {}
+
+                if(level == null){
+                    level = 'mapel'
+                }
+
+                if(param != null){
+                    params[param] = data.value
+                }
                 
-                if(data.kelas_id){
-                    setKelasId(data.kelas_id)
+                if(param2nd != null){
+                    params[param2nd] = data.value2nd
                 }
-
-                if(data.bab_id){
-                    setBabId(data.bab_id)
+                
+                if(param3rd != null){
+                    params[param3rd] = data.value3rd
                 }
+            
+                window.axios.post(`/backoffice/json/dashboard/${level}`, params).then((response) => {
+                    var data = response.data.data
 
-                setIsLoading(false)
-                setGraphicTitle(graphicTitle)
-                setCurrentLevel(currentLevel)
-                setNextApi(nextApi)
-                setListDatas(chartData)
-                setListDataIds(chartDataId)
+                    var chartData = data.data
+                    var chartDataId = data.data_id
+                    var nextApi = data.next_api
+                    var graphicTitle = data.graphic_title
+                    var currentLevel = data.level
+
+                    options['onClick'] = graphClickEvent
+                
+                    if(data.kelas_id){
+                        setKelasId(data.kelas_id)
+                    }
+    
+                    if(data.bab_id){
+                        setBabId(data.bab_id)
+                    }
+
+                    setIsLoading(false)
+                    setGraphicTitle(graphicTitle)
+                    setCurrentLevel(currentLevel)
+                    setNextApi(nextApi)
+                    setListDatas(chartData)
+                    setListDataIds(chartDataId)
+                }).catch((err) => {
+                    console.log(err)
+                })
             }).catch((err) => {
                 console.log(err)
             })
@@ -183,8 +157,6 @@ function DashboardWaliKelas() {
         marginLeft: "5px",
         marginRight: "5px"
     }
-    
-    options['onClick'] = graphClickEvent
 
     function graphClickEvent(event, clickedElements){
         if (clickedElements.length === 0) return
@@ -243,6 +215,12 @@ function DashboardWaliKelas() {
             var graphicTitle = data.graphic_title
             var nextApi = data.next_api
             var currentLevel = data.level
+
+            if(data.level == 'siswa'){
+                options['onClick'] = null
+            }else{
+                options['onClick'] = graphClickEvent
+            }
 
             if(data.kelas_id){
                 setKelasId(data.kelas_id)

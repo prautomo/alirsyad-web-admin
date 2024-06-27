@@ -123,6 +123,11 @@ class DashboardController extends Controller {
             "next_api" => $next_api,
             "graphic_title" => "Ringkasan Grafik"
         ];
+        
+        Session::put('dshLevel', $data['level']);
+        Session::put('dshParam', null);
+        Session::put('dshValue', null);
+
         return response()->json(['message' => 'success', 'data' => $data]);
     }
 
@@ -210,6 +215,9 @@ class DashboardController extends Controller {
             "next_api" => $next_api,
             "graphic_title" => $jenjang->name
         ];
+
+        $this->setCurrentDashboard($data['level'], 'jenjang_id', $jenjang_id);
+
         return response()->json(['message' => 'success', 'data' => $data]);
     }
 
@@ -269,6 +277,9 @@ class DashboardController extends Controller {
             "next_api" => $next_api,
             "graphic_title" => $tingkat->jenjang->name . " " . $tingkat->name
         ];
+
+        $this->setCurrentDashboard($data['level'], 'tingkat_id', $tingkat_id);
+
         return response()->json(['message' => 'success', 'data' => $data]);
     }
     
@@ -338,6 +349,9 @@ class DashboardController extends Controller {
             "kelas_id" => $kelas_id,
             "graphic_title" => $kelas->tingkat->jenjang->name . " " . $kelas->tingkat->name . $kelas->name
         ];
+
+        $this->setCurrentDashboard($data['level'], 'kelas_id', $kelas_id);
+
         return response()->json(['message' => 'success', 'data' => $data]);
     }
     
@@ -423,6 +437,9 @@ class DashboardController extends Controller {
             "kelas_id" => $kelas_id,
             "graphic_title" => $kelas->tingkat->jenjang->name . " " . $kelas->tingkat->name . $kelas->name . " / " . $mapel->name
         ];
+
+        $this->setCurrentDashboard($data['level'], 'mapel_id', $mapel_id, 'kelas_id', $kelas_id);
+
         return response()->json(['message' => 'success', 'data' => $data]);
     }
 
@@ -490,6 +507,9 @@ class DashboardController extends Controller {
             "bab_id" => $bab_id,
             "graphic_title" => $kelas->tingkat->jenjang->name . " " . $kelas->tingkat->name . $kelas->name . " / " . $bab->mataPelajaran->name . " " . $bab->name
         ];
+
+        $this->setCurrentDashboard($data['level'], 'bab_id', $bab_id, 'kelas_id', $kelas_id);
+
         return response()->json(['message' => 'success', 'data' => $data]);
     }
     
@@ -562,9 +582,37 @@ class DashboardController extends Controller {
             "kelas_id" => $kelas_id,
             "graphic_title" => $kelas->tingkat->jenjang->name . " " . $kelas->tingkat->name . $kelas->name . " / " . $bab->mataPelajaran->name . " " . $bab->name . " " . $subbab->judul_subbab
         ];
+
+        $this->setCurrentDashboard($data['level'], 'bab_id', $bab_id, 'kelas_id', $kelas_id, 'subbab_number', $subbab_number);
+
         return response()->json(['message' => 'success', 'data' => $data]);
     }
 
+    public function getCurrentDashboard(Request $request)
+    {
+        $data = [
+            'level' => Session::get('dshLevel'),
+            'param' => Session::get('dshParam'),
+            'value' => Session::get('dshValue'),
+            'param2nd' => Session::get('dsh2ndParam'),
+            'value2nd' => Session::get('dsh2ndValue'),
+            'param3rd' => Session::get('dsh3rdParam'),
+            'value3rd' => Session::get('dsh3rdValue'),
+        ];
+        
+        return response()->json(['message' => 'success', 'data' => $data]);
+    }
+
+    public function setCurrentDashboard($level, $param, $value, $param2nd = null, $value2nd = null, $param3rd = null, $value3rd = null)
+    {
+        Session::put('dshLevel', $level);
+        Session::put('dshParam', $param);
+        Session::put('dshValue', $value);
+        Session::put('dsh2ndParam', $param2nd);
+        Session::put('dsh2ndValue', $value2nd);
+        Session::put('dsh3rdParam', $param3rd);
+        Session::put('dsh3rdValue', $value3rd);
+    }
     
     public function filterLevel(Request $request)
     {

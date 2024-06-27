@@ -142,25 +142,55 @@ function DashboardGuruMapel() {
     useEffect(() => {
         if (listDatas.length < 1) {
             
-            window.axios.post("/backoffice/json/dashboard/bab").then((response) => {
+            window.axios.post("/backoffice/json/dashboard/current").then((response) => {
                 var data = response.data.data
 
-                var chartData = data.data
-                var chartDataId = data.data_id
-                var nextApi = data.next_api
-                var graphicTitle = data.graphic_title
-                var currentLevel = data.level
+                var level = data.level
+                var param = data.param
+                var param2nd = data.param2nd
+                var param3rd = data.param3rd
 
-                setIsLoading(false)
-                setGraphicTitle(graphicTitle)
-                setCurrentLevel(currentLevel)
-                setNextApi(nextApi)
-                setListDatas(chartData)
-                setListDataIds(chartDataId)
+                var params = {}
+
+                if(level == null){
+                    level = 'bab'
+                }
+
+                if(param != null){
+                    params[param] = data.value
+                }
+                
+                if(param2nd != null){
+                    params[param2nd] = data.value2nd
+                }
+                
+                if(param3rd != null){
+                    params[param3rd] = data.value3rd
+                }
+            
+                window.axios.post(`/backoffice/json/dashboard/${level}`, params).then((response) => {
+                    var data = response.data.data
+
+                    var chartData = data.data
+                    var chartDataId = data.data_id
+                    var nextApi = data.next_api
+                    var graphicTitle = data.graphic_title
+                    var currentLevel = data.level
+
+                    options['onClick'] = graphClickEvent
+
+                    setIsLoading(false)
+                    setGraphicTitle(graphicTitle)
+                    setCurrentLevel(currentLevel)
+                    setNextApi(nextApi)
+                    setListDatas(chartData)
+                    setListDataIds(chartDataId)
+                }).catch((err) => {
+                    console.log(err)
+                })
             }).catch((err) => {
                 console.log(err)
             })
-
             
             window.axios.post("/backoffice/json/dashboard/filter/level").then((response) => {
                 var data = response.data.data
@@ -176,8 +206,6 @@ function DashboardGuruMapel() {
         marginLeft: "5px",
         marginRight: "5px"
     }
-    
-    options['onClick'] = graphClickEvent
 
     function graphClickEvent(event, clickedElements){
         if (clickedElements.length === 0) return
@@ -246,6 +274,12 @@ function DashboardGuruMapel() {
             var graphicTitle = data.graphic_title
             var nextApi = data.next_api
             var currentLevel = data.level
+            
+            if(data.level == 'siswa'){
+                options['onClick'] = null
+            }else{
+                options['onClick'] = graphClickEvent
+            }
 
             if(data.kelas_id){
                 setKelasId(data.kelas_id)

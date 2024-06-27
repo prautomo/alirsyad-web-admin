@@ -122,6 +122,7 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
         Route::post('/json/dashboard/bab', 'DashboardController@getDataBab')->name('dashboard.get-data-bab');
         Route::post('/json/dashboard/subbab', 'DashboardController@getDataSubbab')->name('dashboard.get-data-subbab');
         Route::post('/json/dashboard/siswa', 'DashboardController@getDataSiswa')->name('dashboard.get-data-siswa');
+        Route::post('/json/dashboard/current', 'DashboardController@getCurrentDashboard')->name('dashboard.get-current-dashboard');
         
         Route::post("/json/dashboard/filter/level", 'DashboardController@filterLevel')->name('dashboard.filter-level');
         Route::post("/json/dashboard/filter/tingkat", 'DashboardController@filterTingkat')->name('dashboard.filter-tingkat');

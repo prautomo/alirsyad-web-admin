@@ -311,7 +311,6 @@ function DashboardKepalaSekolah() {
     setListConfigData(listConfig);
   }, [listDatas]);
   var handleChange = function handleChange(e) {
-    console.log('e value', e.target.value);
     var getLevel = filterLevel.filter(function (el) {
       return el.option == e.target.id;
     });
@@ -320,7 +319,6 @@ function DashboardKepalaSekolah() {
     }
     var level = getLevel[0];
     setNextApi(level.next_api);
-    console.log('level', level);
     var params = _defineProperty({}, level.next_api.param, e.target.value);
     if (kelasId != 0) {
       params['kelas_id'] = kelasId;

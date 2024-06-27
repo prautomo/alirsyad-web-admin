@@ -23,14 +23,13 @@ exports.push([module.i, ".dashboard-final-score {\r\n    background: #F6D0A14D;\
 /*!********************************************************************!*\
   !*** ./resources/js/backoffice/components/Dashboard/Superadmin.js ***!
   \********************************************************************/
-/*! exports provided: options, data, chartLevel, default */
+/*! exports provided: options, data, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "options", function() { return options; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "data", function() { return data; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "chartLevel", function() { return chartLevel; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
@@ -97,43 +96,6 @@ var data = {
     backgroundColor: 'rgba(2, 65, 2, 1)'
   }]
 };
-var chartLevel = [{
-  level: 'jenjang',
-  data: [[{
-    label: "TK",
-    score: 1376
-  }, {
-    label: "SD",
-    score: 580
-  }, {
-    label: "SMP",
-    score: 1500
-  }, {
-    label: "SMA",
-    score: 1125
-  }]]
-}, {
-  level: 'tingkat',
-  data: [[{
-    label: "SD 1",
-    score: 1376
-  }, {
-    label: "SD 2",
-    score: 580
-  }, {
-    label: "SD 3",
-    score: 1500
-  }, {
-    label: "SD 4",
-    score: 1126
-  }, {
-    label: "SD 5",
-    score: 1518
-  }, {
-    label: "SD 6",
-    score: 480
-  }]]
-}];
 function DashboardSuperadmin() {
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
     _useState2 = _slicedToArray(_useState, 2),
@@ -192,19 +154,42 @@ function DashboardSuperadmin() {
     setIsLoading = _useState24[1];
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     if (listDatas.length < 1) {
-      window.axios.post("/backoffice/json/dashboard/jenjang").then(function (response) {
+      window.axios.post("/backoffice/json/dashboard/current").then(function (response) {
         var data = response.data.data;
-        var chartData = data.data;
-        var chartDataId = data.data_id;
-        var nextApi = data.next_api;
-        var graphicTitle = data.graphic_title;
-        var currentLevel = data.level;
-        setIsLoading(false);
-        setGraphicTitle(graphicTitle);
-        setCurrentLevel(currentLevel);
-        setNextApi(nextApi);
-        setListDatas(chartData);
-        setListDataIds(chartDataId);
+        var level = data.level;
+        var param = data.param;
+        var param2nd = data.param2nd;
+        var param3rd = data.param3rd;
+        var params = {};
+        if (level == null) {
+          level = 'jenjang';
+        }
+        if (param != null) {
+          params[param] = data.value;
+        }
+        if (param2nd != null) {
+          params[param2nd] = data.value2nd;
+        }
+        if (param3rd != null) {
+          params[param3rd] = data.value3rd;
+        }
+        window.axios.post("/backoffice/json/dashboard/".concat(level), params).then(function (response) {
+          var data = response.data.data;
+          var chartData = data.data;
+          var chartDataId = data.data_id;
+          var nextApi = data.next_api;
+          var graphicTitle = data.graphic_title;
+          var currentLevel = data.level;
+          options['onClick'] = graphClickEvent;
+          setIsLoading(false);
+          setGraphicTitle(graphicTitle);
+          setCurrentLevel(currentLevel);
+          setNextApi(nextApi);
+          setListDatas(chartData);
+          setListDataIds(chartDataId);
+        })["catch"](function (err) {
+          console.log(err);
+        });
       })["catch"](function (err) {
         console.log(err);
       });
@@ -221,7 +206,6 @@ function DashboardSuperadmin() {
     marginLeft: "5px",
     marginRight: "5px"
   };
-  options['onClick'] = graphClickEvent;
   function graphClickEvent(event, clickedElements) {
     if (clickedElements.length === 0) return;
     var _clickedElements$0$el = clickedElements[0].element.$context,
@@ -261,6 +245,11 @@ function DashboardSuperadmin() {
     }
     window.axios.post("/backoffice/json/dashboard/".concat(nextApi.name), params).then(function (response) {
       var data = response.data.data;
+      if (data.level == 'siswa') {
+        options['onClick'] = null;
+      } else {
+        options['onClick'] = graphClickEvent;
+      }
       var chartData = data.data;
       var chartDataId = data.data_id;
       var graphicTitle = data.graphic_title;
