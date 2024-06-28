@@ -12,7 +12,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, ".dashboard-final-score {\r\n    background: #F6D0A14D;\r\n    padding: 10px 20px;\r\n    border-radius: 4px !important;\r\n    color: #E98A15 !important;\r\n}\r\n\r\n.dashboard-filter .bootstrap-select {\r\n    width: 200px !important;\r\n}", ""]);
+exports.push([module.i, ".dashboard-final-score {\n    background: #F6D0A14D;\n    padding: 10px 20px;\n    border-radius: 4px !important;\n    color: #E98A15 !important;\n}\n\n.dashboard-filter .bootstrap-select {\n    width: 200px !important;\n}", ""]);
 
 // exports
 
@@ -220,6 +220,15 @@ function DashboardGuruMapel() {
           var graphicTitle = data.graphic_title;
           var currentLevel = data.level;
           options['onClick'] = graphClickEvent;
+          if (data.kelas_id) {
+            setKelasId(data.kelas_id);
+          }
+          if (data.bab_id) {
+            setBabId(data.bab_id);
+          }
+          if (data.mapel_id) {
+            setMapelId(data.mapel_id);
+          }
           setIsLoading(false);
           setGraphicTitle(graphicTitle);
           setCurrentLevel(currentLevel);
@@ -283,6 +292,11 @@ function DashboardGuruMapel() {
   }, []);
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     var selectedId = selectedBarIdx.isClick ? listDataIds[selectedBarIdx.idx] : selectedBarIdx.idx;
+    if (currentLevel == 'siswa') {
+      window.location.href = "/backoffice/e-raport/".concat(selectedId, "/").concat(mapelId);
+      return;
+    }
+    setIsLoading(true);
     var params = _defineProperty({}, nextApi.param, selectedId);
     if (kelasId != 0) {
       params['kelas_id'] = kelasId;
@@ -292,21 +306,20 @@ function DashboardGuruMapel() {
     }
     window.axios.post("/backoffice/json/dashboard/".concat(nextApi.name), params).then(function (response) {
       var data = response.data.data;
+      options['onClick'] = graphClickEvent;
       var chartData = data.data;
       var chartDataId = data.data_id;
       var graphicTitle = data.graphic_title;
       var nextApi = data.next_api;
       var currentLevel = data.level;
-      if (data.level == 'siswa') {
-        options['onClick'] = null;
-      } else {
-        options['onClick'] = graphClickEvent;
-      }
       if (data.kelas_id) {
         setKelasId(data.kelas_id);
       }
       if (data.bab_id) {
         setBabId(data.bab_id);
+      }
+      if (data.mapel_id) {
+        setMapelId(data.mapel_id);
       }
       setIsLoading(false);
       setGraphicTitle(graphicTitle);
@@ -320,20 +333,26 @@ function DashboardGuruMapel() {
   }, [selectedBarIdx]);
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     var listConfig = [];
+    var listColor = ["red", "rgba(2, 65, 2, 1)"];
     var _loop = function _loop() {
         var labels = [];
         var tempScores = [];
+        var colors = currentLevel == 'siswa' ? [] : 'rgba(2, 65, 2, 1)';
         listDatas[i].forEach(function (element) {
           var data = element;
           labels.push(data.label);
           tempScores.push(data.score);
+          if (currentLevel == 'siswa') {
+            var color = data.score > 50 ? listColor[1] : listColor[0];
+            colors.push(color);
+          }
         });
         objConfig = {
           labels: labels,
           datasets: [{
             label: 'Score',
             data: tempScores,
-            backgroundColor: 'rgba(2, 65, 2, 1)',
+            backgroundColor: colors,
             borderRadius: 10,
             minBarLength: 1,
             barThickness: 120
@@ -345,6 +364,7 @@ function DashboardGuruMapel() {
     for (var i = 0; i < listDatas.length; i++) {
       _loop();
     }
+    console.log('listConfig', listConfig);
     setListConfigData(listConfig);
   }, [listDatas]);
   var handleChange = function handleChange(e) {

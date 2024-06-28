@@ -37442,10 +37442,10 @@ Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), 
 Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(3), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(4), __webpack_require__.e(7), __webpack_require__.e(18), __webpack_require__.e(10), __webpack_require__.e(11), __webpack_require__.e(17), __webpack_require__.e(34)]).then(__webpack_require__.bind(null, /*! ./frontoffice/components/Modul/Detail */ "./resources/js/frontoffice/components/Modul/Detail.js"));
 Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(3), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(4), __webpack_require__.e(7), __webpack_require__.e(9), __webpack_require__.e(18), __webpack_require__.e(35)]).then(__webpack_require__.bind(null, /*! ./frontoffice/components/Nilai/List */ "./resources/js/frontoffice/components/Nilai/List.js"));
 // guru
-Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(3), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(22), __webpack_require__.e(36)]).then(__webpack_require__.bind(null, /*! ./guru/components/Dashboard/DetailProgressBelajar */ "./resources/js/guru/components/Dashboard/DetailProgressBelajar.js"));
-Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(3), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(22), __webpack_require__.e(39)]).then(__webpack_require__.bind(null, /*! ./guru/components/Progress/ListSiswa */ "./resources/js/guru/components/Progress/ListSiswa.js"));
-Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(3), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(22), __webpack_require__.e(38)]).then(__webpack_require__.bind(null, /*! ./guru/components/Progress/DetailSiswa */ "./resources/js/guru/components/Progress/DetailSiswa.js"));
-Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(3), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(22), __webpack_require__.e(37)]).then(__webpack_require__.bind(null, /*! ./guru/components/Progress/DetailSimulasiPercobaan */ "./resources/js/guru/components/Progress/DetailSimulasiPercobaan.js"));
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(3), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(22), __webpack_require__.e(12)]).then(__webpack_require__.bind(null, /*! ./guru/components/Dashboard/DetailProgressBelajar */ "./resources/js/guru/components/Dashboard/DetailProgressBelajar.js"));
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(3), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(22), __webpack_require__.e(38)]).then(__webpack_require__.bind(null, /*! ./guru/components/Progress/ListSiswa */ "./resources/js/guru/components/Progress/ListSiswa.js"));
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(3), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(22), __webpack_require__.e(37)]).then(__webpack_require__.bind(null, /*! ./guru/components/Progress/DetailSiswa */ "./resources/js/guru/components/Progress/DetailSiswa.js"));
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(3), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(22), __webpack_require__.e(36)]).then(__webpack_require__.bind(null, /*! ./guru/components/Progress/DetailSimulasiPercobaan */ "./resources/js/guru/components/Progress/DetailSimulasiPercobaan.js"));
 
 /***/ }),
 
@@ -37587,8 +37587,8 @@ window.initDatatable = function (tableSelector) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\Freelance\DIB\web-digital-interactive-book\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\Freelance\DIB\web-digital-interactive-book\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /Users/sql/Documents/Ferdhika/Project/DIB/web-digital-interactive-book/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /Users/sql/Documents/Ferdhika/Project/DIB/web-digital-interactive-book/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
