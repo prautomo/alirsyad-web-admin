@@ -299,8 +299,8 @@ function DashboardWaliKelas() {
             data: tempScores,
             backgroundColor: colors,
             borderRadius: 10,
-            minBarLength: 1,
-            barThickness: 120
+            minBarLength: 1
+            // barThickness: 120,
           }]
         };
         listConfig.push(objConfig);

@@ -272,7 +272,7 @@ function DashboardKepalaSekolah() {
                         backgroundColor: colors,
                         borderRadius: 10,
                         minBarLength: 1,
-                        barThickness: 120,
+                        // barThickness: 120,
                     }
                 ]
             }
