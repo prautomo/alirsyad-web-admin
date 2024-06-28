@@ -12,17 +12,17 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, ".dashboard-final-score {\r\n    background: #F6D0A14D;\r\n    padding: 10px 20px;\r\n    border-radius: 4px !important;\r\n    color: #E98A15 !important;\r\n}\r\n\r\n.dashboard-filter .bootstrap-select {\r\n    width: 200px !important;\r\n}", ""]);
+exports.push([module.i, ".dashboard-final-score {\n    background: #F6D0A14D;\n    padding: 10px 20px;\n    border-radius: 4px !important;\n    color: #E98A15 !important;\n}\n\n.dashboard-filter .bootstrap-select {\n    width: 200px !important;\n}", ""]);
 
 // exports
 
 
 /***/ }),
 
-/***/ "./resources/js/backoffice/components/Dashboard/Superadmin.js":
-/*!********************************************************************!*\
-  !*** ./resources/js/backoffice/components/Dashboard/Superadmin.js ***!
-  \********************************************************************/
+/***/ "./resources/js/backoffice/components/Dashboard/WaliKelas.js":
+/*!*******************************************************************!*\
+  !*** ./resources/js/backoffice/components/Dashboard/WaliKelas.js ***!
+  \*******************************************************************/
 /*! exports provided: options, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -87,7 +87,7 @@ var options = {
     event["native"].target.style.cursor = chartElement[0] ? 'pointer' : 'default';
   }
 };
-function DashboardSuperadmin() {
+function DashboardWaliKelas() {
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
     _useState2 = _slicedToArray(_useState, 2),
     listConfigData = _useState2[0],
@@ -113,9 +113,6 @@ function DashboardSuperadmin() {
     filterLevel = _useState12[0],
     setfilterLevel = _useState12[1];
   var _useState13 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
-      jenjang: [],
-      tingkat: [],
-      kelas: [],
       mapel: [],
       bab: [],
       subbab: []
@@ -157,7 +154,7 @@ function DashboardSuperadmin() {
         var param3rd = data.param3rd;
         var params = {};
         if (level == null) {
-          level = 'jenjang';
+          level = 'mapel';
         }
         if (param != null) {
           params[param] = data.value;
@@ -218,6 +215,7 @@ function DashboardSuperadmin() {
     var data = event.chart.data;
     var barLabel = event.chart.data.labels[dataIndex];
     var selectedIdx = dataIndex;
+    setIsLoading(true);
     setSelectedBarIdx({
       label: barLabel,
       idx: selectedIdx,
@@ -225,13 +223,13 @@ function DashboardSuperadmin() {
     });
   }
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    if (filters.jenjang.length < 1) {
-      window.axios.get("/backoffice/json/jenjangs").then(function (response) {
+    if (filters.mapel.length < 1) {
+      window.axios.post("/backoffice/json/dashboard/filter/mapel").then(function (response) {
         var data = response.data.data;
         setFilters(_objectSpread(_objectSpread({}, filters), {}, {
-          jenjang: data
+          mapel: data
         }));
-        $("#jenjang").selectpicker("refresh");
+        $("#mapel").selectpicker("refresh");
       })["catch"](function (err) {
         console.log(err);
       });
@@ -361,46 +359,6 @@ function DashboardSuperadmin() {
       color: "#9E9E9E"
     }
   }, "Filter By"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-    id: "jenjang",
-    name: "jenjang",
-    "data-style": "btn-green-pastel",
-    "class": "selectpicker mr-2",
-    placeholder: "Jenjang",
-    onChange: handleChange
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-    value: ""
-  }, "Semua Jenjang"), filters.jenjang.length > 0 && filters.jenjang.map(function (data) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: data.id
-    }, data.name);
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-    id: "tingkat",
-    name: "tingkat",
-    "data-style": "btn-green-pastel",
-    "class": "selectpicker mr-2",
-    placeholder: "Tingkat",
-    onChange: handleChange
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-    value: ""
-  }, "Semua Tingkat"), filters.tingkat.length > 0 && filters.tingkat.map(function (data) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: data.id
-    }, data.name);
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-    id: "kelas",
-    name: "kelas",
-    "data-style": "btn-green-pastel",
-    multiple: true,
-    "class": "selectpicker mr-2",
-    placeholder: "Kelas",
-    onChange: handleChange
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-    value: ""
-  }, "Semua Kelas"), filters.kelas.length > 0 && filters.kelas.map(function (data) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: data.id
-    }, data.name);
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
     id: "mapel",
     name: "mapel",
     "data-style": "btn-green-pastel",
@@ -492,9 +450,9 @@ function DashboardSuperadmin() {
     "class": "mt-2"
   }, "Mohon tunggu..."))));
 }
-/* harmony default export */ __webpack_exports__["default"] = (DashboardSuperadmin);
-if (document.getElementById('dashboard-superadmin')) {
-  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DashboardSuperadmin, null), document.getElementById('dashboard-superadmin'));
+/* harmony default export */ __webpack_exports__["default"] = (DashboardWaliKelas);
+if (document.getElementById('dashboard-wali-kelas')) {
+  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DashboardWaliKelas, null), document.getElementById('dashboard-wali-kelas'));
 }
 
 /***/ }),

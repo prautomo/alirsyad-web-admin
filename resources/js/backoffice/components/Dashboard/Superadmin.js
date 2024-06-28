@@ -75,7 +75,7 @@ function DashboardSuperadmin() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        if (listDatas.length < 1) {
+        if (listDatas?.length < 1) {
             
             window.axios.post("/backoffice/json/dashboard/current").then((response) => {
                 var data = response.data.data
@@ -272,7 +272,7 @@ function DashboardSuperadmin() {
                         backgroundColor: colors,
                         borderRadius: 10,
                         minBarLength: 1,
-                        barThickness: 120,
+                        // barThickness: 120,
                     }
                 ]
             }
