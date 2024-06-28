@@ -179,6 +179,18 @@ function DashboardGuruMapel() {
 
                     options['onClick'] = graphClickEvent
 
+                    if(data.kelas_id){
+                        setKelasId(data.kelas_id)
+                    }
+        
+                    if(data.bab_id){
+                        setBabId(data.bab_id)
+                    }
+        
+                    if(data.mapel_id){
+                        setMapelId(data.mapel_id)
+                    }
+
                     setIsLoading(false)
                     setGraphicTitle(graphicTitle)
                     setCurrentLevel(currentLevel)
@@ -254,6 +266,13 @@ function DashboardGuruMapel() {
     useEffect(() => {
         var selectedId = selectedBarIdx.isClick ? listDataIds[selectedBarIdx.idx] : selectedBarIdx.idx
 
+        if(currentLevel == 'siswa'){
+            window.location.href = `/backoffice/e-raport/${selectedId}/${mapelId}`;
+            return;
+        }
+
+        setIsLoading(true)
+        
         var params = {
             [nextApi.param] : selectedId
         }
@@ -269,17 +288,13 @@ function DashboardGuruMapel() {
         window.axios.post(`/backoffice/json/dashboard/${nextApi.name}`, params).then((response) => {
             var data = response.data.data
 
+            options['onClick'] = graphClickEvent
+
             var chartData = data.data
             var chartDataId = data.data_id
             var graphicTitle = data.graphic_title
             var nextApi = data.next_api
             var currentLevel = data.level
-            
-            if(data.level == 'siswa'){
-                options['onClick'] = null
-            }else{
-                options['onClick'] = graphClickEvent
-            }
 
             if(data.kelas_id){
                 setKelasId(data.kelas_id)
@@ -287,6 +302,10 @@ function DashboardGuruMapel() {
 
             if(data.bab_id){
                 setBabId(data.bab_id)
+            }
+        
+            if(data.mapel_id){
+                setMapelId(data.mapel_id)
             }
 
             setIsLoading(false)
@@ -302,14 +321,22 @@ function DashboardGuruMapel() {
 
     useEffect(() => {
         const listConfig = [];
+        const listColor = ["red", "rgba(2, 65, 2, 1)"];
         for (let i=0; i<listDatas.length; i++) {
             const labels = [];
             const tempScores = [];
+            const colors = currentLevel == 'siswa' ? [] : 'rgba(2, 65, 2, 1)';
 
             listDatas[i].forEach(element => {
                 const data = element;
+
                 labels.push(data.label);
                 tempScores.push(data.score);
+
+                if(currentLevel == 'siswa'){
+                    const color = data.score > 50 ? listColor[1] : listColor[0];
+                    colors.push(color);
+                }
             });
             
             var objConfig = {
@@ -318,7 +345,7 @@ function DashboardGuruMapel() {
                     {
                         label: 'Score',
                         data: tempScores,
-                        backgroundColor: 'rgba(2, 65, 2, 1)',
+                        backgroundColor: colors,
                         borderRadius: 10,
                         minBarLength: 1,
                         barThickness: 120,
@@ -328,6 +355,8 @@ function DashboardGuruMapel() {
 
             listConfig.push(objConfig)
         }
+        console.log('listConfig', listConfig)
+
         setListConfigData(listConfig);
     }, [listDatas]);
 

@@ -43,23 +43,12 @@ export const options = {
                 ticks: {
                     stepSize: 500,
                 },
-            },
+            }
         },
     },
     onHover: (event, chartElement) => {
         event.native.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
     }
-};
-
-export const data = {
-    undefined,
-    datasets: [
-        {
-            label: 'Score',
-            data: [],
-            backgroundColor: 'rgba(2, 65, 2, 1)',
-        }
-    ],
 };
 
 function DashboardSuperadmin() {
@@ -79,6 +68,7 @@ function DashboardSuperadmin() {
         subbab: [],
     });
     const [kelasId, setKelasId] = useState(0);
+    const [mapelId, setMapelId] = useState(0);
     const [babId, setBabId] = useState(0);
     const [graphicTitle, setGraphicTitle] = useState("");
     const [currentLevel, setCurrentLevel] = useState("");
@@ -124,6 +114,18 @@ function DashboardSuperadmin() {
 
                     options['onClick'] = graphClickEvent
 
+                    if(data.kelas_id){
+                        setKelasId(data.kelas_id)
+                    }
+        
+                    if(data.bab_id){
+                        setBabId(data.bab_id)
+                    }
+        
+                    if(data.mapel_id){
+                        setMapelId(data.mapel_id)
+                    }
+
                     setIsLoading(false)
                     setGraphicTitle(graphicTitle)
                     setCurrentLevel(currentLevel)
@@ -160,7 +162,6 @@ function DashboardSuperadmin() {
         const barLabel = event.chart.data.labels[dataIndex]
         const selectedIdx = dataIndex
 
-        setIsLoading(true)
         setSelectedBarIdx({
             label: barLabel,
             idx: selectedIdx,
@@ -189,6 +190,13 @@ function DashboardSuperadmin() {
     useEffect(() => {
         var selectedId = selectedBarIdx.isClick ? listDataIds[selectedBarIdx.idx] : selectedBarIdx.idx
 
+        if(currentLevel == 'siswa'){
+            window.location.href = `/backoffice/e-raport/${selectedId}/${mapelId}`;
+            return;
+        }
+
+        setIsLoading(true)
+        
         var params = {
             [nextApi.param] : selectedId
         }
@@ -204,11 +212,7 @@ function DashboardSuperadmin() {
         window.axios.post(`/backoffice/json/dashboard/${nextApi.name}`, params).then((response) => {
             var data = response.data.data
 
-            if(data.level == 'siswa'){
-                options['onClick'] = null
-            }else{
-                options['onClick'] = graphClickEvent
-            }
+            options['onClick'] = graphClickEvent
 
             var chartData = data.data
             var chartDataId = data.data_id
@@ -222,6 +226,10 @@ function DashboardSuperadmin() {
 
             if(data.bab_id){
                 setBabId(data.bab_id)
+            }
+        
+            if(data.mapel_id){
+                setMapelId(data.mapel_id)
             }
 
             setIsLoading(false)
@@ -237,14 +245,22 @@ function DashboardSuperadmin() {
 
     useEffect(() => {
         const listConfig = [];
+        const listColor = ["red", "rgba(2, 65, 2, 1)"];
         for (let i=0; i<listDatas.length; i++) {
             const labels = [];
             const tempScores = [];
+            const colors = currentLevel == 'siswa' ? [] : 'rgba(2, 65, 2, 1)';
 
             listDatas[i].forEach(element => {
                 const data = element;
+
                 labels.push(data.label);
                 tempScores.push(data.score);
+
+                if(currentLevel == 'siswa'){
+                    const color = data.score > 50 ? listColor[1] : listColor[0];
+                    colors.push(color);
+                }
             });
             
             var objConfig = {
@@ -253,7 +269,7 @@ function DashboardSuperadmin() {
                     {
                         label: 'Score',
                         data: tempScores,
-                        backgroundColor: 'rgba(2, 65, 2, 1)',
+                        backgroundColor: colors,
                         borderRadius: 10,
                         minBarLength: 1,
                         barThickness: 120,
@@ -263,6 +279,8 @@ function DashboardSuperadmin() {
 
             listConfig.push(objConfig)
         }
+        console.log('listConfig', listConfig)
+
         setListConfigData(listConfig);
     }, [listDatas]);
 

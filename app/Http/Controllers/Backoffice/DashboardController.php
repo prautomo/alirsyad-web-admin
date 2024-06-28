@@ -580,6 +580,7 @@ class DashboardController extends Controller {
             "data_id" => $result_ids,
             "next_api" => $next_api,
             "kelas_id" => $kelas_id,
+            "mapel_id" => $bab->mata_pelajaran_id,
             "graphic_title" => $kelas->tingkat->jenjang->name . " " . $kelas->tingkat->name . $kelas->name . " / " . $bab->mataPelajaran->name . " " . $bab->name . " " . $subbab->judul_subbab
         ];
 
