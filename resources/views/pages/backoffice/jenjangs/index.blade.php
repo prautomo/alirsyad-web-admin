@@ -4,14 +4,22 @@
 
 @section('header')
     @parent
-    <div class="row align-items-center py-4">
-        <div class="col-lg-6 col-7">
-            <h6 class="h2 text-white d-inline-block mb-0">@yield('title')</h6>
-        </div>
+    <div class="d-flex align-items-center">
+        <form class="form-inline mr-sm-3 search-main" id="search-main">
+            <div class="form-group mb-0">
+                <div class="input-group input-group-alternative input-group-merge search-bar-filter">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    </div>
+                    <input class="form-control" id="search-dt-table" placeholder="Cari Nama" type="text">
+                </div>
+            </div>
+        </form>
         @can('jenjang-create')
-        <div class="col-lg-6 col-5 text-right">
-            <a href="{{ route('backoffice::jenjangs.create') }}" class="btn btn-sm btn-neutral">New</a>
-            <!-- <a href="#" class="btn btn-sm btn-neutral">Filters</a> -->
+        <div style="margin-left: auto;">
+            <a href="{{ route('backoffice::jenjangs.create') }}" class="btn btn-md btn-primary">
+                <i class="fa fa-plus text-light"></i>&nbsp;&nbsp;Tambah Data
+            </a>
         </div>
         @endcan
     </div>
@@ -25,14 +33,9 @@
     @elseif (session('status') === 'failed')
         <x-alert.failed :message="session('message')" />
     @endif
-        <div class="card">
-            <!-- Card header -->
-            <div class="card-header border-0">
-                <h3 class="mb-0">Data</h3>
-            </div>
-            <!-- table -->
+        <div class="card bg-transparent">
             <div class="">
-                <x-datatable>
+                <x-datatable.table :customSearch="__(1)">
                     {{--
                         data-* is same as option columns in datatable
                         https://datatables.net/reference/option/columns
@@ -40,9 +43,10 @@
                     <th data-data="DT_RowIndex" data-searchable="false">@lang("No")</th>
                     <th data-data="name">@lang("Name")</th>
                     <th data-data="uploader">@lang("Uploader")</th>
+                    <th data-data="kepala_sekolah">@lang("Kepala Sekolah")</th>
                     <th data-data="created_at">@lang("Created At")</th>
                     <th data-data="action" data-orderable="false" data-searchable="false">@lang("Action")</th>
-                </x-datatable>
+                </x-datatable.table>
             </div>
             <!-- endtable -->
         </div>

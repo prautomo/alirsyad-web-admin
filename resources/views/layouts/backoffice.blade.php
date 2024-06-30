@@ -20,11 +20,13 @@
   <link rel="stylesheet" href="{{ asset('backoffice/assets/vendor/nucleo/css/nucleo.css') }}" type="text/css">
   <link rel="stylesheet" href="{{ asset('backoffice/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css') }}" type="text/css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@8.19.0/dist/sweetalert2.min.css">
-  
+  <!-- Select Style -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
   <!-- Argon CSS -->
   <link rel="stylesheet" href="{{ asset('backoffice/assets/css/argon.css?v=1.2.0') }}" type="text/css">
   <!-- Page plugins -->
   <link rel="stylesheet" href="{{ asset('backoffice/assets/css/gaya.css') }}" type="text/css">
+  <link rel="stylesheet" href="{{ asset('backoffice/assets/css/icon.css') }}" type="text/css">
   @stack('plugin_css')
 </head>
 
@@ -34,9 +36,10 @@
   <!-- Main content -->
   <div class="main-content" id="panel">
     <!-- Topnav -->
-    <nav class="navbar navbar-top navbar-expand navbar-dark bg-ijo border-bottom">
-      <div class="container-fluid">
+    <nav class="navbar navbar-top navbar-expand navbar-dark bg-transparent border-bottom">
+      <div class="container-fluid header-nav">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <h6 class="h2 text-dark d-inline-block mb-0" id="page-title-nav">@yield('title')</h6>
           <!-- Search form -->
           <!-- <form class="navbar-search navbar-search-light form-inline mr-sm-3" id="navbar-search-main">
             <div class="form-group mb-0">
@@ -231,19 +234,45 @@
             </li>
             --}}
           </ul>
-          <ul class="navbar-nav align-items-center  ml-auto ml-md-0 ">
+          <ul class="navbar-nav align-items-center ml-auto ml-md-0 navbar-account">
             <li class="nav-item dropdown">
-              <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
+              <a class="nav-link pr-3" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
                 aria-expanded="false">
                 <div class="media align-items-center">
                   <span class="avatar avatar-sm rounded-circle">
                     @php
                     $userDetail = \App\Models\ExternalUser::where("email", @Auth::user()->email)->first();
+                    $activeRole = Session::get('activeRole');
+                    $otherRole = Session::get('otherRole');
+
+                    if($activeRole == null){
+                      $authUserRole = Auth::user()->roles->pluck('name')->toArray();
+                      $defaultRole = "";
+                      
+                      if (in_array("Guru Mata Pelajaran", $authUserRole)) {
+                        $defaultRole = "Guru Mata Pelajaran";
+                      }else if(in_array("Wali Kelas", $authUserRole)){
+                        $defaultRole = "Wali Kelas";
+                      }else if(in_array("Kepala Sekolah", $authUserRole)){
+                        $defaultRole = "Kepala Sekolah";
+                      }else{
+                        $defaultRole = "Superadmin";
+                      }
+
+                      $roles = array_diff($authUserRole, array($defaultRole));
+                      
+                      Session::put('activeRole', $defaultRole);
+                      Session::put('otherRole', $roles);
+                      $activeRole = $defaultRole;
+                      $otherRole = $roles;
+                    }
+                    
+                    // dd($otherRole);
                     @endphp
-                    <img alt="{{ Auth::user()->name }}" src="{{ @$userDetail->photo ? asset(@$userDetail->photo) : asset('images/user-logo.png') }}">
+                    <img alt="{{ Auth::user()->name }}" src="{{ @$userDetail->photo ? asset(@$userDetail->photo) : asset('backoffice/assets/img/icons/akun.png') }}">
                   </span>
                   <div class="media-body  ml-2  d-none d-lg-block">
-                    <span class="mb-0 text-sm  font-weight-bold">{{ Auth::user()->name }}</span>
+                    <span class="mb-0 text-sm font-weight-500"><b>{{ Auth::user()->name }}</b> ({{ $activeRole }})</span>
                   </div>
                 </div>
               </a>
@@ -265,6 +294,14 @@
                 </a>
                 
                 <div class="dropdown-divider"></div> -->
+                @foreach($otherRole as $role)
+
+                  <a href="/backoffice/profile/change-active-role/{{ $role }}" class="dropdown-item">
+                    <i class="ni ni-badge"></i>
+                    <span>Switch as {{ $role }}</span>
+                  </a>
+                @endforeach
+
                 <a href="{{ route('backoffice::akun-saya') }}" class="dropdown-item">
                   <i class="ni ni-single-02"></i>
                   <span>Profile</span>
@@ -288,7 +325,7 @@
     </nav>
     <!-- Header -->
     <!-- Header -->
-    <div class="header bg-ijo pb-6">
+    <div class="header bg-transparent pb-6">
       <div class="container-fluid">
         <div class="header-body">
             @yield('header')
@@ -300,7 +337,7 @@
         @yield('content')
         
         <!-- Footer -->
-        @include('layouts.partials.backoffice.footer')
+        <!-- @include('layouts.partials.backoffice.footer') -->
     </div>
   </div>
   <!-- Argon Scripts -->
@@ -314,6 +351,10 @@
   <!-- Argon JS -->
   <script src="{{ asset('backoffice/assets/js/argon.js?v=1.2.0') }}"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8.19.0/dist/sweetalert2.min.js"></script>
+
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   
   @stack('plugin_script')
 

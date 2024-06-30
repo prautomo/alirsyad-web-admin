@@ -12,7 +12,7 @@ class Jenjang extends Model
     use HasFactory, SoftDeletes, SearchableTrait;
 
     protected $fillable = [
-        'name', 'description', 'status', 'logo', 'uploader_id', 'show_for_guest', 
+        'name', 'description', 'status', 'logo', 'uploader_id', 'show_for_guest', 'kepala_sekolah_id'
     ];
 
     /**
@@ -69,6 +69,11 @@ class Jenjang extends Model
     public function tingkat()
     {
         return $this->hasMany("App\Models\Tingkat", "jenjang_id", "id")->withTrashed();
+    }
+
+    public function kepalaSekolah()
+    {
+        return $this->belongsTo("App\Models\ExternalUser",  "kepala_sekolah_id", "id")->withTrashed();
     }
 
     // ortu siswa yg register

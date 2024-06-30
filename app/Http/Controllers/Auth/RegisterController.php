@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Str;
 
 class RegisterController extends Controller
 {
@@ -81,6 +82,7 @@ class RegisterController extends Controller
             'role' => "SISWA",
             'is_pengunjung' => true,
             'jenjang_id' => $data['jenjang_id'],
+            'uuid' => (string) Str::uuid()
         ]);
 
         

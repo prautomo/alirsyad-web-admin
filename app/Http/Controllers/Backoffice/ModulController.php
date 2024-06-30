@@ -17,6 +17,8 @@ use App\Models\Update;
 use App\Models\UploaderMataPelajaran;
 use App\Helpers\ExtractArchive;
 use App\Helpers\GenerateSlug;
+use App\Models\ExternalUser;
+use App\Models\GuruMataPelajaran;
 
 class ModulController extends Controller
 {
@@ -133,8 +135,14 @@ class ModulController extends Controller
 
     private function getMapelIdsUser()
     {
-        $userId = @\Auth::user()->id;
-        $mapelIdsUser = UploaderMataPelajaran::where('guru_uploader_id', $userId)->pluck('mata_pelajaran_id')->all();
+        // WH 23/05/24 - Covered guru uploader as guru mapel
+        // $userId = @\Auth::user()->id;
+        // $mapelIdsUser = UploaderMataPelajaran::where('guru_uploader_id', $userId)->pluck('mata_pelajaran_id')->all();
+
+        $userEmail = @\Auth::user()->email;
+        $user = ExternalUser::where(['email' => $userEmail, 'deleted_at' => null])->first();
+
+        $mapelIdsUser = GuruMataPelajaran::where('guru_id', $user->id)->pluck('mata_pelajaran_id')->all();
         $mapelIdsUser = count($mapelIdsUser) > 0 ? $mapelIdsUser : [];
 
         return $mapelIdsUser;

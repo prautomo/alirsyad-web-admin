@@ -1,4 +1,4 @@
-@props(['filterCol' => [], 'isMultiple' => []])
+@props(['filterCol' => [], 'isMultiple' => [], 'customSearch' => 0])
 
 <style>
     .form-group{
@@ -28,7 +28,6 @@
         overflow: auto;
     }
 </style>
-<div id="filter-col" class="row"></div>
 <table {{$attributes->merge(["class" => "datatable-serverside table datatable"])}}>
     <thead>
         <tr>
@@ -78,13 +77,32 @@
     // filterCol = idx of column that able to filter, isMultiple = consider if its multiple value or not
     var filter_col = <?php echo json_encode($filterCol); ?>;
     var is_multiple = <?php echo json_encode($isMultiple); ?>;
+    var is_custom_search = <?php echo $customSearch; ?>;
     var idx_loop = 0;
 
     filter_col = JSON.parse("[" + filter_col + "]");
     is_multiple = JSON.parse("[" + is_multiple + "]");
 
     $(document).ready(function () {
-        const datatable = initDatatable('.datatable-serverside');
+
+        const options = {
+            paging: true,
+            pageLength: 10,
+            language: {
+                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data.",
+                paginate: {
+                    previous: "<i class='fa fa-chevron-left'></i>",
+                    next: "<i class='fa fa-chevron-right'></i>",
+                },
+            },
+            serverSide: filter_col.length == 0 ? true : false // temporary, needs to permanently changed to true
+        }
+
+        if (is_custom_search) {
+            options.dom = 'trip'
+        }
+
+        const datatable = initDatatable('.datatable-serverside', options);
         const datatableId = datatable.table().node().id;
 
         datatable.on('init', function ( e, settings, json ) {
@@ -93,7 +111,9 @@
                 var columnId = "div-filter-" + column.index();
                 var columnHeader = column.header().textContent;
 
-                $('<div id="' + columnId + '" class="form-group pr-3">\
+                console.log('columnId', columnId)
+
+                $('<div id="' + columnId + '" class="form-group col-3">\
                     <label>'+ columnHeader +':</label>')
                     .appendTo( $('#filter-col'));
 
@@ -159,6 +179,11 @@
                 }
             }
         }
+
+        // Custom Search
+        $('#search-dt-table').keyup(function(){
+            datatable.search($(this).val()).draw() ;
+        })
 
         // copy slug
         $(document).on('click', '#datatable-copy-btn', function(event) {
@@ -274,6 +299,96 @@
                 MathJax.typeset([$("#ps-jawaban-value")[0]]);
                 MathJax.typeset([$("#ps-pembahasan-value")[0]]);
             })
+        });
+
+        $(document).on('click', '.datatable-viewQR-btn', function(event) {
+            event.preventDefault();
+            const qr_data = $(this).data("qr");
+
+            $('#previewQRCode').html(qr_data.qrcode);
+            $('#previewQRCodeName').html(qr_data.name);
+            $('#previewQRCodeNis').html(qr_data.nis);
+            $('#previewQRCodeTingkat').html(qr_data.tingkat);
+        });
+
+        function svgDataURL(svgString) {
+            return "data:image/svg+xml," + encodeURIComponent(svgString);
+        }
+
+        $(document).on('click', '.datatable-downloadQR-btn', function(event) {
+            event.preventDefault();
+
+            const captureElement = document.querySelector('#bodyPreviewQR')
+            const qrItemName = $('#previewQRCodeName').text()
+            const qrItemNis = $('#previewQRCodeNis').text()
+            const qrItemTingkat = $('#previewQRCodeTingkat').text()
+
+            html2canvas(captureElement)
+                .then(canvas => {
+                    canvas.style.display = 'none'
+                    document.body.appendChild(canvas)
+                    return canvas
+                })
+                .then(canvas => {
+                    const image = canvas.toDataURL('image/png')
+                    const a = document.createElement('a')
+                    a.setAttribute('download', 'QR '+ qrItemName + ' ' + qrItemNis + ' ' + qrItemTingkat + '.png')
+                    a.setAttribute('href', image)
+                    a.click()
+                    canvas.remove()
+                })
+        });
+
+        $(document).on('click', '.datatable-printQR-btn', function(event) {
+            event.preventDefault();
+            var popUpAndPrint = function()
+            {
+                var svgQR = $('#previewQRCode');
+                var name = $('#previewQRCodeName').html();
+                var nis = $('#previewQRCodeNis').html();
+                var tingkat = $('#previewQRCodeTingkat').html();
+                var width = parseFloat(850)
+                var height = parseFloat(850)
+                var printWindow = window.open('', 'PrintMap',
+                'width=' + width + ',height=' + height);
+
+                var html = '';
+                html += "<style>\
+                    @import url('https://fonts.googleapis.com/css?family=Poppins');\
+                    *{\
+                        font-family: 'Poppins', sans-serif;\
+                    }\
+                    .text-title{\
+                        margin-bottom: 0;\
+                    }\
+                    .text-sub-title{\
+                        margin-top: 5px;\
+                        font-weight: 400;\
+                        margin-bottom: 25px;\
+                    }\
+                    .text-identity{\
+                        margin-top: 0;\
+                    }\
+                    </style>"
+
+                html += '<div style="display: flex; justify-content: center; align-items: center; height: 100%">';
+                html += '<center>';
+                html += "<h1 class='text-title'>Bismillah</h1>"
+                html += "<h3 class='text-sub-title'>Silahkan Scan QR dibawah untuk login</h3>"
+                html += $(svgQR).html()
+                html += '<br/>'
+                html += '<br/>'
+                html += '<h3 class="text-identity">' + name + ' / ' + nis + ' / ' + tingkat + '</h3>'
+                html += '</center>'
+                html += '</div>';
+
+                console.log('html', html)
+
+                printWindow.document.writeln(html);
+                printWindow.document.close();
+                printWindow.print();
+            };
+            setTimeout(popUpAndPrint, 500);
         });
 
         $(document).on('click', '.datatable-status-dana-btn', function(event) {
@@ -526,6 +641,59 @@
         </div>
       </div>
       <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="viewQRModal" tabindex="-1" role="dialog" aria-labelledby="viewQRLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title" id="viewQRLabel">Generate QR Code</h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body pt-0">
+        <div class="row mt-2 text-center">
+            <div class="col-md-12" id="bodyPreviewQR">
+                <div id="previewQRCode" class="mb-3 mt-4"></div>
+                <p class="font-weight-bold">
+                    <span id="previewQRCodeName">-</span> /
+                    <span id="previewQRCodeNis">-</span> /
+                    <span id="previewQRCodeTingkat">-</span>
+                </p>
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="justify-content: center;">
+        <button type="button" class="btn btn-md btn-outline-primary datatable-printQR-btn">Cetak QR</button>
+        <button type="button" class="btn btn-md btn-primary datatable-downloadQR-btn">Unduh QR</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title" id="filterLabel">Filter</h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body pt-0">
+        <div class="row mt-2 text-center">
+            <div class="col-md-12">
+                <div id="filter-col" class="row"></div>
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-primary" id="btn-submit-filter">Filter</a>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>

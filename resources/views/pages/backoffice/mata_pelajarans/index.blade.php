@@ -3,15 +3,30 @@
 @section('title', __("Mata Pelajaran"))
 
 @section('header')
-  @parent
-    <div class="row align-items-center py-4">
-        <div class="col-lg-6 col-7">
-            <h6 class="h2 text-white d-inline-block mb-0">@yield('title')</h6>
+    @parent
+    <div class="d-flex align-items-center">
+        <form class="form-inline mr-sm-3 search-main" id="search-main">
+            <div class="form-group mb-0">
+                <div class="input-group input-group-alternative input-group-merge search-bar-filter">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    </div>
+                    <input class="form-control" id="search-dt-table" placeholder="Cari Nama, Jenjang Pendidikan, Tingkat" type="text">
+                </div>
+            </div>
+        </form>
+
+        <div class="dropdown mr-3">
+            <button class="btn btn-green-pastel dropdown-toggle" type="button" data-toggle="modal" data-target="#filterModal" aria-haspopup="true" aria-expanded="false">
+            {{__("Filter")}}
+            </button>
         </div>
+
         @can('mata_pelajaran-create')
-        <div class="col-lg-6 col-5 text-right">
-            <a href="{{ route('backoffice::mata_pelajarans.create') }}" class="btn btn-sm btn-neutral">New</a>
-            <!-- <a href="#" class="btn btn-sm btn-neutral">Filters</a> -->
+        <div style="margin-left: auto;">
+            <a href="{{ route('backoffice::mata_pelajarans.create') }}" class="btn btn-md btn-primary">
+                <i class="fa fa-plus text-light"></i>&nbsp;&nbsp;Tambah Data
+            </a>
         </div>
         @endcan
     </div>
@@ -25,14 +40,10 @@
         @elseif (session('status') === 'failed')
             <x-alert.failed :message="session('message')" />
         @endif
-    <div class="card">
-      <!-- Card header -->
-      <div class="card-header border-0">
-        <h3 class="mb-0">Data</h3>
-      </div>
+    <div class="card bg-transparent">
       <!-- tble -->
       <div class="">
-            <x-datatable.table :filterCol="__('4,3,2')" :isMultiple="__('0,0,0')">
+            <x-datatable.table :filterCol="__('4,3,2')" :isMultiple="__('0,0,0')" :customSearch="__(1)">
                 {{--
                     data-* is same as option columns in datatable
                     https://datatables.net/reference/option/columns

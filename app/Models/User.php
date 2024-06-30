@@ -87,4 +87,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany('App\Models\MataPelajaran', 'uploader_mata_pelajarans', 'guru_uploader_id', 'mata_pelajaran_id');
     }
+    
+    public function userRoles()
+    {
+        return $this->hasMany("App\Models\UserRole",  "user_id", "id")->withTrashed();
+    }
 }

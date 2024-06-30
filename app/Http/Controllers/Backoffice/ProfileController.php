@@ -238,4 +238,31 @@ class ProfileController extends Controller
 
         return redirect("/backoffice/profile")->with('success', "Profile Berhasil Di Ubah");
     }
+
+    public function changeActiveRole($role){
+        
+        $authUserRole = Auth::user()->roles->pluck('name')->toArray();
+
+        if(in_array($role, $authUserRole)){
+            $otherRole = array_diff($authUserRole, array($role));
+
+            Session::put('activeRole', $role);
+            Session::put('otherRole', $otherRole);
+        }
+
+        $this->setCurrentDashboard(null, null, null);
+
+        return redirect("/backoffice/dashboard")->with('success', "Berhasil switch role!");
+    }
+
+    public function setCurrentDashboard($level, $param, $value, $param2nd = null, $value2nd = null, $param3rd = null, $value3rd = null)
+    {
+        Session::put('dshLevel', $level);
+        Session::put('dshParam', $param);
+        Session::put('dshValue', $value);
+        Session::put('dsh2ndParam', $param2nd);
+        Session::put('dsh2ndValue', $value2nd);
+        Session::put('dsh3rdParam', $param3rd);
+        Session::put('dsh3rdValue', $value3rd);
+    }
 }

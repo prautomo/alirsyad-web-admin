@@ -44,7 +44,7 @@
 
 @can(@$permissionName.'-edit')
     @if(@$editRoute)
-    <a href="{{ $editRoute }}" class="btn btn-sm btn-icon btn-primary" data-role="form-modal">
+    <a href="{{ $editRoute }}" class="btn btn-sm btn-icon btn-blue-pastel" data-role="form-modal">
         <i class="fa fa-pencil-alt"></i>
         {{__("Edit")}}
     </a>
@@ -53,7 +53,7 @@
 
 @can(@$permissionName.'-delete')
     @if(@$deleteRoute)
-    <a href="{{$deleteRoute}}" data-name="{{$name ?? ""}}" class="btn btn-sm btn-icon btn-danger datatable-delete-btn">
+    <a href="{{$deleteRoute}}" data-name="{{$name ?? ""}}" class="btn btn-sm btn-icon btn-red-pastel datatable-delete-btn">
         <i class="far fa-trash-alt"></i>
         {{__("Remove")}}
     </a>
@@ -69,12 +69,31 @@
     @endif
 @endcan
 
+@can(@$permissionName.'-list')
+    @if(@$generateQR)
+    {{-- <a href="{{ $generateQR }}" class="btn btn-sm btn-icon btn-yellow-pastel" data-role="form-modal"> --}}
+    <a href="#" data-toggle="modal" data-target="#viewQRModal" class="btn btn-sm btn-icon btn-yellow-pastel datatable-viewQR-btn" data-qr='{{ $generateQR ?? ""}}' >
+        <i class="fa fa-qrcode"></i>
+        {{__("QR Code")}}
+    </a>
+    @endif
+@endcan
+
 @if(isset($statusRequestDanaRoute))
 <a href="{{$statusRequestDanaRoute}}" data-name="{{$name ?? ""}}" data-status="{{$status ?? ""}}" class="btn btn-sm btn-icon btn-primary datatable-status-dana-btn">
     <i class="fa fa-pencil-alt"></i>
     {{__("Change Status")}}
 </a>
 @endif
+
+@can(@$permissionName.'-list')
+    @if(@$viewRoute)
+    <a href="{{$viewRoute}}" data-name="{{$name ?? ""}}" class="btn btn-sm btn-icon btn-blue-pastel">
+        <i class="fa fa-eye"></i>
+        {{ $viewBtnText }}
+    </a>
+    @endif
+@endcan
 
 @if(isset($saldoRoute) || isset($productRoute))
 <!-- gakepake -->

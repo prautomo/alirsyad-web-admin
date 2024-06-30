@@ -37421,31 +37421,31 @@ $(document).ready(function () {
  * includes React and other helpers. It's a great starting point while
  * building robust, powerful web applications using React + Laravel.
  */
+
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
-
 __webpack_require__(/*! ./action */ "./resources/js/action.js");
-
 __webpack_require__(/*! ./datatable */ "./resources/js/datatable.js");
 /**
  * Next, we will create a fresh React component instance and attach it to
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
+
 // admin
-
-
-Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(5), __webpack_require__.e(12), __webpack_require__.e(16)]).then(__webpack_require__.bind(null, /*! ./backoffice/components/ExternalUser */ "./resources/js/backoffice/components/ExternalUser/index.js"));
-Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(4), __webpack_require__.e(6), __webpack_require__.e(7), __webpack_require__.e(11), __webpack_require__.e(17)]).then(__webpack_require__.bind(null, /*! ./backoffice/components/StoryPath/Form */ "./resources/js/backoffice/components/StoryPath/Form.js"));
-Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(5), __webpack_require__.e(18)]).then(__webpack_require__.bind(null, /*! ./backoffice/pages/Soal */ "./resources/js/backoffice/pages/Soal/index.js")); // siswa
-
-Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(8), __webpack_require__.e(13), __webpack_require__.e(23)]).then(__webpack_require__.bind(null, /*! ./frontoffice/components/Video/Detail */ "./resources/js/frontoffice/components/Video/Detail.js"));
-Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(15), __webpack_require__.e(7), __webpack_require__.e(8), __webpack_require__.e(14), __webpack_require__.e(24)]).then(__webpack_require__.bind(null, /*! ./frontoffice/components/Modul/Detail */ "./resources/js/frontoffice/components/Modul/Detail.js"));
-Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(6), __webpack_require__.e(15), __webpack_require__.e(25)]).then(__webpack_require__.bind(null, /*! ./frontoffice/components/Nilai/List */ "./resources/js/frontoffice/components/Nilai/List.js")); // guru
-
-Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(3), __webpack_require__.e(19), __webpack_require__.e(26)]).then(__webpack_require__.bind(null, /*! ./guru/components/Dashboard/DetailProgressBelajar */ "./resources/js/guru/components/Dashboard/DetailProgressBelajar.js"));
-Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(3), __webpack_require__.e(19), __webpack_require__.e(29)]).then(__webpack_require__.bind(null, /*! ./guru/components/Progress/ListSiswa */ "./resources/js/guru/components/Progress/ListSiswa.js"));
-Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(3), __webpack_require__.e(19), __webpack_require__.e(28)]).then(__webpack_require__.bind(null, /*! ./guru/components/Progress/DetailSiswa */ "./resources/js/guru/components/Progress/DetailSiswa.js"));
-Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(3), __webpack_require__.e(19), __webpack_require__.e(27)]).then(__webpack_require__.bind(null, /*! ./guru/components/Progress/DetailSimulasiPercobaan */ "./resources/js/guru/components/Progress/DetailSimulasiPercobaan.js"));
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(8), __webpack_require__.e(15), __webpack_require__.e(19)]).then(__webpack_require__.bind(null, /*! ./backoffice/components/ExternalUser */ "./resources/js/backoffice/components/ExternalUser/index.js"));
+__webpack_require__.e(/*! import() */ 32).then(__webpack_require__.t.bind(null, /*! ./backoffice/components/Dashboard */ "./resources/js/backoffice/components/Dashboard/index.js", 7));
+__webpack_require__.e(/*! import() */ 33).then(__webpack_require__.t.bind(null, /*! ./backoffice/components/ERaport */ "./resources/js/backoffice/components/ERaport/index.js", 7));
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(7), __webpack_require__.e(9), __webpack_require__.e(10), __webpack_require__.e(14), __webpack_require__.e(20)]).then(__webpack_require__.bind(null, /*! ./backoffice/components/StoryPath/Form */ "./resources/js/backoffice/components/StoryPath/Form.js"));
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(8), __webpack_require__.e(21)]).then(__webpack_require__.bind(null, /*! ./backoffice/pages/Soal */ "./resources/js/backoffice/pages/Soal/index.js"));
+// siswa
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(11), __webpack_require__.e(16), __webpack_require__.e(31)]).then(__webpack_require__.bind(null, /*! ./frontoffice/components/Video/Detail */ "./resources/js/frontoffice/components/Video/Detail.js"));
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(3), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(4), __webpack_require__.e(7), __webpack_require__.e(18), __webpack_require__.e(10), __webpack_require__.e(11), __webpack_require__.e(17), __webpack_require__.e(34)]).then(__webpack_require__.bind(null, /*! ./frontoffice/components/Modul/Detail */ "./resources/js/frontoffice/components/Modul/Detail.js"));
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(3), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(4), __webpack_require__.e(7), __webpack_require__.e(9), __webpack_require__.e(18), __webpack_require__.e(35)]).then(__webpack_require__.bind(null, /*! ./frontoffice/components/Nilai/List */ "./resources/js/frontoffice/components/Nilai/List.js"));
+// guru
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(3), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(22), __webpack_require__.e(36)]).then(__webpack_require__.bind(null, /*! ./guru/components/Dashboard/DetailProgressBelajar */ "./resources/js/guru/components/Dashboard/DetailProgressBelajar.js"));
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(3), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(22), __webpack_require__.e(39)]).then(__webpack_require__.bind(null, /*! ./guru/components/Progress/ListSiswa */ "./resources/js/guru/components/Progress/ListSiswa.js"));
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(3), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(22), __webpack_require__.e(38)]).then(__webpack_require__.bind(null, /*! ./guru/components/Progress/DetailSiswa */ "./resources/js/guru/components/Progress/DetailSiswa.js"));
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(3), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(22), __webpack_require__.e(37)]).then(__webpack_require__.bind(null, /*! ./guru/components/Progress/DetailSimulasiPercobaan */ "./resources/js/guru/components/Progress/DetailSimulasiPercobaan.js"));
 
 /***/ }),
 
@@ -37457,6 +37457,7 @@ Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), 
 /***/ (function(module, exports, __webpack_require__) {
 
 window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
  * for JavaScript based Bootstrap features such as modals and tabs. This
@@ -37466,9 +37467,7 @@ window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 try {
   window.Popper = __webpack_require__(/*! popper.js */ "./node_modules/popper.js/dist/esm/popper.js")["default"];
   window.$ = window.jQuery = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
-
   __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.js");
-
   $(document).ready(function () {
     $.ajaxSetup({
       headers: {
@@ -37477,16 +37476,15 @@ try {
     });
   });
 } catch (e) {}
+
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
  * to our Laravel back-end. This library automatically handles sending the
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-
 var getAxios = function getAxios(url) {
   var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   return window.axios.get(url, {
@@ -37498,15 +37496,18 @@ var getAxios = function getAxios(url) {
     return res.data;
   });
 };
-
 window.getAxios = getAxios;
+
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
  * allows your team to easily build robust real-time web applications.
  */
+
 // import Echo from 'laravel-echo';
+
 // window.Pusher = require('pusher-js');
+
 // window.Echo = new Echo({
 //     broadcaster: 'pusher',
 //     key: process.env.MIX_PUSHER_APP_KEY,
@@ -37523,30 +37524,26 @@ window.getAxios = getAxios;
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 var columnOptions = ["cellType", "className", "contentPadding", "createdCell", "data", "defaultContent", "name", "orderable", "orderData", "orderDataType", "render", "searchable", "title", "type", "visible", "width"];
-
 var getColumnDataAttributes = function getColumnDataAttributes() {
   var tableSelector = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : ".datatable-serverside";
   return $(tableSelector).find("thead > tr > *").map(function (_i, el) {
     return columnOptions.reduce(function (obj, key) {
       var val = el.dataset[key];
-
       if (val === undefined) {
         return obj;
       }
-
       var boleanIndex = ["true", "false"].indexOf(val.toLowerCase());
       return _objectSpread(_objectSpread({}, obj), {}, _defineProperty({}, key, boleanIndex < 0 ? val : boleanIndex === 0));
     }, {});
   }).toArray();
 };
-
 window.initDatatable = function (tableSelector) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   var columns = getColumnDataAttributes(tableSelector);
@@ -37560,7 +37557,7 @@ window.initDatatable = function (tableSelector) {
     },
     autoWidth: true,
     searching: true,
-    serverSide: false, // set to false -> to make sure all options are shown in dropdown dilter
+    serverSide: true,
     processing: true,
     deferRender: true,
     ajax: {
@@ -37590,8 +37587,8 @@ window.initDatatable = function (tableSelector) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\Ferdhika\Projects\DIB\web-digital-interactive-book\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\Ferdhika\Projects\DIB\web-digital-interactive-book\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\Freelance\DIB\web-digital-interactive-book\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\Freelance\DIB\web-digital-interactive-book\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

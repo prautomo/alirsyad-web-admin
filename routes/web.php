@@ -44,6 +44,7 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
         Route::post('/profile/photo', "ProfileController@profilePhoto")->name('akun-saya.photo');
         Route::get('/profile/password-edit', "ProfileController@passwordEdit")->name('akun-saya.password-edit');
         Route::post('/profile/password-edit', "ProfileController@passwordUpdate")->name('akun-saya.password-update');
+        Route::get('/profile/change-active-role/{role}', "ProfileController@changeActiveRole")->name('akun-saya.change-active-role');
 
         Route::resource('jenjangs', 'JenjangController');
         Route::resource('tingkats', 'TingkatController');
@@ -70,8 +71,17 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
         Route::get('external-users/next-grade',  "ExternalUserController@nextGrade")->name('external-users.next_grade');
         Route::post('external-users/next-grade', 'ExternalUserController@nextGradeUpdate')->name('external-users.next_grade_update');
         Route::get('external-users/next-grade/list-siswa', 'ExternalUserController@listSiswaJson')->name('external-users.listSiswaJson');
+        Route::get('external-users/generate-qr-code/{id}', 'ExternalUserController@generateQRCode')->name('external-users.generateQRCode');
+        Route::get('external-users/generate-qr-code-bulk', 'ExternalUserController@generateQRCodeBulk')->name('external-users.generateQRCodeBulk');
+        Route::get('external-users/filter-col', 'ExternalUserController@filterCol')->name('external-users.filterCol');
+
         // begin - development purpose only
         Route::get('external-users/next-grade/add-init-kelas-siswa', 'ExternalUserController@initKelasSiswa')->name('external-users.initKelasSiswa');
+        Route::get('external-users/generate-uuid-external-users', 'ExternalUserController@generate_uuid'); //Temp route to generate uuid external users
+        Route::get('external-users/set-kelas-id-guru-mapel', 'ExternalUserController@set_kelas_id_guru_mapel'); //Temp route to set default kelas id on guru mapel (first found kelas of tingkat)
+        Route::get('external-users/set-user-roles', 'ExternalUserController@set_user_roles'); //Temp route to set user roles (on table model_has_roles)
+        Route::get('e-raport/generate-dummy-score', 'ERaportController@generateDummyScore'); //Temp route to generate dummy score
+        
         // end
         Route::resource('external-users', 'ExternalUserController');
         Route::post('external-users/update-status/{id}', 'ExternalUserController@updateStatus')->name('external-users.update-status');
@@ -82,6 +92,10 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
         // JSON Response
         Route::get("/json/tingkats/{id}", "\App\Http\Controllers\API\TingkatController@show")->name('json.tingkat.detail');
         Route::get("/json/moduls", "\App\Http\Controllers\API\ModulController@index")->name('json.modul');
+
+        Route::get("/json/kelas", "\App\Http\Controllers\API\KelasController@index");
+        Route::get("/json/tingkats", "\App\Http\Controllers\API\TingkatController@index");
+        Route::get("/json/jenjangs", "\App\Http\Controllers\API\JenjangController@index");
 
         Route::resource('paket-soals', 'PaketSoalController');
         Route::get('paket-soals/{id}/soal', 'PaketSoalController@indexSoal')->name('paket-soals.index-soal');
@@ -94,6 +108,29 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
         Route::delete('paket-soals/{paketId}/soal/{id}/delete', 'PaketSoalController@destroySoal')->name('paket-soals.destroy-soal');
 
         Route::get('soals/create', 'SoalController@create')->name('soals.create');
+
+        Route::resource('e-raport', 'ERaportController');
+        Route::get('json/e-raport/filter-col', 'ERaportController@filterCol')->name('e-raport.filter-col-show-detail-mapel');
+        Route::get('e-raport/{id}/{mapelId}', 'ERaportController@showDetailMapel')->name('e-raport.show-detail-mapel');
+        Route::get('e-raport/{id}/{mapelId}/filter-col', 'ERaportController@filterColShowDetailMapel')->name('e-raport.filter-col-show-detail-mapel');
+
+        Route::get("/json/e-raport/grafik/{id}/{mapelId}", "ERaportController@showDetailMapelGrafik");
+        Route::post('/json/dashboard/jenjang', 'DashboardController@getDataJenjang')->name('dashboard.get-data-jenjang');
+        Route::post('/json/dashboard/tingkat', 'DashboardController@getDataTingkat')->name('dashboard.get-data-tingkat');
+        Route::post('/json/dashboard/kelas', 'DashboardController@getDataKelas')->name('dashboard.get-data-kelas');
+        Route::post('/json/dashboard/mapel', 'DashboardController@getDataMapel')->name('dashboard.get-data-mapel');
+        Route::post('/json/dashboard/bab', 'DashboardController@getDataBab')->name('dashboard.get-data-bab');
+        Route::post('/json/dashboard/subbab', 'DashboardController@getDataSubbab')->name('dashboard.get-data-subbab');
+        Route::post('/json/dashboard/siswa', 'DashboardController@getDataSiswa')->name('dashboard.get-data-siswa');
+        Route::post('/json/dashboard/current', 'DashboardController@getCurrentDashboard')->name('dashboard.get-current-dashboard');
+        
+        Route::post("/json/dashboard/filter/level", 'DashboardController@filterLevel')->name('dashboard.filter-level');
+        Route::post("/json/dashboard/filter/tingkat", 'DashboardController@filterTingkat')->name('dashboard.filter-tingkat');
+        Route::post("/json/dashboard/filter/kelas", 'DashboardController@filterKelas')->name('dashboard.filter-kelas');
+        Route::post("/json/dashboard/filter/mapel", 'DashboardController@filterMapel')->name('dashboard.filter-mapel');
+        Route::post("/json/dashboard/filter/bab", 'DashboardController@filterBab')->name('dashboard.filter-bab');
+        Route::post("/json/dashboard/filter/subbab", 'DashboardController@filterSubbab')->name('dashboard.filter-subbab');
+        Route::post("/json/dashboard/filter/mengajar", 'DashboardController@filterMengajar')->name('dashboard.filter-mengajar');
 
         Route::resource('password-reset-students', 'PasswordResetStudentController');
         Route::post('password-reset-students/update-status/{id}', 'PasswordResetStudentController@updateStatus')->name('password-reset-students.update-status');

@@ -23,6 +23,7 @@
         "laravelcollective/html": "^6.2",
         "laravolt/indonesia": "^0.29.0",
         "maatwebsite/excel": "^3.1",
+        "simplesoftwareio/simple-qrcode": "~4",
         "spatie/laravel-permission": "^3.17",
         "yajra/laravel-datatables-oracle": "~9.0"
     },
