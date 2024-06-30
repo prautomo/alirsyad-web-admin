@@ -1013,38 +1013,43 @@ class ExternalUserController extends Controller
             }
         }
 
-        $kepala_sekolah_ids = Jenjang::whereNotNull('kepala_sekolah_id')->pluck('kepala_sekolah_id')->toArray();
+        $kepala_sekolah_ids = Jenjang::whereNotNull('kepala_sekolah_id')->where(['deleted_at' => null])->pluck('kepala_sekolah_id')->toArray();
         foreach($kepala_sekolah_ids as $kepala_sekolah_id){
             $external_user = ExternalUser::find($kepala_sekolah_id);
-            $login_user = User::where(['email' => $external_user->email, 'deleted_at' => null])->first();
 
-            if($login_user == null){
-                $new_user['name'] = $user['name'];
-                $new_user['username'] = $user['nis'];
-                $new_user['email'] = $user['email'];
-                $new_user['password'] = $user['password'];
+            if($external_user != null){
+                $login_user = User::where(['email' => $external_user->email, 'deleted_at' => null])->first();
 
-                $login_user = User::create($new_user);
+                if($login_user == null){
+                    $new_user['name'] = $user['name'];
+                    $new_user['username'] = $user['nis'];
+                    $new_user['email'] = $user['email'];
+                    $new_user['password'] = $user['password'];
+    
+                    $login_user = User::create($new_user);
+                }
+    
+                $login_user->assignRole("Kepala Sekolah");
             }
-
-            $login_user->assignRole("Kepala Sekolah");
         }
         
-        $wali_kelas_ids = Kelas::whereNotNull('wali_kelas_id')->pluck('wali_kelas_id')->toArray();
+        $wali_kelas_ids = Kelas::whereNotNull('wali_kelas_id')->where(['deleted_at' => null])->pluck('wali_kelas_id')->toArray();
         foreach($wali_kelas_ids as $wali_kelas_id){
             $external_user = ExternalUser::find($wali_kelas_id);
-            $login_user = User::where(['email' => $external_user->email, 'deleted_at' => null])->first();
+            if($external_user != null){
+                $login_user = User::where(['email' => $external_user->email, 'deleted_at' => null])->first();
 
-            if($login_user == null){
-                $new_user['name'] = $user['name'];
-                $new_user['username'] = $user['nis'];
-                $new_user['email'] = $user['email'];
-                $new_user['password'] = $user['password'];
+                if($login_user == null){
+                    $new_user['name'] = $user['name'];
+                    $new_user['username'] = $user['nis'];
+                    $new_user['email'] = $user['email'];
+                    $new_user['password'] = $user['password'];
 
-                $login_user = User::create($new_user);
+                    $login_user = User::create($new_user);
+                }
+
+                $login_user->assignRole("Wali Kelas");
             }
-
-            $login_user->assignRole("Wali Kelas");
         }
         
         return response()->json("Success set roles.", 200);
