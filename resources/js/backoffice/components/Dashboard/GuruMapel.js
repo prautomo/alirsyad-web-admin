@@ -321,22 +321,14 @@ function DashboardGuruMapel() {
 
     useEffect(() => {
         const listConfig = [];
-        const listColor = ["red", "rgba(2, 65, 2, 1)"];
         for (let i=0; i<listDatas.length; i++) {
             const labels = [];
             const tempScores = [];
-            const colors = currentLevel == 'siswa' ? [] : 'rgba(2, 65, 2, 1)';
 
             listDatas[i].forEach(element => {
                 const data = element;
-
                 labels.push(data.label);
                 tempScores.push(data.score);
-
-                if(currentLevel == 'siswa'){
-                    const color = data.score > 50 ? listColor[1] : listColor[0];
-                    colors.push(color);
-                }
             });
             
             var objConfig = {
@@ -345,10 +337,10 @@ function DashboardGuruMapel() {
                     {
                         label: 'Score',
                         data: tempScores,
-                        backgroundColor: colors,
+                        backgroundColor: "rgba(2, 65, 2, 1)",
                         borderRadius: 10,
                         minBarLength: 1,
-                        barThickness: 120,
+                        // barThickness: 120,
                     }
                 ]
             }

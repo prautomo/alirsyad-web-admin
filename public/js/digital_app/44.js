@@ -150,8 +150,8 @@ function GrafikERaport(_ref) {
         data: tempScores,
         backgroundColor: 'rgba(2, 65, 2, 1)',
         borderRadius: 10,
-        minBarLength: 1,
-        barThickness: 120
+        minBarLength: 1
+        // barThickness: 120,
       }]
     });
   }, [datas]);

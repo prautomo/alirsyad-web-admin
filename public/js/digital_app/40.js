@@ -12,23 +12,25 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, ".dashboard-final-score {\n    background: #F6D0A14D;\n    padding: 10px 20px;\n    border-radius: 4px !important;\n    color: #E98A15 !important;\n}\n\n.dashboard-filter .bootstrap-select {\n    width: 200px !important;\n}", ""]);
+exports.push([module.i, ".dashboard-final-score {\r\n    background: #F6D0A14D;\r\n    padding: 10px 20px;\r\n    border-radius: 4px !important;\r\n    color: #E98A15 !important;\r\n}\r\n\r\n.dashboard-filter .bootstrap-select {\r\n    width: 200px !important;\r\n}", ""]);
 
 // exports
 
 
 /***/ }),
 
-/***/ "./resources/js/backoffice/components/Dashboard/KepalaSekolah.js":
-/*!***********************************************************************!*\
-  !*** ./resources/js/backoffice/components/Dashboard/KepalaSekolah.js ***!
-  \***********************************************************************/
-/*! exports provided: options, default */
+/***/ "./resources/js/backoffice/components/Dashboard/GuruMapel.js":
+/*!*******************************************************************!*\
+  !*** ./resources/js/backoffice/components/Dashboard/GuruMapel.js ***!
+  \*******************************************************************/
+/*! exports provided: options, data, chartLevel, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "options", function() { return options; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "data", function() { return data; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "chartLevel", function() { return chartLevel; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
@@ -87,7 +89,52 @@ var options = {
     event["native"].target.style.cursor = chartElement[0] ? 'pointer' : 'default';
   }
 };
-function DashboardKepalaSekolah() {
+var data = {
+  undefined: undefined,
+  datasets: [{
+    label: 'Score',
+    data: [],
+    backgroundColor: 'rgba(2, 65, 2, 1)'
+  }]
+};
+var chartLevel = [{
+  level: 'jenjang',
+  data: [[{
+    label: "TK",
+    score: 1376
+  }, {
+    label: "SD",
+    score: 580
+  }, {
+    label: "SMP",
+    score: 1500
+  }, {
+    label: "SMA",
+    score: 1125
+  }]]
+}, {
+  level: 'tingkat',
+  data: [[{
+    label: "SD 1",
+    score: 1376
+  }, {
+    label: "SD 2",
+    score: 580
+  }, {
+    label: "SD 3",
+    score: 1500
+  }, {
+    label: "SD 4",
+    score: 1126
+  }, {
+    label: "SD 5",
+    score: 1518
+  }, {
+    label: "SD 6",
+    score: 480
+  }]]
+}];
+function DashboardGuruMapel() {
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
     _useState2 = _slicedToArray(_useState, 2),
     listConfigData = _useState2[0],
@@ -113,9 +160,7 @@ function DashboardKepalaSekolah() {
     filterLevel = _useState12[0],
     setfilterLevel = _useState12[1];
   var _useState13 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
-      tingkat: [],
-      kelas: [],
-      mapel: [],
+      mengajar: [],
       bab: [],
       subbab: []
     }),
@@ -156,7 +201,7 @@ function DashboardKepalaSekolah() {
         var param3rd = data.param3rd;
         var params = {};
         if (level == null) {
-          level = 'tingkat';
+          level = 'bab';
         }
         if (param != null) {
           params[param] = data.value;
@@ -225,13 +270,21 @@ function DashboardKepalaSekolah() {
     });
   }
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    if (filters.tingkat.length < 1) {
-      window.axios.post("/backoffice/json/dashboard/filter/tingkat").then(function (response) {
-        var data = response.data.data;
+    if (filters.mengajar.length < 1) {
+      window.axios.post("/backoffice/json/dashboard/filter/mengajar").then(function (response) {
+        var data = response.data;
         setFilters(_objectSpread(_objectSpread({}, filters), {}, {
-          tingkat: data
+          mengajar: data.data
         }));
-        $("#tingkat").selectpicker("refresh");
+        if (data.kelas_id) {
+          setKelasId(data.kelas_id);
+        }
+        if (data.mapel_id) {
+          setMapelId(data.mapel_id);
+        }
+        $("#mengajar").selectpicker("refresh");
+        $("#mengajar").val("".concat(data.mapel_id + '/' + data.kelas_id));
+        $("#mengajar").selectpicker("refresh");
       })["catch"](function (err) {
         console.log(err);
       });
@@ -280,26 +333,20 @@ function DashboardKepalaSekolah() {
   }, [selectedBarIdx]);
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     var listConfig = [];
-    var listColor = ["red", "rgba(2, 65, 2, 1)"];
     var _loop = function _loop() {
         var labels = [];
         var tempScores = [];
-        var colors = currentLevel == 'siswa' ? [] : 'rgba(2, 65, 2, 1)';
         listDatas[i].forEach(function (element) {
           var data = element;
           labels.push(data.label);
           tempScores.push(data.score);
-          if (currentLevel == 'siswa') {
-            var color = data.score > 50 ? listColor[1] : listColor[0];
-            colors.push(color);
-          }
         });
         objConfig = {
           labels: labels,
           datasets: [{
             label: 'Score',
             data: tempScores,
-            backgroundColor: colors,
+            backgroundColor: "rgba(2, 65, 2, 1)",
             borderRadius: 10,
             minBarLength: 1
             // barThickness: 120,
@@ -361,42 +408,15 @@ function DashboardKepalaSekolah() {
       color: "#9E9E9E"
     }
   }, "Filter By"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-    id: "tingkat",
-    name: "tingkat",
-    "data-style": "btn-green-pastel",
-    "class": "selectpicker mr-2",
-    placeholder: "Tingkat",
-    onChange: handleChange
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-    value: ""
-  }, "Semua Tingkat"), filters.tingkat.length > 0 && filters.tingkat.map(function (data) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: data.id
-    }, data.name);
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-    id: "kelas",
-    name: "kelas",
-    "data-style": "btn-green-pastel",
-    multiple: true,
-    "class": "selectpicker mr-2",
-    placeholder: "Kelas",
-    onChange: handleChange
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-    value: ""
-  }, "Semua Kelas"), filters.kelas.length > 0 && filters.kelas.map(function (data) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: data.id
-    }, data.name);
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-    id: "mapel",
-    name: "mapel",
+    id: "mengajar",
+    name: "mengajar",
     "data-style": "btn-green-pastel",
     "class": "selectpicker mr-2",
     placeholder: "Mata Pelajaran",
     onChange: handleChange
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
     value: ""
-  }, "Semua Mata Pelajaran"), filters.mapel.length > 0 && filters.mapel.map(function (data) {
+  }, "Mengajar"), filters.mengajar.length > 0 && filters.mengajar.map(function (data) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
       value: data.id
     }, data.name);
@@ -479,9 +499,9 @@ function DashboardKepalaSekolah() {
     "class": "mt-2"
   }, "Mohon tunggu..."))));
 }
-/* harmony default export */ __webpack_exports__["default"] = (DashboardKepalaSekolah);
-if (document.getElementById('dashboard-kepala-sekolah')) {
-  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DashboardKepalaSekolah, null), document.getElementById('dashboard-kepala-sekolah'));
+/* harmony default export */ __webpack_exports__["default"] = (DashboardGuruMapel);
+if (document.getElementById('dashboard-guru-mapel')) {
+  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DashboardGuruMapel, null), document.getElementById('dashboard-guru-mapel'));
 }
 
 /***/ }),
