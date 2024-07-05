@@ -333,29 +333,23 @@ function DashboardGuruMapel() {
   }, [selectedBarIdx]);
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     var listConfig = [];
-    var listColor = ["red", "rgba(2, 65, 2, 1)"];
     var _loop = function _loop() {
         var labels = [];
         var tempScores = [];
-        var colors = currentLevel == 'siswa' ? [] : 'rgba(2, 65, 2, 1)';
         listDatas[i].forEach(function (element) {
           var data = element;
           labels.push(data.label);
           tempScores.push(data.score);
-          if (currentLevel == 'siswa') {
-            var color = data.score > 50 ? listColor[1] : listColor[0];
-            colors.push(color);
-          }
         });
         objConfig = {
           labels: labels,
           datasets: [{
             label: 'Score',
             data: tempScores,
-            backgroundColor: colors,
+            backgroundColor: "rgba(2, 65, 2, 1)",
             borderRadius: 10,
-            minBarLength: 1,
-            barThickness: 120
+            minBarLength: 1
+            // barThickness: 120,
           }]
         };
         listConfig.push(objConfig);

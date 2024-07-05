@@ -1141,19 +1141,19 @@ class ExternalUserController extends Controller
                     'label' => 'Jenjang',
                     'name' => 'jenjangs',
                     'param' => 'jenjang_id',
-                    'data' => Jenjang::where('show_for_guest', 1)->get(['id AS val', 'name'])
+                    'data' => Jenjang::where(['show_for_guest' => 1, 'deleted_at' => NULL])->get(['id AS val', 'name'])
                 ],
                 [
                     'label' => 'Tingkat',
                     'name' => 'tingkats',
                     'param' => 'tingkat_id',
-                    'data' => Tingkat::get(['id AS val', 'name'])
+                    'data' => Tingkat::where(['deleted_at' => NULL])->get(['id AS val', 'name'])
                 ],
                 [
                     'label' => 'Kelas',
                     'name' => 'kelas',
                     'param' => 'kelas_id',
-                    'data' => Kelas::distinct()->orderBy('name')->get(['name AS val', 'name'])->unique('name')
+                    'data' => Kelas::where(['deleted_at' => NULL])->distinct()->orderBy('name')->get(['name AS val', 'name'])->unique('name')
                 ],
             ];
         }else if($role == 'GURU'){

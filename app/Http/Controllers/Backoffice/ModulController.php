@@ -19,6 +19,7 @@ use App\Helpers\ExtractArchive;
 use App\Helpers\GenerateSlug;
 use App\Models\ExternalUser;
 use App\Models\GuruMataPelajaran;
+use App\Models\Jenjang;
 
 class ModulController extends Controller
 {
@@ -58,6 +59,32 @@ class ModulController extends Controller
             ->filter(function ($query) use ($request) {
 
                 $search = @$request->search['value'];
+                $visibilitas = $request->visibilitas;
+                $jenjang_id = $request->jenjang_id;
+                $tingkat_id = $request->tingkat_id;
+                $mata_pelajaran_id = $request->mata_pelajaran_id;
+
+                if($visibilitas){
+                    $query = $query->where(['is_visible' => $visibilitas]);
+                }
+
+                if($jenjang_id){
+                    $query = $query->whereHas('mataPelajaran.tingkat.jenjang', function ($query2) use ($jenjang_id) {
+                        $query2->where('id', '=',  $jenjang_id);
+                    });
+                }
+
+                if($tingkat_id){
+                    $query = $query->whereHas('mataPelajaran.tingkat', function ($query2) use ($tingkat_id) {
+                        $query2->where('id', '=',  $tingkat_id);
+                    });
+                }
+
+                if($mata_pelajaran_id){
+                    $query = $query->whereHas('mataPelajaran', function ($query2) use ($mata_pelajaran_id) {
+                        $query2->where('id', '=',  $mata_pelajaran_id);
+                    });
+                }
 
                 if ($search) {
                     $query->where(function ($query) use ($search) {
@@ -400,5 +427,47 @@ class ModulController extends Controller
         }
 
         Update::create($data);
+    }
+    
+    public function filterCol(Request $request)
+    {
+        $params_origin = '';
+        $data = [
+            [
+                'label' => 'Visibilitas',
+                'name' => 'visibilitas',
+                'param' => 'visibilitas',
+                'data' => [
+                    [
+                        'val' => 1,
+                        'name' => 'Tampilkan'
+                    ],
+                    [
+                        'val' => 0,
+                        'name' => 'Sembunyikan'
+                    ]
+                ]
+            ],
+            [
+                'label' => 'Jenjang',
+                'name' => 'jenjangs',
+                'param' => 'jenjang_id',
+                'data' => Jenjang::where(['show_for_guest' => 1, 'deleted_at' => NULL])->get(['id AS val', 'name'])
+            ],
+            [
+                'label' => 'Tingkat',
+                'name' => 'tingkats',
+                'param' => 'tingkat_id',
+                'data' => Tingkat::where(['deleted_at' => NULL])->get(['id AS val', 'name'])
+            ],
+            [
+                'label' => 'Mata Pelajaran',
+                'name' => 'mata_pelajarans',
+                'param' => 'mata_pelajaran_id',
+                'data' => MataPelajaran::where(['deleted_at' => NULL])->get(['id AS val', 'name'])
+            ],
+        ];
+    
+        return response()->json(['message' => 'success', 'data' => $data, 'params_origin' => $params_origin]);
     }
 }

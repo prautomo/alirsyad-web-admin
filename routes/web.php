@@ -52,6 +52,11 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
         Route::resource('kelas', 'KelasController');
         Route::resource('banners', 'BannerController');
 
+        Route::get('moduls/filter-col', 'ModulController@filterCol')->name('moduls.filterCol');
+        Route::get('videos/filter-col', 'VideoController@filterCol')->name('videos.filterCol');
+        Route::get('simulasis/filter-col', 'SimulasiController@filterCol')->name('simulasis.filterCol');
+        Route::get('paket-soals/filter-col', 'PaketSoalController@filterCol')->name('paket-soals.filterCol');
+
         Route::resource('moduls', 'ModulController');
         Route::resource('videos', 'VideoController');
         Route::resource('simulasis', 'SimulasiController');
