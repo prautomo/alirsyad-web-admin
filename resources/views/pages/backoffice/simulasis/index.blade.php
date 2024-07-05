@@ -43,7 +43,7 @@
     <div class="card bg-transparent">
       <!-- tble -->
       <div class="">
-            <x-datatable.table :filterCol="__('8,5,4,2')" :isMultiple="__('0,0,0,0')" :customSearch="__(1)">
+            <x-datatable.table :customSearch="__(1)">
                 {{--
                     data-* is same as option columns in datatable
                     https://datatables.net/reference/option/columns
@@ -67,5 +67,70 @@
     </div>
   </div>
 </div>
-
 @endsection
+
+@push('script')
+<script>
+    
+    $(document).ready(function(){
+      
+        var url_params = new URLSearchParams(window.location.search);
+        var filter_col = ""
+
+        $.ajaxSetup({
+        async: false,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            type:'GET',
+            url:'/backoffice/simulasis/filter-col',
+            success:function(response){
+                console.log('response', response)
+                $('#btn-submit-filter').attr("href", window.location.pathname + response.params_origin);
+
+                filter_col = response.data
+                filter_col.forEach(filter => {
+                        
+                    var col_name = filter.name
+                    var html_select = '<div id="filter-'+ col_name +'" class="form-group col">\
+                        <label>'+ filter.label +'</label>\
+                        <select id="select-'+ col_name +'"class="form-control"><option value="">All</option>'
+
+                    // var url_params = new URLSearchParams(window.location.search);
+                    var selected_val = url_params.get(filter.param);
+
+                    var data = filter.data
+                    data.forEach(element => {
+                    html_select += '<option value="'+ element.val +'" '+ (selected_val == element.val ? 'selected' : '') +'>'+element.name+'</option>'
+                    });
+
+                    html_select += '</select>\
+                        </div>'
+
+                    $('#filter-col').append(html_select);
+                });
+            },
+        });
+
+        $('#btn-submit-filter').click(function() {
+            var query_params = ""
+            filter_col.forEach(filter => {
+                var selected_val = $(`#select-${filter.name}`).find(":selected").val();
+
+                if(selected_val != ""){
+                    if(query_params == ""){
+                        query_params = "?"
+                    }else{
+                        query_params += "&"
+                    }
+                    
+                    query_params += `${filter.param}=${selected_val}`
+                }
+            });
+            $(this).attr("href", this.href + query_params);
+        });
+    });
+</script>
+@endpush

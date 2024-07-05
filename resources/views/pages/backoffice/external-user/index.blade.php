@@ -155,7 +155,7 @@
                 filter_col.forEach(filter => {
                           
                     var col_name = filter.name
-                    var html_select = '<div id="filter-jenjangs" class="form-group col">\
+                    var html_select = '<div id="filter-'+ col_name +'" class="form-group col">\
                         <label>'+ filter.label +'</label>\
                         <select id="select-'+ col_name +'"class="form-control"><option value="">All</option>'
 
@@ -180,8 +180,15 @@
           filter_col.forEach(filter => {
             var selected_val = $(`#select-${filter.name}`).find(":selected").val();
 
-            if(selected_val != "")
-              query_params += `&${filter.param}=${selected_val}`
+            if(selected_val != ""){
+              if(query_params == ""){
+                query_params = "?"
+              }else{
+                query_params += "&"
+              }
+              
+              query_params += `${filter.param}=${selected_val}`
+            }
           });
           $(this).attr("href", this.href + query_params);
         });
