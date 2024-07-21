@@ -75,36 +75,43 @@
     });
 
     CKEDITOR.replace( 'soal', {
+        versionCheck: false,
         filebrowserUploadUrl: "{{route('backoffice::upload.imageCKEditor', ['_token' => csrf_token() ])}}",
         filebrowserUploadMethod: 'form'
     } );
 
     CKEDITOR.replace( 'pilihan_a', {
+        versionCheck: false,
         filebrowserUploadUrl: "{{route('backoffice::upload.imageCKEditor', ['_token' => csrf_token() ])}}",
         filebrowserUploadMethod: 'form'
     } );
 
     CKEDITOR.replace( 'pilihan_b', {
+        versionCheck: false,
         filebrowserUploadUrl: "{{route('backoffice::upload.imageCKEditor', ['_token' => csrf_token() ])}}",
         filebrowserUploadMethod: 'form'
     } );
 
     CKEDITOR.replace( 'pilihan_c', {
+        versionCheck: false,
         filebrowserUploadUrl: "{{route('backoffice::upload.imageCKEditor', ['_token' => csrf_token() ])}}",
         filebrowserUploadMethod: 'form'
     } );
 
     CKEDITOR.replace( 'pilihan_d', {
+        versionCheck: false,
         filebrowserUploadUrl: "{{route('backoffice::upload.imageCKEditor', ['_token' => csrf_token() ])}}",
         filebrowserUploadMethod: 'form'
     } );
 
     CKEDITOR.replace( 'pilihan_e', {
+        versionCheck: false,
         filebrowserUploadUrl: "{{route('backoffice::upload.imageCKEditor', ['_token' => csrf_token() ])}}",
         filebrowserUploadMethod: 'form'
     } );
 
     CKEDITOR.replace( 'pembahasan', {
+        versionCheck: false,
         filebrowserUploadUrl: "{{route('backoffice::upload.imageCKEditor', ['_token' => csrf_token() ])}}",
         filebrowserUploadMethod: 'form'
     } );
