@@ -78,7 +78,7 @@ class PaketSoalController extends Controller
                 
                 if($search){
                     $query->where(function($query) use ($search){
-                        $query->where('name', 'LIKE', '%'.$search.'%');
+                        $query->where('judul_subbab', 'LIKE', '%'.$search.'%');
 
                         $query = $query->orWhereHas('mataPelajaran', function($query2) use ( $search ){
                             $query2->where('name', 'LIKE', '%'.$search.'%');
