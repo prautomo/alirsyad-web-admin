@@ -12,7 +12,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, "\r\n.rating-checked {\r\n    color: orange;\r\n}\r\n\r\n.title-nilai-simulasi {\r\n    line-height: 0 !important;\r\n    margin-top: 15px;\r\n}\r\n\r\n.cursor-pointer {cursor: pointer;}\r\n\r\n.disable {\r\n    color: #9f9d9d !important;\r\n}", ""]);
+exports.push([module.i, "\n.rating-checked {\n    color: orange;\n}\n\n.title-nilai-simulasi {\n    line-height: 0 !important;\n    margin-top: 15px;\n}\n\n.cursor-pointer {cursor: pointer;}\n\n.disable {\n    color: #9f9d9d !important;\n}", ""]);
 
 // exports
 

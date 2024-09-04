@@ -190,7 +190,7 @@ function DashboardSuperadmin() {
     useEffect(() => {
         var selectedId = selectedBarIdx.isClick ? listDataIds[selectedBarIdx.idx] : selectedBarIdx.idx
 
-        if(currentLevel == 'siswa'){
+        if(currentLevel == 'siswa' && selectedBarIdx.isClick){
             window.location.href = `/backoffice/e-raport/${selectedId}/${mapelId}`;
             return;
         }
@@ -288,6 +288,42 @@ function DashboardSuperadmin() {
         var level = getLevel[0]
         setNextApi(level.next_api)
 
+        if (level?.option === 'jenjang' && e.target.value === '') {
+            window.axios.post(`/backoffice/json/dashboard/jenjang`, params).then((response) => {
+                var data = response.data.data
+    
+                options['onClick'] = graphClickEvent
+    
+                var chartData = data.data
+                var chartDataId = data.data_id
+                var graphicTitle = data.graphic_title
+                var nextApi = data.next_api
+                var currentLevel = data.level
+    
+                if(data.kelas_id){
+                    setKelasId(data.kelas_id)
+                }
+    
+                if(data.bab_id){
+                    setBabId(data.bab_id)
+                }
+            
+                if(data.mapel_id){
+                    setMapelId(data.mapel_id)
+                }
+    
+                setIsLoading(false)
+                setGraphicTitle(graphicTitle)
+                setCurrentLevel(currentLevel)
+                setNextApi(nextApi)
+                setListDataIds(chartDataId)
+                setListDatas(chartData)
+            }).catch((err) => {
+                console.log(err)
+            })
+            return
+        } 
+        
         var params = {
             [level.next_api.param] : e.target.value
         }
@@ -321,39 +357,39 @@ function DashboardSuperadmin() {
         <div className="row mb-4">
             <div className="col-12">
                 <div style={{ display: 'flex', alignItems: 'center'}}>
-                    <div style={{ marginLeft: 'auto' }} class="dashboard-filter">
+                    <div style={{ marginLeft: 'auto' }} className="dashboard-filter">
                         <label className="my-auto mr-2" style={{ color: "#9E9E9E"}}>Filter By</label>
-                        <select id="jenjang" name="jenjang" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Jenjang" onChange={handleChange}>
+                        <select id="jenjang" name="jenjang" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Jenjang" onChange={handleChange}>
                             <option value="">Semua Jenjang</option>
                             {filters.jenjang.length > 0 && filters.jenjang.map((data) => (
                                 <option value={data.id}>{data.name}</option>
                             ))}
                         </select>
-                        <select id="tingkat" name="tingkat" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Tingkat" onChange={handleChange}>
+                        <select id="tingkat" name="tingkat" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Tingkat" onChange={handleChange}>
                             <option value="">Semua Tingkat</option>
                             {filters.tingkat.length > 0 && filters.tingkat.map((data) => (
                                 <option value={data.id}>{data.name}</option>
                             ))}
                         </select>
-                        <select id="kelas" name="kelas" data-style="btn-green-pastel" multiple class="selectpicker mr-2" placeholder="Kelas" onChange={handleChange}>
+                        <select id="kelas" name="kelas" data-style="btn-green-pastel" multiple className="selectpicker mr-2" placeholder="Kelas" onChange={handleChange}>
                             <option value="">Semua Kelas</option>
                             {filters.kelas.length > 0 && filters.kelas.map((data) => (
                                 <option value={data.id}>{data.name}</option>
                             ))}
                         </select>
-                        <select id="mapel" name="mapel" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Mata Pelajaran" onChange={handleChange}>
+                        <select id="mapel" name="mapel" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Mata Pelajaran" onChange={handleChange}>
                             <option value="">Semua Mata Pelajaran</option>
                             {filters.mapel.length > 0 && filters.mapel.map((data) => (
                                 <option value={data.id}>{data.name}</option>
                             ))}
                         </select>
-                        <select id="bab" name="bab" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Module" onChange={handleChange}>
+                        <select id="bab" name="bab" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Module" onChange={handleChange}>
                             <option value="">Semua Module</option>
                             {filters.bab.length > 0 && filters.bab.map((data) => (
                                 <option value={data.id}>{data.name}</option>
                             ))}
                         </select>
-                        <select id="subbab" name="subbab" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Sub-Module" onChange={handleChange}>
+                        <select id="subbab" name="subbab" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Sub-Module" onChange={handleChange}>
                             <option value="">Semua Sub-Module</option>
                             {filters.subbab.length > 0 && filters.subbab.map((data) => (
                                 <option value={data.id}>{data.name}</option>
@@ -401,7 +437,7 @@ function DashboardSuperadmin() {
                         wrapperStyle={{}}
                         wrapperClass=""
                     />
-                    <h2 class="mt-2">Mohon tunggu...</h2>
+                    <h2 className="mt-2">Mohon tunggu...</h2>
                 </div>
             </div>  
         )}

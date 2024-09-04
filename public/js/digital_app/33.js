@@ -7,7 +7,7 @@
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(3), __webpack_require__.e(5), __webpack_require__.e(44)]).then(__webpack_require__.bind(null, /*! ./Grafik */ "./resources/js/backoffice/components/ERaport/Grafik.js"));
+Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(3), __webpack_require__.e(5), __webpack_require__.e(6)]).then(__webpack_require__.bind(null, /*! ./Grafik */ "./resources/js/backoffice/components/ERaport/Grafik.js"));
 
 /***/ })
 
