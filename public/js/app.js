@@ -37587,8 +37587,8 @@ window.initDatatable = function (tableSelector) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\Freelance\DIB\web-digital-interactive-book\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\Freelance\DIB\web-digital-interactive-book\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /Users/sql/Documents/Ferdhika/Project/DIB/web-digital-interactive-book/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /Users/sql/Documents/Ferdhika/Project/DIB/web-digital-interactive-book/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

@@ -12,7 +12,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, ".dashboard-final-score {\r\n    background: #F6D0A14D;\r\n    padding: 10px 20px;\r\n    border-radius: 4px !important;\r\n    color: #E98A15 !important;\r\n}\r\n\r\n.dashboard-filter .bootstrap-select {\r\n    width: 200px !important;\r\n}", ""]);
+exports.push([module.i, ".dashboard-final-score {\n    background: #F6D0A14D;\n    padding: 10px 20px;\n    border-radius: 4px !important;\n    color: #E98A15 !important;\n}\n\n.dashboard-filter .bootstrap-select {\n    width: 200px !important;\n}", ""]);
 
 // exports
 
@@ -239,7 +239,7 @@ function DashboardSuperadmin() {
   }, []);
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     var selectedId = selectedBarIdx.isClick ? listDataIds[selectedBarIdx.idx] : selectedBarIdx.idx;
-    if (currentLevel == 'siswa') {
+    if (currentLevel == 'siswa' && selectedBarIdx.isClick) {
       window.location.href = "/backoffice/e-raport/".concat(selectedId, "/").concat(mapelId);
       return;
     }
@@ -317,6 +317,35 @@ function DashboardSuperadmin() {
     }
     var level = getLevel[0];
     setNextApi(level.next_api);
+    if ((level === null || level === void 0 ? void 0 : level.option) === 'jenjang' && e.target.value === '') {
+      window.axios.post("/backoffice/json/dashboard/jenjang", params).then(function (response) {
+        var data = response.data.data;
+        options['onClick'] = graphClickEvent;
+        var chartData = data.data;
+        var chartDataId = data.data_id;
+        var graphicTitle = data.graphic_title;
+        var nextApi = data.next_api;
+        var currentLevel = data.level;
+        if (data.kelas_id) {
+          setKelasId(data.kelas_id);
+        }
+        if (data.bab_id) {
+          setBabId(data.bab_id);
+        }
+        if (data.mapel_id) {
+          setMapelId(data.mapel_id);
+        }
+        setIsLoading(false);
+        setGraphicTitle(graphicTitle);
+        setCurrentLevel(currentLevel);
+        setNextApi(nextApi);
+        setListDataIds(chartDataId);
+        setListDatas(chartData);
+      })["catch"](function (err) {
+        console.log(err);
+      });
+      return;
+    }
     var params = _defineProperty({}, level.next_api.param, e.target.value);
     if (kelasId != 0) {
       params['kelas_id'] = kelasId;
@@ -348,7 +377,7 @@ function DashboardSuperadmin() {
     style: {
       marginLeft: 'auto'
     },
-    "class": "dashboard-filter"
+    className: "dashboard-filter"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "my-auto mr-2",
     style: {
@@ -358,7 +387,7 @@ function DashboardSuperadmin() {
     id: "jenjang",
     name: "jenjang",
     "data-style": "btn-green-pastel",
-    "class": "selectpicker mr-2",
+    className: "selectpicker mr-2",
     placeholder: "Jenjang",
     onChange: handleChange
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
@@ -371,7 +400,7 @@ function DashboardSuperadmin() {
     id: "tingkat",
     name: "tingkat",
     "data-style": "btn-green-pastel",
-    "class": "selectpicker mr-2",
+    className: "selectpicker mr-2",
     placeholder: "Tingkat",
     onChange: handleChange
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
@@ -385,7 +414,7 @@ function DashboardSuperadmin() {
     name: "kelas",
     "data-style": "btn-green-pastel",
     multiple: true,
-    "class": "selectpicker mr-2",
+    className: "selectpicker mr-2",
     placeholder: "Kelas",
     onChange: handleChange
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
@@ -398,7 +427,7 @@ function DashboardSuperadmin() {
     id: "mapel",
     name: "mapel",
     "data-style": "btn-green-pastel",
-    "class": "selectpicker mr-2",
+    className: "selectpicker mr-2",
     placeholder: "Mata Pelajaran",
     onChange: handleChange
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
@@ -411,7 +440,7 @@ function DashboardSuperadmin() {
     id: "bab",
     name: "bab",
     "data-style": "btn-green-pastel",
-    "class": "selectpicker mr-2",
+    className: "selectpicker mr-2",
     placeholder: "Module",
     onChange: handleChange
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
@@ -424,7 +453,7 @@ function DashboardSuperadmin() {
     id: "subbab",
     name: "subbab",
     "data-style": "btn-green-pastel",
-    "class": "selectpicker mr-2",
+    className: "selectpicker mr-2",
     placeholder: "Sub-Module",
     onChange: handleChange
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
@@ -483,7 +512,7 @@ function DashboardSuperadmin() {
     wrapperStyle: {},
     wrapperClass: ""
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
-    "class": "mt-2"
+    className: "mt-2"
   }, "Mohon tunggu..."))));
 }
 /* harmony default export */ __webpack_exports__["default"] = (DashboardSuperadmin);
