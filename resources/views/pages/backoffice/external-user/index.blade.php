@@ -31,7 +31,7 @@
               <a href="{{ route('backoffice::external-users.batch_create', ['role'=>\Request::get('role')]) }}" class="btn btn-md btn-outline-primary">
                 Unggah XLSX
               </a>
-              <a href="{{ route('backoffice::external-users.generateQRCodeBulk') }}" class="btn btn-md btn-secondary" id="btn-generate-qr">
+              <a href="{{ route('backoffice::external-users.generateQRCodeBulk') }}" class="btn btn-md btn-secondary{{\Request::get('tingkat_id') && \Request::get('kelas_id') ? '' : ' disabled'}}" id="btn-generate-qr">
                 Generate QR Code
               </a>
               @endif
@@ -94,7 +94,7 @@
                 <th data-data="kelas.name">@lang("Kelas")</th>
                 <th data-data="tahun_ajaran">@lang("Tahun Ajaran")</th>
                 @elseif(\Request::get('role') === 'SISWA' && @\Request::get('is_pengunjung'))
-                <th data-data="kelas.tingkat.jenjang.name">@lang("Jenjang")</th>
+                <th data-data="jenjang.name">@lang("Jenjang")</th>
                 @else
                 <th data-data="mengajar">@lang("Mengajar")</th>
                 @endif
@@ -182,7 +182,8 @@
 
             if(selected_val != ""){
               if(query_params == ""){
-                query_params = "?"
+                // query_params = "?"
+                query_params += "&"
               }else{
                 query_params += "&"
               }
