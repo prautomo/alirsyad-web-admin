@@ -544,23 +544,52 @@ class DashboardController extends Controller {
         group by user_id, tingkat_kesulitan', array($kelas_id, $bab_id, $subbab_number));
                     
         $count_scores = [];
+        $count_score_splits = [];
         foreach($result_from_db as $item){
             if(!array_key_exists($item->user_id, $count_scores)){
                 $count_scores[$item->user_id] = 0;
+                $count_score_splits[$item->user_id] = [
+                    "mudah" => 0,
+                    "sedang" => 0,
+                    "sulit" => 0,
+                ];
             }
 
             $count_scores[$item->user_id] += $this->getScoreFinal($item->total_benar, $item->tingkat_kesulitan);
+            $count_score_splits[$item->user_id][$item->tingkat_kesulitan] += $this->getScoreFinal($item->total_benar, $item->tingkat_kesulitan);
         }
 
         foreach($siswas as $siswa){
             $score = 0;
+            $score_split = [
+                "mudah" => 0,
+                "sedang" => 0,
+                "sulit" => 0,
+            ];
+            $percentage_split = [
+                "mudah" => "0%",
+                "sedang" => "0%",
+                "sulit" => "0%",
+            ];
             if(array_key_exists($siswa->id, $count_scores)){
                 $score = $count_scores[$siswa->id];
+                
+                if(array_key_exists($siswa->id, $count_score_splits)){
+                    $score_split = $count_score_splits[$siswa->id];
+    
+                    $percentage_split = [
+                        "mudah" => number_format(($score_split["mudah"] / $score) * 100, 0),
+                        "sedang" => number_format(($score_split["sedang"] / $score) * 100, 0),
+                        "sulit" => number_format(($score_split["sulit"] / $score) * 100, 0),
+                    ];
+                }
             }
 
             array_push($result, [
                 "label" => $siswa->name,
-                "score" => $score
+                "score" => $score,
+                "score_split" => $score_split,
+                "percentage_split" => $percentage_split,
             ]);
             array_push($result_ids, $siswa->id);
         }
