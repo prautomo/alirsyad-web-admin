@@ -34,7 +34,10 @@ export const options = {
             align: 'center',
             anchor: 'center',
             color: 'white',
-        },
+            // formatter: function(value){
+            //     return value + ' (100%) ';
+            // }
+        },    
         title: {
             display: false,
         },
@@ -245,35 +248,93 @@ function DashboardSuperadmin() {
 
     useEffect(() => {
         const listConfig = [];
+
+        console.log('currentLevel', currentLevel)
+
+        // if (currentLevel === 'siswa') {
+        //     options.indexAxis = 'y';
+        // } else {
+        //     options.indexAxis = 'x';
+        // }
+
+        options.plugins['tooltip'] = {
+            callbacks: {
+                label: function(tooltipItem) {
+                    if (currentLevel === 'siswa') {
+                        return Number(tooltipItem?.formattedValue) + "%";
+                    } else {
+                        return Number(tooltipItem?.formattedValue);
+                    }
+                }
+            }
+        }
+
         for (let i=0; i<listDatas.length; i++) {
             const labels = [];
             const tempScores = [];
+            const tempScoresMudah = [];
+            const tempScoresSedang = [];
+            const tempScoresSulit = [];
 
             listDatas[i].forEach(element => {
                 const data = element;
                 labels.push(data.label);
                 tempScores.push(data.score);
+                if (data?.percentage_split) {
+                    tempScoresMudah.push(data?.percentage_split?.mudah ?? 0);
+                    tempScoresSedang.push(data?.percentage_split?.sedang ?? 0);
+                    tempScoresSulit.push(data?.percentage_split?.sulit ?? 0);
+                }
             });
             
             var objConfig = {
                 labels,
-                datasets: [
-                    {
-                        label: 'Score',
-                        data: tempScores,
-                        backgroundColor: "rgba(2, 65, 2, 1)",
-                        borderRadius: 10,
-                        minBarLength: 1,
-                        // barThickness: 120,
-                    }
-                ]
+                datasets: []
+            }
+
+            if (currentLevel === "siswa") {
+                objConfig.datasets.push({
+                    label: 'Mudah',
+                    data: tempScoresMudah,
+                    backgroundColor: "rgba(2, 65, 2, 1)",
+                    borderRadius: 10,
+                    minBarLength: 1,
+                    // barThickness: 20,
+                });
+
+                objConfig.datasets.push({
+                    label: 'Sedang',
+                    data: tempScoresSedang,
+                    backgroundColor: "rgba(255, 153, 51, 1)",
+                    borderRadius: 10,
+                    minBarLength: 1,
+                    // barThickness: 120,
+                });
+
+                objConfig.datasets.push({
+                    label: 'Sulit',
+                    data: tempScoresSulit,
+                    backgroundColor: "rgba(255, 51, 51, 1)",
+                    borderRadius: 10,
+                    minBarLength: 1,
+                    // barThickness: 120,
+                });
+            } else {
+                objConfig.datasets.push({
+                    label: 'Score',
+                    data: tempScores,
+                    backgroundColor: "rgba(2, 65, 2, 1)",
+                    borderRadius: 10,
+                    minBarLength: 1,
+                    // barThickness: 120,
+                });
             }
 
             listConfig.push(objConfig)
         }
         console.log('listConfig', listConfig)
 
-        setListConfigData(listConfig);
+        setListConfigData(listConfig);   
     }, [listDatas]);
 
     const handleChange = (e) => {
@@ -418,8 +479,12 @@ function DashboardSuperadmin() {
                                         ))}
                                     </div>
                                 </div>
+
+                                <div style={{ overflowX: scroll, width: "100%" }}>
+                                    <Bar options={options} data={data} />
+
+                                </div>
     
-                                <Bar options={options} data={data} />
                             </div>
                         </div>
                     </div>
