@@ -35,8 +35,11 @@ export const options = {
             anchor: 'center',
             color: 'white',
             // formatter: function(value){
-            //     return value + ' (100%) ';
-            // }
+            //     return value + '%';
+            // },
+            // font: {
+            //     size: 3,
+            // }      
         },    
         title: {
             display: false,
@@ -251,11 +254,23 @@ function DashboardSuperadmin() {
 
         console.log('currentLevel', currentLevel)
 
-        // if (currentLevel === 'siswa') {
-        //     options.indexAxis = 'y';
-        // } else {
-        //     options.indexAxis = 'x';
-        // }
+        if (currentLevel === 'siswa') {
+            // options.indexAxis = 'y';
+            options.plugins.datalabels.formatter = function(value){
+                return value + '%';
+            };
+            options.plugins.datalabels.font = {
+                size: 3,
+            }; 
+        } else {
+            // options.indexAxis = 'x';
+            options.plugins.datalabels.formatter = function(value){
+                return value;
+            };
+            options.plugins.datalabels.font = {
+                size: 12,
+            }; 
+        }
 
         options.plugins['tooltip'] = {
             callbacks: {

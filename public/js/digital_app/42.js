@@ -19,10 +19,10 @@ exports.push([module.i, ".dashboard-final-score {\n    background: #F6D0A14D;\n 
 
 /***/ }),
 
-/***/ "./resources/js/backoffice/components/Dashboard/KepalaSekolah.js":
-/*!***********************************************************************!*\
-  !*** ./resources/js/backoffice/components/Dashboard/KepalaSekolah.js ***!
-  \***********************************************************************/
+/***/ "./resources/js/backoffice/components/Dashboard/Superadmin.js":
+/*!********************************************************************!*\
+  !*** ./resources/js/backoffice/components/Dashboard/Superadmin.js ***!
+  \********************************************************************/
 /*! exports provided: options, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -71,6 +71,12 @@ var options = {
       align: 'center',
       anchor: 'center',
       color: 'white'
+      // formatter: function(value){
+      //     return value + '%';
+      // },
+      // font: {
+      //     size: 3,
+      // }      
     },
     title: {
       display: false
@@ -87,7 +93,7 @@ var options = {
     event["native"].target.style.cursor = chartElement[0] ? 'pointer' : 'default';
   }
 };
-function DashboardKepalaSekolah() {
+function DashboardSuperadmin() {
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
     _useState2 = _slicedToArray(_useState, 2),
     listConfigData = _useState2[0],
@@ -113,6 +119,7 @@ function DashboardKepalaSekolah() {
     filterLevel = _useState12[0],
     setfilterLevel = _useState12[1];
   var _useState13 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
+      jenjang: [],
       tingkat: [],
       kelas: [],
       mapel: [],
@@ -147,7 +154,7 @@ function DashboardKepalaSekolah() {
     isLoading = _useState26[0],
     setIsLoading = _useState26[1];
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    if (listDatas.length < 1) {
+    if ((listDatas === null || listDatas === void 0 ? void 0 : listDatas.length) < 1) {
       window.axios.post("/backoffice/json/dashboard/current").then(function (response) {
         var data = response.data.data;
         var level = data.level;
@@ -156,7 +163,7 @@ function DashboardKepalaSekolah() {
         var param3rd = data.param3rd;
         var params = {};
         if (level == null) {
-          level = 'tingkat';
+          level = 'jenjang';
         }
         if (param != null) {
           params[param] = data.value;
@@ -217,7 +224,6 @@ function DashboardKepalaSekolah() {
     var data = event.chart.data;
     var barLabel = event.chart.data.labels[dataIndex];
     var selectedIdx = dataIndex;
-    setIsLoading(true);
     setSelectedBarIdx({
       label: barLabel,
       idx: selectedIdx,
@@ -225,13 +231,13 @@ function DashboardKepalaSekolah() {
     });
   }
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    if (filters.tingkat.length < 1) {
-      window.axios.post("/backoffice/json/dashboard/filter/tingkat").then(function (response) {
+    if (filters.jenjang.length < 1) {
+      window.axios.get("/backoffice/json/jenjangs").then(function (response) {
         var data = response.data.data;
         setFilters(_objectSpread(_objectSpread({}, filters), {}, {
-          tingkat: data
+          jenjang: data
         }));
-        $("#tingkat").selectpicker("refresh");
+        $("#jenjang").selectpicker("refresh");
       })["catch"](function (err) {
         console.log(err);
       });
@@ -239,7 +245,7 @@ function DashboardKepalaSekolah() {
   }, []);
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     var selectedId = selectedBarIdx.isClick ? listDataIds[selectedBarIdx.idx] : selectedBarIdx.idx;
-    if (currentLevel == 'siswa') {
+    if (currentLevel == 'siswa' && selectedBarIdx.isClick) {
       window.location.href = "/backoffice/e-raport/".concat(selectedId, "/").concat(mapelId);
       return;
     }
@@ -280,25 +286,91 @@ function DashboardKepalaSekolah() {
   }, [selectedBarIdx]);
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     var listConfig = [];
+    console.log('currentLevel', currentLevel);
+    if (currentLevel === 'siswa') {
+      // options.indexAxis = 'y';
+      options.plugins.datalabels.formatter = function (value) {
+        return value + '%';
+      };
+      options.plugins.datalabels.font = {
+        size: 3
+      };
+    } else {
+      // options.indexAxis = 'x';
+      options.plugins.datalabels.formatter = function (value) {
+        return value;
+      };
+      options.plugins.datalabels.font = {
+        size: 12
+      };
+    }
+    options.plugins['tooltip'] = {
+      callbacks: {
+        label: function label(tooltipItem) {
+          if (currentLevel === 'siswa') {
+            return Number(tooltipItem === null || tooltipItem === void 0 ? void 0 : tooltipItem.formattedValue) + "%";
+          } else {
+            return Number(tooltipItem === null || tooltipItem === void 0 ? void 0 : tooltipItem.formattedValue);
+          }
+        }
+      }
+    };
     var _loop = function _loop() {
         var labels = [];
         var tempScores = [];
+        var tempScoresMudah = [];
+        var tempScoresSedang = [];
+        var tempScoresSulit = [];
         listDatas[i].forEach(function (element) {
           var data = element;
           labels.push(data.label);
           tempScores.push(data.score);
+          if (data !== null && data !== void 0 && data.percentage_split) {
+            var _data$percentage_spli, _data$percentage_spli2, _data$percentage_spli3, _data$percentage_spli4, _data$percentage_spli5, _data$percentage_spli6;
+            tempScoresMudah.push((_data$percentage_spli = data === null || data === void 0 || (_data$percentage_spli2 = data.percentage_split) === null || _data$percentage_spli2 === void 0 ? void 0 : _data$percentage_spli2.mudah) !== null && _data$percentage_spli !== void 0 ? _data$percentage_spli : 0);
+            tempScoresSedang.push((_data$percentage_spli3 = data === null || data === void 0 || (_data$percentage_spli4 = data.percentage_split) === null || _data$percentage_spli4 === void 0 ? void 0 : _data$percentage_spli4.sedang) !== null && _data$percentage_spli3 !== void 0 ? _data$percentage_spli3 : 0);
+            tempScoresSulit.push((_data$percentage_spli5 = data === null || data === void 0 || (_data$percentage_spli6 = data.percentage_split) === null || _data$percentage_spli6 === void 0 ? void 0 : _data$percentage_spli6.sulit) !== null && _data$percentage_spli5 !== void 0 ? _data$percentage_spli5 : 0);
+          }
         });
         objConfig = {
           labels: labels,
-          datasets: [{
+          datasets: []
+        };
+        if (currentLevel === "siswa") {
+          objConfig.datasets.push({
+            label: 'Mudah',
+            data: tempScoresMudah,
+            backgroundColor: "rgba(2, 65, 2, 1)",
+            borderRadius: 10,
+            minBarLength: 1
+            // barThickness: 20,
+          });
+          objConfig.datasets.push({
+            label: 'Sedang',
+            data: tempScoresSedang,
+            backgroundColor: "rgba(255, 153, 51, 1)",
+            borderRadius: 10,
+            minBarLength: 1
+            // barThickness: 120,
+          });
+          objConfig.datasets.push({
+            label: 'Sulit',
+            data: tempScoresSulit,
+            backgroundColor: "rgba(255, 51, 51, 1)",
+            borderRadius: 10,
+            minBarLength: 1
+            // barThickness: 120,
+          });
+        } else {
+          objConfig.datasets.push({
             label: 'Score',
             data: tempScores,
             backgroundColor: "rgba(2, 65, 2, 1)",
             borderRadius: 10,
             minBarLength: 1
             // barThickness: 120,
-          }]
-        };
+          });
+        }
         listConfig.push(objConfig);
       },
       objConfig;
@@ -317,6 +389,35 @@ function DashboardKepalaSekolah() {
     }
     var level = getLevel[0];
     setNextApi(level.next_api);
+    if ((level === null || level === void 0 ? void 0 : level.option) === 'jenjang' && e.target.value === '') {
+      window.axios.post("/backoffice/json/dashboard/jenjang", params).then(function (response) {
+        var data = response.data.data;
+        options['onClick'] = graphClickEvent;
+        var chartData = data.data;
+        var chartDataId = data.data_id;
+        var graphicTitle = data.graphic_title;
+        var nextApi = data.next_api;
+        var currentLevel = data.level;
+        if (data.kelas_id) {
+          setKelasId(data.kelas_id);
+        }
+        if (data.bab_id) {
+          setBabId(data.bab_id);
+        }
+        if (data.mapel_id) {
+          setMapelId(data.mapel_id);
+        }
+        setIsLoading(false);
+        setGraphicTitle(graphicTitle);
+        setCurrentLevel(currentLevel);
+        setNextApi(nextApi);
+        setListDataIds(chartDataId);
+        setListDatas(chartData);
+      })["catch"](function (err) {
+        console.log(err);
+      });
+      return;
+    }
     var params = _defineProperty({}, level.next_api.param, e.target.value);
     if (kelasId != 0) {
       params['kelas_id'] = kelasId;
@@ -348,17 +449,30 @@ function DashboardKepalaSekolah() {
     style: {
       marginLeft: 'auto'
     },
-    "class": "dashboard-filter"
+    className: "dashboard-filter"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "my-auto mr-2",
     style: {
       color: "#9E9E9E"
     }
   }, "Filter By"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+    id: "jenjang",
+    name: "jenjang",
+    "data-style": "btn-green-pastel",
+    className: "selectpicker mr-2",
+    placeholder: "Jenjang",
+    onChange: handleChange
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+    value: ""
+  }, "Semua Jenjang"), filters.jenjang.length > 0 && filters.jenjang.map(function (data) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: data.id
+    }, data.name);
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
     id: "tingkat",
     name: "tingkat",
     "data-style": "btn-green-pastel",
-    "class": "selectpicker mr-2",
+    className: "selectpicker mr-2",
     placeholder: "Tingkat",
     onChange: handleChange
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
@@ -372,7 +486,7 @@ function DashboardKepalaSekolah() {
     name: "kelas",
     "data-style": "btn-green-pastel",
     multiple: true,
-    "class": "selectpicker mr-2",
+    className: "selectpicker mr-2",
     placeholder: "Kelas",
     onChange: handleChange
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
@@ -385,7 +499,7 @@ function DashboardKepalaSekolah() {
     id: "mapel",
     name: "mapel",
     "data-style": "btn-green-pastel",
-    "class": "selectpicker mr-2",
+    className: "selectpicker mr-2",
     placeholder: "Mata Pelajaran",
     onChange: handleChange
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
@@ -398,7 +512,7 @@ function DashboardKepalaSekolah() {
     id: "bab",
     name: "bab",
     "data-style": "btn-green-pastel",
-    "class": "selectpicker mr-2",
+    className: "selectpicker mr-2",
     placeholder: "Module",
     onChange: handleChange
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
@@ -411,7 +525,7 @@ function DashboardKepalaSekolah() {
     id: "subbab",
     name: "subbab",
     "data-style": "btn-green-pastel",
-    "class": "selectpicker mr-2",
+    className: "selectpicker mr-2",
     placeholder: "Sub-Module",
     onChange: handleChange
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
@@ -446,10 +560,15 @@ function DashboardKepalaSekolah() {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, data.labels[idx], " : ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, value)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         style: spanBorderRight
       }));
-    }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_chartjs_2__WEBPACK_IMPORTED_MODULE_5__["Bar"], {
+    }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      style: {
+        overflowX: scroll,
+        width: "100%"
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_chartjs_2__WEBPACK_IMPORTED_MODULE_5__["Bar"], {
       options: options,
       data: data
-    })))));
+    }))))));
   }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "row",
     style: {
@@ -470,12 +589,12 @@ function DashboardKepalaSekolah() {
     wrapperStyle: {},
     wrapperClass: ""
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
-    "class": "mt-2"
+    className: "mt-2"
   }, "Mohon tunggu..."))));
 }
-/* harmony default export */ __webpack_exports__["default"] = (DashboardKepalaSekolah);
-if (document.getElementById('dashboard-kepala-sekolah')) {
-  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DashboardKepalaSekolah, null), document.getElementById('dashboard-kepala-sekolah'));
+/* harmony default export */ __webpack_exports__["default"] = (DashboardSuperadmin);
+if (document.getElementById('dashboard-superadmin')) {
+  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DashboardSuperadmin, null), document.getElementById('dashboard-superadmin'));
 }
 
 /***/ }),
