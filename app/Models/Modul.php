@@ -32,6 +32,7 @@ class Modul extends Model
         'tahun_ajaran',
         'urutan',
         'is_visible',
+        'is_subbab',
     ];
 
     public static function search($request)

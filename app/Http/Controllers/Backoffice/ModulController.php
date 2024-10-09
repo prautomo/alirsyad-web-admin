@@ -63,9 +63,14 @@ class ModulController extends Controller
                 $jenjang_id = $request->jenjang_id;
                 $tingkat_id = $request->tingkat_id;
                 $mata_pelajaran_id = $request->mata_pelajaran_id;
+                $isSubBab = $request->is_subbab;
 
                 if($visibilitas){
                     $query = $query->where(['is_visible' => $visibilitas]);
+                }
+
+                if($isSubBab){
+                    $query = $query->where(['is_subbab' => $isSubBab]);
                 }
 
                 if($jenjang_id){
@@ -249,7 +254,7 @@ class ModulController extends Controller
         // default image
         $url = "images/placeholder.png";
         // temp request
-        $dataReq = $request->only(['name', 'icon', 'description', 'mata_pelajaran_id', 'slug', 'semester', 'tahun_ajaran', 'urutan', 'is_visible']);
+        $dataReq = $request->only(['name', 'icon', 'description', 'mata_pelajaran_id', 'slug', 'semester', 'tahun_ajaran', 'urutan', 'is_visible', 'is_subbab']);
         $dataReq['uploader_id'] = \Auth::user()->id;
 
         if ($request->hasFile('icon')) {
@@ -328,7 +333,7 @@ class ModulController extends Controller
             'urutan' => 'required|numeric|min:0',
         ]);
 
-        $dataReq = $request->only(['name', 'icon', 'description', 'mata_pelajaran_id', 'slug', 'semester', 'tahun_ajaran', 'urutan', 'is_visible']);
+        $dataReq = $request->only(['name', 'icon', 'description', 'mata_pelajaran_id', 'slug', 'semester', 'tahun_ajaran', 'urutan', 'is_visible', 'is_subbab']);
         
         if ($request->hasFile('icon')) {
             $validated = $request->validate([
