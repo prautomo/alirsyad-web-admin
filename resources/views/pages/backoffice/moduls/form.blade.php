@@ -66,6 +66,25 @@
     </div>
     <!-- END Visibilitas Materi -->
 
+    <!-- Is Sub Materi --> 
+    <div class="col-md-12">
+        <div class="form-group">
+            <label class="form-control-label" for="input-isSubbab">Jenis Materi</label>
+
+            <select id="isSubbab" name="is_subbab" class="form-control {{($errors->has('isSubbab') ? ' is-invalid' : '')}}">
+                <option value="0" {{ @$data->is_subbab==0 ? "selected " : "" }}>BAB</option>
+                <option value="1" {{ @$data ? (@$data->is_subbab== 1 ? "selected " : "") : "selected"}}>SUB BAB</option>
+            </select>
+
+            @if($errors->has('isSubbab'))
+            <div class="invalid-feedback">
+                <i class="fa fa-exclamation-circle fa-fw"></i> {{ $errors->first('isSubbab') }}
+            </div>
+            @endif
+        </div>
+    </div>
+    <!-- END Visibilitas Materi -->
+
     <x-input.images :label="__('Upload Cover Update')" wrapId="coverUpdate" name="cover_update" :data="@$update" :default="@$update->logo ? asset(@$update->logo) : asset('images/placeholder.png')" required />
 
     <div class="col-xs-12 col-sm-12 col-md-12 text-right">

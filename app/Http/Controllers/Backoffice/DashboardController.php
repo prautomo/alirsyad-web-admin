@@ -390,7 +390,7 @@ class DashboardController extends Controller {
         $result = [];
         $result_ids = [];
 
-        $babs = Modul::where(['deleted_at' => NULL, 'mata_pelajaran_id' => $mapel_id])->orderBy('urutan')->get();
+        $babs = Modul::where(['deleted_at' => NULL, 'mata_pelajaran_id' => $mapel_id, 'is_subbab' => false])->orderBy('urutan')->get();
         
         $result_from_db = DB::select('select bab_id, bab_name, tingkat_kesulitan, sum(total_benar) as total_benar from (
         select b.id as bab_id, b.name as bab_name, e.paket_soal_id as paket_soal_id, ps.tingkat_kesulitan, e.total_benar from moduls b
