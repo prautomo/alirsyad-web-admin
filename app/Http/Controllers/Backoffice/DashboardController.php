@@ -536,8 +536,8 @@ class DashboardController extends Controller {
 
         $siswas =  ExternalUser::where(['kelas_id' => $kelas_id, 'deleted_at' => NULL])->get();
         
-        $result_from_db = DB::select('select user_id, user_name, tingkat_kesulitan, sum(total_benar) as total_benar from (
-        select eu.id user_id, eu.name as user_name, e.paket_soal_id as paket_soal_id, ps.tingkat_kesulitan, e.total_benar from paket_soals ps
+        $result_from_db = DB::select('select user_id, user_name, tingkat_kesulitan, sum(total_benar) as total_benar, sum(total_terjawab) as total_terjawab from (
+        select eu.id user_id, eu.name as user_name, e.paket_soal_id as paket_soal_id, ps.tingkat_kesulitan, e.total_benar, e.total_terjawab from paket_soals ps
         join e_raport e on ps.id = e.paket_soal_id
         join external_users eu on e.user_id = eu.id and eu.kelas_id = ?
         where eu.deleted_at is null and ps.deleted_at is null and ps.deleted_at is null and ps.bab_id = ? and ps.subbab = ?) grouped
@@ -545,6 +545,7 @@ class DashboardController extends Controller {
                     
         $count_scores = [];
         $count_score_splits = [];
+        $count_terjawab_splits = [];
         foreach($result_from_db as $item){
             if(!array_key_exists($item->user_id, $count_scores)){
                 $count_scores[$item->user_id] = 0;
@@ -553,10 +554,16 @@ class DashboardController extends Controller {
                     "sedang" => 0,
                     "sulit" => 0,
                 ];
+                $count_terjawab_splits[$item->user_id] = [
+                    "mudah" => 0,
+                    "sedang" => 0,
+                    "sulit" => 0,
+                ];
             }
 
             $count_scores[$item->user_id] += $this->getScoreFinal($item->total_benar, $item->tingkat_kesulitan);
             $count_score_splits[$item->user_id][$item->tingkat_kesulitan] += $this->getScoreFinal($item->total_benar, $item->tingkat_kesulitan);
+            $count_terjawab_splits[$item->user_id][$item->tingkat_kesulitan] += $item->total_terjawab;
         }
 
         foreach($siswas as $siswa){
@@ -571,16 +578,22 @@ class DashboardController extends Controller {
                 "sedang" => "0%",
                 "sulit" => "0%",
             ];
+            $terjawab_split = [
+                "mudah" => 0,
+                "sedang" => 0,
+                "sulit" => 0,
+            ];
             if(array_key_exists($siswa->id, $count_scores)){
                 $score = $count_scores[$siswa->id];
                 
                 if(array_key_exists($siswa->id, $count_score_splits)){
                     $score_split = $count_score_splits[$siswa->id];
+                    $terjawab_split = $count_terjawab_splits[$siswa->id];
     
                     $percentage_split = [
-                        "mudah" => number_format(($score_split["mudah"] / $score) * 100, 0),
-                        "sedang" => number_format(($score_split["sedang"] / $score) * 100, 0),
-                        "sulit" => number_format(($score_split["sulit"] / $score) * 100, 0),
+                        "mudah" => $score_split["mudah"] === 0 ? 0 : number_format(($score_split["mudah"] / $terjawab_split["mudah"]) * 100, 0),
+                        "sedang" => $score_split["sedang"] === 0 ? 0 : number_format(($score_split["sedang"] / $terjawab_split["sedang"]) * 100, 0),
+                        "sulit" => $score_split["sulit"] === 0 ? 0 : number_format(($score_split["sulit"] / $terjawab_split["sulit"]) * 100, 0),
                     ];
                 }
             }
@@ -589,6 +602,7 @@ class DashboardController extends Controller {
                 "label" => $siswa->name,
                 "score" => $score,
                 "score_split" => $score_split,
+                "terjawab_split" => $terjawab_split,
                 "percentage_split" => $percentage_split,
             ]);
             array_push($result_ids, $siswa->id);
