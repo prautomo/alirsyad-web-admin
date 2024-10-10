@@ -153,7 +153,7 @@ class SimulasiController extends Controller{
             })
             ->addColumn("action", function ($data) {
                 $relModul = @$data->modul->slug ? "?rel=modul/".@$data->modul->slug.".html" : "";
-                $url_userdev = "https://userdev.alirsyadbandung.sch.id/";
+                $url_userdev = "https://user.alirsyadbandung.sch.id/";
                 $simulasi = Simulasi::find($data->id);
                 return view("components.datatable.actions", [
                     "name" => $data->name,

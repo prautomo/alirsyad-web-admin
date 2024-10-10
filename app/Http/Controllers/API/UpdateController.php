@@ -89,6 +89,7 @@ class UpdateController extends BaseController
             // });
             // filter tingkat nya sendiri
             $updates = $updates->where('tingkat_id', @$user->kelas->tingkat_id);
+
             $updates = $updates->orderBy('created_at', 'desc');
             if (@$request->limit) $updates = $updates->limit(@$request->limit);
             

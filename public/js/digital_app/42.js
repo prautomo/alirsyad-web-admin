@@ -19,10 +19,10 @@ exports.push([module.i, ".dashboard-final-score {\n    background: #F6D0A14D;\n 
 
 /***/ }),
 
-/***/ "./resources/js/backoffice/components/Dashboard/Superadmin.js":
-/*!********************************************************************!*\
-  !*** ./resources/js/backoffice/components/Dashboard/Superadmin.js ***!
-  \********************************************************************/
+/***/ "./resources/js/backoffice/components/Dashboard/KepalaSekolah.js":
+/*!***********************************************************************!*\
+  !*** ./resources/js/backoffice/components/Dashboard/KepalaSekolah.js ***!
+  \***********************************************************************/
 /*! exports provided: options, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -93,7 +93,7 @@ var options = {
     event["native"].target.style.cursor = chartElement[0] ? 'pointer' : 'default';
   }
 };
-function DashboardSuperadmin() {
+function DashboardKepalaSekolah() {
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
     _useState2 = _slicedToArray(_useState, 2),
     listConfigData = _useState2[0],
@@ -119,7 +119,6 @@ function DashboardSuperadmin() {
     filterLevel = _useState12[0],
     setfilterLevel = _useState12[1];
   var _useState13 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
-      jenjang: [],
       tingkat: [],
       kelas: [],
       mapel: [],
@@ -154,7 +153,7 @@ function DashboardSuperadmin() {
     isLoading = _useState26[0],
     setIsLoading = _useState26[1];
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    if ((listDatas === null || listDatas === void 0 ? void 0 : listDatas.length) < 1) {
+    if (listDatas.length < 1) {
       window.axios.post("/backoffice/json/dashboard/current").then(function (response) {
         var data = response.data.data;
         var level = data.level;
@@ -163,7 +162,7 @@ function DashboardSuperadmin() {
         var param3rd = data.param3rd;
         var params = {};
         if (level == null) {
-          level = 'jenjang';
+          level = 'tingkat';
         }
         if (param != null) {
           params[param] = data.value;
@@ -224,6 +223,7 @@ function DashboardSuperadmin() {
     var data = event.chart.data;
     var barLabel = event.chart.data.labels[dataIndex];
     var selectedIdx = dataIndex;
+    setIsLoading(true);
     setSelectedBarIdx({
       label: barLabel,
       idx: selectedIdx,
@@ -231,13 +231,13 @@ function DashboardSuperadmin() {
     });
   }
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    if (filters.jenjang.length < 1) {
-      window.axios.get("/backoffice/json/jenjangs").then(function (response) {
+    if (filters.tingkat.length < 1) {
+      window.axios.post("/backoffice/json/dashboard/filter/tingkat").then(function (response) {
         var data = response.data.data;
         setFilters(_objectSpread(_objectSpread({}, filters), {}, {
-          jenjang: data
+          tingkat: data
         }));
-        $("#jenjang").selectpicker("refresh");
+        $("#tingkat").selectpicker("refresh");
       })["catch"](function (err) {
         console.log(err);
       });
@@ -456,6 +456,8 @@ function DashboardSuperadmin() {
       color: "#9E9E9E"
     }
   }, "Filter By"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+<<<<<<< HEAD
+=======
     id: "jenjang",
     name: "jenjang",
     "data-style": "btn-green-pastel",
@@ -469,6 +471,7 @@ function DashboardSuperadmin() {
       value: data.id
     }, data.name);
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+>>>>>>> develop-dib
     id: "tingkat",
     name: "tingkat",
     "data-style": "btn-green-pastel",
@@ -592,9 +595,9 @@ function DashboardSuperadmin() {
     className: "mt-2"
   }, "Mohon tunggu..."))));
 }
-/* harmony default export */ __webpack_exports__["default"] = (DashboardSuperadmin);
-if (document.getElementById('dashboard-superadmin')) {
-  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DashboardSuperadmin, null), document.getElementById('dashboard-superadmin'));
+/* harmony default export */ __webpack_exports__["default"] = (DashboardKepalaSekolah);
+if (document.getElementById('dashboard-kepala-sekolah')) {
+  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DashboardKepalaSekolah, null), document.getElementById('dashboard-kepala-sekolah'));
 }
 
 /***/ }),
