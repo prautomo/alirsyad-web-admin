@@ -35,9 +35,12 @@ export const options = {
             anchor: 'center',
             color: 'white',
             // formatter: function(value){
-            //     return value + ' (100%) ';
-            // }
-        },    
+            //     return value + '%';
+            // },
+            // font: {
+            //     size: 3,
+            // }      
+        },
         title: {
             display: false,
         },
@@ -48,6 +51,7 @@ export const options = {
                 },
             }
         },
+        
     },
     onHover: (event, chartElement) => {
         event.native.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
@@ -246,27 +250,131 @@ function DashboardSuperadmin() {
         })
     }, [selectedBarIdx]);
 
+    const getOrCreateTooltip = (chart) => {
+        let tooltipEl = chart.canvas.parentNode.querySelector('div');
+      
+        if (!tooltipEl) {
+          tooltipEl = document.createElement('div');
+          tooltipEl.style.background = 'rgba(0, 0, 0, 0.7)';
+          tooltipEl.style.borderRadius = '3px';
+          tooltipEl.style.color = 'white';
+          tooltipEl.style.opacity = 1;
+          tooltipEl.style.pointerEvents = 'none';
+          tooltipEl.style.position = 'absolute';
+          tooltipEl.style.transform = 'translate(-50%, 0)';
+          tooltipEl.style.transition = 'all .1s ease';
+      
+          const table = document.createElement('table');
+          table.style.margin = '0px';
+      
+          tooltipEl.appendChild(table);
+          chart.canvas.parentNode.appendChild(tooltipEl);
+        }
+      
+        return tooltipEl;
+      };
+      
+      const externalTooltipHandler = (context) => {
+        // Tooltip Element
+        const {chart, tooltip} = context;
+        const tooltipEl = getOrCreateTooltip(chart);
+      
+        // Hide if no tooltip
+        if (tooltip.opacity === 0) {
+          tooltipEl.style.opacity = 0;
+          return;
+        }
+      
+        // Set Text
+        if (tooltip.body) {
+            const dataPoints = tooltip.dataPoints;
+
+            let innerHtml = `<tbody style="font-size:12px;" border="0">`
+
+            dataPoints.forEach((dataPoint, i) => {
+                const dataIndex = dataPoint?.dataIndex;
+                const dataset = dataPoint?.dataset;
+                const dataBenar = dataset?.benars[dataIndex];
+                const dataTerjawab = dataset?.terjawabs[dataIndex];
+                const dataPercentage = dataset?.data[dataIndex];
+
+                innerHtml += `<tr style="background-color: inherit; border-width: 0; text-align: center; font-weight: bold;">
+                    <td colspan="3" style='padding: 0px 3px; margin: 0px;'>${dataPoint?.label}</td>
+                </tr>`;
+
+                innerHtml += `<tr style="background-color: inherit; border-width: 0;">
+                    <td style='padding: 0px 3px; margin: 0px;'>Level</td>
+                    <td style='padding: 0px 3px; margin: 0px;'>:</td>
+                    <td style='padding: 0px 3px; margin: 0px;'>${dataset?.label}</td>
+                </tr>`;
+
+                innerHtml += `<tr style="background-color: inherit; border-width: 0;">
+                    <td style='padding: 0px 3px; margin: 0px;'>Total Benar</td>
+                    <td style='padding: 0px 3px; margin: 0px;'>:</td>
+                    <td style='padding: 0px 3px; margin: 0px;'>${dataBenar}</td>
+                </tr>`;
+
+                innerHtml += `<tr style="background-color: inherit; border-width: 0;">
+                    <td style='padding: 0px 3px; margin: 0px;'>Total Terjawab</td>
+                    <td style='padding: 0px 3px; margin: 0px;'>:</td>
+                    <td style='padding: 0px 3px; margin: 0px;'>${dataTerjawab}</td>
+                </tr>`;
+
+                innerHtml += `<tr style="background-color: inherit; border-width: 0;">
+                    <td style='padding: 0px 3px; margin: 0px;'>Persentase</td>
+                    <td style='padding: 0px 3px; margin: 0px;'>:</td>
+                    <td style='padding: 0px 3px; margin: 0px;'>${dataPercentage}%</td>
+                </tr>`;
+            });
+            innerHtml += `</tbody>`;
+
+            const tableRoot = tooltipEl.querySelector('table');
+            // Remove old children
+            while (tableRoot.firstChild) {
+                tableRoot.firstChild.remove();
+            }
+            // Add new children
+            tableRoot.innerHTML = innerHtml;
+        }
+      
+        const {offsetLeft: positionX, offsetTop: positionY} = chart.canvas;
+      
+        // Display, position, and set styles for font
+        tooltipEl.style.opacity = 1;
+        tooltipEl.style.left = positionX + tooltip.caretX + 'px';
+        tooltipEl.style.top = positionY + tooltip.caretY + 'px';
+        tooltipEl.style.font = tooltip.options.bodyFont.string;
+        tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
+      };
+
+
     useEffect(() => {
         const listConfig = [];
 
         console.log('currentLevel', currentLevel)
 
-        // if (currentLevel === 'siswa') {
-        //     options.indexAxis = 'y';
-        // } else {
-        //     options.indexAxis = 'x';
-        // }
+        if (currentLevel === 'siswa') {
+            // options.indexAxis = 'y';
+            // options.plugins.datalabels.formatter = function(value){
+            //     return value + '%';
+            // };
+            
+            // options.plugins.datalabels.font = {
+            //     size: 3,
+            // }; 
+        } else {
+            // options.indexAxis = 'x';
+            options.plugins.datalabels.formatter = function(value){
+                return value;
+            };
+            // options.plugins.datalabels.font = {
+            //     size: 12,
+            // }; 
+        }
 
         options.plugins['tooltip'] = {
-            callbacks: {
-                label: function(tooltipItem) {
-                    if (currentLevel === 'siswa') {
-                        return Number(tooltipItem?.formattedValue) + "%";
-                    } else {
-                        return Number(tooltipItem?.formattedValue);
-                    }
-                }
-            }
+            enabled: false,
+            external: externalTooltipHandler,
         }
 
         for (let i=0; i<listDatas.length; i++) {
@@ -276,14 +384,34 @@ function DashboardSuperadmin() {
             const tempScoresSedang = [];
             const tempScoresSulit = [];
 
+            const tempTerjawabMudah = [];
+            const tempTerjawabSedang = [];
+            const tempTerjawabSulit = [];
+
+            const tempPercentageMudah = [];
+            const tempPercentageSedang = [];
+            const tempPercentageSulit = [];
+
             listDatas[i].forEach(element => {
                 const data = element;
                 labels.push(data.label);
                 tempScores.push(data.score);
                 if (data?.percentage_split) {
-                    tempScoresMudah.push(data?.percentage_split?.mudah ?? 0);
-                    tempScoresSedang.push(data?.percentage_split?.sedang ?? 0);
-                    tempScoresSulit.push(data?.percentage_split?.sulit ?? 0);
+                    tempPercentageMudah.push(data?.percentage_split?.mudah ?? 0);
+                    tempPercentageSedang.push(data?.percentage_split?.sedang ?? 0);
+                    tempPercentageSulit.push(data?.percentage_split?.sulit ?? 0);
+                }
+
+                if (data?.score_split) {
+                    tempScoresMudah.push(data?.score_split?.mudah ?? 0);
+                    tempScoresSedang.push(data?.score_split?.sedang ?? 0);
+                    tempScoresSulit.push(data?.score_split?.sulit ?? 0);
+                }
+
+                if (data?.terjawab_split) {
+                    tempTerjawabMudah.push(data?.terjawab_split?.mudah ?? 0);
+                    tempTerjawabSedang.push(data?.terjawab_split?.sedang ?? 0);
+                    tempTerjawabSulit.push(data?.terjawab_split?.sulit ?? 0);
                 }
             });
             
@@ -295,28 +423,34 @@ function DashboardSuperadmin() {
             if (currentLevel === "siswa") {
                 objConfig.datasets.push({
                     label: 'Mudah',
-                    data: tempScoresMudah,
+                    data: tempPercentageMudah,
                     backgroundColor: "rgba(2, 65, 2, 1)",
                     borderRadius: 10,
                     minBarLength: 1,
+                    benars: tempScoresMudah,
+                    terjawabs: tempTerjawabMudah,
                     // barThickness: 20,
                 });
 
                 objConfig.datasets.push({
                     label: 'Sedang',
-                    data: tempScoresSedang,
+                    data: tempPercentageSedang,
                     backgroundColor: "rgba(255, 153, 51, 1)",
                     borderRadius: 10,
                     minBarLength: 1,
+                    benars: tempScoresSedang,
+                    terjawabs: tempTerjawabSedang,
                     // barThickness: 120,
                 });
 
                 objConfig.datasets.push({
                     label: 'Sulit',
-                    data: tempScoresSulit,
+                    data: tempPercentageSulit,
                     backgroundColor: "rgba(255, 51, 51, 1)",
                     borderRadius: 10,
                     minBarLength: 1,
+                    benars: tempScoresSulit,
+                    terjawabs: tempTerjawabSulit,
                     // barThickness: 120,
                 });
             } else {

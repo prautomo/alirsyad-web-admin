@@ -12,7 +12,11 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
+<<<<<<< HEAD
 exports.push([module.i, "", ""]);
+=======
+exports.push([module.i, ".dashboard-final-score {\n    background: #F6D0A14D;\n    padding: 10px 20px;\n    border-radius: 4px !important;\n    color: #E98A15 !important;\n}\n\n.dashboard-filter .bootstrap-select {\n    width: 200px !important;\n}", ""]);
+>>>>>>> develop-dib
 
 // exports
 

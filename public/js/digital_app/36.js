@@ -12,7 +12,11 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
+<<<<<<< HEAD
 exports.push([module.i, "\n.rating-checked {\n    color: orange;\n}\n\n.title-nilai-simulasi {\n    line-height: 0 !important;\n    margin-top: 15px;\n}\n\n.cursor-pointer {cursor: pointer;}\n\n.disable {\n    color: #9f9d9d !important;\n}", ""]);
+=======
+exports.push([module.i, "#progress-detail-guru .nav-tabs {\n    overflow-x: hidden;\n    overflow-y: hidden;\n    flex-wrap: nowrap;\n}\n#progress-detail-guru .nav-tabs .nav-link {\n    white-space: nowrap;\n}\n\n#progress-detail-guru .nav-tabs:hover {\n    overflow-x: auto;\n}", ""]);
+>>>>>>> develop-dib
 
 // exports
 
