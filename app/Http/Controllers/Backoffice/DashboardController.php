@@ -561,8 +561,10 @@ class DashboardController extends Controller {
                 ];
             }
 
-            $count_scores[$item->user_id] += $this->getScoreFinal($item->total_benar, $item->tingkat_kesulitan);
-            $count_score_splits[$item->user_id][$item->tingkat_kesulitan] += $this->getScoreFinal($item->total_benar, $item->tingkat_kesulitan);
+            // $count_scores[$item->user_id] += $this->getScoreFinal($item->total_benar, $item->tingkat_kesulitan);
+            $count_scores[$item->user_id] += $item->total_benar;
+            // $count_score_splits[$item->user_id][$item->tingkat_kesulitan] += $this->getScoreFinal($item->total_benar, $item->tingkat_kesulitan);
+            $count_score_splits[$item->user_id][$item->tingkat_kesulitan] += $item->total_benar;
             $count_terjawab_splits[$item->user_id][$item->tingkat_kesulitan] += $item->total_terjawab;
         }
 
