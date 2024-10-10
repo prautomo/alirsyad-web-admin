@@ -14,17 +14,17 @@ require('./datatable');
  */
 
 // admin
-import('./backoffice/components/ExternalUser');
-import('./backoffice/components/Dashboard');
-import('./backoffice/components/ERaport');
-import('./backoffice/components/StoryPath/Form');
-import('./backoffice/pages/Soal');
+require('./backoffice/components/ExternalUser');
+require('./backoffice/components/Dashboard');
+require('./backoffice/components/ERaport');
+require('./backoffice/components/StoryPath/Form');
+require('./backoffice/pages/Soal');
 // siswa
-import('./frontoffice/components/Video/Detail');
-import('./frontoffice/components/Modul/Detail');
-import('./frontoffice/components/Nilai/List');
+require('./frontoffice/components/Video/Detail');
+require('./frontoffice/components/Modul/Detail');
+require('./frontoffice/components/Nilai/List');
 // guru
-import('./guru/components/Dashboard/DetailProgressBelajar');
-import('./guru/components/Progress/ListSiswa');
-import('./guru/components/Progress/DetailSiswa');
-import('./guru/components/Progress/DetailSimulasiPercobaan');
+require('./guru/components/Dashboard/DetailProgressBelajar');
+require('./guru/components/Progress/ListSiswa');
+require('./guru/components/Progress/DetailSiswa');
+require('./guru/components/Progress/DetailSimulasiPercobaan');
