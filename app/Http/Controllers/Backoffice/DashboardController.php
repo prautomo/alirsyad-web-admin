@@ -574,9 +574,9 @@ class DashboardController extends Controller {
                 "sulit" => 0,
             ];
             $percentage_split = [
-                "mudah" => "0%",
-                "sedang" => "0%",
-                "sulit" => "0%",
+                "mudah" => 0,
+                "sedang" => 0,
+                "sulit" => 0,
             ];
             $terjawab_split = [
                 "mudah" => 0,
