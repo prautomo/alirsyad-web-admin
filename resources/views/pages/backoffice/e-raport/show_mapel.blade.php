@@ -103,25 +103,25 @@
                         @foreach($bab['subbabs'] as $subbab)
                             <tr>
                                 <td>{{ $subbab['name'] }}</td>
-                                <td>{{ $subbab['mudah'] }}</td>
-                                <td>{{ $subbab['sedang'] }}</td>
-                                <td>{{ $subbab['sulit'] }}</td>
+                                <td>{{ $subbab['mudah'] . "/" . $subbab['mudah_terjawab'] }}</td>
+                                <td>{{ $subbab['sedang'] . "/" . $subbab['sedang_terjawab']  }}</td>
+                                <td>{{ $subbab['sulit'] . "/" . $subbab['sulit_terjawab']  }}</td>
                                 <td>{{ $subbab['total'] }}</td>
                             </tr>
                         @endforeach
                         <tr class="row-bab">
                             <td>{{ $bab['name'] }}</td>
-                            <td>{{ $bab['mudah'] }}</td>
-                            <td>{{ $bab['sedang'] }}</td>
-                            <td>{{ $bab['sulit'] }}</td>
+                            <td>{{ $bab['mudah'] . "/" . $subbab['mudah_terjawab'] }}</td>
+                            <td>{{ $bab['sedang'] . "/" . $subbab['sedang_terjawab'] }}</td>
+                            <td>{{ $bab['sulit'] . "/" . $subbab['sulit_terjawab'] }}</td>
                             <td>{{ $bab['total'] }}</td>
                         </tr>
                     @endforeach
                     <tr class="row-mapel">
                         <td>{{ $data['name'] }}</td>
-                        <td>{{ $data['mudah'] }}</td>
-                        <td>{{ $data['sedang'] }}</td>
-                        <td>{{ $data['sulit'] }}</td>
+                        <td>{{ $data['mudah'] . "/" . $subbab['mudah_terjawab'] }}</td>
+                        <td>{{ $data['sedang'] . "/" . $subbab['sedang_terjawab'] }}</td>
+                        <td>{{ $data['sulit'] . "/" . $subbab['sulit_terjawab'] }}</td>
                         <td>{{ $data['total'] }}</td>
                     </tr>
                 </tbody>

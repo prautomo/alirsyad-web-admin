@@ -83,14 +83,20 @@ function GrafikERaport({ siswa_id, mapel_id }) {
                     result = data_subbabs.subbabs.map((element) => {
                         return {
                           'label' : element.label,
-                          'score' : element.score
+                          'score' : element.score,
+                          'mudah' : element.mudah,
+                          'sedang' : element.sedang,
+                          'sulit' : element.sulit
                         }
                     })
                 }else{
                     result = data_babs.map((element) => {
                         return {
                           'label' : element.label,
-                          'score' : element.score
+                          'score' : element.score,
+                          'mudah' : element.mudah,
+                          'sedang' : element.sedang,
+                          'sulit' : element.sulit
                         }
                     })
                 }
@@ -106,19 +112,40 @@ function GrafikERaport({ siswa_id, mapel_id }) {
 
     useEffect(() => {
         const labels = [];
-        const tempScores = [];
+        const tempMudah = [];
+        const tempSedang = [];
+        const tempSulit = [];
         for (let i=0; i<datas.length; i++) {
             const data = datas[i];
             labels.push(data.label);
-            tempScores.push(data.score);
+            tempMudah.push(data.mudah);
+            tempSedang.push(data.sedang);
+            tempSulit.push(data.sulit);
         }
+
         setConfigData({
             labels,
             datasets: [
                 {
-                    label: 'Score',
-                    data: tempScores,
+                    label: 'Percentage Mudah',
+                    data: tempMudah,
                     backgroundColor: 'rgba(2, 65, 2, 1)',
+                    borderRadius: 10,
+                    minBarLength: 1,
+                    // barThickness: 120,
+                },
+                {
+                    label: 'Percentage Sedang',
+                    data: tempSedang,
+                    backgroundColor: 'rgba(255, 153, 51, 1)',
+                    borderRadius: 10,
+                    minBarLength: 1,
+                    // barThickness: 120,
+                },
+                {
+                    label: 'Percentage Sulit',
+                    data: tempSulit,
+                    backgroundColor: 'rgba(255, 51, 51, 1)',
                     borderRadius: 10,
                     minBarLength: 1,
                     // barThickness: 120,
