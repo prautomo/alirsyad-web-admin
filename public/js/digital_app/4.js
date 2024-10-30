@@ -286,6 +286,7 @@ function DashboardSuperadmin() {
   }, [selectedBarIdx]);
   var getOrCreateTooltip = function getOrCreateTooltip(chart) {
     var tooltipEl = chart.canvas.parentNode.querySelector('div');
+    console.log('tooltipEl 0', tooltipEl);
     if (!tooltipEl) {
       tooltipEl = document.createElement('div');
       tooltipEl.style.background = 'rgba(0, 0, 0, 0.7)';
