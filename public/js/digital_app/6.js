@@ -1,1 +1,355 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[6],{103:function(e,t,a){var n=a(419);"string"==typeof n&&(n=[[e.i,n,""]]);var r={hmr:!0,transform:void 0,insertInto:void 0};a(53)(n,r);n.locals&&(e.exports=n.locals)},419:function(e,t,a){(e.exports=a(52)(!1)).push([e.i,".dashboard-final-score{background:rgba(246,208,161,.30196078431372547);padding:10px 20px;border-radius:4px!important;color:#e98a15!important}.dashboard-filter .bootstrap-select{width:200px!important}",""])},424:function(e,t,a){"use strict";a.r(t),a.d(t,"options",(function(){return g}));var n=a(0),r=a.n(n),l=a(14),o=a.n(l),c=(a(103),a(16)),i=a(43),s=a(42),u=a(62);function d(e){return(d="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e})(e)}function b(e,t){var a=Object.keys(e);if(Object.getOwnPropertySymbols){var n=Object.getOwnPropertySymbols(e);t&&(n=n.filter((function(t){return Object.getOwnPropertyDescriptor(e,t).enumerable}))),a.push.apply(a,n)}return a}function m(e){for(var t=1;t<arguments.length;t++){var a=null!=arguments[t]?arguments[t]:{};t%2?b(Object(a),!0).forEach((function(t){f(e,t,a[t])})):Object.getOwnPropertyDescriptors?Object.defineProperties(e,Object.getOwnPropertyDescriptors(a)):b(Object(a)).forEach((function(t){Object.defineProperty(e,t,Object.getOwnPropertyDescriptor(a,t))}))}return e}function f(e,t,a){var n;return n=function(e,t){if("object"!=d(e)||!e)return e;var a=e[Symbol.toPrimitive];if(void 0!==a){var n=a.call(e,t||"default");if("object"!=d(n))return n;throw new TypeError("@@toPrimitive must return a primitive value.")}return("string"===t?String:Number)(e)}(t,"string"),(t="symbol"==d(n)?n:n+"")in e?Object.defineProperty(e,t,{value:a,enumerable:!0,configurable:!0,writable:!0}):e[t]=a,e}function p(e,t){return function(e){if(Array.isArray(e))return e}(e)||function(e,t){var a=null==e?null:"undefined"!=typeof Symbol&&e[Symbol.iterator]||e["@@iterator"];if(null!=a){var n,r,l,o,c=[],i=!0,s=!1;try{if(l=(a=a.call(e)).next,0===t){if(Object(a)!==a)return;i=!1}else for(;!(i=(n=l.call(a)).done)&&(c.push(n.value),c.length!==t);i=!0);}catch(e){s=!0,r=e}finally{try{if(!i&&null!=a.return&&(o=a.return(),Object(o)!==o))return}finally{if(s)throw r}}return c}}(e,t)||function(e,t){if(!e)return;if("string"==typeof e)return h(e,t);var a=Object.prototype.toString.call(e).slice(8,-1);"Object"===a&&e.constructor&&(a=e.constructor.name);if("Map"===a||"Set"===a)return Array.from(e);if("Arguments"===a||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(a))return h(e,t)}(e,t)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function h(e,t){(null==t||t>e.length)&&(t=e.length);for(var a=0,n=new Array(t);a<t;a++)n[a]=e[a];return n}c.Chart.register(c.CategoryScale,c.LinearScale,c.BarElement,c.Title,c.Tooltip,c.Legend,i.a);var g={responsive:!0,plugins:{legend:{display:!1},datalabels:{display:!0,align:"center",anchor:"center",color:"white"},title:{display:!1},scales:{y:{ticks:{stepSize:500}}}},onHover:function(e,t){e.native.target.style.cursor=t[0]?"pointer":"default"}};function v(){var e=p(Object(n.useState)([]),2),t=e[0],a=e[1],l=p(Object(n.useState)([]),2),o=l[0],c=l[1],i=p(Object(n.useState)([]),2),d=i[0],b=i[1],h=p(Object(n.useState)({}),2),v=h[0],y=h[1],E=p(Object(n.useState)({}),2),w=E[0],j=E[1],O=p(Object(n.useState)([]),2),S=O[0],x=O[1],k=p(Object(n.useState)({mapel:[],bab:[],subbab:[]}),2),_=k[0],C=k[1],N=p(Object(n.useState)(0),2),P=N[0],I=N[1],L=p(Object(n.useState)(0),2),M=L[0],A=L[1],D=p(Object(n.useState)(0),2),B=D[0],F=D[1],T=p(Object(n.useState)(""),2),J=T[0],R=T[1],z=p(Object(n.useState)(""),2),H=z[0],U=z[1],q=p(Object(n.useState)(!0),2),G=q[0],K=q[1];Object(n.useEffect)((function(){o.length<1&&(window.axios.post("/backoffice/json/dashboard/current").then((function(e){var t=e.data.data,a=t.level,n=t.param,r=t.param2nd,l=t.param3rd,o={};null==a&&(a="mapel"),null!=n&&(o[n]=t.value),null!=r&&(o[r]=t.value2nd),null!=l&&(o[l]=t.value3rd),window.axios.post("/backoffice/json/dashboard/".concat(a),o).then((function(e){var t=e.data.data,a=t.data,n=t.data_id,r=t.next_api,l=t.graphic_title,o=t.level;g.onClick=V,t.kelas_id&&I(t.kelas_id),t.bab_id&&F(t.bab_id),t.mapel_id&&A(t.mapel_id),K(!1),R(l),U(o),y(r),c(a),b(n)})).catch((function(e){console.log(e)}))})).catch((function(e){console.log(e)})),window.axios.post("/backoffice/json/dashboard/filter/level").then((function(e){var t=e.data.data;x(t)})).catch((function(e){console.log(e)})))}),[]);var Q={borderLeft:"1px solid #F6D0A1",marginLeft:"5px",marginRight:"5px"};function V(e,t){if(0!==t.length){var a=t[0].element.$context,n=a.dataIndex,r=(a.raw,e.chart.data,e.chart.data.labels[n]),l=n;K(!0),j({label:r,idx:l,isClick:!0})}}Object(n.useEffect)((function(){_.mapel.length<1&&window.axios.post("/backoffice/json/dashboard/filter/mapel").then((function(e){var t=e.data.data;C(m(m({},_),{},{mapel:t})),$("#mapel").selectpicker("refresh")})).catch((function(e){console.log(e)}))}),[]),Object(n.useEffect)((function(){var e=w.isClick?d[w.idx]:w.idx;if("siswa"!=H){K(!0);var t=f({},v.param,e);0!=P&&(t.kelas_id=P),0!=B&&(t.bab_id=B),window.axios.post("/backoffice/json/dashboard/".concat(v.name),t).then((function(e){var t=e.data.data;g.onClick=V;var a=t.data,n=t.data_id,r=t.graphic_title,l=t.next_api,o=t.level;t.kelas_id&&I(t.kelas_id),t.bab_id&&F(t.bab_id),t.mapel_id&&A(t.mapel_id),K(!1),R(r),U(o),y(l),b(n),c(a)})).catch((function(e){console.log(e)}))}else window.location.href="/backoffice/e-raport/".concat(e,"/").concat(M)}),[w]),Object(n.useEffect)((function(){for(var e,t=[],n=function(){var a=[],n=[];o[r].forEach((function(e){var t=e;a.push(t.label),n.push(t.score)})),e={labels:a,datasets:[{label:"Score",data:n,backgroundColor:"rgba(2, 65, 2, 1)",borderRadius:10,minBarLength:1}]},t.push(e)},r=0;r<o.length;r++)n();console.log("listConfig",t),a(t)}),[o]);var W=function(e){var t=S.filter((function(t){return t.option==e.target.id}));if(0!=t.length){var a=t[0];y(a.next_api);var n=f({},a.next_api.param,e.target.value);0!=P&&(n.kelas_id=P),window.axios.post("/backoffice/json/dashboard/filter/".concat(a.next_api.name),n).then((function(e){var t=e.data.data;C(m(m({},_),{},f({},a.next_api.name,t))),$("#".concat(a.next_api.name)).selectpicker("refresh")})).catch((function(e){console.log(e)})),K(!0),j({label:e.target.id,idx:e.target.value,isClick:!1})}};return r.a.createElement(r.a.Fragment,null,r.a.createElement("div",{className:"row mb-4"},r.a.createElement("div",{className:"col-12"},r.a.createElement("div",{style:{display:"flex",alignItems:"center"}},r.a.createElement("div",{style:{marginLeft:"auto"},class:"dashboard-filter"},r.a.createElement("label",{className:"my-auto mr-2",style:{color:"#9E9E9E"}},"Filter By"),r.a.createElement("select",{id:"mapel",name:"mapel","data-style":"btn-green-pastel",class:"selectpicker mr-2",placeholder:"Mata Pelajaran",onChange:W},r.a.createElement("option",{value:""},"Semua Mata Pelajaran"),_.mapel.length>0&&_.mapel.map((function(e){return r.a.createElement("option",{value:e.id},e.name)}))),r.a.createElement("select",{id:"bab",name:"bab","data-style":"btn-green-pastel",class:"selectpicker mr-2",placeholder:"Module",onChange:W},r.a.createElement("option",{value:""},"Semua Module"),_.bab.length>0&&_.bab.map((function(e){return r.a.createElement("option",{value:e.id},e.name)}))),r.a.createElement("select",{id:"subbab",name:"subbab","data-style":"btn-green-pastel",class:"selectpicker mr-2",placeholder:"Sub-Module",onChange:W},r.a.createElement("option",{value:""},"Semua Sub-Module"),_.subbab.length>0&&_.subbab.map((function(e){return r.a.createElement("option",{value:e.id},e.name)}))))))),G?r.a.createElement("div",{className:"row",style:{height:"70vh",width:"100%"}},r.a.createElement("div",{className:"col-12 d-flex justify-content-center align-items-center",style:{flexDirection:"column"}},r.a.createElement(u.a,{visible:!0,height:"100",width:"100",color:"#024102",ariaLabel:"three-circles-loading",wrapperStyle:{},wrapperClass:""}),r.a.createElement("h2",{class:"mt-2"},"Mohon tunggu..."))):t&&t.map((function(e,t){return r.a.createElement("div",{className:"row"},r.a.createElement("div",{className:"col-12"},r.a.createElement("div",{className:"card"},r.a.createElement("div",{className:"card-body"},r.a.createElement("div",{style:{display:"flex",alignItems:"center"},className:"mb-3"},r.a.createElement("h2",{className:"text-primary"},r.a.createElement("b",null,J)),r.a.createElement("div",{className:"dashboard-final-score",style:{marginLeft:"auto"}},e.datasets[0].data.length<15&&e.datasets[0].data.map((function(t,a){return r.a.createElement(r.a.Fragment,null,r.a.createElement("span",null,e.labels[a]," : ",r.a.createElement("b",null,t)),r.a.createElement("span",{style:Q}))})))),r.a.createElement(s.a,{options:g,data:e})))))})))}t.default=v,document.getElementById("dashboard-wali-kelas")&&o.a.render(r.a.createElement(v,null),document.getElementById("dashboard-wali-kelas"))}}]);
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[6],{
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./resources/js/backoffice/components/ERaport/index.css":
+/*!**********************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/postcss-loader/src??ref--6-2!./resources/js/backoffice/components/ERaport/index.css ***!
+  \**********************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, ".dashboard-final-score {\r\n    background: #F6D0A14D;\r\n    padding: 10px 20px;\r\n    border-radius: 4px !important;\r\n    color: #E98A15 !important;\r\n}\r\n\r\n.dashboard-filter .bootstrap-select {\r\n    width: 200px !important;\r\n}", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./resources/js/backoffice/components/ERaport/Grafik.js":
+/*!**************************************************************!*\
+  !*** ./resources/js/backoffice/components/ERaport/Grafik.js ***!
+  \**************************************************************/
+/*! exports provided: options, data, default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "options", function() { return options; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "data", function() { return data; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _index_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./index.css */ "./resources/js/backoffice/components/ERaport/index.css");
+/* harmony import */ var _index_css__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_index_css__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var chart_js_auto_auto_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! chart.js/auto/auto.js */ "./node_modules/chart.js/auto/auto.js");
+/* harmony import */ var chart_js_auto_auto_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(chart_js_auto_auto_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var chartjs_plugin_datalabels__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! chartjs-plugin-datalabels */ "./node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.esm.js");
+/* harmony import */ var react_chartjs_2__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-chartjs-2 */ "./node_modules/react-chartjs-2/dist/index.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+
+
+chart_js_auto_auto_js__WEBPACK_IMPORTED_MODULE_3__["Chart"].register(chart_js_auto_auto_js__WEBPACK_IMPORTED_MODULE_3__["CategoryScale"], chart_js_auto_auto_js__WEBPACK_IMPORTED_MODULE_3__["LinearScale"], chart_js_auto_auto_js__WEBPACK_IMPORTED_MODULE_3__["BarElement"], chart_js_auto_auto_js__WEBPACK_IMPORTED_MODULE_3__["Title"], chart_js_auto_auto_js__WEBPACK_IMPORTED_MODULE_3__["Tooltip"], chart_js_auto_auto_js__WEBPACK_IMPORTED_MODULE_3__["Legend"], chartjs_plugin_datalabels__WEBPACK_IMPORTED_MODULE_4__["default"]);
+var options = {
+  responsive: true,
+  plugins: {
+    legend: {
+      display: false
+    },
+    datalabels: {
+      display: true,
+      align: 'center',
+      anchor: 'center',
+      color: 'white'
+    },
+    title: {
+      display: false
+    },
+    scales: {
+      y: {
+        ticks: {
+          stepSize: 500
+        }
+      }
+    }
+  },
+  onHover: function onHover(event, chartElement) {
+    event["native"].target.style.cursor = chartElement[0] ? 'pointer' : 'default';
+  }
+};
+var data = {
+  undefined: undefined,
+  datasets: [{
+    label: 'Score',
+    data: [],
+    backgroundColor: 'rgba(2, 65, 2, 1)'
+  }]
+};
+function GrafikERaport(_ref) {
+  var siswa_id = _ref.siswa_id,
+    mapel_id = _ref.mapel_id;
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(data),
+    _useState2 = _slicedToArray(_useState, 2),
+    configData = _useState2[0],
+    setConfigData = _useState2[1];
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+    _useState4 = _slicedToArray(_useState3, 2),
+    datas = _useState4[0],
+    setDatas = _useState4[1];
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({}),
+    _useState6 = _slicedToArray(_useState5, 2),
+    title = _useState6[0],
+    setTitle = _useState6[1];
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    var searchParams = new URLSearchParams(window.location.search);
+    if (datas.length < 1) {
+      // get data from /json/e-raport/grafik/{id}/{mapelId}; id = siswa_id
+      window.axios.get("/backoffice/json/e-raport/grafik/".concat(siswa_id, "/").concat(mapel_id)).then(function (response) {
+        var data = response.data.data;
+        var data_babs = data.babs;
+        var result;
+        if (searchParams.has('bab')) {
+          var bab_id = searchParams.get('bab');
+          var data_subbabs = data_babs.find(function (element) {
+            return element.id == bab_id;
+          });
+          result = data_subbabs.subbabs.map(function (element) {
+            return {
+              'label': element.label,
+              'score': element.score,
+              'mudah': element.mudah,
+              'sedang': element.sedang,
+              'sulit': element.sulit
+            };
+          });
+        } else {
+          result = data_babs.map(function (element) {
+            return {
+              'label': element.label,
+              'score': element.score,
+              'mudah': element.mudah,
+              'sedang': element.sedang,
+              'sulit': element.sulit
+            };
+          });
+        }
+        setDatas(result);
+        setTitle({
+          'label': data.label,
+          'total_score': data.score
+        });
+      });
+    }
+  }, []);
+  var getOrCreateTooltip = function getOrCreateTooltip(chart) {
+    var tooltipEl = chart.canvas.parentNode.querySelector('div');
+    if (tooltipEl != undefined) {
+      var existTooltip = document.getElementById("chart-tooltip");
+      if (existTooltip != undefined) {
+        existTooltip.remove();
+      }
+      tooltipEl = document.createElement('div');
+      tooltipEl.id = 'chart-tooltip';
+      tooltipEl.style.background = 'rgba(0, 0, 0, 0.7)';
+      tooltipEl.style.borderRadius = '3px';
+      tooltipEl.style.color = 'white';
+      tooltipEl.style.opacity = 1;
+      tooltipEl.style.pointerEvents = 'none';
+      tooltipEl.style.position = 'absolute';
+      tooltipEl.style.transform = 'translate(-50%, 0)';
+      tooltipEl.style.transition = 'all .1s ease';
+      var table = document.createElement('table');
+      table.style.margin = '0px';
+      tooltipEl.appendChild(table);
+      chart.canvas.parentNode.appendChild(tooltipEl);
+    }
+    return tooltipEl;
+  };
+  var externalTooltipHandler = function externalTooltipHandler(context) {
+    // Tooltip Element
+    var chart = context.chart,
+      tooltip = context.tooltip;
+    var tooltipEl = getOrCreateTooltip(chart);
+
+    // Hide if no tooltip
+    if (tooltip.opacity === 0) {
+      tooltipEl.style.opacity = 0;
+      return;
+    }
+
+    // Set Text
+    if (tooltip.body) {
+      var dataPoints = tooltip.dataPoints;
+      var innerHtml = "<tbody style=\"font-size:12px;\" border=\"0\">";
+      dataPoints.forEach(function (dataPoint, i) {
+        var dataIndex = dataPoint === null || dataPoint === void 0 ? void 0 : dataPoint.dataIndex;
+        var dataset = dataPoint === null || dataPoint === void 0 ? void 0 : dataPoint.dataset;
+        var dataBenar = dataset === null || dataset === void 0 ? void 0 : dataset.benars[dataIndex];
+        var dataTerjawab = dataset === null || dataset === void 0 ? void 0 : dataset.terjawabs[dataIndex];
+        var dataPercentage = dataset === null || dataset === void 0 ? void 0 : dataset.data[dataIndex];
+        innerHtml += "<tr style=\"background-color: inherit; border-width: 0; text-align: center; font-weight: bold;\">\n                    <td colspan=\"3\" style='padding: 0px 3px; margin: 0px;'>".concat(dataPoint === null || dataPoint === void 0 ? void 0 : dataPoint.label, "</td>\n                </tr>");
+        innerHtml += "<tr style=\"background-color: inherit; border-width: 0;\">\n                    <td style='padding: 0px 3px; margin: 0px;'>Level</td>\n                    <td style='padding: 0px 3px; margin: 0px;'>:</td>\n                    <td style='padding: 0px 3px; margin: 0px;'>".concat(dataset === null || dataset === void 0 ? void 0 : dataset.label, "</td>\n                </tr>");
+        innerHtml += "<tr style=\"background-color: inherit; border-width: 0;\">\n                    <td style='padding: 0px 3px; margin: 0px;'>Total Benar</td>\n                    <td style='padding: 0px 3px; margin: 0px;'>:</td>\n                    <td style='padding: 0px 3px; margin: 0px;'>".concat(dataBenar, "</td>\n                </tr>");
+        innerHtml += "<tr style=\"background-color: inherit; border-width: 0;\">\n                    <td style='padding: 0px 3px; margin: 0px;'>Total Terjawab</td>\n                    <td style='padding: 0px 3px; margin: 0px;'>:</td>\n                    <td style='padding: 0px 3px; margin: 0px;'>".concat(dataTerjawab, "</td>\n                </tr>");
+        innerHtml += "<tr style=\"background-color: inherit; border-width: 0;\">\n                    <td style='padding: 0px 3px; margin: 0px;'>Persentase</td>\n                    <td style='padding: 0px 3px; margin: 0px;'>:</td>\n                    <td style='padding: 0px 3px; margin: 0px;'>".concat(dataPercentage, "%</td>\n                </tr>");
+      });
+      innerHtml += "</tbody>";
+      var tableRoot = tooltipEl.querySelector('table');
+
+      // Remove old children
+      while (tableRoot.firstChild) {
+        tableRoot.firstChild.remove();
+      }
+      // Add new children
+      tableRoot.innerHTML = innerHtml;
+    }
+    var _chart$canvas = chart.canvas,
+      positionX = _chart$canvas.offsetLeft,
+      positionY = _chart$canvas.offsetTop;
+
+    // Display, position, and set styles for font
+    tooltipEl.style.opacity = 1;
+    tooltipEl.style.left = positionX + tooltip.caretX + 'px';
+    tooltipEl.style.top = positionY + tooltip.caretY + 'px';
+    tooltipEl.style.font = tooltip.options.bodyFont.string;
+    tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
+  };
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    var labels = [];
+    var tempMudah = {
+      totalBenar: [],
+      totalTerjawab: [],
+      percentage: []
+    };
+    var tempSedang = {
+      totalBenar: [],
+      totalTerjawab: [],
+      percentage: []
+    };
+    var tempSulit = {
+      totalBenar: [],
+      totalTerjawab: [],
+      percentage: []
+    };
+    options.plugins['tooltip'] = {
+      enabled: false,
+      external: externalTooltipHandler
+    };
+    for (var i = 0; i < datas.length; i++) {
+      var _data = datas[i];
+      labels.push(_data.label);
+      tempMudah.totalBenar.push(_data.mudah.total_benar);
+      tempSedang.totalBenar.push(_data.sedang.total_benar);
+      tempSulit.totalBenar.push(_data.sulit.total_benar);
+      tempMudah.totalTerjawab.push(_data.mudah.total_terjawab);
+      tempSedang.totalTerjawab.push(_data.sedang.total_terjawab);
+      tempSulit.totalTerjawab.push(_data.sulit.total_terjawab);
+      tempMudah.percentage.push(_data.mudah.percentage);
+      tempSedang.percentage.push(_data.sedang.percentage);
+      tempSulit.percentage.push(_data.sulit.percentage);
+    }
+    setConfigData({
+      labels: labels,
+      datasets: [{
+        label: 'Percentage Mudah',
+        data: tempMudah.percentage,
+        backgroundColor: 'rgba(2, 65, 2, 1)',
+        borderRadius: 10,
+        minBarLength: 1,
+        benars: tempMudah.totalBenar,
+        terjawabs: tempMudah.totalTerjawab
+        // barThickness: 120,
+      }, {
+        label: 'Percentage Sedang',
+        data: tempSedang.percentage,
+        backgroundColor: 'rgba(255, 153, 51, 1)',
+        borderRadius: 10,
+        minBarLength: 1,
+        benars: tempSedang.totalBenar,
+        terjawabs: tempSedang.totalTerjawab
+        // barThickness: 120,
+      }, {
+        label: 'Percentage Sulit',
+        data: tempSulit.percentage,
+        backgroundColor: 'rgba(255, 51, 51, 1)',
+        borderRadius: 10,
+        minBarLength: 1,
+        benars: tempSulit.totalBenar,
+        terjawabs: tempSulit.totalTerjawab
+        // barThickness: 120,
+      }]
+    });
+  }, [datas]);
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "row mt-4"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "col-12"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "card-body"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center'
+    },
+    className: "mb-3"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "text-primary"
+  }, title.label), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "dashboard-final-score",
+    style: {
+      marginLeft: 'auto'
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, title.label, " : ", title.total_score))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_chartjs_2__WEBPACK_IMPORTED_MODULE_5__["Bar"], {
+    options: options,
+    data: configData
+  }))))));
+}
+/* harmony default export */ __webpack_exports__["default"] = (GrafikERaport);
+var container = document.getElementById("grafik-eraport");
+if (container) {
+  var siswaId = container.getAttribute("siswa-id");
+  var mapelId = container.getAttribute("mapel-id");
+  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(GrafikERaport, {
+    siswa_id: siswaId,
+    mapel_id: mapelId
+  }), container);
+}
+
+/***/ }),
+
+/***/ "./resources/js/backoffice/components/ERaport/index.css":
+/*!**************************************************************!*\
+  !*** ./resources/js/backoffice/components/ERaport/index.css ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../../node_modules/css-loader??ref--6-1!../../../../../node_modules/postcss-loader/src??ref--6-2!./index.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./resources/js/backoffice/components/ERaport/index.css");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ })
+
+}]);

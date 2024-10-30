@@ -45,6 +45,9 @@ export const options = {
             },
         },
     },
+    onHover: (event, chartElement) => {
+        event.native.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
+    }
 };
 
 export const data = {
@@ -83,14 +86,20 @@ function GrafikERaport({ siswa_id, mapel_id }) {
                     result = data_subbabs.subbabs.map((element) => {
                         return {
                           'label' : element.label,
-                          'score' : element.score
+                          'score' : element.score,
+                          'mudah' : element.mudah,
+                          'sedang' : element.sedang,
+                          'sulit' : element.sulit
                         }
                     })
                 }else{
                     result = data_babs.map((element) => {
                         return {
                           'label' : element.label,
-                          'score' : element.score
+                          'score' : element.score,
+                          'mudah' : element.mudah,
+                          'sedang' : element.sedang,
+                          'sulit' : element.sulit
                         }
                     })
                 }
@@ -103,24 +112,184 @@ function GrafikERaport({ siswa_id, mapel_id }) {
             });
         }
     }, []);
+    
+    const getOrCreateTooltip = (chart) => {
+        let tooltipEl = chart.canvas.parentNode.querySelector('div');
+      
+        if (tooltipEl != undefined) {
+          let existTooltip = document.getElementById("chart-tooltip");
+
+          if(existTooltip != undefined)
+          {
+            existTooltip.remove();
+          }
+
+          tooltipEl = document.createElement('div');
+          tooltipEl.id = 'chart-tooltip'
+          tooltipEl.style.background = 'rgba(0, 0, 0, 0.7)';
+          tooltipEl.style.borderRadius = '3px';
+          tooltipEl.style.color = 'white';
+          tooltipEl.style.opacity = 1;
+          tooltipEl.style.pointerEvents = 'none';
+          tooltipEl.style.position = 'absolute';
+          tooltipEl.style.transform = 'translate(-50%, 0)';
+          tooltipEl.style.transition = 'all .1s ease';
+
+          const table = document.createElement('table');
+          table.style.margin = '0px';
+      
+          tooltipEl.appendChild(table);
+          chart.canvas.parentNode.appendChild(tooltipEl);
+        }
+      
+        return tooltipEl;
+    };
+
+    const externalTooltipHandler = (context) => {
+        // Tooltip Element
+        const {chart, tooltip} = context;
+        const tooltipEl = getOrCreateTooltip(chart);
+      
+        // Hide if no tooltip
+        if (tooltip.opacity === 0) {
+          tooltipEl.style.opacity = 0;
+          return;
+        }
+      
+        // Set Text
+        if (tooltip.body) {
+            const dataPoints = tooltip.dataPoints;
+
+            let innerHtml = `<tbody style="font-size:12px;" border="0">`
+
+            dataPoints.forEach((dataPoint, i) => {
+                const dataIndex = dataPoint?.dataIndex;
+                const dataset = dataPoint?.dataset;
+                const dataBenar = dataset?.benars[dataIndex];
+                const dataTerjawab = dataset?.terjawabs[dataIndex];
+                const dataPercentage = dataset?.data[dataIndex];
+
+                innerHtml += `<tr style="background-color: inherit; border-width: 0; text-align: center; font-weight: bold;">
+                    <td colspan="3" style='padding: 0px 3px; margin: 0px;'>${dataPoint?.label}</td>
+                </tr>`;
+
+                innerHtml += `<tr style="background-color: inherit; border-width: 0;">
+                    <td style='padding: 0px 3px; margin: 0px;'>Level</td>
+                    <td style='padding: 0px 3px; margin: 0px;'>:</td>
+                    <td style='padding: 0px 3px; margin: 0px;'>${dataset?.label}</td>
+                </tr>`;
+
+                innerHtml += `<tr style="background-color: inherit; border-width: 0;">
+                    <td style='padding: 0px 3px; margin: 0px;'>Total Benar</td>
+                    <td style='padding: 0px 3px; margin: 0px;'>:</td>
+                    <td style='padding: 0px 3px; margin: 0px;'>${dataBenar}</td>
+                </tr>`;
+
+                innerHtml += `<tr style="background-color: inherit; border-width: 0;">
+                    <td style='padding: 0px 3px; margin: 0px;'>Total Terjawab</td>
+                    <td style='padding: 0px 3px; margin: 0px;'>:</td>
+                    <td style='padding: 0px 3px; margin: 0px;'>${dataTerjawab}</td>
+                </tr>`;
+
+                innerHtml += `<tr style="background-color: inherit; border-width: 0;">
+                    <td style='padding: 0px 3px; margin: 0px;'>Persentase</td>
+                    <td style='padding: 0px 3px; margin: 0px;'>:</td>
+                    <td style='padding: 0px 3px; margin: 0px;'>${dataPercentage}%</td>
+                </tr>`;
+            });
+            innerHtml += `</tbody>`;
+
+            const tableRoot = tooltipEl.querySelector('table');
+
+            // Remove old children
+            while (tableRoot.firstChild) {
+                tableRoot.firstChild.remove();
+            }
+            // Add new children
+            tableRoot.innerHTML = innerHtml;
+        }
+      
+        const {offsetLeft: positionX, offsetTop: positionY} = chart.canvas;
+      
+        // Display, position, and set styles for font
+        tooltipEl.style.opacity = 1;
+        tooltipEl.style.left = positionX + tooltip.caretX + 'px';
+        tooltipEl.style.top = positionY + tooltip.caretY + 'px';
+        tooltipEl.style.font = tooltip.options.bodyFont.string;
+        tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
+    };
 
     useEffect(() => {
         const labels = [];
-        const tempScores = [];
+        const tempMudah = {
+            totalBenar: [],
+            totalTerjawab: [],
+            percentage: []
+        }
+        const tempSedang = {
+            totalBenar: [],
+            totalTerjawab: [],
+            percentage: []
+        }
+        const tempSulit = {
+            totalBenar: [],
+            totalTerjawab: [],
+            percentage: []
+        }
+
+        options.plugins['tooltip'] = {
+            enabled: false,
+            external: externalTooltipHandler,
+        }
+
         for (let i=0; i<datas.length; i++) {
             const data = datas[i];
             labels.push(data.label);
-            tempScores.push(data.score);
+            
+            tempMudah.totalBenar.push(data.mudah.total_benar);
+            tempSedang.totalBenar.push(data.sedang.total_benar);
+            tempSulit.totalBenar.push(data.sulit.total_benar);
+            
+            tempMudah.totalTerjawab.push(data.mudah.total_terjawab);
+            tempSedang.totalTerjawab.push(data.sedang.total_terjawab);
+            tempSulit.totalTerjawab.push(data.sulit.total_terjawab);
+
+            tempMudah.percentage.push(data.mudah.percentage);
+            tempSedang.percentage.push(data.sedang.percentage);
+            tempSulit.percentage.push(data.sulit.percentage);
         }
+
         setConfigData({
             labels,
             datasets: [
                 {
-                    label: 'Score',
-                    data: tempScores,
+                    label: 'Percentage Mudah',
+                    data: tempMudah.percentage,
                     backgroundColor: 'rgba(2, 65, 2, 1)',
                     borderRadius: 10,
                     minBarLength: 1,
+                    benars: tempMudah.totalBenar,
+                    terjawabs: tempMudah.totalTerjawab,
+                    // barThickness: 120,
+                },
+                {
+                    label: 'Percentage Sedang',
+                    data: tempSedang.percentage,
+                    backgroundColor: 'rgba(255, 153, 51, 1)',
+                    borderRadius: 10,
+                    minBarLength: 1,
+                    benars: tempSedang.totalBenar,
+                    terjawabs: tempSedang.totalTerjawab,
+                    // barThickness: 120,
+                },
+                {
+                    label: 'Percentage Sulit',
+                    data: tempSulit.percentage,
+                    backgroundColor: 'rgba(255, 51, 51, 1)',
+                    borderRadius: 10,
+                    minBarLength: 1,
+                    benars: tempSulit.totalBenar,
+                    terjawabs: tempSulit.totalTerjawab,
                     // barThickness: 120,
                 }
             ],

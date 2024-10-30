@@ -252,6 +252,7 @@ function DashboardSuperadmin() {
 
     const getOrCreateTooltip = (chart) => {
         let tooltipEl = chart.canvas.parentNode.querySelector('div');
+        console.log('tooltipEl 0', tooltipEl)
       
         if (!tooltipEl) {
           tooltipEl = document.createElement('div');

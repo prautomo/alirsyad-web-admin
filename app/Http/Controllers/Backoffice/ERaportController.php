@@ -286,6 +286,9 @@ class ERaportController extends Controller
             "mudah" => 0,
             "sedang" => 0,
             "sulit" => 0,
+            "mudah_terjawab" => 0,
+            "sedang_terjawab" => 0,
+            "sulit_terjawab" => 0,
             "total" => 0,
             "babs" => [],
         ];
@@ -303,6 +306,9 @@ class ERaportController extends Controller
                 "mudah" => 0,
                 "sedang" => 0,
                 "sulit" => 0,
+                "mudah_terjawab" => 0,
+                "sedang_terjawab" => 0,
+                "sulit_terjawab" => 0,
                 "total" => 0,
             ];
             $result_subbab = [];
@@ -313,23 +319,36 @@ class ERaportController extends Controller
                     "name" => "",
                     "mudah" => 0,
                     "sedang" => 0,
-                    "sulit" => 0
+                    "sulit" => 0,
+                    "mudah_terjawab" => 0,
+                    "sedang_terjawab" => 0,
+                    "sulit_terjawab" => 0,
                 ];
                 $total_per_subbab = 0;
 
                 foreach($subbab_paket_soals as $paket_soal){
                     $subbab_obj['name'] = $paket_soal->judul_subbab;
 
-                    $score = ERaport::where(['user_id' => $id, 'paket_soal_id' => $paket_soal->id])->sum('total_benar');
+                    $get_e_raport = ERaport::where(['user_id' => $id, 'paket_soal_id' => $paket_soal->id])->first();
                     $total_benar = 0;
-                    if($score){
-                        $total_benar = $score;
+                    if($get_e_raport != null){
+                        $total_benar = $get_e_raport->total_benar;
+                    }
+
+                    $total_terjawab = 0;
+                    if($get_e_raport != null){
+                        $total_terjawab = $get_e_raport->total_terjawab;
                     }
                     
                     $subbab_obj[$paket_soal->tingkat_kesulitan] = $total_benar;
+                    $subbab_obj[$paket_soal->tingkat_kesulitan . "_terjawab"] = $total_terjawab;
+
                     $total_per_subbab += $this->getScoreFinal($total_benar, $paket_soal->tingkat_kesulitan);
                     $total_score[$paket_soal->tingkat_kesulitan] += $total_benar;
+                    $total_score[$paket_soal->tingkat_kesulitan . "_terjawab"] += $total_terjawab;
+
                     $result[$paket_soal->tingkat_kesulitan] += $total_benar;
+                    $result[$paket_soal->tingkat_kesulitan . "_terjawab"]  += $total_terjawab;
                 }
 
                 $subbab_obj['total'] = $total_per_subbab;
@@ -383,12 +402,23 @@ class ERaportController extends Controller
 
             $total_score = 0;
             $result_subbab = [];
+            $total_score_per_bab = [
+                "mudah" => 0,
+                "sedang" => 0,
+                "sulit" => 0,
+                "mudah_terjawab" => 0,
+                "sedang_terjawab" => 0,
+                "sulit_terjawab" => 0,
+            ];
             
             foreach($subbabs as $subbab){
                 $subbab_paket_soals = PaketSoal::where(['bab_id' => $bab_id, 'subbab' => $subbab, 'deleted_at' => null])->get();
                 $subbab_obj = [
                     "id" => "",
-                    "label" => ""
+                    "label" => "",
+                    "mudah" => 0,
+                    "sedang" => 0,
+                    "sulit" => 0,
                 ];
                 $total_per_subbab = 0;
 
@@ -396,12 +426,20 @@ class ERaportController extends Controller
                     $subbab_obj['id'] = $paket_soal->id;
                     $subbab_obj['label'] = $paket_soal->judul_subbab;
 
-                    $score = ERaport::where(['user_id' => $id, 'paket_soal_id' => $paket_soal->id])->sum('total_benar');
+                    $get_e_raport = ERaport::where(['user_id' => $id, 'paket_soal_id' => $paket_soal->id])->first();
                     $total_benar = 0;
-                    if($score){
-                        $total_benar = $score;
-                    }
+                    if($get_e_raport != null){
+                        $total_benar = $get_e_raport->total_benar;
+                        // $subbab_obj[$paket_soal->tingkat_kesulitan] = ($get_e_raport->total_benar / $get_e_raport->total_terjawab) * 100;
+                        $subbab_obj[$paket_soal->tingkat_kesulitan] = [
+                            "total_benar" => $get_e_raport->total_benar,
+                            "total_terjawab" => $get_e_raport->total_terjawab,
+                            "percentage" =>  round(($get_e_raport->total_benar / $get_e_raport->total_terjawab) * 100, 2)
+                        ];
                     
+                        $total_score_per_bab[$paket_soal->tingkat_kesulitan] += $total_benar;
+                        $total_score_per_bab[$paket_soal->tingkat_kesulitan . "_terjawab"] += $get_e_raport->total_terjawab;
+                    }
                     $total_per_subbab += $this->getScoreFinal($total_benar, $paket_soal->tingkat_kesulitan);
                 }
 
@@ -411,13 +449,31 @@ class ERaportController extends Controller
                 array_push($result_subbab, $subbab_obj);
             }
 
+            // $bab_obj = $total_score_per_bab;
             $bab_obj['id'] = $modul->id;
             $bab_obj['label'] = $modul->name;
             $bab_obj['score'] = $total_score;
+            // $bab_obj['mudah'] = ($total_score_per_bab['mudah_terjawab'] === 0) ? 0 : ($total_score_per_bab['mudah'] / $total_score_per_bab['mudah_terjawab']) * 100;
+            // $bab_obj['sedang'] = ($total_score_per_bab['sedang_terjawab'] === 0) ? 0 : ($total_score_per_bab['sedang'] / $total_score_per_bab['sedang_terjawab']) * 100;
+            // $bab_obj['sulit'] = ($total_score_per_bab['sulit_terjawab'] === 0) ? 0 : ($total_score_per_bab['sulit'] / $total_score_per_bab['sulit_terjawab'] ?: 1) * 100;
+            $bab_obj['mudah'] = [
+                'total_benar' => $total_score_per_bab['mudah'],
+                'total_terjawab' => $total_score_per_bab['mudah_terjawab'],
+                'percentage' => round(($total_score_per_bab['mudah_terjawab'] === 0) ? 0 : ($total_score_per_bab['mudah'] / $total_score_per_bab['mudah_terjawab']) * 100, 2)
+            ];
+            $bab_obj['sedang'] = [
+                'total_benar' => $total_score_per_bab['sedang'],
+                'total_terjawab' => $total_score_per_bab['sedang_terjawab'],
+                'percentage' => round(($total_score_per_bab['sedang_terjawab'] === 0) ? 0 : ($total_score_per_bab['sedang'] / $total_score_per_bab['sedang_terjawab']) * 100, 2)
+            ];
+            $bab_obj['sulit'] = [
+                'total_benar' => $total_score_per_bab['sulit'],
+                'total_terjawab' => $total_score_per_bab['sulit_terjawab'],
+                'percentage' => round(($total_score_per_bab['sulit_terjawab'] === 0) ? 0 : ($total_score_per_bab['sulit'] / $total_score_per_bab['sulit_terjawab']) * 100, 2)
+            ];
             $bab_obj['subbabs'] = $result_subbab;
             array_push($result['babs'], $bab_obj);
         }
-        // dd($result);
 
         $mapelList = $this->getMapel($user->kelas->tingkat->id);
         // return view($this->prefix.'.show_mapel', ['data' => $result, 'mapelList' => $mapelList, 'selectedMapel' => $mapelId, 'user' => $user]);
