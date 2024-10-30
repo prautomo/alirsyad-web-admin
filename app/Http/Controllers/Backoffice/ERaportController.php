@@ -430,7 +430,12 @@ class ERaportController extends Controller
                     $total_benar = 0;
                     if($get_e_raport != null){
                         $total_benar = $get_e_raport->total_benar;
-                        $subbab_obj[$paket_soal->tingkat_kesulitan] = ($get_e_raport->total_benar / $get_e_raport->total_terjawab) * 100;
+                        // $subbab_obj[$paket_soal->tingkat_kesulitan] = ($get_e_raport->total_benar / $get_e_raport->total_terjawab) * 100;
+                        $subbab_obj[$paket_soal->tingkat_kesulitan] = [
+                            "total_benar" => $get_e_raport->total_benar,
+                            "total_terjawab" => $get_e_raport->total_terjawab,
+                            "percentage" =>  round(($get_e_raport->total_benar / $get_e_raport->total_terjawab) * 100, 2)
+                        ];
                     
                         $total_score_per_bab[$paket_soal->tingkat_kesulitan] += $total_benar;
                         $total_score_per_bab[$paket_soal->tingkat_kesulitan . "_terjawab"] += $get_e_raport->total_terjawab;
@@ -448,13 +453,27 @@ class ERaportController extends Controller
             $bab_obj['id'] = $modul->id;
             $bab_obj['label'] = $modul->name;
             $bab_obj['score'] = $total_score;
-            $bab_obj['mudah'] = ($total_score_per_bab['mudah_terjawab'] === 0) ? 0 : ($total_score_per_bab['mudah'] / $total_score_per_bab['mudah_terjawab']) * 100;
-            $bab_obj['sedang'] = ($total_score_per_bab['sedang_terjawab'] === 0) ? 0 : ($total_score_per_bab['sedang'] / $total_score_per_bab['sedang_terjawab']) * 100;
-            $bab_obj['sulit'] = ($total_score_per_bab['sulit_terjawab'] === 0) ? 0 : ($total_score_per_bab['sulit'] / $total_score_per_bab['sulit_terjawab'] ?: 1) * 100;
+            // $bab_obj['mudah'] = ($total_score_per_bab['mudah_terjawab'] === 0) ? 0 : ($total_score_per_bab['mudah'] / $total_score_per_bab['mudah_terjawab']) * 100;
+            // $bab_obj['sedang'] = ($total_score_per_bab['sedang_terjawab'] === 0) ? 0 : ($total_score_per_bab['sedang'] / $total_score_per_bab['sedang_terjawab']) * 100;
+            // $bab_obj['sulit'] = ($total_score_per_bab['sulit_terjawab'] === 0) ? 0 : ($total_score_per_bab['sulit'] / $total_score_per_bab['sulit_terjawab'] ?: 1) * 100;
+            $bab_obj['mudah'] = [
+                'total_benar' => $total_score_per_bab['mudah'],
+                'total_terjawab' => $total_score_per_bab['mudah_terjawab'],
+                'percentage' => round(($total_score_per_bab['mudah_terjawab'] === 0) ? 0 : ($total_score_per_bab['mudah'] / $total_score_per_bab['mudah_terjawab']) * 100, 2)
+            ];
+            $bab_obj['sedang'] = [
+                'total_benar' => $total_score_per_bab['sedang'],
+                'total_terjawab' => $total_score_per_bab['sedang_terjawab'],
+                'percentage' => round(($total_score_per_bab['sedang_terjawab'] === 0) ? 0 : ($total_score_per_bab['sedang'] / $total_score_per_bab['sedang_terjawab']) * 100, 2)
+            ];
+            $bab_obj['sulit'] = [
+                'total_benar' => $total_score_per_bab['sulit'],
+                'total_terjawab' => $total_score_per_bab['sulit_terjawab'],
+                'percentage' => round(($total_score_per_bab['sulit_terjawab'] === 0) ? 0 : ($total_score_per_bab['sulit'] / $total_score_per_bab['sulit_terjawab']) * 100, 2)
+            ];
             $bab_obj['subbabs'] = $result_subbab;
             array_push($result['babs'], $bab_obj);
         }
-        // dd($result);
 
         $mapelList = $this->getMapel($user->kelas->tingkat->id);
         // return view($this->prefix.'.show_mapel', ['data' => $result, 'mapelList' => $mapelList, 'selectedMapel' => $mapelId, 'user' => $user]);

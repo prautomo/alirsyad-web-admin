@@ -111,17 +111,17 @@
                         @endforeach
                         <tr class="row-bab">
                             <td>{{ $bab['name'] }}</td>
-                            <td>{{ $bab['mudah'] . "/" . $subbab['mudah_terjawab'] }}</td>
-                            <td>{{ $bab['sedang'] . "/" . $subbab['sedang_terjawab'] }}</td>
-                            <td>{{ $bab['sulit'] . "/" . $subbab['sulit_terjawab'] }}</td>
+                            <td>{{ $bab['mudah'] . "/" . $bab['mudah_terjawab'] }}</td>
+                            <td>{{ $bab['sedang'] . "/" . $bab['sedang_terjawab'] }}</td>
+                            <td>{{ $bab['sulit'] . "/" . $bab['sulit_terjawab'] }}</td>
                             <td>{{ $bab['total'] }}</td>
                         </tr>
                     @endforeach
                     <tr class="row-mapel">
                         <td>{{ $data['name'] }}</td>
-                        <td>{{ $data['mudah'] . "/" . $subbab['mudah_terjawab'] }}</td>
-                        <td>{{ $data['sedang'] . "/" . $subbab['sedang_terjawab'] }}</td>
-                        <td>{{ $data['sulit'] . "/" . $subbab['sulit_terjawab'] }}</td>
+                        <td>{{ $data['mudah'] . "/" . $data['mudah_terjawab'] }}</td>
+                        <td>{{ $data['sedang'] . "/" . $data['sedang_terjawab'] }}</td>
+                        <td>{{ $data['sulit'] . "/" . $data['sulit_terjawab'] }}</td>
                         <td>{{ $data['total'] }}</td>
                     </tr>
                 </tbody>
