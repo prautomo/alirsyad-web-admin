@@ -12,7 +12,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, ".dashboard-final-score {\r\n    background: #F6D0A14D;\r\n    padding: 10px 20px;\r\n    border-radius: 4px !important;\r\n    color: #E98A15 !important;\r\n}\r\n\r\n.dashboard-filter .bootstrap-select {\r\n    width: 200px !important;\r\n}", ""]);
+exports.push([module.i, ".dashboard-final-score {\n    background: #F6D0A14D;\n    padding: 10px 20px;\n    border-radius: 4px !important;\n    color: #E98A15 !important;\n}\n\n.dashboard-filter .bootstrap-select {\n    width: 200px !important;\n}", ""]);
 
 // exports
 
