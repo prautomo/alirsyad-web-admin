@@ -59,7 +59,6 @@ export const options = {
 };
 
 function DashboardSuperadmin() {
-
     const [listConfigData, setListConfigData] = useState([]);
     const [listDatas, setListDatas] = useState([]);
     const [listDataIds, setListDataIds] = useState([]);
@@ -83,77 +82,47 @@ function DashboardSuperadmin() {
 
     useEffect(() => {
         if (listDatas?.length < 1) {
-            
-            window.axios.post("/backoffice/json/dashboard/current").then((response) => {
-                var data = response.data.data
-
-                var level = data.level
-                var param = data.param
-                var param2nd = data.param2nd
-                var param3rd = data.param3rd
-
-                var params = {}
-
-                if(level == null){
-                    level = 'jenjang'
+            window.axios.post("/backoffice/json/dashboard/jenjang").then((response) => {  // Gantilah dengan endpoint yang sesuai jika perlu
+                var data = response.data.data;
+    
+                var chartData = data.data;
+                var chartDataId = data.data_id;
+                var nextApi = data.next_api;
+                var graphicTitle = data.graphic_title;
+                var currentLevel = data.level;
+    
+                options['onClick'] = graphClickEvent;
+    
+                if (data.kelas_id) {
+                    setKelasId(data.kelas_id);
                 }
-
-                if(param != null){
-                    params[param] = data.value
+    
+                if (data.bab_id) {
+                    setBabId(data.bab_id);
                 }
-                
-                if(param2nd != null){
-                    params[param2nd] = data.value2nd
+    
+                if (data.mapel_id) {
+                    setMapelId(data.mapel_id);
                 }
-                
-                if(param3rd != null){
-                    params[param3rd] = data.value3rd
-                }
-            
-                window.axios.post(`/backoffice/json/dashboard/${level}`, params).then((response) => {
-                    var data = response.data.data
-
-                    var chartData = data.data
-                    var chartDataId = data.data_id
-                    var nextApi = data.next_api
-                    var graphicTitle = data.graphic_title
-                    var currentLevel = data.level
-
-                    options['onClick'] = graphClickEvent
-
-                    if(data.kelas_id){
-                        setKelasId(data.kelas_id)
-                    }
-        
-                    if(data.bab_id){
-                        setBabId(data.bab_id)
-                    }
-        
-                    if(data.mapel_id){
-                        setMapelId(data.mapel_id)
-                    }
-
-                    setIsLoading(false)
-                    setGraphicTitle(graphicTitle)
-                    setCurrentLevel(currentLevel)
-                    setNextApi(nextApi)
-                    setListDatas(chartData)
-                    setListDataIds(chartDataId)
-                }).catch((err) => {
-                    console.log(err)
-                })
+    
+                setIsLoading(false);
+                setGraphicTitle(graphicTitle);
+                setCurrentLevel(currentLevel);
+                setNextApi(nextApi);
+                setListDatas(chartData);
+                setListDataIds(chartDataId);
             }).catch((err) => {
-                console.log(err)
-            })
-            
+                console.log(err);
+            });
+
             window.axios.post("/backoffice/json/dashboard/filter/level").then((response) => {
-                var data = response.data.data
-                setfilterLevel(data)
+                var data = response.data.data;
+                setfilterLevel(data);
             }).catch((err) => {
-                console.log(err)
-            })
+                console.log(err);
+            });
         }
-    }, []);
+    }, []);    
 
     const spanBorderRight = {
         borderLeft: "1px solid #F6D0A1",
@@ -174,11 +143,74 @@ function DashboardSuperadmin() {
             idx: selectedIdx,
             isClick: true
         })
+
+        if (currentLevel == 'tingkat') {
+            console.log("Memanggil!!!!!!!!!!!!!!")
+            getTingkatData()
+        }
     }
 
     useEffect(() => {
-        if(filters.jenjang.length < 1){
+        if (currentLevel === 'tingkat') {
+            window.axios.post("/backoffice/json/dashboard/filter/tingkat").then((response) => {
+                var data = response.data.data;
+                setFilters((prevFilters) => ({
+                    ...prevFilters,
+                    tingkat: data,
+                }));
+                $("#tingkat").selectpicker("refresh");
+            }).catch((err) => {
+                console.log(err);
+            });
+        // } else if (currentLevel === 'kelas') {
+        //     window.axios.post("/backoffice/json/dashboard/filter/kelas").then((response) => {
+        //         var data = response.data.data;
+        //         setFilters((prevFilters) => ({
+        //             ...prevFilters,
+        //             kelas: data,
+        //         }));
+        //         $("#kelas").selectpicker("refresh");
+        //     }).catch((err) => {
+        //         console.log(err);
+        //     });
+        // } else if (currentLevel === 'mapel') {
+        //     window.axios.post("/backoffice/json/dashboard/filter/mapel").then((response) => {
+        //         var data = response.data.data;
+        //         setFilters((prevFilters) => ({
+        //             ...prevFilters,
+        //             mapel: data,
+        //         }));
+        //         $("#mapel").selectpicker("refresh");
+        //     }).catch((err) => {
+        //         console.log(err);
+        //     });
+        // } else if (currentLevel === 'bab') {
+        //     window.axios.post("/backoffice/json/dashboard/filter/bab").then((response) => {
+        //         var data = response.data.data;
+        //         setFilters((prevFilters) => ({
+        //             ...prevFilters,
+        //             bab: data,
+        //         }));
+        //         $("#bab").selectpicker("refresh");
+        //     }).catch((err) => {
+        //         console.log(err);
+        //     });
+        // } else if (currentLevel === 'subbab') {
+        //     window.axios.post("/backoffice/json/dashboard/filter/subbab").then((response) => {
+        //         var data = response.data.data;
+        //         setFilters((prevFilters) => ({
+        //             ...prevFilters,
+        //             subbab: data,
+        //         }));
+        //         $("#subbab").selectpicker("refresh");
+        //     }).catch((err) => {
+        //         console.log(err);
+        //     });
+        }
+    }, [currentLevel]);
 
+    useEffect(() => {
+        if(filters.jenjang.length < 1){
             window.axios.get("/backoffice/json/jenjangs").then((response) => {
                 var data = response.data.data
                 setFilters({
@@ -191,7 +223,6 @@ function DashboardSuperadmin() {
                 console.log(err)
             })
         }
-
     }, []);
 
     useEffect(() => {

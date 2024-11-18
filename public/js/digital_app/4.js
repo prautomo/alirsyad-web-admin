@@ -155,51 +155,30 @@ function DashboardSuperadmin() {
     setIsLoading = _useState26[1];
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     if ((listDatas === null || listDatas === void 0 ? void 0 : listDatas.length) < 1) {
-      window.axios.post("/backoffice/json/dashboard/current").then(function (response) {
+      window.axios.post("/backoffice/json/dashboard/jenjang").then(function (response) {
+        // Gantilah dengan endpoint yang sesuai jika perlu
         var data = response.data.data;
-        var level = data.level;
-        var param = data.param;
-        var param2nd = data.param2nd;
-        var param3rd = data.param3rd;
-        var params = {};
-        if (level == null) {
-          level = 'jenjang';
+        var chartData = data.data;
+        var chartDataId = data.data_id;
+        var nextApi = data.next_api;
+        var graphicTitle = data.graphic_title;
+        var currentLevel = data.level;
+        options['onClick'] = graphClickEvent;
+        if (data.kelas_id) {
+          setKelasId(data.kelas_id);
         }
-        if (param != null) {
-          params[param] = data.value;
+        if (data.bab_id) {
+          setBabId(data.bab_id);
         }
-        if (param2nd != null) {
-          params[param2nd] = data.value2nd;
+        if (data.mapel_id) {
+          setMapelId(data.mapel_id);
         }
-        if (param3rd != null) {
-          params[param3rd] = data.value3rd;
-        }
-        window.axios.post("/backoffice/json/dashboard/".concat(level), params).then(function (response) {
-          var data = response.data.data;
-          var chartData = data.data;
-          var chartDataId = data.data_id;
-          var nextApi = data.next_api;
-          var graphicTitle = data.graphic_title;
-          var currentLevel = data.level;
-          options['onClick'] = graphClickEvent;
-          if (data.kelas_id) {
-            setKelasId(data.kelas_id);
-          }
-          if (data.bab_id) {
-            setBabId(data.bab_id);
-          }
-          if (data.mapel_id) {
-            setMapelId(data.mapel_id);
-          }
-          setIsLoading(false);
-          setGraphicTitle(graphicTitle);
-          setCurrentLevel(currentLevel);
-          setNextApi(nextApi);
-          setListDatas(chartData);
-          setListDataIds(chartDataId);
-        })["catch"](function (err) {
-          console.log(err);
-        });
+        setIsLoading(false);
+        setGraphicTitle(graphicTitle);
+        setCurrentLevel(currentLevel);
+        setNextApi(nextApi);
+        setListDatas(chartData);
+        setListDataIds(chartDataId);
       })["catch"](function (err) {
         console.log(err);
       });
@@ -229,7 +208,70 @@ function DashboardSuperadmin() {
       idx: selectedIdx,
       isClick: true
     });
+    if (currentLevel == 'tingkat') {
+      console.log("Memanggil!!!!!!!!!!!!!!");
+      getTingkatData();
+    }
   }
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    if (currentLevel === 'tingkat') {
+      window.axios.post("/backoffice/json/dashboard/filter/tingkat").then(function (response) {
+        var data = response.data.data;
+        setFilters(function (prevFilters) {
+          return _objectSpread(_objectSpread({}, prevFilters), {}, {
+            tingkat: data
+          });
+        });
+        $("#tingkat").selectpicker("refresh");
+      })["catch"](function (err) {
+        console.log(err);
+      });
+      // } else if (currentLevel === 'kelas') {
+      //     window.axios.post("/backoffice/json/dashboard/filter/kelas").then((response) => {
+      //         var data = response.data.data;
+      //         setFilters((prevFilters) => ({
+      //             ...prevFilters,
+      //             kelas: data,
+      //         }));
+      //         $("#kelas").selectpicker("refresh");
+      //     }).catch((err) => {
+      //         console.log(err);
+      //     });
+      // } else if (currentLevel === 'mapel') {
+      //     window.axios.post("/backoffice/json/dashboard/filter/mapel").then((response) => {
+      //         var data = response.data.data;
+      //         setFilters((prevFilters) => ({
+      //             ...prevFilters,
+      //             mapel: data,
+      //         }));
+      //         $("#mapel").selectpicker("refresh");
+      //     }).catch((err) => {
+      //         console.log(err);
+      //     });
+      // } else if (currentLevel === 'bab') {
+      //     window.axios.post("/backoffice/json/dashboard/filter/bab").then((response) => {
+      //         var data = response.data.data;
+      //         setFilters((prevFilters) => ({
+      //             ...prevFilters,
+      //             bab: data,
+      //         }));
+      //         $("#bab").selectpicker("refresh");
+      //     }).catch((err) => {
+      //         console.log(err);
+      //     });
+      // } else if (currentLevel === 'subbab') {
+      //     window.axios.post("/backoffice/json/dashboard/filter/subbab").then((response) => {
+      //         var data = response.data.data;
+      //         setFilters((prevFilters) => ({
+      //             ...prevFilters,
+      //             subbab: data,
+      //         }));
+      //         $("#subbab").selectpicker("refresh");
+      //     }).catch((err) => {
+      //         console.log(err);
+      //     });
+    }
+  }, [currentLevel]);
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     if (filters.jenjang.length < 1) {
       window.axios.get("/backoffice/json/jenjangs").then(function (response) {

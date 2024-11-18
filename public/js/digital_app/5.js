@@ -146,51 +146,29 @@ function DashboardWaliKelas() {
     setIsLoading = _useState26[1];
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     if (listDatas.length < 1) {
-      window.axios.post("/backoffice/json/dashboard/current").then(function (response) {
+      window.axios.post("/backoffice/json/dashboard/".concat(level), params).then(function (response) {
         var data = response.data.data;
-        var level = data.level;
-        var param = data.param;
-        var param2nd = data.param2nd;
-        var param3rd = data.param3rd;
-        var params = {};
-        if (level == null) {
-          level = 'mapel';
+        var chartData = data.data;
+        var chartDataId = data.data_id;
+        var nextApi = data.next_api;
+        var graphicTitle = data.graphic_title;
+        var currentLevel = data.level;
+        options['onClick'] = graphClickEvent;
+        if (data.kelas_id) {
+          setKelasId(data.kelas_id);
         }
-        if (param != null) {
-          params[param] = data.value;
+        if (data.bab_id) {
+          setBabId(data.bab_id);
         }
-        if (param2nd != null) {
-          params[param2nd] = data.value2nd;
+        if (data.mapel_id) {
+          setMapelId(data.mapel_id);
         }
-        if (param3rd != null) {
-          params[param3rd] = data.value3rd;
-        }
-        window.axios.post("/backoffice/json/dashboard/".concat(level), params).then(function (response) {
-          var data = response.data.data;
-          var chartData = data.data;
-          var chartDataId = data.data_id;
-          var nextApi = data.next_api;
-          var graphicTitle = data.graphic_title;
-          var currentLevel = data.level;
-          options['onClick'] = graphClickEvent;
-          if (data.kelas_id) {
-            setKelasId(data.kelas_id);
-          }
-          if (data.bab_id) {
-            setBabId(data.bab_id);
-          }
-          if (data.mapel_id) {
-            setMapelId(data.mapel_id);
-          }
-          setIsLoading(false);
-          setGraphicTitle(graphicTitle);
-          setCurrentLevel(currentLevel);
-          setNextApi(nextApi);
-          setListDatas(chartData);
-          setListDataIds(chartDataId);
-        })["catch"](function (err) {
-          console.log(err);
-        });
+        setIsLoading(false);
+        setGraphicTitle(graphicTitle);
+        setCurrentLevel(currentLevel);
+        setNextApi(nextApi);
+        setListDatas(chartData);
+        setListDataIds(chartDataId);
       })["catch"](function (err) {
         console.log(err);
       });

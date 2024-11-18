@@ -131,7 +131,6 @@ class DashboardController extends Controller {
         return response()->json(['message' => 'success', 'data' => $data]);
     }
 
-    
     public function getScoreFinal($total_benar, $tingkat_kesulitan){
         $score = 0;
         switch ($tingkat_kesulitan) {
