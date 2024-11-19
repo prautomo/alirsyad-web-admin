@@ -51,7 +51,7 @@ export const options = {
                 },
             }
         },
-        
+
     },
     onHover: (event, chartElement) => {
         event.native.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
@@ -84,27 +84,27 @@ function DashboardSuperadmin() {
         if (listDatas?.length < 1) {
             window.axios.post("/backoffice/json/dashboard/jenjang").then((response) => {  // Gantilah dengan endpoint yang sesuai jika perlu
                 var data = response.data.data;
-    
+
                 var chartData = data.data;
                 var chartDataId = data.data_id;
                 var nextApi = data.next_api;
                 var graphicTitle = data.graphic_title;
                 var currentLevel = data.level;
-    
+
                 options['onClick'] = graphClickEvent;
-    
+
                 if (data.kelas_id) {
                     setKelasId(data.kelas_id);
                 }
-    
+
                 if (data.bab_id) {
                     setBabId(data.bab_id);
                 }
-    
+
                 if (data.mapel_id) {
                     setMapelId(data.mapel_id);
                 }
-    
+
                 setIsLoading(false);
                 setGraphicTitle(graphicTitle);
                 setCurrentLevel(currentLevel);
@@ -122,7 +122,7 @@ function DashboardSuperadmin() {
                 console.log(err);
             });
         }
-    }, []);    
+    }, []);
 
     const spanBorderRight = {
         borderLeft: "1px solid #F6D0A1",
@@ -130,12 +130,12 @@ function DashboardSuperadmin() {
         marginRight: "5px"
     }
 
-    function graphClickEvent(event, clickedElements){
+    function graphClickEvent(event, clickedElements) {
         if (clickedElements.length === 0) return
-        
+
         const { dataIndex, raw } = clickedElements[0].element.$context
         const data = event.chart.data
-        const barLabel = event.chart.data.labels[dataIndex]
+        const barLabel = data.labels[dataIndex]
         const selectedIdx = dataIndex
 
         setSelectedBarIdx({
@@ -143,78 +143,103 @@ function DashboardSuperadmin() {
             idx: selectedIdx,
             isClick: true
         })
-
-        if (currentLevel == 'tingkat') {
-            console.log("Memanggil!!!!!!!!!!!!!!")
-            getTingkatData()
-        }
     }
 
-    useEffect(() => {
-        if (currentLevel === 'tingkat') {
-            window.axios.post("/backoffice/json/dashboard/filter/tingkat").then((response) => {
-                var data = response.data.data;
-                setFilters((prevFilters) => ({
-                    ...prevFilters,
-                    tingkat: data,
-                }));
-                $("#tingkat").selectpicker("refresh");
-            }).catch((err) => {
-                console.log(err);
-            });
-        // } else if (currentLevel === 'kelas') {
-        //     window.axios.post("/backoffice/json/dashboard/filter/kelas").then((response) => {
-        //         var data = response.data.data;
-        //         setFilters((prevFilters) => ({
-        //             ...prevFilters,
-        //             kelas: data,
-        //         }));
-        //         $("#kelas").selectpicker("refresh");
-        //     }).catch((err) => {
-        //         console.log(err);
-        //     });
-        // } else if (currentLevel === 'mapel') {
-        //     window.axios.post("/backoffice/json/dashboard/filter/mapel").then((response) => {
-        //         var data = response.data.data;
-        //         setFilters((prevFilters) => ({
-        //             ...prevFilters,
-        //             mapel: data,
-        //         }));
-        //         $("#mapel").selectpicker("refresh");
-        //     }).catch((err) => {
-        //         console.log(err);
-        //     });
-        // } else if (currentLevel === 'bab') {
-        //     window.axios.post("/backoffice/json/dashboard/filter/bab").then((response) => {
-        //         var data = response.data.data;
-        //         setFilters((prevFilters) => ({
-        //             ...prevFilters,
-        //             bab: data,
-        //         }));
-        //         $("#bab").selectpicker("refresh");
-        //     }).catch((err) => {
-        //         console.log(err);
-        //     });
-        // } else if (currentLevel === 'subbab') {
-        //     window.axios.post("/backoffice/json/dashboard/filter/subbab").then((response) => {
-        //         var data = response.data.data;
-        //         setFilters((prevFilters) => ({
-        //             ...prevFilters,
-        //             subbab: data,
-        //         }));
-        //         $("#subbab").selectpicker("refresh");
-        //     }).catch((err) => {
-        //         console.log(err);
-        //     });
+    const fetchData = async (endpoint, params, setter, pickerId) => {
+        try {
+            const response = await window.axios.post(endpoint, params);
+            const data = response.data.data;
+            setter((prevFilters) => ({
+                ...prevFilters,
+                [pickerId]: data,
+            }));
+            $(`#${pickerId}`).selectpicker("refresh");
+        } catch (err) {
+            console.log(err);
         }
-    }, [currentLevel]);
+    };
 
     useEffect(() => {
-        if(filters.jenjang.length < 1){
+        const { label } = selectedBarIdx;
+
+        if (label) {
+            // Check Jenjang
+            if (filters.jenjang.length > 1) {
+                const foundJenjang = filters.jenjang.find((data) => label === data.name);
+                if (foundJenjang) {
+                    fetchData(
+                        "/backoffice/json/dashboard/filter/tingkat",
+                        { jenjang_id: foundJenjang.id },
+                        setFilters,
+                        "tingkat"
+                    );
+                }
+            }
+
+            // Check Tingkat
+            if (filters.tingkat.length > 1) {
+                const labelParts = label.split(" ");
+                const foundTingkat = filters.tingkat.find((data) => labelParts[1] === data.name);
+                if (foundTingkat) {
+                    fetchData(
+                        "/backoffice/json/dashboard/filter/kelas",
+                        { tingkat_id: foundTingkat.id },
+                        setFilters,
+                        "kelas"
+                    );
+                }
+            }
+
+            // Check Kelas
+            if (filters.kelas.length > 1) {
+                const labelParts = label.split(" ");
+                const foundKelas = filters.kelas.find((data) => labelParts[1].match(/\d+|\D+/g)[1] === data.name);
+                if (foundKelas) {
+                    fetchData(
+                        "/backoffice/json/dashboard/filter/mapel",
+                        { kelas_id: foundKelas.id },
+                        setFilters,
+                        "mapel"
+                    );
+                }
+            }
+
+            // issue
+            if (filters.mapel.length > 1) {
+                const labelParts = label
+                const foundMapel = filters.mapel.find((data) => labelParts === data.name);
+                if (foundMapel) {
+                    fetchData(
+                        "/backoffice/json/dashboard/filter/bab",
+                        { mapel_id: foundMapel.id },
+                        setFilters,
+                        "bab"
+                    );
+                }
+            }
+
+            if(filters.bab.length > 1){
+                const labelParts = label;
+                console.log('labelParts!!!!!!!!!!!!!!!!!!!', labelParts)
+                const foundBab = filters.bab.find((data) => labelParts === data.name);
+                if (foundBab) {
+                    fetchData(
+                        "/backoffice/json/dashboard/filter/subbab",
+                        { bab_id: foundBab.id },
+                        setFilters,
+                        "subbab"
+                    );
+                }
+            }
+        }
+    }, [selectedBarIdx.isClick, filters]);
+
+    useEffect(() => {
+        if (filters.jenjang.length < 1) {
             window.axios.get("/backoffice/json/jenjangs").then((response) => {
                 var data = response.data.data
                 setFilters({
-                    ...filters, 
+                    ...filters,
                     jenjang: data
                 })
 
@@ -228,22 +253,22 @@ function DashboardSuperadmin() {
     useEffect(() => {
         var selectedId = selectedBarIdx.isClick ? listDataIds[selectedBarIdx.idx] : selectedBarIdx.idx
 
-        if(currentLevel == 'siswa' && selectedBarIdx.isClick){
+        if (currentLevel == 'siswa' && selectedBarIdx.isClick) {
             window.location.href = `/backoffice/e-raport/${selectedId}/${mapelId}`;
             return;
         }
 
         setIsLoading(true)
-        
+
         var params = {
-            [nextApi.param] : selectedId
+            [nextApi.param]: selectedId
         }
 
-        if(kelasId != 0){
+        if (kelasId != 0) {
             params['kelas_id'] = kelasId
         }
 
-        if(babId != 0){
+        if (babId != 0) {
             params['bab_id'] = babId
         }
 
@@ -258,15 +283,15 @@ function DashboardSuperadmin() {
             var nextApi = data.next_api
             var currentLevel = data.level
 
-            if(data.kelas_id){
+            if (data.kelas_id) {
                 setKelasId(data.kelas_id)
             }
 
-            if(data.bab_id){
+            if (data.bab_id) {
                 setBabId(data.bab_id)
             }
-        
-            if(data.mapel_id){
+
+            if (data.mapel_id) {
                 setMapelId(data.mapel_id)
             }
 
@@ -284,39 +309,39 @@ function DashboardSuperadmin() {
     const getOrCreateTooltip = (chart) => {
         let tooltipEl = chart.canvas.parentNode.querySelector('div');
         console.log('tooltipEl 0', tooltipEl)
-      
+
         if (!tooltipEl) {
-          tooltipEl = document.createElement('div');
-          tooltipEl.style.background = 'rgba(0, 0, 0, 0.7)';
-          tooltipEl.style.borderRadius = '3px';
-          tooltipEl.style.color = 'white';
-          tooltipEl.style.opacity = 1;
-          tooltipEl.style.pointerEvents = 'none';
-          tooltipEl.style.position = 'absolute';
-          tooltipEl.style.transform = 'translate(-50%, 0)';
-          tooltipEl.style.transition = 'all .1s ease';
-      
-          const table = document.createElement('table');
-          table.style.margin = '0px';
-      
-          tooltipEl.appendChild(table);
-          chart.canvas.parentNode.appendChild(tooltipEl);
+            tooltipEl = document.createElement('div');
+            tooltipEl.style.background = 'rgba(0, 0, 0, 0.7)';
+            tooltipEl.style.borderRadius = '3px';
+            tooltipEl.style.color = 'white';
+            tooltipEl.style.opacity = 1;
+            tooltipEl.style.pointerEvents = 'none';
+            tooltipEl.style.position = 'absolute';
+            tooltipEl.style.transform = 'translate(-50%, 0)';
+            tooltipEl.style.transition = 'all .1s ease';
+
+            const table = document.createElement('table');
+            table.style.margin = '0px';
+
+            tooltipEl.appendChild(table);
+            chart.canvas.parentNode.appendChild(tooltipEl);
         }
-      
+
         return tooltipEl;
-      };
-      
-      const externalTooltipHandler = (context) => {
+    };
+
+    const externalTooltipHandler = (context) => {
         // Tooltip Element
-        const {chart, tooltip} = context;
+        const { chart, tooltip } = context;
         const tooltipEl = getOrCreateTooltip(chart);
-      
+
         // Hide if no tooltip
         if (tooltip.opacity === 0) {
-          tooltipEl.style.opacity = 0;
-          return;
+            tooltipEl.style.opacity = 0;
+            return;
         }
-      
+
         // Set Text
         if (tooltip.body) {
             const dataPoints = tooltip.dataPoints;
@@ -368,17 +393,16 @@ function DashboardSuperadmin() {
             // Add new children
             tableRoot.innerHTML = innerHtml;
         }
-      
-        const {offsetLeft: positionX, offsetTop: positionY} = chart.canvas;
-      
+
+        const { offsetLeft: positionX, offsetTop: positionY } = chart.canvas;
+
         // Display, position, and set styles for font
         tooltipEl.style.opacity = 1;
         tooltipEl.style.left = positionX + tooltip.caretX + 'px';
         tooltipEl.style.top = positionY + tooltip.caretY + 'px';
         tooltipEl.style.font = tooltip.options.bodyFont.string;
         tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
-      };
-
+    };
 
     useEffect(() => {
         const listConfig = [];
@@ -390,13 +414,13 @@ function DashboardSuperadmin() {
             // options.plugins.datalabels.formatter = function(value){
             //     return value + '%';
             // };
-            
+
             // options.plugins.datalabels.font = {
             //     size: 3,
             // }; 
         } else {
             // options.indexAxis = 'x';
-            options.plugins.datalabels.formatter = function(value){
+            options.plugins.datalabels.formatter = function (value) {
                 return value;
             };
             // options.plugins.datalabels.font = {
@@ -409,7 +433,7 @@ function DashboardSuperadmin() {
             external: externalTooltipHandler,
         }
 
-        for (let i=0; i<listDatas.length; i++) {
+        for (let i = 0; i < listDatas.length; i++) {
             const labels = [];
             const tempScores = [];
             const tempScoresMudah = [];
@@ -446,7 +470,7 @@ function DashboardSuperadmin() {
                     tempTerjawabSulit.push(data?.terjawab_split?.sulit ?? 0);
                 }
             });
-            
+
             var objConfig = {
                 labels,
                 datasets: []
@@ -499,16 +523,15 @@ function DashboardSuperadmin() {
             listConfig.push(objConfig)
         }
         console.log('listConfig', listConfig)
-
-        setListConfigData(listConfig);   
+        setListConfigData(listConfig);
     }, [listDatas]);
 
     const handleChange = (e) => {
         var getLevel = filterLevel.filter(function (el) {
             return el.option == e.target.id
         });
-        
-        if(getLevel.length == 0){
+
+        if (getLevel.length == 0) {
             return;
         }
 
@@ -518,27 +541,27 @@ function DashboardSuperadmin() {
         if (level?.option === 'jenjang' && e.target.value === '') {
             window.axios.post(`/backoffice/json/dashboard/jenjang`, params).then((response) => {
                 var data = response.data.data
-    
+
                 options['onClick'] = graphClickEvent
-    
+
                 var chartData = data.data
                 var chartDataId = data.data_id
                 var graphicTitle = data.graphic_title
                 var nextApi = data.next_api
                 var currentLevel = data.level
-    
-                if(data.kelas_id){
+
+                if (data.kelas_id) {
                     setKelasId(data.kelas_id)
                 }
-    
-                if(data.bab_id){
+
+                if (data.bab_id) {
                     setBabId(data.bab_id)
                 }
-            
-                if(data.mapel_id){
+
+                if (data.mapel_id) {
                     setMapelId(data.mapel_id)
                 }
-    
+
                 setIsLoading(false)
                 setGraphicTitle(graphicTitle)
                 setCurrentLevel(currentLevel)
@@ -549,13 +572,13 @@ function DashboardSuperadmin() {
                 console.log(err)
             })
             return
-        } 
-        
-        var params = {
-            [level.next_api.param] : e.target.value
         }
-        
-        if(kelasId != 0){
+
+        var params = {
+            [level.next_api.param]: e.target.value
+        }
+
+        if (kelasId != 0) {
             params['kelas_id'] = kelasId
         }
 
@@ -563,7 +586,7 @@ function DashboardSuperadmin() {
             var data = response.data.data
 
             setFilters({
-                ...filters, 
+                ...filters,
                 [level.next_api.name]: data
             })
 
@@ -579,13 +602,13 @@ function DashboardSuperadmin() {
             isClick: false
         })
     }
-    
+
     return (<>
         <div className="row mb-4">
             <div className="col-12">
-                <div style={{ display: 'flex', alignItems: 'center'}}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
                     <div style={{ marginLeft: 'auto' }} className="dashboard-filter">
-                        <label className="my-auto mr-2" style={{ color: "#9E9E9E"}}>Filter By</label>
+                        <label className="my-auto mr-2" style={{ color: "#9E9E9E" }}>Filter By</label>
                         <select id="jenjang" name="jenjang" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Jenjang" onChange={handleChange}>
                             <option value="">Semua Jenjang</option>
                             {filters.jenjang.length > 0 && filters.jenjang.map((data) => (
@@ -635,7 +658,7 @@ function DashboardSuperadmin() {
                             <div className="card-body">
                                 <div style={{ display: 'flex', alignItems: 'center' }} className="mb-3">
                                     <h2 className="text-primary"><b>{graphicTitle}</b></h2>
-    
+
                                     <div className="dashboard-final-score" style={{ marginLeft: 'auto' }}>
                                         {data.datasets[0].data.length < 15 && data.datasets[0].data.map((value, idx) => (
                                             <>
@@ -650,14 +673,14 @@ function DashboardSuperadmin() {
                                     <Bar options={options} data={data} />
 
                                 </div>
-    
+
                             </div>
                         </div>
                     </div>
-                </div>  
-            ))    
+                </div>
+            ))
         ) : (
-            <div className="row" style={{ height: '70vh', width:'100%' }}>
+            <div className="row" style={{ height: '70vh', width: '100%' }}>
                 <div className="col-12 d-flex justify-content-center align-items-center" style={{ flexDirection: 'column' }}>
                     <ThreeCircles
                         visible={true}
@@ -670,14 +693,14 @@ function DashboardSuperadmin() {
                     />
                     <h2 className="mt-2">Mohon tunggu...</h2>
                 </div>
-            </div>  
+            </div>
         )}
-             
+
     </>);
 }
 
 export default DashboardSuperadmin;
 
 if (document.getElementById('dashboard-superadmin')) {
-    ReactDOM.render(<DashboardSuperadmin  />, document.getElementById('dashboard-superadmin'));
+    ReactDOM.render(<DashboardSuperadmin />, document.getElementById('dashboard-superadmin'));
 }

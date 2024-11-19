@@ -433,7 +433,8 @@ class DashboardController extends Controller {
             "data" => [$result],
             "data_id" => $result_ids,
             "next_api" => $next_api,
-            "kelas_id" => $kelas_id,
+            "kelas_id" => $kelas->id,
+            "mapel_id" => $mapel->id,
             "graphic_title" => $kelas->tingkat->jenjang->name . " " . $kelas->tingkat->name . $kelas->name . " / " . $mapel->name
         ];
 

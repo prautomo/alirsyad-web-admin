@@ -73,7 +73,7 @@ function DashboardWaliKelas() {
 
     useEffect(() => {
         if (listDatas.length < 1) {
-            window.axios.post(`/backoffice/json/dashboard/${level}`, params).then((response) => {
+            window.axios.post(`/backoffice/json/dashboard/mapel`).then((response) => {
                 var data = response.data.data
 
                 var chartData = data.data
@@ -126,7 +126,7 @@ function DashboardWaliKelas() {
         
         const { dataIndex, raw } = clickedElements[0].element.$context
         const data = event.chart.data
-        const barLabel = event.chart.data.labels[dataIndex]
+        const barLabel = data.labels[dataIndex]
         const selectedIdx = dataIndex
 
         setIsLoading(true)
@@ -136,6 +136,54 @@ function DashboardWaliKelas() {
             isClick: true
         })
     }
+
+    const fetchData = async (endpoint, params, setter, pickerId) => {
+        try {
+            const response = await window.axios.post(endpoint, params);
+            const data = response.data.data;
+            setter((prevFilters) => ({
+                ...prevFilters,
+                [pickerId]: data,
+            }));
+            $(`#${pickerId}`).selectpicker("refresh");
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    useEffect(() => {
+        const { label } = selectedBarIdx;
+
+        if (label) {
+            // issue
+            if (filters.mapel.length > 1) {
+                const labelParts = label
+                const foundMapel = filters.mapel.find((data) => labelParts === data.name);
+                if (foundMapel) {
+                    fetchData(
+                        "/backoffice/json/dashboard/filter/bab",
+                        { mapel_id: foundMapel.id },
+                        setFilters,
+                        "bab"
+                    );
+                }
+            }
+
+            if(filters.bab.length > 1){
+                const labelParts = label;
+                console.log('labelParts!!!!!!!!!!!!!!!!!!!', labelParts)
+                const foundBab = filters.bab.find((data) => labelParts === data.name);
+                if (foundBab) {
+                    fetchData(
+                        "/backoffice/json/dashboard/filter/subbab",
+                        { bab_id: foundBab.id },
+                        setFilters,
+                        "subbab"
+                    );
+                }
+            }
+        }
+    }, [selectedBarIdx.isClick, filters]);
 
     useEffect(() => {
         if(filters.mapel.length < 1){
@@ -289,21 +337,21 @@ function DashboardWaliKelas() {
         <div className="row mb-4">
             <div className="col-12">
                 <div style={{ display: 'flex', alignItems: 'center'}}>
-                    <div style={{ marginLeft: 'auto' }} class="dashboard-filter">
+                    <div style={{ marginLeft: 'auto' }} className="dashboard-filter">
                         <label className="my-auto mr-2" style={{ color: "#9E9E9E"}}>Filter By</label>
-                        <select id="mapel" name="mapel" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Mata Pelajaran" onChange={handleChange}>
+                        <select id="mapel" name="mapel" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Mata Pelajaran" onChange={handleChange}>
                             <option value="">Semua Mata Pelajaran</option>
                             {filters.mapel.length > 0 && filters.mapel.map((data) => (
                                 <option value={data.id}>{data.name}</option>
                             ))}
                         </select>
-                        <select id="bab" name="bab" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Module" onChange={handleChange}>
+                        <select id="bab" name="bab" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Module" onChange={handleChange}>
                             <option value="">Semua Module</option>
                             {filters.bab.length > 0 && filters.bab.map((data) => (
                                 <option value={data.id}>{data.name}</option>
                             ))}
                         </select>
-                        <select id="subbab" name="subbab" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Sub-Module" onChange={handleChange}>
+                        <select id="subbab" name="subbab" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Sub-Module" onChange={handleChange}>
                             <option value="">Semua Sub-Module</option>
                             {filters.subbab.length > 0 && filters.subbab.map((data) => (
                                 <option value={data.id}>{data.name}</option>
@@ -351,7 +399,7 @@ function DashboardWaliKelas() {
                         wrapperStyle={{}}
                         wrapperClass=""
                     />
-                    <h2 class="mt-2">Mohon tunggu...</h2>
+                    <h2 className="mt-2">Mohon tunggu...</h2>
                 </div>
             </div>  
         )}

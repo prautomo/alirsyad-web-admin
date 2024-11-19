@@ -82,11 +82,11 @@ function DashboardGuruMapel() {
     const [currentLevel, setCurrentLevel] = useState("");
     const [isLoading, setIsLoading] = useState(true);
 
+    //uf1
     useEffect(() => {
         if (listDatas.length < 1) {
-            window.axios.post(`/backoffice/json/dashboard/${level}`, params).then((response) => {
+            window.axios.post(`/backoffice/json/dashboard/bab`).then((response) => {
                 var data = response.data.data
-
                 var chartData = data.data
                 var chartDataId = data.data_id
                 var nextApi = data.next_api
@@ -98,11 +98,7 @@ function DashboardGuruMapel() {
                 if(data.kelas_id){
                     setKelasId(data.kelas_id)
                 }
-    
-                if(data.bab_id){
-                    setBabId(data.bab_id)
-                }
-    
+
                 if(data.mapel_id){
                     setMapelId(data.mapel_id)
                 }
@@ -126,6 +122,23 @@ function DashboardGuruMapel() {
         }
     }, []);
 
+    //uf2
+    useEffect(() => {
+        if (mapelId) {
+            window.axios.post("/backoffice/json/dashboard/filter/bab", { mapel_id: mapelId }).then((response) => {
+                var data = response.data.data;
+                setFilters({
+                    ...filters,
+                    bab: data
+                });
+    
+                $("#bab").selectpicker("refresh");
+            }).catch((err) => {
+                console.log(err);
+            });
+        }        
+    }, [mapelId]); 
+
     const spanBorderRight = {
         borderLeft: "1px solid #F6D0A1",
         marginLeft: "5px",
@@ -137,7 +150,7 @@ function DashboardGuruMapel() {
         
         const { dataIndex, raw } = clickedElements[0].element.$context
         const data = event.chart.data
-        const barLabel = event.chart.data.labels[dataIndex]
+        const barLabel = data.labels[dataIndex]
         const selectedIdx = dataIndex
 
         setIsLoading(true)
@@ -148,6 +161,41 @@ function DashboardGuruMapel() {
         })
     }
 
+    const fetchData = async (endpoint, params, setter, pickerId) => {
+        try {
+            const response = await window.axios.post(endpoint, params);
+            const data = response.data.data;
+            setter((prevFilters) => ({
+                ...prevFilters,
+                [pickerId]: data,
+            }));
+            $(`#${pickerId}`).selectpicker("refresh");
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    //uf3
+    useEffect(() => {
+        const { label } = selectedBarIdx;
+
+        if (label) {
+            if(filters.bab.length > 1){
+                const labelParts = label;
+                const foundBab = filters.bab.find((data) => labelParts === data.name);
+                if (foundBab) {
+                    fetchData(
+                        "/backoffice/json/dashboard/filter/subbab",
+                        { bab_id: foundBab.id },
+                        setFilters,
+                        "subbab"
+                    );
+                }
+            }
+        }
+    }, [selectedBarIdx.isClick, filters]);
+
+    //uf4
     useEffect(() => {
         if(filters.mengajar.length < 1){
 
@@ -166,16 +214,15 @@ function DashboardGuruMapel() {
                     setMapelId(data.mapel_id)
                 }
 
-                $("#mengajar").selectpicker("refresh");
                 $("#mengajar").val(`${data.mapel_id + '/' + data.kelas_id}`);
                 $("#mengajar").selectpicker("refresh");
             }).catch((err) => {
                 console.log(err)
             })
         }
-
     }, []);
 
+    //uf5
     useEffect(() => {
         var selectedId = selectedBarIdx.isClick ? listDataIds[selectedBarIdx.idx] : selectedBarIdx.idx
 
@@ -232,6 +279,7 @@ function DashboardGuruMapel() {
         })
     }, [selectedBarIdx]);
 
+    //uf6
     useEffect(() => {
         const listConfig = [];
         for (let i=0; i<listDatas.length; i++) {
@@ -266,10 +314,11 @@ function DashboardGuruMapel() {
     }, [listDatas]);
 
     const handleChange = (e) => {
+        console.log("apaaaaaaaaaaan nih?", e)
         var getLevel = filterLevel.filter(function (el) {
             return el.option == e.target.id
         });
-        
+        console.log('getLevel', getLevel)
         if(getLevel.length == 0){
             return;
         }
@@ -311,21 +360,21 @@ function DashboardGuruMapel() {
         <div className="row mb-4">
             <div className="col-12">
                 <div style={{ display: 'flex', alignItems: 'center'}}>
-                    <div style={{ marginLeft: 'auto' }} class="dashboard-filter">
+                    <div style={{ marginLeft: 'auto' }} className="dashboard-filter">
                         <label className="my-auto mr-2" style={{ color: "#9E9E9E"}}>Filter By</label>
-                        <select id="mengajar" name="mengajar" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Mata Pelajaran" onChange={handleChange}>
+                        <select id="mengajar" name="mengajar" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Mata Pelajaran" onChange={handleChange}>
                             <option value="">Mengajar</option>
                             {filters.mengajar.length > 0 && filters.mengajar.map((data) => (
                                 <option value={data.id}>{data.name}</option>
                             ))}
                         </select>
-                        <select id="bab" name="bab" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Module" onChange={handleChange}>
+                        <select id="bab" name="bab" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Module" onChange={handleChange}>
                             <option value="">Semua Module</option>
                             {filters.bab.length > 0 && filters.bab.map((data) => (
                                 <option value={data.id}>{data.name}</option>
                             ))}
                         </select>
-                        <select id="subbab" name="subbab" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Sub-Module" onChange={handleChange}>
+                        <select id="subbab" name="subbab" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Sub-Module" onChange={handleChange}>
                             <option value="">Semua Sub-Module</option>
                             {filters.subbab.length > 0 && filters.subbab.map((data) => (
                                 <option value={data.id}>{data.name}</option>
@@ -373,7 +422,7 @@ function DashboardGuruMapel() {
                         wrapperStyle={{}}
                         wrapperClass=""
                     />
-                    <h2 class="mt-2">Mohon tunggu...</h2>
+                    <h2 className="mt-2">Mohon tunggu...</h2>
                 </div>
             </div>  
         )}
