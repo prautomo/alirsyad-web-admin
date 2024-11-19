@@ -156,6 +156,8 @@ function DashboardGuruMapel() {
     _useState26 = _slicedToArray(_useState25, 2),
     isLoading = _useState26[0],
     setIsLoading = _useState26[1];
+
+  //uf1
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     if (listDatas.length < 1) {
       window.axios.post("/backoffice/json/dashboard/bab").then(function (response) {
@@ -166,8 +168,12 @@ function DashboardGuruMapel() {
         var graphicTitle = data.graphic_title;
         var currentLevel = data.level;
         options['onClick'] = graphClickEvent;
-        if (data.kelas_id) setKelasId(data.kelas_id);
-        if (data.mapel_id) setMapelId(data.mapel_id);
+        if (data.kelas_id) {
+          setKelasId(data.kelas_id);
+        }
+        if (data.mapel_id) {
+          setMapelId(data.mapel_id);
+        }
         setIsLoading(false);
         setGraphicTitle(graphicTitle);
         setCurrentLevel(currentLevel);
@@ -175,18 +181,18 @@ function DashboardGuruMapel() {
         setListDatas(chartData);
         setListDataIds(chartDataId);
       })["catch"](function (err) {
-        return console.log(err);
+        console.log(err);
       });
       window.axios.post("/backoffice/json/dashboard/filter/level").then(function (response) {
         var data = response.data.data;
         setfilterLevel(data);
       })["catch"](function (err) {
-        return console.log(err);
+        console.log(err);
       });
     }
-  }, []); // Memanggil sekali saat komponen pertama kali dimuat
+  }, []);
 
-  // 2. Update filter bab berdasarkan mapelId
+  //uf2
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     if (mapelId) {
       window.axios.post("/backoffice/json/dashboard/filter/bab", {
@@ -198,104 +204,30 @@ function DashboardGuruMapel() {
         }));
         $("#bab").selectpicker("refresh");
       })["catch"](function (err) {
-        return console.log(err);
+        console.log(err);
       });
     }
-  }, [mapelId]); // Bergantung pada mapelId
-
-  // 3. Update filter subbab berdasarkan bab yang dipilih
-  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    var label = selectedBarIdx.label;
-    if (label && filters.bab.length > 1) {
-      var foundBab = filters.bab.find(function (data) {
-        return label === data.name;
-      });
-      if (foundBab) {
-        fetchData("/backoffice/json/dashboard/filter/subbab", {
-          bab_id: foundBab.id
-        }, setFilters, "subbab");
-      }
-    }
-  }, [selectedBarIdx.isClick, filters.bab]); // Bergantung pada selectedBarIdx dan bab
-
-  // 4. Update filter 'mengajar' hanya jika belum ada
-  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    if (filters.mengajar.length < 1) {
-      window.axios.post("/backoffice/json/dashboard/filter/mengajar").then(function (response) {
-        var data = response.data;
-        setFilters(_objectSpread(_objectSpread({}, filters), {}, {
-          mengajar: data.data
-        }));
-        if (data.kelas_id) setKelasId(data.kelas_id);
-        if (data.mapel_id) setMapelId(data.mapel_id);
-        $("#mengajar").val("".concat(data.mapel_id + '/' + data.kelas_id));
-        $("#mengajar").selectpicker("refresh");
-      })["catch"](function (err) {
-        return console.log(err);
-      });
-    }
-  }, [filters.mengajar]); // Bergantung pada filter mengajar yang masih kosong
-
-  // 5. Ambil data grafik berdasarkan seleksi bar
-  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    var selectedId = selectedBarIdx.isClick ? listDataIds[selectedBarIdx.idx] : selectedBarIdx.idx;
-    if (currentLevel === 'siswa') {
-      window.location.href = "/backoffice/e-raport/".concat(selectedId, "/").concat(mapelId);
-      return;
-    }
+  }, [mapelId]);
+  var spanBorderRight = {
+    borderLeft: "1px solid #F6D0A1",
+    marginLeft: "5px",
+    marginRight: "5px"
+  };
+  function graphClickEvent(event, clickedElements) {
+    if (clickedElements.length === 0) return;
+    var _clickedElements$0$el = clickedElements[0].element.$context,
+      dataIndex = _clickedElements$0$el.dataIndex,
+      raw = _clickedElements$0$el.raw;
+    var data = event.chart.data;
+    var barLabel = data.labels[dataIndex];
+    var selectedIdx = dataIndex;
     setIsLoading(true);
-    var params = _defineProperty({}, nextApi.param, selectedId);
-    if (kelasId !== 0) params['kelas_id'] = kelasId;
-    if (babId !== 0) params['bab_id'] = babId;
-    window.axios.post("/backoffice/json/dashboard/".concat(nextApi.name), params).then(function (response) {
-      var data = response.data.data;
-      var chartData = data.data;
-      var chartDataId = data.data_id;
-      var graphicTitle = data.graphic_title;
-      var nextApi = data.next_api;
-      var currentLevel = data.level;
-      if (data.kelas_id) setKelasId(data.kelas_id);
-      if (data.bab_id) setBabId(data.bab_id);
-      if (data.mapel_id) setMapelId(data.mapel_id);
-      setIsLoading(false);
-      setGraphicTitle(graphicTitle);
-      setCurrentLevel(currentLevel);
-      setNextApi(nextApi);
-      setListDataIds(chartDataId);
-      setListDatas(chartData);
-    })["catch"](function (err) {
-      return console.log(err);
+    setSelectedBarIdx({
+      label: barLabel,
+      idx: selectedIdx,
+      isClick: true
     });
-  }, [selectedBarIdx]); // Bergantung pada selectedBarIdx
-
-  // 6. Update konfigurasi grafik saat data grafik (listDatas) berubah
-  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    var listConfig = [];
-    var _loop = function _loop() {
-      var labels = [];
-      var tempScores = [];
-      listDatas[i].forEach(function (element) {
-        labels.push(element.label);
-        tempScores.push(element.score);
-      });
-      var objConfig = {
-        labels: labels,
-        datasets: [{
-          label: 'Score',
-          data: tempScores,
-          backgroundColor: "rgba(2, 65, 2, 1)",
-          borderRadius: 10,
-          minBarLength: 1
-        }]
-      };
-      listConfig.push(objConfig);
-    };
-    for (var i = 0; i < listDatas.length; i++) {
-      _loop();
-    }
-    setListConfigData(listConfig);
-  }, [listDatas]); // Bergantung pada perubahan listDatas
-
+  }
   var fetchData = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(endpoint, params, setter, pickerId) {
       var response, _data;
@@ -328,37 +260,145 @@ function DashboardGuruMapel() {
       return _ref.apply(this, arguments);
     };
   }();
-  var graphClickEvent = function graphClickEvent(event, clickedElements) {
-    if (clickedElements.length === 0) return;
-    var _clickedElements$0$el = clickedElements[0].element.$context,
-      dataIndex = _clickedElements$0$el.dataIndex,
-      raw = _clickedElements$0$el.raw;
-    var data = event.chart.data;
-    var barLabel = data.labels[dataIndex];
-    var selectedIdx = dataIndex;
+
+  //uf3
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    var label = selectedBarIdx.label;
+    if (label) {
+      if (filters.bab.length > 1) {
+        var labelParts = label;
+        var foundBab = filters.bab.find(function (data) {
+          return labelParts === data.name;
+        });
+        if (foundBab) {
+          fetchData("/backoffice/json/dashboard/filter/subbab", {
+            bab_id: foundBab.id
+          }, setFilters, "subbab");
+        }
+      }
+    }
+  }, [selectedBarIdx.isClick, filters]);
+
+  //uf4
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    if (filters.mengajar.length < 1) {
+      window.axios.post("/backoffice/json/dashboard/filter/mengajar").then(function (response) {
+        var data = response.data;
+        setFilters(_objectSpread(_objectSpread({}, filters), {}, {
+          mengajar: data.data
+        }));
+        if (data.kelas_id) {
+          setKelasId(data.kelas_id);
+        }
+        if (data.mapel_id) {
+          setMapelId(data.mapel_id);
+        }
+        $("#mengajar").val("".concat(data.mapel_id + '/' + data.kelas_id));
+        $("#mengajar").selectpicker("refresh");
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    }
+  }, []);
+
+  //uf5
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    var selectedId = selectedBarIdx.isClick ? listDataIds[selectedBarIdx.idx] : selectedBarIdx.idx;
+    if (currentLevel == 'siswa') {
+      window.location.href = "/backoffice/e-raport/".concat(selectedId, "/").concat(mapelId);
+      return;
+    }
     setIsLoading(true);
-    setSelectedBarIdx({
-      label: barLabel,
-      idx: selectedIdx,
-      isClick: true
+    var params = _defineProperty({}, nextApi.param, selectedId);
+    if (kelasId != 0) {
+      params['kelas_id'] = kelasId;
+    }
+    if (babId != 0) {
+      params['bab_id'] = babId;
+    }
+    console.log("params chart", params);
+    window.axios.post("/backoffice/json/dashboard/".concat(nextApi.name), params).then(function (response) {
+      var data = response.data.data;
+      options['onClick'] = graphClickEvent;
+      var chartData = data.data;
+      var chartDataId = data.data_id;
+      var graphicTitle = data.graphic_title;
+      var nextApi = data.next_api;
+      var currentLevel = data.level;
+      if (data.kelas_id) {
+        setKelasId(data.kelas_id);
+      }
+      if (data.bab_id) {
+        setBabId(data.bab_id);
+      }
+      if (data.mapel_id) {
+        setMapelId(data.mapel_id);
+      }
+      console.log('chartData!!!!!!!!!!!!!', chartData);
+      setIsLoading(false);
+      setGraphicTitle(graphicTitle);
+      setCurrentLevel(currentLevel);
+      setNextApi(nextApi);
+      setListDataIds(chartDataId);
+      setListDatas(chartData);
+    })["catch"](function (err) {
+      console.log(err);
     });
-  };
+  }, [selectedBarIdx]);
+
+  //uf6
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    var listConfig = [];
+    var _loop = function _loop() {
+        var labels = [];
+        var tempScores = [];
+        listDatas[i].forEach(function (element) {
+          var data = element;
+          labels.push(data.label);
+          tempScores.push(data.score);
+        });
+        objConfig = {
+          labels: labels,
+          datasets: [{
+            label: 'Score',
+            data: tempScores,
+            backgroundColor: "rgba(2, 65, 2, 1)",
+            borderRadius: 10,
+            minBarLength: 1
+            // barThickness: 120,
+          }]
+        };
+        listConfig.push(objConfig);
+      },
+      objConfig;
+    for (var i = 0; i < listDatas.length; i++) {
+      _loop();
+    }
+    console.log('listConfig', listConfig);
+    setListConfigData(listConfig);
+  }, [listDatas]);
   var handleChange = function handleChange(e) {
-    console.log("Filter change:", e);
+    console.log("apaaaaaaaaaaan nih?", e);
     var getLevel = filterLevel.filter(function (el) {
-      return el.option === e.target.id;
+      return el.option == e.target.id;
     });
-    if (getLevel.length === 0) return;
+    console.log('getLevel', getLevel);
+    if (getLevel.length == 0) {
+      return;
+    }
     var level = getLevel[0];
     setNextApi(level.next_api);
     var params = _defineProperty({}, level.next_api.param, e.target.value);
-    if (kelasId !== 0) params['kelas_id'] = kelasId;
+    if (kelasId != 0) {
+      params['kelas_id'] = kelasId;
+    }
+    console.log("params handlechange", params);
     window.axios.post("/backoffice/json/dashboard/filter/".concat(level.next_api.name), params).then(function (response) {
       var data = response.data.data;
       setFilters(_objectSpread(_objectSpread({}, filters), {}, _defineProperty({}, level.next_api.name, data)));
       $("#".concat(level.next_api.name)).selectpicker("refresh");
     })["catch"](function (err) {
-      return console.log(err);
+      console.log(err);
     });
     setIsLoading(true);
     setSelectedBarIdx({
@@ -366,11 +406,6 @@ function DashboardGuruMapel() {
       idx: e.target.value,
       isClick: false
     });
-  };
-  var spanBorderRight = {
-    borderLeft: "1px solid #F6D0A1",
-    marginLeft: "5px",
-    marginRight: "5px"
   };
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "row mb-4"

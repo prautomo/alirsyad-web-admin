@@ -245,6 +245,8 @@ function DashboardGuruMapel() {
             params['bab_id'] = babId
         }
 
+        console.log("params chart", params)
+
         window.axios.post(`/backoffice/json/dashboard/${nextApi.name}`, params).then((response) => {
             var data = response.data.data
 
@@ -267,6 +269,8 @@ function DashboardGuruMapel() {
             if(data.mapel_id){
                 setMapelId(data.mapel_id)
             }
+
+            console.log('chartData!!!!!!!!!!!!!', chartData)
 
             setIsLoading(false)
             setGraphicTitle(graphicTitle)
@@ -326,7 +330,6 @@ function DashboardGuruMapel() {
         var level = getLevel[0]
         setNextApi(level.next_api)
 
-
         var params = {
             [level.next_api.param] : e.target.value
         }
@@ -334,6 +337,8 @@ function DashboardGuruMapel() {
         if(kelasId != 0){
             params['kelas_id'] = kelasId
         }
+
+        console.log("params handlechange", params)
 
         window.axios.post(`/backoffice/json/dashboard/filter/${level.next_api.name}`, params).then((response) => {
             var data = response.data.data
