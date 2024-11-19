@@ -203,67 +203,66 @@ function DashboardWaliKelas() {
       isClick: true
     });
   }
-  var fetchData = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(endpoint, params, setter, pickerId) {
-      var response, data;
-      return _regeneratorRuntime().wrap(function _callee$(_context) {
-        while (1) switch (_context.prev = _context.next) {
-          case 0:
-            _context.prev = 0;
-            _context.next = 3;
-            return window.axios.post(endpoint, params);
-          case 3:
-            response = _context.sent;
-            data = response.data.data;
-            setter(function (prevFilters) {
-              return _objectSpread(_objectSpread({}, prevFilters), {}, _defineProperty({}, pickerId, data));
-            });
-            $("#".concat(pickerId)).selectpicker("refresh");
-            _context.next = 12;
-            break;
-          case 9:
-            _context.prev = 9;
-            _context.t0 = _context["catch"](0);
-            console.log(_context.t0);
-          case 12:
-          case "end":
-            return _context.stop();
-        }
-      }, _callee, null, [[0, 9]]);
-    }));
-    return function fetchData(_x, _x2, _x3, _x4) {
-      return _ref.apply(this, arguments);
-    };
-  }();
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    var label = selectedBarIdx.label;
-    if (label) {
-      // issue
-      if (filters.mapel.length > 1) {
-        var labelParts = label;
-        var foundMapel = filters.mapel.find(function (data) {
-          return labelParts === data.name;
-        });
-        if (foundMapel) {
-          fetchData("/backoffice/json/dashboard/filter/bab", {
-            mapel_id: foundMapel.id
-          }, setFilters, "bab");
-        }
-      }
-      if (filters.bab.length > 1) {
-        var _labelParts = label;
-        console.log('labelParts!!!!!!!!!!!!!!!!!!!', _labelParts);
-        var foundBab = filters.bab.find(function (data) {
-          return _labelParts === data.name;
-        });
-        if (foundBab) {
-          fetchData("/backoffice/json/dashboard/filter/subbab", {
-            bab_id: foundBab.id
-          }, setFilters, "subbab");
-        }
-      }
-    }
-  }, [selectedBarIdx.isClick, filters]);
+    var fetchData = /*#__PURE__*/function () {
+      var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+        var labelParts, foundMapel, _labelParts, foundBab;
+        return _regeneratorRuntime().wrap(function _callee$(_context) {
+          while (1) switch (_context.prev = _context.next) {
+            case 0:
+              try {
+                if (currentLevel === 'bab') {
+                  labelParts = selectedBarIdx.label;
+                  foundMapel = filters.mapel.find(function (data) {
+                    return labelParts === data.name;
+                  });
+                  window.axios.post("/backoffice/json/dashboard/filter/bab", {
+                    mapel_id: foundMapel.id
+                  }).then(function (response) {
+                    var data = response.data.data;
+                    setFilters(function (prevFilters) {
+                      return _objectSpread(_objectSpread({}, prevFilters), {}, {
+                        bab: data
+                      });
+                    });
+                    $("#bab").selectpicker("refresh");
+                  })["catch"](function (err) {
+                    console.log(err);
+                  });
+                } else if (currentLevel === 'subbab') {
+                  _labelParts = selectedBarIdx.label;
+                  foundBab = filters.bab.find(function (data) {
+                    return _labelParts === data.name;
+                  });
+                  window.axios.post("/backoffice/json/dashboard/filter/subbab", {
+                    bab_id: foundBab.id
+                  }).then(function (response) {
+                    var data = response.data.data;
+                    setFilters(function (prevFilters) {
+                      return _objectSpread(_objectSpread({}, prevFilters), {}, {
+                        subbab: data
+                      });
+                    });
+                    $("#subbab").selectpicker("refresh");
+                  })["catch"](function (err) {
+                    console.log(err);
+                  });
+                }
+              } catch (err) {
+                console.log(err);
+              }
+            case 1:
+            case "end":
+              return _context.stop();
+          }
+        }, _callee);
+      }));
+      return function fetchData() {
+        return _ref.apply(this, arguments);
+      };
+    }();
+    fetchData();
+  }, [currentLevel, selectedBarIdx.label, filters]);
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     if (filters.mapel.length < 1) {
       window.axios.post("/backoffice/json/dashboard/filter/mapel").then(function (response) {

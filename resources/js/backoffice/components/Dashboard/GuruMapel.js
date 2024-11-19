@@ -161,39 +161,30 @@ function DashboardGuruMapel() {
         })
     }
 
-    const fetchData = async (endpoint, params, setter, pickerId) => {
-        try {
-            const response = await window.axios.post(endpoint, params);
-            const data = response.data.data;
-            setter((prevFilters) => ({
-                ...prevFilters,
-                [pickerId]: data,
-            }));
-            $(`#${pickerId}`).selectpicker("refresh");
-        } catch (err) {
-            console.log(err);
-        }
-    };
-
-    //uf3
     useEffect(() => {
-        const { label } = selectedBarIdx;
-
-        if (label) {
-            if(filters.bab.length > 1){
-                const labelParts = label;
-                const foundBab = filters.bab.find((data) => labelParts === data.name);
-                if (foundBab) {
-                    fetchData(
-                        "/backoffice/json/dashboard/filter/subbab",
-                        { bab_id: foundBab.id },
-                        setFilters,
-                        "subbab"
-                    );
+        const fetchData = async () => {
+            try {
+                if (currentLevel === 'subbab') {
+                    const labelParts = selectedBarIdx.label;
+                    const foundBab = filters.bab.find((data) => labelParts === data.name);
+                    window.axios.post("/backoffice/json/dashboard/filter/subbab", {bab_id: foundBab.id}).then((response) => {
+                        var data = response.data.data;
+                        setFilters((prevFilters) => ({
+                            ...prevFilters,
+                            subbab: data,
+                        }));
+                        $("#subbab").selectpicker("refresh");
+                    }).catch((err) => {
+                        console.log(err);
+                    });
                 }
+            } catch (err) {
+                console.log(err);
             }
-        }
-    }, [selectedBarIdx.isClick, filters]);
+        };
+
+        fetchData();
+    }, [currentLevel, selectedBarIdx.label, filters]);
 
     //uf4
     useEffect(() => {

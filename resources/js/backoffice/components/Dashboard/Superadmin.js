@@ -145,94 +145,84 @@ function DashboardSuperadmin() {
         })
     }
 
-    const fetchData = async (endpoint, params, setter, pickerId) => {
-        try {
-            const response = await window.axios.post(endpoint, params);
-            const data = response.data.data;
-            setter((prevFilters) => ({
-                ...prevFilters,
-                [pickerId]: data,
-            }));
-            $(`#${pickerId}`).selectpicker("refresh");
-        } catch (err) {
-            console.log(err);
-        }
-    };
-
     useEffect(() => {
-        const { label } = selectedBarIdx;
-
-        if (label) {
-            // Check Jenjang
-            if (filters.jenjang.length > 1) {
-                const foundJenjang = filters.jenjang.find((data) => label === data.name);
-                if (foundJenjang) {
-                    fetchData(
-                        "/backoffice/json/dashboard/filter/tingkat",
-                        { jenjang_id: foundJenjang.id },
-                        setFilters,
-                        "tingkat"
-                    );
+        const fetchData = async () => {
+            try {
+                if (currentLevel === 'tingkat') {
+                    const foundJenjang = filters.jenjang.find((data) => selectedBarIdx.label === data.name);
+                    if (foundJenjang) {
+                        const response = await window.axios.post("/backoffice/json/dashboard/filter/tingkat", { jenjang_id: foundJenjang.id });
+                        const data = response.data.data;
+                        setFilters((prevFilters) => ({
+                            ...prevFilters,
+                            tingkat: data,
+                        }));
+                        $("#tingkat").selectpicker("refresh");
+                    } else {
+                        console.log("Jenjang tidak ditemukan");
+                    }
+                } else if (currentLevel === 'kelas') {
+                    const labelParts = selectedBarIdx.label.split(" ");
+                    const foundTingkat = filters.tingkat.find((data) => labelParts[1] === data.name);
+                    if (foundTingkat) {
+                        const response = await window.axios.post("/backoffice/json/dashboard/filter/kelas", { tingkat_id: foundTingkat.id });
+                        const data = response.data.data;
+                        setFilters((prevFilters) => ({
+                            ...prevFilters,
+                            kelas: data,
+                        }));
+                        $("#kelas").selectpicker("refresh");
+                    } else {
+                        console.log("Tingkat tidak ditemukan");
+                    }
+                } else if (currentLevel === 'mapel') {
+                    const labelParts = selectedBarIdx.label.split(" ");
+                    const foundKelas = filters.kelas.find((data) => labelParts[1].match(/\d+|\D+/g)[1] === data.name);
+                    if (foundKelas) {
+                        const response = await window.axios.post("/backoffice/json/dashboard/filter/mapel");
+                        const data = response.data.data;
+                        setFilters((prevFilters) => ({
+                            ...prevFilters,
+                            mapel: data,
+                        }));
+                        $("#mapel").selectpicker("refresh");
+                    } else {
+                        console.log("Kelas tidak ditemukan");
+                    }
+                } else if (currentLevel === 'bab') {
+                    const labelParts = selectedBarIdx.label
+                    const foundMapel = filters.mapel.find((data) => labelParts === data.name);
+                    window.axios.post("/backoffice/json/dashboard/filter/bab", {mapel_id: foundMapel.id}).then((response) => {
+                        var data = response.data.data;
+                        setFilters((prevFilters) => ({
+                            ...prevFilters,
+                            bab: data,
+                        }));
+                        $("#bab").selectpicker("refresh");
+                    }).catch((err) => {
+                        console.log(err);
+                    });
+                } else if (currentLevel === 'subbab') {
+                    const labelParts = selectedBarIdx.label;
+                    const foundBab = filters.bab.find((data) => labelParts === data.name);
+                    window.axios.post("/backoffice/json/dashboard/filter/subbab", {bab_id: foundBab.id}).then((response) => {
+                        var data = response.data.data;
+                        setFilters((prevFilters) => ({
+                            ...prevFilters,
+                            subbab: data,
+                        }));
+                        $("#subbab").selectpicker("refresh");
+                    }).catch((err) => {
+                        console.log(err);
+                    });
                 }
+            } catch (err) {
+                console.log(err);
             }
+        };
 
-            // Check Tingkat
-            if (filters.tingkat.length > 1) {
-                const labelParts = label.split(" ");
-                const foundTingkat = filters.tingkat.find((data) => labelParts[1] === data.name);
-                if (foundTingkat) {
-                    fetchData(
-                        "/backoffice/json/dashboard/filter/kelas",
-                        { tingkat_id: foundTingkat.id },
-                        setFilters,
-                        "kelas"
-                    );
-                }
-            }
-
-            // Check Kelas
-            if (filters.kelas.length > 1) {
-                const labelParts = label.split(" ");
-                const foundKelas = filters.kelas.find((data) => labelParts[1].match(/\d+|\D+/g)[1] === data.name);
-                if (foundKelas) {
-                    fetchData(
-                        "/backoffice/json/dashboard/filter/mapel",
-                        { kelas_id: foundKelas.id },
-                        setFilters,
-                        "mapel"
-                    );
-                }
-            }
-
-            // issue
-            if (filters.mapel.length > 1) {
-                const labelParts = label
-                const foundMapel = filters.mapel.find((data) => labelParts === data.name);
-                if (foundMapel) {
-                    fetchData(
-                        "/backoffice/json/dashboard/filter/bab",
-                        { mapel_id: foundMapel.id },
-                        setFilters,
-                        "bab"
-                    );
-                }
-            }
-
-            if(filters.bab.length > 1){
-                const labelParts = label;
-                console.log('labelParts!!!!!!!!!!!!!!!!!!!', labelParts)
-                const foundBab = filters.bab.find((data) => labelParts === data.name);
-                if (foundBab) {
-                    fetchData(
-                        "/backoffice/json/dashboard/filter/subbab",
-                        { bab_id: foundBab.id },
-                        setFilters,
-                        "subbab"
-                    );
-                }
-            }
-        }
-    }, [selectedBarIdx.isClick, filters]);
+        fetchData();
+    }, [currentLevel, selectedBarIdx.label, filters]);
 
     useEffect(() => {
         if (filters.jenjang.length < 1) {

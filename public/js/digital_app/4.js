@@ -212,105 +212,166 @@ function DashboardSuperadmin() {
       isClick: true
     });
   }
-  var fetchData = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(endpoint, params, setter, pickerId) {
-      var response, data;
-      return _regeneratorRuntime().wrap(function _callee$(_context) {
-        while (1) switch (_context.prev = _context.next) {
-          case 0:
-            _context.prev = 0;
-            _context.next = 3;
-            return window.axios.post(endpoint, params);
-          case 3:
-            response = _context.sent;
-            data = response.data.data;
-            setter(function (prevFilters) {
-              return _objectSpread(_objectSpread({}, prevFilters), {}, _defineProperty({}, pickerId, data));
-            });
-            $("#".concat(pickerId)).selectpicker("refresh");
-            _context.next = 12;
-            break;
-          case 9:
-            _context.prev = 9;
-            _context.t0 = _context["catch"](0);
-            console.log(_context.t0);
-          case 12:
-          case "end":
-            return _context.stop();
-        }
-      }, _callee, null, [[0, 9]]);
-    }));
-    return function fetchData(_x, _x2, _x3, _x4) {
-      return _ref.apply(this, arguments);
-    };
-  }();
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    var label = selectedBarIdx.label;
-    if (label) {
-      // Check Jenjang
-      if (filters.jenjang.length > 1) {
-        var foundJenjang = filters.jenjang.find(function (data) {
-          return label === data.name;
-        });
-        if (foundJenjang) {
-          fetchData("/backoffice/json/dashboard/filter/tingkat", {
-            jenjang_id: foundJenjang.id
-          }, setFilters, "tingkat");
-        }
-      }
-
-      // Check Tingkat
-      if (filters.tingkat.length > 1) {
-        var labelParts = label.split(" ");
-        var foundTingkat = filters.tingkat.find(function (data) {
-          return labelParts[1] === data.name;
-        });
-        if (foundTingkat) {
-          fetchData("/backoffice/json/dashboard/filter/kelas", {
-            tingkat_id: foundTingkat.id
-          }, setFilters, "kelas");
-        }
-      }
-
-      // Check Kelas
-      if (filters.kelas.length > 1) {
-        var _labelParts = label.split(" ");
-        var foundKelas = filters.kelas.find(function (data) {
-          return _labelParts[1].match(/\d+|\D+/g)[1] === data.name;
-        });
-        if (foundKelas) {
-          fetchData("/backoffice/json/dashboard/filter/mapel", {
-            kelas_id: foundKelas.id
-          }, setFilters, "mapel");
-        }
-      }
-
-      // issue
-      if (filters.mapel.length > 1) {
-        var _labelParts2 = label;
-        var foundMapel = filters.mapel.find(function (data) {
-          return _labelParts2 === data.name;
-        });
-        if (foundMapel) {
-          fetchData("/backoffice/json/dashboard/filter/bab", {
-            mapel_id: foundMapel.id
-          }, setFilters, "bab");
-        }
-      }
-      if (filters.bab.length > 1) {
-        var _labelParts3 = label;
-        console.log('labelParts!!!!!!!!!!!!!!!!!!!', _labelParts3);
-        var foundBab = filters.bab.find(function (data) {
-          return _labelParts3 === data.name;
-        });
-        if (foundBab) {
-          fetchData("/backoffice/json/dashboard/filter/subbab", {
-            bab_id: foundBab.id
-          }, setFilters, "subbab");
-        }
-      }
-    }
-  }, [selectedBarIdx.isClick, filters]);
+    var fetchData = /*#__PURE__*/function () {
+      var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+        var foundJenjang, response, data, labelParts, foundTingkat, _response, _data, _labelParts, foundKelas, _response2, _data2, _labelParts2, foundMapel, _labelParts3, foundBab;
+        return _regeneratorRuntime().wrap(function _callee$(_context) {
+          while (1) switch (_context.prev = _context.next) {
+            case 0:
+              _context.prev = 0;
+              if (!(currentLevel === 'tingkat')) {
+                _context.next = 15;
+                break;
+              }
+              foundJenjang = filters.jenjang.find(function (data) {
+                return selectedBarIdx.label === data.name;
+              });
+              if (!foundJenjang) {
+                _context.next = 12;
+                break;
+              }
+              _context.next = 6;
+              return window.axios.post("/backoffice/json/dashboard/filter/tingkat", {
+                jenjang_id: foundJenjang.id
+              });
+            case 6:
+              response = _context.sent;
+              data = response.data.data;
+              setFilters(function (prevFilters) {
+                return _objectSpread(_objectSpread({}, prevFilters), {}, {
+                  tingkat: data
+                });
+              });
+              $("#tingkat").selectpicker("refresh");
+              _context.next = 13;
+              break;
+            case 12:
+              console.log("Jenjang tidak ditemukan");
+            case 13:
+              _context.next = 46;
+              break;
+            case 15:
+              if (!(currentLevel === 'kelas')) {
+                _context.next = 30;
+                break;
+              }
+              labelParts = selectedBarIdx.label.split(" ");
+              foundTingkat = filters.tingkat.find(function (data) {
+                return labelParts[1] === data.name;
+              });
+              if (!foundTingkat) {
+                _context.next = 27;
+                break;
+              }
+              _context.next = 21;
+              return window.axios.post("/backoffice/json/dashboard/filter/kelas", {
+                tingkat_id: foundTingkat.id
+              });
+            case 21:
+              _response = _context.sent;
+              _data = _response.data.data;
+              setFilters(function (prevFilters) {
+                return _objectSpread(_objectSpread({}, prevFilters), {}, {
+                  kelas: _data
+                });
+              });
+              $("#kelas").selectpicker("refresh");
+              _context.next = 28;
+              break;
+            case 27:
+              console.log("Tingkat tidak ditemukan");
+            case 28:
+              _context.next = 46;
+              break;
+            case 30:
+              if (!(currentLevel === 'mapel')) {
+                _context.next = 45;
+                break;
+              }
+              _labelParts = selectedBarIdx.label.split(" ");
+              foundKelas = filters.kelas.find(function (data) {
+                return _labelParts[1].match(/\d+|\D+/g)[1] === data.name;
+              });
+              if (!foundKelas) {
+                _context.next = 42;
+                break;
+              }
+              _context.next = 36;
+              return window.axios.post("/backoffice/json/dashboard/filter/mapel");
+            case 36:
+              _response2 = _context.sent;
+              _data2 = _response2.data.data;
+              setFilters(function (prevFilters) {
+                return _objectSpread(_objectSpread({}, prevFilters), {}, {
+                  mapel: _data2
+                });
+              });
+              $("#mapel").selectpicker("refresh");
+              _context.next = 43;
+              break;
+            case 42:
+              console.log("Kelas tidak ditemukan");
+            case 43:
+              _context.next = 46;
+              break;
+            case 45:
+              if (currentLevel === 'bab') {
+                _labelParts2 = selectedBarIdx.label;
+                foundMapel = filters.mapel.find(function (data) {
+                  return _labelParts2 === data.name;
+                });
+                window.axios.post("/backoffice/json/dashboard/filter/bab", {
+                  mapel_id: foundMapel.id
+                }).then(function (response) {
+                  var data = response.data.data;
+                  setFilters(function (prevFilters) {
+                    return _objectSpread(_objectSpread({}, prevFilters), {}, {
+                      bab: data
+                    });
+                  });
+                  $("#bab").selectpicker("refresh");
+                })["catch"](function (err) {
+                  console.log(err);
+                });
+              } else if (currentLevel === 'subbab') {
+                _labelParts3 = selectedBarIdx.label;
+                foundBab = filters.bab.find(function (data) {
+                  return _labelParts3 === data.name;
+                });
+                window.axios.post("/backoffice/json/dashboard/filter/subbab", {
+                  bab_id: foundBab.id
+                }).then(function (response) {
+                  var data = response.data.data;
+                  setFilters(function (prevFilters) {
+                    return _objectSpread(_objectSpread({}, prevFilters), {}, {
+                      subbab: data
+                    });
+                  });
+                  $("#subbab").selectpicker("refresh");
+                })["catch"](function (err) {
+                  console.log(err);
+                });
+              }
+            case 46:
+              _context.next = 51;
+              break;
+            case 48:
+              _context.prev = 48;
+              _context.t0 = _context["catch"](0);
+              console.log(_context.t0);
+            case 51:
+            case "end":
+              return _context.stop();
+          }
+        }, _callee, null, [[0, 48]]);
+      }));
+      return function fetchData() {
+        return _ref.apply(this, arguments);
+      };
+    }();
+    fetchData();
+  }, [currentLevel, selectedBarIdx.label, filters]);
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     if (filters.jenjang.length < 1) {
       window.axios.get("/backoffice/json/jenjangs").then(function (response) {
