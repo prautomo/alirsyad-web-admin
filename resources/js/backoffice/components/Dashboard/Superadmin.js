@@ -254,12 +254,14 @@ function DashboardSuperadmin() {
             [nextApi.param]: selectedId
         }
 
-        if (kelasId != 0) {
+        if( currentLevel == 'mapel') {
             params['kelas_id'] = kelasId
-        }
-
-        if (babId != 0) {
+        } else if (currentLevel == 'bab') {
+            params['kelas_id'] = kelasId
+            // params['mapel_id'] = mapelId
+        } else if (currentLevel == 'subbab') {
             params['bab_id'] = babId
+            params['kelas_id'] = kelasId
         }
 
         window.axios.post(`/backoffice/json/dashboard/${nextApi.name}`, params).then((response) => {
@@ -568,10 +570,6 @@ function DashboardSuperadmin() {
             [level.next_api.param]: e.target.value
         }
 
-        if (kelasId != 0) {
-            params['kelas_id'] = kelasId
-        }
-
         window.axios.post(`/backoffice/json/dashboard/filter/${level.next_api.name}`, params).then((response) => {
             var data = response.data.data
 
@@ -611,7 +609,7 @@ function DashboardSuperadmin() {
                                 <option value={data.id}>{data.name}</option>
                             ))}
                         </select>
-                        <select id="kelas" name="kelas" data-style="btn-green-pastel" multiple className="selectpicker mr-2" placeholder="Kelas" onChange={handleChange}>
+                        <select id="kelas" name="kelas" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Kelas" onChange={handleChange}>
                             <option value="">Semua Kelas</option>
                             {filters.kelas.length > 0 && filters.kelas.map((data) => (
                                 <option value={data.id}>{data.name}</option>

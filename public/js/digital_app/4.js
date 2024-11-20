@@ -393,11 +393,15 @@ function DashboardSuperadmin() {
     }
     setIsLoading(true);
     var params = _defineProperty({}, nextApi.param, selectedId);
-    if (kelasId != 0) {
+    if (currentLevel == 'mapel') {
       params['kelas_id'] = kelasId;
-    }
-    if (babId != 0) {
+    } else if (currentLevel == 'bab') {
+      // params['bab_id'] = 
+      params['kelas_id'] = kelasId;
+      // params['mapel_id'] = mapelId
+    } else if (currentLevel == 'subbab') {
       params['bab_id'] = babId;
+      params['kelas_id'] = kelasId;
     }
     window.axios.post("/backoffice/json/dashboard/".concat(nextApi.name), params).then(function (response) {
       var data = response.data.data;
@@ -647,9 +651,6 @@ function DashboardSuperadmin() {
       return;
     }
     var params = _defineProperty({}, level.next_api.param, e.target.value);
-    if (kelasId != 0) {
-      params['kelas_id'] = kelasId;
-    }
     window.axios.post("/backoffice/json/dashboard/filter/".concat(level.next_api.name), params).then(function (response) {
       var data = response.data.data;
       setFilters(_objectSpread(_objectSpread({}, filters), {}, _defineProperty({}, level.next_api.name, data)));
@@ -713,7 +714,6 @@ function DashboardSuperadmin() {
     id: "kelas",
     name: "kelas",
     "data-style": "btn-green-pastel",
-    multiple: true,
     className: "selectpicker mr-2",
     placeholder: "Kelas",
     onChange: handleChange
