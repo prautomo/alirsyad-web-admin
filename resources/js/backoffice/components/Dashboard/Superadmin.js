@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import "./index.css";
 import {
@@ -13,6 +13,7 @@ import {
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Bar } from 'react-chartjs-2';
 import { ThreeCircles } from 'react-loader-spinner'
+
 ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -79,6 +80,12 @@ function DashboardSuperadmin() {
     const [graphicTitle, setGraphicTitle] = useState("");
     const [currentLevel, setCurrentLevel] = useState("");
     const [isLoading, setIsLoading] = useState(true);
+    const [selectedJenjang, setSelectedJenjang] = useState('');
+    const [selectedTingkat, setSelectedTingkat] = useState('');
+    const [selectedKelas, setSelectedKelas] = useState('');
+    const [selectedMapel, setSelectedMapel] = useState('');
+    const [selectedBab, setSelectedBab] = useState('');
+    const [selectedSubbab, setSelectedSubbab] = useState('');
 
     useEffect(() => {
         if (listDatas?.length < 1) {
@@ -148,7 +155,7 @@ function DashboardSuperadmin() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                if (currentLevel === 'tingkat') {
+                if (currentLevel === 'tingkat' || selectedJenjang) {
                     const foundJenjang = filters.jenjang.find((data) => selectedBarIdx.label === data.name);
                     if (foundJenjang) {
                         const response = await window.axios.post("/backoffice/json/dashboard/filter/tingkat", { jenjang_id: foundJenjang.id });
@@ -156,12 +163,16 @@ function DashboardSuperadmin() {
                         setFilters((prevFilters) => ({
                             ...prevFilters,
                             tingkat: data,
+                            kelas: [],
+                            mapel: [],
+                            bab: [],
+                            subbab: []
                         }));
                         $("#tingkat").selectpicker("refresh");
                     } else {
                         console.log("Jenjang tidak ditemukan");
                     }
-                } else if (currentLevel === 'kelas') {
+                } else if (currentLevel === 'kelas' || selectedTingkat) {
                     const labelParts = selectedBarIdx.label.split(" ");
                     const foundTingkat = filters.tingkat.find((data) => labelParts[1] === data.name);
                     if (foundTingkat) {
@@ -170,51 +181,59 @@ function DashboardSuperadmin() {
                         setFilters((prevFilters) => ({
                             ...prevFilters,
                             kelas: data,
+                            mapel: [],
+                            bab: [],
+                            subbab: []
                         }));
                         $("#kelas").selectpicker("refresh");
                     } else {
                         console.log("Tingkat tidak ditemukan");
                     }
-                } else if (currentLevel === 'mapel') {
+                } else if (currentLevel === 'mapel' || selectedKelas) {
                     const labelParts = selectedBarIdx.label.split(" ");
                     const foundKelas = filters.kelas.find((data) => labelParts[1].match(/\d+|\D+/g)[1] === data.name);
                     if (foundKelas) {
-                        const response = await window.axios.post("/backoffice/json/dashboard/filter/mapel");
+                        const response = await window.axios.post("/backoffice/json/dashboard/filter/mapel", { kelas_id: foundKelas.id });
                         const data = response.data.data;
                         setFilters((prevFilters) => ({
                             ...prevFilters,
                             mapel: data,
+                            bab: [],
+                            subbab: []
                         }));
                         $("#mapel").selectpicker("refresh");
                     } else {
                         console.log("Kelas tidak ditemukan");
                     }
-                } else if (currentLevel === 'bab') {
+                } else if (currentLevel === 'bab' || selectedMapel) {
                     const labelParts = selectedBarIdx.label
                     const foundMapel = filters.mapel.find((data) => labelParts === data.name);
-                    window.axios.post("/backoffice/json/dashboard/filter/bab", {mapel_id: foundMapel.id}).then((response) => {
-                        var data = response.data.data;
+                    if (foundMapel) {
+                        const response = await window.axios.post("/backoffice/json/dashboard/filter/bab", { mapel_id: foundMapel.id });
+                        const data = response.data.data;
                         setFilters((prevFilters) => ({
                             ...prevFilters,
                             bab: data,
+                            subbab: []
                         }));
                         $("#bab").selectpicker("refresh");
-                    }).catch((err) => {
-                        console.log(err);
-                    });
-                } else if (currentLevel === 'subbab') {
+                    } else {
+                        console.log("Mata pelajaran tidak tidak ditemukan")
+                    }
+                } else if (currentLevel === 'subbab' || selectedBab) {
                     const labelParts = selectedBarIdx.label;
                     const foundBab = filters.bab.find((data) => labelParts === data.name);
-                    window.axios.post("/backoffice/json/dashboard/filter/subbab", {bab_id: foundBab.id}).then((response) => {
-                        var data = response.data.data;
+                    if (foundBab) {
+                        const response = await window.axios.post("/backoffice/json/dashboard/filter/subbab", { bab_id: foundBab.id });
+                        const data = response.data.data;
                         setFilters((prevFilters) => ({
                             ...prevFilters,
                             subbab: data,
                         }));
                         $("#subbab").selectpicker("refresh");
-                    }).catch((err) => {
-                        console.log(err);
-                    });
+                    } else {
+                        console.log("BAB tidak ditemukan");
+                    }
                 }
             } catch (err) {
                 console.log(err);
@@ -222,7 +241,7 @@ function DashboardSuperadmin() {
         };
 
         fetchData();
-    }, [currentLevel, selectedBarIdx.label, filters]);
+    }, [currentLevel, selectedBarIdx.label, selectedJenjang, selectedTingkat, selectedKelas, selectedMapel, selectedBab]);
 
     useEffect(() => {
         if (filters.jenjang.length < 1) {
@@ -519,6 +538,45 @@ function DashboardSuperadmin() {
     }, [listDatas]);
 
     const handleChange = (e) => {
+
+        const { name} = e.target;
+
+        if (name === 'jenjang') {
+            setSelectedTingkat('');
+            setSelectedKelas('');
+            setSelectedMapel('');
+            setSelectedBab('');
+            setSelectedSubbab('');
+            $("#kelas").selectpicker("refresh");
+            $("#mapel").selectpicker("refresh");
+            $("#bab").selectpicker("refresh");
+            $("#subbab").selectpicker("refresh");
+        } else if (name === 'tingkat') {
+            setSelectedKelas('');
+            setSelectedMapel('');
+            setSelectedBab('');
+            setSelectedSubbab('');
+            $("#kelas").selectpicker("refresh");
+            $("#mapel").selectpicker("refresh");
+            $("#bab").selectpicker("refresh");
+            $("#subbab").selectpicker("refresh");
+        } else if (name === 'kelas') {
+            setSelectedMapel('');
+            setSelectedBab('');
+            setSelectedSubbab('');
+            $("#mapel").selectpicker("refresh");
+            $("#bab").selectpicker("refresh");
+            $("#subbab").selectpicker("refresh");
+        } else if (name === 'mapel') {
+            setSelectedBab('');
+            setSelectedSubbab('');
+            $("#bab").selectpicker("refresh");
+            $("#subbab").selectpicker("refresh");
+        } else if (name === 'bab') {
+            setSelectedSubbab('');
+            $("#subbab").selectpicker("refresh");
+        }
+
         var getLevel = filterLevel.filter(function (el) {
             return el.option == e.target.id
         });
@@ -595,42 +653,42 @@ function DashboardSuperadmin() {
         <div className="row mb-4">
             <div className="col-12">
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <div style={{ marginLeft: 'auto' }} className="dashboard-filter">
+                <div style={{ marginLeft: 'auto' }} className="dashboard-filter">
                         <label className="my-auto mr-2" style={{ color: "#9E9E9E" }}>Filter By</label>
-                        <select id="jenjang" name="jenjang" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Jenjang" onChange={handleChange}>
+                        <select id="jenjang" name="jenjang" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Jenjang" value={selectedJenjang} onChange={handleChange}>
                             <option value="">Semua Jenjang</option>
                             {filters.jenjang.length > 0 && filters.jenjang.map((data) => (
-                                <option value={data.id}>{data.name}</option>
+                                <option key={data.id} value={data.id}>{data.name}</option>
                             ))}
                         </select>
-                        <select id="tingkat" name="tingkat" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Tingkat" onChange={handleChange}>
+                        <select id="tingkat" name="tingkat" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Tingkat" value={selectedTingkat} onChange={handleChange}>
                             <option value="">Semua Tingkat</option>
                             {filters.tingkat.length > 0 && filters.tingkat.map((data) => (
-                                <option value={data.id}>{data.name}</option>
+                                <option key={data.id} value={data.id}>{data.name}</option>
                             ))}
                         </select>
-                        <select id="kelas" name="kelas" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Kelas" onChange={handleChange}>
+                        <select id="kelas" name="kelas" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Kelas" value={selectedKelas} onChange={handleChange}>
                             <option value="">Semua Kelas</option>
                             {filters.kelas.length > 0 && filters.kelas.map((data) => (
-                                <option value={data.id}>{data.name}</option>
+                                <option key={data.id} value={data.id}>{data.name}</option>
                             ))}
                         </select>
-                        <select id="mapel" name="mapel" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Mata Pelajaran" onChange={handleChange}>
+                        <select id="mapel" name="mapel" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Mata Pelajaran" value={selectedMapel} onChange={handleChange}>
                             <option value="">Semua Mata Pelajaran</option>
                             {filters.mapel.length > 0 && filters.mapel.map((data) => (
-                                <option value={data.id}>{data.name}</option>
+                                <option key={data.id} value={data.id}>{data.name}</option>
                             ))}
                         </select>
-                        <select id="bab" name="bab" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Module" onChange={handleChange}>
+                        <select id="bab" name="bab" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Module" value={selectedBab} onChange={handleChange}>
                             <option value="">Semua Module</option>
                             {filters.bab.length > 0 && filters.bab.map((data) => (
-                                <option value={data.id}>{data.name}</option>
+                                <option key={data.id} value={data.id}>{data.name}</option>
                             ))}
                         </select>
-                        <select id="subbab" name="subbab" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Sub-Module" onChange={handleChange}>
+                        <select id="subbab" name="subbab" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Sub-Module" value={selectedSubbab} onChange={handleChange}>
                             <option value="">Semua Sub-Module</option>
                             {filters.subbab.length > 0 && filters.subbab.map((data) => (
-                                <option value={data.id}>{data.name}</option>
+                                <option key={data.id} value={data.id}>{data.name}</option>
                             ))}
                         </select>
                     </div>

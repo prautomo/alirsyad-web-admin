@@ -389,7 +389,6 @@ function DashboardKepalaSekolah() {
     if (currentLevel == 'mapel') {
       params['kelas_id'] = kelasId;
     } else if (currentLevel == 'bab') {
-      // params['bab_id'] = 
       params['kelas_id'] = kelasId;
       params['mapel_id'] = mapelId;
     } else if (currentLevel == 'subbab') {
