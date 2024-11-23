@@ -284,11 +284,23 @@ function DashboardWaliKelas() {
     }
     setIsLoading(true);
     var params = _defineProperty({}, nextApi.param, selectedId);
-    if (kelasId != 0) {
+
+    // if(kelasId != 0){
+    //     params['kelas_id'] = kelasId
+    // }
+
+    // if(babId != 0){
+    //     params['bab_id'] = babId
+    // }
+
+    if (currentLevel == 'mapel') {
       params['kelas_id'] = kelasId;
-    }
-    if (babId != 0) {
+    } else if (currentLevel == 'bab') {
+      params['kelas_id'] = kelasId;
+      // params['mapel_id'] = mapelId
+    } else if (currentLevel == 'subbab') {
       params['bab_id'] = babId;
+      params['kelas_id'] = kelasId;
     }
     window.axios.post("/backoffice/json/dashboard/".concat(nextApi.name), params).then(function (response) {
       var data = response.data.data;
@@ -362,8 +374,31 @@ function DashboardWaliKelas() {
     }
     window.axios.post("/backoffice/json/dashboard/filter/".concat(level.next_api.name), params).then(function (response) {
       var data = response.data.data;
-      setFilters(_objectSpread(_objectSpread({}, filters), {}, _defineProperty({}, level.next_api.name, data)));
-      $("#".concat(level.next_api.name)).selectpicker("refresh");
+      if (level.next_api.name === 'mapel') {
+        setFilters(function (prevFilters) {
+          return _objectSpread(_objectSpread({}, prevFilters), {}, {
+            mapel: data,
+            bab: filters.bab.length > 0 ? filters.bab.length = 0 : [],
+            subbab: filters.subbab.length > 0 ? filters.subbab.length = 0 : []
+          });
+        });
+      } else if (level.next_api.name === 'bab') {
+        setFilters(function (prevFilters) {
+          return _objectSpread(_objectSpread({}, prevFilters), {}, {
+            bab: data,
+            subbab: filters.subbab.length > 0 ? filters.subbab.length = 0 : []
+          });
+        });
+      } else if (level.next_api.name === 'subbab') {
+        setFilters(function (prevFilters) {
+          return _objectSpread(_objectSpread({}, prevFilters), {}, {
+            subbab: data
+          });
+        });
+      }
+      $("#mapel").selectpicker("refresh");
+      $("#bab").selectpicker("refresh");
+      $("#subbab").selectpicker("refresh");
     })["catch"](function (err) {
       console.log(err);
     });

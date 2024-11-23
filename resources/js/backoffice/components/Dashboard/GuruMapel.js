@@ -197,12 +197,20 @@ function DashboardGuruMapel() {
                     mengajar: data.data
                 })
                 
-                if(data.kelas_id){
-                    setKelasId(data.kelas_id)
-                }
+                // if(data.kelas_id){
+                //     setKelasId(data.kelas_id)
+                // }
 
-                if(data.mapel_id){
-                    setMapelId(data.mapel_id)
+                // if(data.mapel_id){
+                //     setMapelId(data.mapel_id)
+                // }
+
+                if (currentLevel == 'bab') {
+                    params['kelas_id'] = kelasId
+                    // params['mapel_id'] = mapelId
+                } else if (currentLevel == 'subbab') {
+                    params['bab_id'] = babId
+                    params['kelas_id'] = kelasId
                 }
 
                 $("#mengajar").val(`${data.mapel_id + '/' + data.kelas_id}`);
@@ -334,12 +342,20 @@ function DashboardGuruMapel() {
         window.axios.post(`/backoffice/json/dashboard/filter/${level.next_api.name}`, params).then((response) => {
             var data = response.data.data
 
-            setFilters({
-                ...filters, 
-                [level.next_api.name]: data
-            })
-
-            $(`#${level.next_api.name}`).selectpicker("refresh");
+            if (level.next_api.name === 'bab') {
+                setFilters((prevFilters) => ({
+                    ...prevFilters,
+                    bab: data,
+                    subbab: filters.subbab.length > 0 ? filters.subbab.length = 0 : []
+                }))
+            } else if (level.next_api.name === 'subbab') {
+                setFilters((prevFilters) => ({
+                    ...prevFilters,
+                    subbab: data
+                }))
+            }
+            $(`#bab`).selectpicker("refresh");
+            $(`#subbab`).selectpicker("refresh");
         }).catch((err) => {
             console.log(err)
         })

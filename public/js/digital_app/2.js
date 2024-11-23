@@ -279,11 +279,21 @@ function DashboardGuruMapel() {
         setFilters(_objectSpread(_objectSpread({}, filters), {}, {
           mengajar: data.data
         }));
-        if (data.kelas_id) {
-          setKelasId(data.kelas_id);
-        }
-        if (data.mapel_id) {
-          setMapelId(data.mapel_id);
+
+        // if(data.kelas_id){
+        //     setKelasId(data.kelas_id)
+        // }
+
+        // if(data.mapel_id){
+        //     setMapelId(data.mapel_id)
+        // }
+
+        if (currentLevel == 'bab') {
+          params['kelas_id'] = kelasId;
+          // params['mapel_id'] = mapelId
+        } else if (currentLevel == 'subbab') {
+          params['bab_id'] = babId;
+          params['kelas_id'] = kelasId;
         }
         $("#mengajar").val("".concat(data.mapel_id + '/' + data.kelas_id));
         $("#mengajar").selectpicker("refresh");
@@ -387,8 +397,22 @@ function DashboardGuruMapel() {
     console.log("params handlechange", params);
     window.axios.post("/backoffice/json/dashboard/filter/".concat(level.next_api.name), params).then(function (response) {
       var data = response.data.data;
-      setFilters(_objectSpread(_objectSpread({}, filters), {}, _defineProperty({}, level.next_api.name, data)));
-      $("#".concat(level.next_api.name)).selectpicker("refresh");
+      if (level.next_api.name === 'bab') {
+        setFilters(function (prevFilters) {
+          return _objectSpread(_objectSpread({}, prevFilters), {}, {
+            bab: data,
+            subbab: filters.subbab.length > 0 ? filters.subbab.length = 0 : []
+          });
+        });
+      } else if (level.next_api.name === 'subbab') {
+        setFilters(function (prevFilters) {
+          return _objectSpread(_objectSpread({}, prevFilters), {}, {
+            subbab: data
+          });
+        });
+      }
+      $("#bab").selectpicker("refresh");
+      $("#subbab").selectpicker("refresh");
     })["catch"](function (err) {
       console.log(err);
     });

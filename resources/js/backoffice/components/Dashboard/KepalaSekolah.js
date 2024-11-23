@@ -205,20 +205,6 @@ function DashboardKepalaSekolah() {
         fetchData();
     }, [currentLevel, selectedBarIdx.label, filters]);
 
-    const fetchData = async (endpoint, params, setter, pickerId) => {
-        try {
-            const response = await window.axios.post(endpoint, params);
-            const data = response.data.data;
-            setter((prevFilters) => ({
-                ...prevFilters,
-                [pickerId]: data,
-            }));
-            $(`#${pickerId}`).selectpicker("refresh");
-        } catch (err) {
-            console.log(err);
-        }
-    };
-
     useEffect(() => {
         if(filters.tingkat.length < 1){
 
@@ -347,12 +333,47 @@ function DashboardKepalaSekolah() {
         window.axios.post(`/backoffice/json/dashboard/filter/${level.next_api.name}`, params).then((response) => {
             var data = response.data.data
 
-            setFilters({
-                ...filters, 
-                [level.next_api.name]: data
-            })
-
-            $(`#${level.next_api.name}`).selectpicker("refresh");
+            if (level.next_api.name === 'tingkat') {
+                setFilters((prevFilters) => ({
+                    ...prevFilters,
+                    tingkat: data,
+                    kelas: filters.kelas.length > 0 ? filters.kelas.length = 0 : [],
+                    mapel: filters.mapel.length > 0 ? filters.mapel.length = 0 : [],
+                    bab: filters.bab.length > 0 ? filters.bab.length = 0 : [],
+                    subbab: filters.subbab.length > 0 ? filters.subbab.length = 0 : []
+                }))
+            } else if (level.next_api.name === 'kelas') {
+                setFilters((prevFilters) => ({
+                    ...prevFilters,
+                    kelas: data,
+                    mapel: filters.mapel.length > 0 ? filters.mapel.length = 0 : [],
+                    bab: filters.bab.length > 0 ? filters.bab.length = 0 : [],
+                    subbab: filters.subbab.length > 0 ? filters.subbab.length = 0 : []
+                }))
+            } else if (level.next_api.name === 'mapel') {
+                setFilters((prevFilters) => ({
+                    ...prevFilters,
+                    mapel: data,
+                    bab: filters.bab.length > 0 ? filters.bab.length = 0 : [],
+                    subbab: filters.subbab.length > 0 ? filters.subbab.length = 0 : []
+                }))
+            } else if (level.next_api.name === 'bab') {
+                setFilters((prevFilters) => ({
+                    ...prevFilters,
+                    bab: data,
+                    subbab: filters.subbab.length > 0 ? filters.subbab.length = 0 : []
+                }))
+            } else if (level.next_api.name === 'subbab') {
+                setFilters((prevFilters) => ({
+                    ...prevFilters,
+                    subbab: data
+                }))
+            }
+            $(`#tingkat`).selectpicker("refresh");
+            $(`#kelas`).selectpicker("refresh");
+            $(`#mapel`).selectpicker("refresh");
+            $(`#bab`).selectpicker("refresh");
+            $(`#subbab`).selectpicker("refresh");
         }).catch((err) => {
             console.log(err)
         })

@@ -333,38 +333,6 @@ function DashboardKepalaSekolah() {
     }();
     fetchData();
   }, [currentLevel, selectedBarIdx.label, filters]);
-  var fetchData = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(endpoint, params, setter, pickerId) {
-      var response, data;
-      return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-        while (1) switch (_context2.prev = _context2.next) {
-          case 0:
-            _context2.prev = 0;
-            _context2.next = 3;
-            return window.axios.post(endpoint, params);
-          case 3:
-            response = _context2.sent;
-            data = response.data.data;
-            setter(function (prevFilters) {
-              return _objectSpread(_objectSpread({}, prevFilters), {}, _defineProperty({}, pickerId, data));
-            });
-            $("#".concat(pickerId)).selectpicker("refresh");
-            _context2.next = 12;
-            break;
-          case 9:
-            _context2.prev = 9;
-            _context2.t0 = _context2["catch"](0);
-            console.log(_context2.t0);
-          case 12:
-          case "end":
-            return _context2.stop();
-        }
-      }, _callee2, null, [[0, 9]]);
-    }));
-    return function fetchData(_x, _x2, _x3, _x4) {
-      return _ref2.apply(this, arguments);
-    };
-  }();
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     if (filters.tingkat.length < 1) {
       window.axios.post("/backoffice/json/dashboard/filter/tingkat").then(function (response) {
@@ -464,8 +432,52 @@ function DashboardKepalaSekolah() {
     var params = _defineProperty({}, level.next_api.param, e.target.value);
     window.axios.post("/backoffice/json/dashboard/filter/".concat(level.next_api.name), params).then(function (response) {
       var data = response.data.data;
-      setFilters(_objectSpread(_objectSpread({}, filters), {}, _defineProperty({}, level.next_api.name, data)));
-      $("#".concat(level.next_api.name)).selectpicker("refresh");
+      if (level.next_api.name === 'tingkat') {
+        setFilters(function (prevFilters) {
+          return _objectSpread(_objectSpread({}, prevFilters), {}, {
+            tingkat: data,
+            kelas: filters.kelas.length > 0 ? filters.kelas.length = 0 : [],
+            mapel: filters.mapel.length > 0 ? filters.mapel.length = 0 : [],
+            bab: filters.bab.length > 0 ? filters.bab.length = 0 : [],
+            subbab: filters.subbab.length > 0 ? filters.subbab.length = 0 : []
+          });
+        });
+      } else if (level.next_api.name === 'kelas') {
+        setFilters(function (prevFilters) {
+          return _objectSpread(_objectSpread({}, prevFilters), {}, {
+            kelas: data,
+            mapel: filters.mapel.length > 0 ? filters.mapel.length = 0 : [],
+            bab: filters.bab.length > 0 ? filters.bab.length = 0 : [],
+            subbab: filters.subbab.length > 0 ? filters.subbab.length = 0 : []
+          });
+        });
+      } else if (level.next_api.name === 'mapel') {
+        setFilters(function (prevFilters) {
+          return _objectSpread(_objectSpread({}, prevFilters), {}, {
+            mapel: data,
+            bab: filters.bab.length > 0 ? filters.bab.length = 0 : [],
+            subbab: filters.subbab.length > 0 ? filters.subbab.length = 0 : []
+          });
+        });
+      } else if (level.next_api.name === 'bab') {
+        setFilters(function (prevFilters) {
+          return _objectSpread(_objectSpread({}, prevFilters), {}, {
+            bab: data,
+            subbab: filters.subbab.length > 0 ? filters.subbab.length = 0 : []
+          });
+        });
+      } else if (level.next_api.name === 'subbab') {
+        setFilters(function (prevFilters) {
+          return _objectSpread(_objectSpread({}, prevFilters), {}, {
+            subbab: data
+          });
+        });
+      }
+      $("#tingkat").selectpicker("refresh");
+      $("#kelas").selectpicker("refresh");
+      $("#mapel").selectpicker("refresh");
+      $("#bab").selectpicker("refresh");
+      $("#subbab").selectpicker("refresh");
     })["catch"](function (err) {
       console.log(err);
     });

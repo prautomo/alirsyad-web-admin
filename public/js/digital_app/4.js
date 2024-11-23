@@ -156,30 +156,6 @@ function DashboardSuperadmin() {
     _useState26 = _slicedToArray(_useState25, 2),
     isLoading = _useState26[0],
     setIsLoading = _useState26[1];
-  var _useState27 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
-    _useState28 = _slicedToArray(_useState27, 2),
-    selectedJenjang = _useState28[0],
-    setSelectedJenjang = _useState28[1];
-  var _useState29 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
-    _useState30 = _slicedToArray(_useState29, 2),
-    selectedTingkat = _useState30[0],
-    setSelectedTingkat = _useState30[1];
-  var _useState31 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
-    _useState32 = _slicedToArray(_useState31, 2),
-    selectedKelas = _useState32[0],
-    setSelectedKelas = _useState32[1];
-  var _useState33 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
-    _useState34 = _slicedToArray(_useState33, 2),
-    selectedMapel = _useState34[0],
-    setSelectedMapel = _useState34[1];
-  var _useState35 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
-    _useState36 = _slicedToArray(_useState35, 2),
-    selectedBab = _useState36[0],
-    setSelectedBab = _useState36[1];
-  var _useState37 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
-    _useState38 = _slicedToArray(_useState37, 2),
-    selectedSubbab = _useState38[0],
-    setSelectedSubbab = _useState38[1];
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     if ((listDatas === null || listDatas === void 0 ? void 0 : listDatas.length) < 1) {
       window.axios.post("/backoffice/json/dashboard/jenjang").then(function (response) {
@@ -244,7 +220,7 @@ function DashboardSuperadmin() {
           while (1) switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              if (!(currentLevel === 'tingkat' || selectedJenjang)) {
+              if (!(currentLevel === 'tingkat')) {
                 _context.next = 15;
                 break;
               }
@@ -280,7 +256,7 @@ function DashboardSuperadmin() {
               _context.next = 73;
               break;
             case 15:
-              if (!(currentLevel === 'kelas' || selectedTingkat)) {
+              if (!(currentLevel === 'kelas')) {
                 _context.next = 30;
                 break;
               }
@@ -316,7 +292,7 @@ function DashboardSuperadmin() {
               _context.next = 73;
               break;
             case 30:
-              if (!(currentLevel === 'mapel' || selectedKelas)) {
+              if (!(currentLevel === 'mapel')) {
                 _context.next = 45;
                 break;
               }
@@ -351,7 +327,7 @@ function DashboardSuperadmin() {
               _context.next = 73;
               break;
             case 45:
-              if (!(currentLevel === 'bab' || selectedMapel)) {
+              if (!(currentLevel === 'bab')) {
                 _context.next = 60;
                 break;
               }
@@ -385,7 +361,7 @@ function DashboardSuperadmin() {
               _context.next = 73;
               break;
             case 60:
-              if (!(currentLevel === 'subbab' || selectedBab)) {
+              if (!(currentLevel === 'subbab')) {
                 _context.next = 73;
                 break;
               }
@@ -432,7 +408,7 @@ function DashboardSuperadmin() {
       };
     }();
     fetchData();
-  }, [currentLevel, selectedBarIdx.label, selectedJenjang, selectedTingkat, selectedKelas, selectedMapel, selectedBab]);
+  }, [currentLevel, selectedBarIdx.label]);
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     if (filters.jenjang.length < 1) {
       window.axios.get("/backoffice/json/jenjangs").then(function (response) {
@@ -678,34 +654,6 @@ function DashboardSuperadmin() {
     setListConfigData(listConfig);
   }, [listDatas]);
   var handleChange = function handleChange(e) {
-    //         const { name} = e.target;
-
-    // if (name === 'jenjang') {
-    //     setSelectedKelas('');
-    //     setSelectedMapel('');
-    //     setSelectedBab('');
-    //     setSelectedSubbab('');
-    //     $("#kelas").selectpicker("refresh");
-    //     $("#mapel").selectpicker("refresh");
-    //     $("#bab").selectpicker("refresh");
-    //     $("#subbab").selectpicker("refresh");
-    // } else if (name === 'tingkat') {
-    //     setSelectedMapel('');
-    //     setSelectedBab('');
-    //     setSelectedSubbab('');
-    //     $("#mapel").selectpicker("refresh");
-    //     $("#bab").selectpicker("refresh");
-    //     $("#subbab").selectpicker("refresh");
-    // } else if (name === 'kelas') {
-    //     setSelectedBab('');
-    //     setSelectedSubbab('');
-    //     $("#bab").selectpicker("refresh");
-    //     $("#subbab").selectpicker("refresh");
-    // } else if (name === 'mapel') {
-    //     setSelectedSubbab('');
-    //     $("#subbab").selectpicker("refresh");
-    // }
-
     var getLevel = filterLevel.filter(function (el) {
       return el.option == e.target.id;
     });
@@ -750,58 +698,49 @@ function DashboardSuperadmin() {
         setFilters(function (prevFilters) {
           return _objectSpread(_objectSpread({}, prevFilters), {}, {
             tingkat: data,
-            kelas: filters.kelas.length = 0,
-            mapel: filters.mapel.length = 0,
-            bab: filters.bab.length = 0,
-            subbab: filters.subbab.length = 0
+            kelas: filters.kelas.length > 0 ? filters.kelas.length = 0 : [],
+            mapel: filters.mapel.length > 0 ? filters.mapel.length = 0 : [],
+            bab: filters.bab.length > 0 ? filters.bab.length = 0 : [],
+            subbab: filters.subbab.length > 0 ? filters.subbab.length = 0 : []
           });
         });
-        $("#".concat(level.next_api.name)).selectpicker("refresh");
-        $("#kelas").selectpicker("refresh");
-        $("#mapel").selectpicker("refresh");
-        $("#bab").selectpicker("refresh");
-        $("#subbab").selectpicker("refresh");
       } else if (level.next_api.name === 'kelas') {
         setFilters(function (prevFilters) {
           return _objectSpread(_objectSpread({}, prevFilters), {}, {
             kelas: data,
-            mapel: filters.mapel.length = 0,
-            bab: filters.bab.length = 0,
-            subbab: filters.subbab.length = 0
+            mapel: filters.mapel.length > 0 ? filters.mapel.length = 0 : [],
+            bab: filters.bab.length > 0 ? filters.bab.length = 0 : [],
+            subbab: filters.subbab.length > 0 ? filters.subbab.length = 0 : []
           });
         });
-        $("#".concat(level.next_api.name)).selectpicker("refresh");
-        $("#mapel").selectpicker("refresh");
-        $("#bab").selectpicker("refresh");
-        $("#subbab").selectpicker("refresh");
       } else if (level.next_api.name === 'mapel') {
         setFilters(function (prevFilters) {
           return _objectSpread(_objectSpread({}, prevFilters), {}, {
             mapel: data,
-            bab: filters.bab.length = 0,
-            subbab: filters.subbab.length = 0
+            bab: filters.bab.length > 0 ? filters.bab.length = 0 : [],
+            subbab: filters.subbab.length > 0 ? filters.subbab.length = 0 : []
           });
         });
-        $("#".concat(level.next_api.name)).selectpicker("refresh");
-        $("#bab").selectpicker("refresh");
-        $("#subbab").selectpicker("refresh");
       } else if (level.next_api.name === 'bab') {
         setFilters(function (prevFilters) {
           return _objectSpread(_objectSpread({}, prevFilters), {}, {
             bab: data,
-            subbab: filters.subbab.length = 0
+            subbab: filters.subbab.length > 0 ? filters.subbab.length = 0 : []
           });
         });
-        $("#".concat(level.next_api.name)).selectpicker("refresh");
-        $("#subbab").selectpicker("refresh");
       } else if (level.next_api.name === 'subbab') {
         setFilters(function (prevFilters) {
           return _objectSpread(_objectSpread({}, prevFilters), {}, {
             subbab: data
           });
         });
-        $("#".concat(level.next_api.name)).selectpicker("refresh");
       }
+      $("#jenjang").selectpicker("refresh");
+      $("#tingkat").selectpicker("refresh");
+      $("#kelas").selectpicker("refresh");
+      $("#mapel").selectpicker("refresh");
+      $("#bab").selectpicker("refresh");
+      $("#subbab").selectpicker("refresh");
     })["catch"](function (err) {
       console.log(err);
     });
@@ -837,7 +776,6 @@ function DashboardSuperadmin() {
     "data-style": "btn-green-pastel",
     className: "selectpicker mr-2",
     placeholder: "Jenjang",
-    value: selectedJenjang,
     onChange: handleChange
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
     value: ""
@@ -852,7 +790,6 @@ function DashboardSuperadmin() {
     "data-style": "btn-green-pastel",
     className: "selectpicker mr-2",
     placeholder: "Tingkat",
-    value: selectedTingkat,
     onChange: handleChange
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
     value: ""
@@ -867,7 +804,6 @@ function DashboardSuperadmin() {
     "data-style": "btn-green-pastel",
     className: "selectpicker mr-2",
     placeholder: "Kelas",
-    value: selectedKelas,
     onChange: handleChange
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
     value: ""
@@ -882,7 +818,6 @@ function DashboardSuperadmin() {
     "data-style": "btn-green-pastel",
     className: "selectpicker mr-2",
     placeholder: "Mata Pelajaran",
-    value: selectedMapel,
     onChange: handleChange
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
     value: ""
@@ -897,7 +832,6 @@ function DashboardSuperadmin() {
     "data-style": "btn-green-pastel",
     className: "selectpicker mr-2",
     placeholder: "Module",
-    value: selectedBab,
     onChange: handleChange
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
     value: ""
@@ -912,7 +846,6 @@ function DashboardSuperadmin() {
     "data-style": "btn-green-pastel",
     className: "selectpicker mr-2",
     placeholder: "Sub-Module",
-    value: selectedSubbab,
     onChange: handleChange
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
     value: ""
