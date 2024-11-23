@@ -249,7 +249,12 @@ function DashboardSuperadmin() {
                 var data = response.data.data
                 setFilters({
                     ...filters,
-                    jenjang: data
+                    jenjang: data,
+                    tingkat: [],
+                    kelas: [],
+                    mapel: [],
+                    bab: [],
+                    subbab: []
                 })
 
                 $("#jenjang").selectpicker("refresh");
@@ -539,43 +544,33 @@ function DashboardSuperadmin() {
 
     const handleChange = (e) => {
 
-        const { name} = e.target;
+//         const { name} = e.target;
 
-        if (name === 'jenjang') {
-            setSelectedTingkat('');
-            setSelectedKelas('');
-            setSelectedMapel('');
-            setSelectedBab('');
-            setSelectedSubbab('');
-            $("#kelas").selectpicker("refresh");
-            $("#mapel").selectpicker("refresh");
-            $("#bab").selectpicker("refresh");
-            $("#subbab").selectpicker("refresh");
-        } else if (name === 'tingkat') {
-            setSelectedKelas('');
-            setSelectedMapel('');
-            setSelectedBab('');
-            setSelectedSubbab('');
-            $("#kelas").selectpicker("refresh");
-            $("#mapel").selectpicker("refresh");
-            $("#bab").selectpicker("refresh");
-            $("#subbab").selectpicker("refresh");
-        } else if (name === 'kelas') {
-            setSelectedMapel('');
-            setSelectedBab('');
-            setSelectedSubbab('');
-            $("#mapel").selectpicker("refresh");
-            $("#bab").selectpicker("refresh");
-            $("#subbab").selectpicker("refresh");
-        } else if (name === 'mapel') {
-            setSelectedBab('');
-            setSelectedSubbab('');
-            $("#bab").selectpicker("refresh");
-            $("#subbab").selectpicker("refresh");
-        } else if (name === 'bab') {
-            setSelectedSubbab('');
-            $("#subbab").selectpicker("refresh");
-        }
+        // if (name === 'jenjang') {
+        //     setSelectedKelas('');
+        //     setSelectedMapel('');
+        //     setSelectedBab('');
+        //     setSelectedSubbab('');
+        //     $("#kelas").selectpicker("refresh");
+        //     $("#mapel").selectpicker("refresh");
+        //     $("#bab").selectpicker("refresh");
+        //     $("#subbab").selectpicker("refresh");
+        // } else if (name === 'tingkat') {
+        //     setSelectedMapel('');
+        //     setSelectedBab('');
+        //     setSelectedSubbab('');
+        //     $("#mapel").selectpicker("refresh");
+        //     $("#bab").selectpicker("refresh");
+        //     $("#subbab").selectpicker("refresh");
+        // } else if (name === 'kelas') {
+        //     setSelectedBab('');
+        //     setSelectedSubbab('');
+        //     $("#bab").selectpicker("refresh");
+        //     $("#subbab").selectpicker("refresh");
+        // } else if (name === 'mapel') {
+        //     setSelectedSubbab('');
+        //     $("#subbab").selectpicker("refresh");
+        // }
 
         var getLevel = filterLevel.filter(function (el) {
             return el.option == e.target.id
@@ -631,12 +626,57 @@ function DashboardSuperadmin() {
         window.axios.post(`/backoffice/json/dashboard/filter/${level.next_api.name}`, params).then((response) => {
             var data = response.data.data
 
-            setFilters({
-                ...filters,
-                [level.next_api.name]: data
-            })
-
-            $(`#${level.next_api.name}`).selectpicker("refresh");
+            if (level.next_api.name === 'tingkat') {
+                setFilters((prevFilters) => ({
+                    ...prevFilters,
+                    tingkat: data,
+                    kelas: filters.kelas.length = 0,
+                    mapel: filters.mapel.length = 0,
+                    bab: filters.bab.length = 0,
+                    subbab: filters.subbab.length = 0
+                }))
+                $(`#${level.next_api.name}`).selectpicker("refresh");
+                $(`#kelas`).selectpicker("refresh");
+                $(`#mapel`).selectpicker("refresh");
+                $(`#bab`).selectpicker("refresh");
+                $(`#subbab`).selectpicker("refresh");
+            } else if (level.next_api.name === 'kelas') {
+                setFilters((prevFilters) => ({
+                    ...prevFilters,
+                    kelas: data,
+                    mapel: filters.mapel.length = 0,
+                    bab: filters.bab.length = 0,
+                    subbab: filters.subbab.length = 0
+                }))
+                $(`#${level.next_api.name}`).selectpicker("refresh");
+                $(`#mapel`).selectpicker("refresh");
+                $(`#bab`).selectpicker("refresh");
+                $(`#subbab`).selectpicker("refresh");
+            } else if (level.next_api.name === 'mapel') {
+                setFilters((prevFilters) => ({
+                    ...prevFilters,
+                    mapel: data,
+                    bab: filters.bab.length = 0,
+                    subbab: filters.subbab.length = 0
+                }))
+                $(`#${level.next_api.name}`).selectpicker("refresh");
+                $(`#bab`).selectpicker("refresh");
+                $(`#subbab`).selectpicker("refresh");
+            } else if (level.next_api.name === 'bab') {
+                setFilters((prevFilters) => ({
+                    ...prevFilters,
+                    bab: data,
+                    subbab: filters.subbab.length = 0
+                }))
+                $(`#${level.next_api.name}`).selectpicker("refresh");
+                $(`#subbab`).selectpicker("refresh");
+            } else if (level.next_api.name === 'subbab') {
+                setFilters((prevFilters) => ({
+                    ...prevFilters,
+                    subbab: data
+                }))
+                $(`#${level.next_api.name}`).selectpicker("refresh");
+            }
         }).catch((err) => {
             console.log(err)
         })
