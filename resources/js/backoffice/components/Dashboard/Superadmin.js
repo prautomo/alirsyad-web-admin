@@ -157,10 +157,6 @@ function DashboardSuperadmin() {
                         setFilters((prevFilters) => ({
                             ...prevFilters,
                             tingkat: data,
-                            kelas: [],
-                            mapel: [],
-                            bab: [],
-                            subbab: []
                         }));
                         $("#tingkat").selectpicker("refresh");
                     } else {
@@ -175,9 +171,6 @@ function DashboardSuperadmin() {
                         setFilters((prevFilters) => ({
                             ...prevFilters,
                             kelas: data,
-                            mapel: [],
-                            bab: [],
-                            subbab: []
                         }));
                         $("#kelas").selectpicker("refresh");
                     } else {
@@ -192,8 +185,6 @@ function DashboardSuperadmin() {
                         setFilters((prevFilters) => ({
                             ...prevFilters,
                             mapel: data,
-                            bab: [],
-                            subbab: []
                         }));
                         $("#mapel").selectpicker("refresh");
                     } else {
@@ -208,7 +199,6 @@ function DashboardSuperadmin() {
                         setFilters((prevFilters) => ({
                             ...prevFilters,
                             bab: data,
-                            subbab: []
                         }));
                         $("#bab").selectpicker("refresh");
                     } else {
@@ -548,44 +538,18 @@ function DashboardSuperadmin() {
         var level = getLevel[0]
         setNextApi(level.next_api)
 
-        if (level?.option === 'jenjang' && e.target.value === '') {
-            window.axios.post(`/backoffice/json/dashboard/jenjang`, params).then((response) => {
-                var data = response.data.data
-
-                options['onClick'] = graphClickEvent
-
-                var chartData = data.data
-                var chartDataId = data.data_id
-                var graphicTitle = data.graphic_title
-                var nextApi = data.next_api
-                var currentLevel = data.level
-
-                if (data.kelas_id) {
-                    setKelasId(data.kelas_id)
-                }
-
-                if (data.bab_id) {
-                    setBabId(data.bab_id)
-                }
-
-                if (data.mapel_id) {
-                    setMapelId(data.mapel_id)
-                }
-
-                setIsLoading(false)
-                setGraphicTitle(graphicTitle)
-                setCurrentLevel(currentLevel)
-                setNextApi(nextApi)
-                setListDataIds(chartDataId)
-                setListDatas(chartData)
-            }).catch((err) => {
-                console.log(err)
-            })
-            return
-        }
-
         var params = {
             [level.next_api.param]: e.target.value
+        }
+
+        if (level?.option === 'kelas' && e.target.value !== kelasId) {
+            setKelasId(e.target.value)
+            setFilters((prevFilters) => ({
+                ...prevFilters,
+                mapel: filters.mapel.length > 0 ? filters.mapel.length = 0 : [],
+                bab: filters.bab.length > 0 ? filters.bab.length = 0 : [],
+                subbab: filters.subbab.length > 0 ? filters.subbab.length = 0 : []
+            }))
         }
 
         window.axios.post(`/backoffice/json/dashboard/filter/${level.next_api.name}`, params).then((response) => {

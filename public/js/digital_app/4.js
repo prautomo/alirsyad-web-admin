@@ -240,11 +240,7 @@ function DashboardSuperadmin() {
               data = response.data.data;
               setFilters(function (prevFilters) {
                 return _objectSpread(_objectSpread({}, prevFilters), {}, {
-                  tingkat: data,
-                  kelas: [],
-                  mapel: [],
-                  bab: [],
-                  subbab: []
+                  tingkat: data
                 });
               });
               $("#tingkat").selectpicker("refresh");
@@ -277,10 +273,7 @@ function DashboardSuperadmin() {
               _data = _response.data.data;
               setFilters(function (prevFilters) {
                 return _objectSpread(_objectSpread({}, prevFilters), {}, {
-                  kelas: _data,
-                  mapel: [],
-                  bab: [],
-                  subbab: []
+                  kelas: _data
                 });
               });
               $("#kelas").selectpicker("refresh");
@@ -313,9 +306,7 @@ function DashboardSuperadmin() {
               _data2 = _response2.data.data;
               setFilters(function (prevFilters) {
                 return _objectSpread(_objectSpread({}, prevFilters), {}, {
-                  mapel: _data2,
-                  bab: [],
-                  subbab: []
+                  mapel: _data2
                 });
               });
               $("#mapel").selectpicker("refresh");
@@ -348,8 +339,7 @@ function DashboardSuperadmin() {
               _data3 = _response3.data.data;
               setFilters(function (prevFilters) {
                 return _objectSpread(_objectSpread({}, prevFilters), {}, {
-                  bab: _data3,
-                  subbab: []
+                  bab: _data3
                 });
               });
               $("#bab").selectpicker("refresh");
@@ -662,36 +652,17 @@ function DashboardSuperadmin() {
     }
     var level = getLevel[0];
     setNextApi(level.next_api);
-    if ((level === null || level === void 0 ? void 0 : level.option) === 'jenjang' && e.target.value === '') {
-      window.axios.post("/backoffice/json/dashboard/jenjang", params).then(function (response) {
-        var data = response.data.data;
-        options['onClick'] = graphClickEvent;
-        var chartData = data.data;
-        var chartDataId = data.data_id;
-        var graphicTitle = data.graphic_title;
-        var nextApi = data.next_api;
-        var currentLevel = data.level;
-        if (data.kelas_id) {
-          setKelasId(data.kelas_id);
-        }
-        if (data.bab_id) {
-          setBabId(data.bab_id);
-        }
-        if (data.mapel_id) {
-          setMapelId(data.mapel_id);
-        }
-        setIsLoading(false);
-        setGraphicTitle(graphicTitle);
-        setCurrentLevel(currentLevel);
-        setNextApi(nextApi);
-        setListDataIds(chartDataId);
-        setListDatas(chartData);
-      })["catch"](function (err) {
-        console.log(err);
-      });
-      return;
-    }
     var params = _defineProperty({}, level.next_api.param, e.target.value);
+    if ((level === null || level === void 0 ? void 0 : level.option) === 'kelas' && e.target.value !== kelasId) {
+      setKelasId(e.target.value);
+      setFilters(function (prevFilters) {
+        return _objectSpread(_objectSpread({}, prevFilters), {}, {
+          mapel: filters.mapel.length > 0 ? filters.mapel.length = 0 : [],
+          bab: filters.bab.length > 0 ? filters.bab.length = 0 : [],
+          subbab: filters.subbab.length > 0 ? filters.subbab.length = 0 : []
+        });
+      });
+    }
     window.axios.post("/backoffice/json/dashboard/filter/".concat(level.next_api.name), params).then(function (response) {
       var data = response.data.data;
       if (level.next_api.name === 'tingkat') {
