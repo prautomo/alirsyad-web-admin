@@ -550,6 +550,9 @@ function DashboardSuperadmin() {
                 bab: filters.bab.length > 0 ? filters.bab.length = 0 : [],
                 subbab: filters.subbab.length > 0 ? filters.subbab.length = 0 : []
             }))
+            $('#mapel').selectpicker("refresh");
+            $('#bab').selectpicker("refresh");
+            $('#subbab').selectpicker("refresh");
         }
 
         window.axios.post(`/backoffice/json/dashboard/filter/${level.next_api.name}`, params).then((response) => {

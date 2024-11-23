@@ -662,6 +662,9 @@ function DashboardSuperadmin() {
           subbab: filters.subbab.length > 0 ? filters.subbab.length = 0 : []
         });
       });
+      $('#mapel').selectpicker("refresh");
+      $('#bab').selectpicker("refresh");
+      $('#subbab').selectpicker("refresh");
     }
     window.axios.post("/backoffice/json/dashboard/filter/".concat(level.next_api.name), params).then(function (response) {
       var data = response.data.data;
