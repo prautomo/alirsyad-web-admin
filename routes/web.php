@@ -86,13 +86,16 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
         Route::get('external-users/set-kelas-id-guru-mapel', 'ExternalUserController@set_kelas_id_guru_mapel'); //Temp route to set default kelas id on guru mapel (first found kelas of tingkat)
         Route::get('external-users/set-user-roles', 'ExternalUserController@set_user_roles'); //Temp route to set user roles (on table model_has_roles)
         Route::get('e-raport/generate-dummy-score', 'ERaportController@generateDummyScore'); //Temp route to generate dummy score
-        
+
         // end
         Route::resource('external-users', 'ExternalUserController');
         Route::post('external-users/update-status/{id}', 'ExternalUserController@updateStatus')->name('external-users.update-status');
 
         Route::resource('manage-external-users', 'ManageExternalUserController');
         // Route::get('manage-external-users/moduls',  "ManageExternalUserController@index_modul")->name('manage-external-users.index_modul');
+
+        // Route Log Activity
+        Route::get('log-activities', 'LogActivityController@index')->name('log-activities.index');
 
         // JSON Response
         Route::get("/json/tingkats/{id}", "\App\Http\Controllers\API\TingkatController@show")->name('json.tingkat.detail');
@@ -128,7 +131,7 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
         Route::post('/json/dashboard/subbab', 'DashboardController@getDataSubbab')->name('dashboard.get-data-subbab');
         Route::post('/json/dashboard/siswa', 'DashboardController@getDataSiswa')->name('dashboard.get-data-siswa');
         Route::post('/json/dashboard/current', 'DashboardController@getCurrentDashboard')->name('dashboard.get-current-dashboard');
-        
+
         Route::post("/json/dashboard/filter/level", 'DashboardController@filterLevel')->name('dashboard.filter-level');
         Route::post("/json/dashboard/filter/tingkat", 'DashboardController@filterTingkat')->name('dashboard.filter-tingkat');
         Route::post("/json/dashboard/filter/kelas", 'DashboardController@filterKelas')->name('dashboard.filter-kelas');

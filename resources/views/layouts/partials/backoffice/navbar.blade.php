@@ -48,7 +48,7 @@
                     </a>
                   </li>
                   @endcan
-                  
+
                   @can('kelas-list')
                   <li class="nav-item">
                     <a href="{{ route('backoffice::kelas.index') }}" class="nav-link{{ (request()->is('backoffice/kelas*')) ? ' active-sub' : '' }}">
@@ -86,7 +86,7 @@
                     </a>
                   </li>
                   @endcan
-                  
+
                   @can('video-list')
                   <li class="nav-item">
                     <a href="{{ route('backoffice::videos.index') }}" class="nav-link{{ (request()->is('backoffice/videos*')) ? ' active-sub' : '' }}">
@@ -228,7 +228,16 @@
               </a>
             </li>
             @endcan
-    
+
+            @can('log-activity-list')
+            <li class="nav-item">
+              <a class="nav-link{{ request()->is('backoffice/log-activities*') ? ' active' : '' }}" href="{{ route('backoffice::log-activities.index') }}">
+                <i class="ni ni-cust-master{{ request()->is('backoffice/log-activities*') ? '-active' : '' }} text-light"></i>
+                <span class="nav-link-text">Log Activity</span>
+              </a>
+            </li>
+            @endcan
+
             <!-- <li class="nav-item">
               <a class="nav-link{{ request()->is('backoffice/mitra*', 'backoffice/reports*') ? ' active' : ' collapsed' }}" href="#navbar-report" data-toggle="collapse" role="button" aria-expanded="{{ request()->is('backoffice/mitra*', 'backoffice/reports*') ? 'true' : 'false' }}" aria-controls="navbar-report">
                 <i class="ni ni-ungroup text-light"></i>
