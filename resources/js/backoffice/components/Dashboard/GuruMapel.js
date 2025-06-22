@@ -308,33 +308,62 @@ function DashboardGuruMapel() {
         setListConfigData(listConfig);
     }, [listDatas]);
 
-    const handleChange = (e) => {
-        console.log("apaaaaaaaaaaan nih?", e)
-        var getLevel = filterLevel.filter(function (el) {
-            return el.option == e.target.id
+    const handleMengajarChange = (e) => {
+        const level = filterLevel.find((el) => el.option === 'mengajar');
+        if (!level) return;
+
+        setNextApi(level.next_api);
+
+        const params = { [level.next_api.param]: e.target.value };
+
+        const [mapel, kelas] = e.target.value.split('/');
+        params[level.next_api.param] = mapel;
+        params['kelas_id'] = kelas;
+
+        setMapelId(parseInt(mapel));
+        setKelasId(parseInt(kelas));
+        setBabId(0);
+
+        window.axios
+            .post(`/backoffice/json/dashboard/filter/${level.next_api.name}`, params)
+            .then((response) => {
+                const data = response.data.data;
+                setFilters((prevFilters) => ({
+                    ...prevFilters,
+                    bab: data,
+                    subbab: []
+                }));
+                $('#bab').selectpicker('refresh');
+                $('#subbab').selectpicker('refresh');
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+
+        setIsLoading(true);
+        setSelectedBarIdx({
+            label: e.target.id,
+            idx: e.target.value,
+            isClick: false,
         });
-        console.log('getLevel', getLevel)
-        if(getLevel.length == 0){
+    };
+
+    const handleChange = (e) => {
+        var getLevel = filterLevel.filter(function (el) {
+            return el.option == e.target.id;
+        });
+        if (getLevel.length == 0) {
             return;
         }
 
-        var level = getLevel[0]
-        setNextApi(level.next_api)
+        var level = getLevel[0];
+        setNextApi(level.next_api);
 
         let params = { [level.next_api.param]: e.target.value };
 
-        if (e.target.id === 'mengajar') {
-            const [mapel, kelas] = e.target.value.split('/')
-            params[level.next_api.param] = mapel
-            params['kelas_id'] = kelas
-            setMapelId(parseInt(mapel))
-            setKelasId(parseInt(kelas))
-            setBabId(0)
-        } else if (kelasId !== 0) {
-            params['kelas_id'] = kelasId
+        if (kelasId !== 0) {
+            params['kelas_id'] = kelasId;
         }
-
-        console.log("params handlechange", params)
 
         window.axios.post(`/backoffice/json/dashboard/filter/${level.next_api.name}`, params).then((response) => {
             var data = response.data.data
@@ -371,7 +400,7 @@ function DashboardGuruMapel() {
                 <div style={{ display: 'flex', alignItems: 'center'}}>
                     <div style={{ marginLeft: 'auto' }} className="dashboard-filter">
                         <label className="my-auto mr-2" style={{ color: "#9E9E9E"}}>Filter By</label>
-                        <select id="mengajar" name="mengajar" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Mata Pelajaran" onChange={handleChange}>
+                        <select id="mengajar" name="mengajar" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Mata Pelajaran" onChange={handleMengajarChange}>
                             <option value="">Mengajar</option>
                             {filters.mengajar.length > 0 && filters.mengajar.map((data) => (
                                 <option value={data.id}>{data.name}</option>
