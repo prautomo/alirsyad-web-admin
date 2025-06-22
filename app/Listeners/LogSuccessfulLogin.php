@@ -51,7 +51,7 @@ class LogSuccessfulLogin
 
         LogActivity::create([
             'action_type'=> LogActivityConst::ACTION_TYPE_READ,
-            'description'   => 'User logged '. $event->user->name .' in. ',
+            'description'   => 'User '. $event->user->name .' logged in. ',
             'actor_user_id' => $event->user->id,
             'actor_user_name' => $event->user->name,
             'actor_user_role' => $event->user->getRoleNames()->implode(','),

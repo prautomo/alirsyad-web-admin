@@ -34,10 +34,10 @@
                     data-* is same as option columns in datatable
                     https://datatables.net/reference/option/columns
                 --}}
+                <th data-data="source_name">@lang("Sumber")</th>
                 <th data-data="action_type">@lang("Tipe Aksi")</th>
                 <th data-data="description">@lang("Deskripsi")</th>
                 <th data-data="actor_user_name">@lang("Pengguna")</th>
-                <th data-data="source_name">@lang("Sumber Nama")</th>
                 <th data-data="created_at">@lang("Dibuat Pada")</th>
             </x-datatable.table>
         </div>
