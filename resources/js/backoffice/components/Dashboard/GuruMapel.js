@@ -107,10 +107,18 @@ function DashboardGuruMapel() {
                     mengajar: data.data,
                 }));
 
-                if (data.kelas_id) setKelasId(data.kelas_id);
-                if (data.mapel_id) setMapelId(data.mapel_id);
+                let val = '';
+                if (data.data && data.data.length > 0) {
+                    val = data.data[0].id;
+                    const [mapel, kelas] = val.split('/');
+                    setMapelId(parseInt(mapel));
+                    setKelasId(parseInt(kelas));
+                } else {
+                    if (data.kelas_id) setKelasId(data.kelas_id);
+                    if (data.mapel_id) setMapelId(data.mapel_id);
+                    val = `${data.mapel_id}/${data.kelas_id}`;
+                }
 
-                const val = `${data.mapel_id}/${data.kelas_id}`;
                 $('#mengajar').val(val);
                 $('#mengajar').selectpicker('refresh');
             }).catch((err) => console.log(err));
@@ -165,6 +173,23 @@ function DashboardGuruMapel() {
     useEffect(() => {
         const selectedId = selectedBar.isClick ? rawIds[selectedBar.idx] : selectedBar.idx;
 
+        if (selectedBar.isClick) {
+            if (currentLevel === 'mengajar') {
+                $('#mengajar').val(selectedId);
+                $('#mengajar').selectpicker('refresh');
+                const [mapel, kelas] = String(selectedId).split('/');
+                setMapelId(parseInt(mapel));
+                setKelasId(parseInt(kelas));
+            } else if (currentLevel === 'bab') {
+                $('#bab').val(selectedId);
+                $('#bab').selectpicker('refresh');
+                setBabId(parseInt(selectedId));
+            } else if (currentLevel === 'subbab') {
+                $('#subbab').val(selectedId);
+                $('#subbab').selectpicker('refresh');
+            }
+        }
+
         if (currentLevel === 'siswa') {
             window.location.href = `/backoffice/e-raport/${selectedId}/${mapelId}`;
             return;
@@ -194,9 +219,17 @@ function DashboardGuruMapel() {
             setRawCharts(data.data);
             setRawIds(data.data_id);
 
-            if (data.kelas_id) setKelasId(data.kelas_id);
+            if (data.kelas_id) {
+                setKelasId(data.kelas_id);
+                $('#mengajar').val(`${data.mapel_id}/${data.kelas_id}`);
+                $('#mengajar').selectpicker('refresh');
+            }
             if (data.mapel_id) setMapelId(data.mapel_id);
-            if (data.bab_id) setBabId(data.bab_id);
+            if (data.bab_id) {
+                setBabId(data.bab_id);
+                $('#bab').val(data.bab_id);
+                $('#bab').selectpicker('refresh');
+            }
         }).catch((err) => console.log(err));
     }, [selectedBar]);
 
