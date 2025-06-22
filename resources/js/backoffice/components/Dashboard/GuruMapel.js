@@ -321,12 +321,12 @@ function DashboardGuruMapel() {
         var level = getLevel[0]
         setNextApi(level.next_api)
 
-        var params = {
-            [level.next_api.param]: e.target.value
-        }
+        let params = { [level.next_api.param]: e.target.value };
 
         if (e.target.id === 'mengajar') {
             const [mapel, kelas] = e.target.value.split('/')
+            params[level.next_api.param] = mapel
+            params['kelas_id'] = kelas
             setMapelId(parseInt(mapel))
             setKelasId(parseInt(kelas))
             setBabId(0)
