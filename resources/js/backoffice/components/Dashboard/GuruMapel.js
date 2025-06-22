@@ -234,6 +234,7 @@ function DashboardGuruMapel() {
         setKelasId(parseInt(kelas));
         setBabId(0);
 
+        // update module options
         const params = { [level.next_api.param]: e.target.value };
 
         window.axios.post(`/backoffice/json/dashboard/filter/${level.next_api.name}`, params)
@@ -244,8 +245,21 @@ function DashboardGuruMapel() {
                 $('#subbab').selectpicker('refresh');
             }).catch((err) => console.log(err));
 
+        // refresh chart data according to selected subject/class
         setLoading(true);
-        setSelectedBar({ label: e.target.id, idx: e.target.value, isClick: false });
+        window.axios.post('/backoffice/json/dashboard/bab', params)
+            .then((response) => {
+                const data = response.data.data;
+                setGraphicTitle(data.graphic_title);
+                setCurrentLevel(data.level);
+                setNextApi(data.next_api);
+                setRawCharts(data.data);
+                setRawIds(data.data_id);
+                if (data.kelas_id) setKelasId(data.kelas_id);
+                if (data.mapel_id) setMapelId(data.mapel_id);
+                if (data.bab_id) setBabId(data.bab_id);
+                setLoading(false);
+            }).catch((err) => console.log(err));
     };
 
     const handleChange = (e) => {
