@@ -197,13 +197,13 @@ function DashboardGuruMapel() {
                     mengajar: data.data
                 })
 
-                // if(data.kelas_id){
-                //     setKelasId(data.kelas_id)
-                // }
+                if (data.kelas_id) {
+                    setKelasId(data.kelas_id)
+                }
 
-                // if(data.mapel_id){
-                //     setMapelId(data.mapel_id)
-                // }
+                if (data.mapel_id) {
+                    setMapelId(data.mapel_id)
+                }
 
                 $("#mengajar").val(`${data.mapel_id + '/' + data.kelas_id}`);
                 $("#mengajar").selectpicker("refresh");
@@ -322,10 +322,15 @@ function DashboardGuruMapel() {
         setNextApi(level.next_api)
 
         var params = {
-            [level.next_api.param] : e.target.value
+            [level.next_api.param]: e.target.value
         }
-        
-        if(kelasId != 0){
+
+        if (e.target.id === 'mengajar') {
+            const [mapel, kelas] = e.target.value.split('/')
+            setMapelId(parseInt(mapel))
+            setKelasId(parseInt(kelas))
+            setBabId(0)
+        } else if (kelasId !== 0) {
             params['kelas_id'] = kelasId
         }
 
