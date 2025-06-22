@@ -15,9 +15,12 @@ use App\Models\UploaderMataPelajaran;
 use Illuminate\Http\Request;
 use DB;
 use Auth;
+use App\Traits\LogActivityTrait;
+use App\Constants\LogActivityConst;
 
 class PaketSoalController extends Controller
-{
+{ 
+    use LogActivityTrait;
     function __construct(){
         $this->middleware('permission:paket-soal-list|paket-soal-create|paket-soal-edit|paket-soal-delete', ['only' => ['index','show']]);
         $this->middleware('permission:paket-soal-create', ['only' => ['create','store']]);
@@ -284,6 +287,15 @@ class PaketSoalController extends Controller
 
         $storeLatihanSoal = PaketSoal::create($newLatihanSoal);
 
+        $this->logActivity(
+            LogActivityConst::ACTION_TYPE_CREATE,
+            'Create Paket Soal ' . $storeLatihanSoal->judul_subbab,
+            LogActivityConst::MODULE_PAKET_SOAL,
+            $storeLatihanSoal->id,
+            null,
+            $storeLatihanSoal->toArray()
+        );
+
         if ($storeLatihanSoal) {
             return redirect()->route($this->routePath . '.index')->with(
                 $this->success(__("Success to Create Paket Soal "), $storeLatihanSoal)
@@ -293,8 +305,18 @@ class PaketSoalController extends Controller
 
     public function destroy(Request $request, $id){
         $d = PaketSoal::findOrFail($id);
+        $before = $d->toArray();
 
         $d->delete();
+
+        $this->logActivity(
+            LogActivityConst::ACTION_TYPE_DELETED,
+            'Delete Paket Soal ' . $d->judul_subbab,
+            LogActivityConst::MODULE_PAKET_SOAL,
+            $id,
+            $before,
+            null
+        );
     }
 
     public function edit(Request $request, $id){
@@ -322,7 +344,17 @@ class PaketSoalController extends Controller
         }
 
         $dt = PaketSoal::findOrFail($id);
+        $before = $dt->toArray();
         $dt->update($dataReq);
+
+        $this->logActivity(
+            LogActivityConst::ACTION_TYPE_UPDATE,
+            'Update Paket Soal ' . $dt->judul_subbab,
+            LogActivityConst::MODULE_PAKET_SOAL,
+            $dt->id,
+            $before,
+            $dt->toArray()
+        );
 
         return redirect()->route($this->routePath.'.index')->with(
             $this->success(__("Success to update Paket Soal"), $dt)
