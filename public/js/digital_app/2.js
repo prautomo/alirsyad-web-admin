@@ -23,13 +23,12 @@ exports.push([module.i, ".dashboard-final-score {\n    background: #F6D0A14D;\n 
 /*!*******************************************************************!*\
   !*** ./resources/js/backoffice/components/Dashboard/GuruMapel.js ***!
   \*******************************************************************/
-/*! exports provided: options, data, default */
+/*! exports provided: options, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "options", function() { return options; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "data", function() { return data; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
@@ -91,39 +90,31 @@ var options = {
     event["native"].target.style.cursor = chartElement[0] ? 'pointer' : 'default';
   }
 };
-var data = {
-  undefined: undefined,
-  datasets: [{
-    label: 'Score',
-    data: [],
-    backgroundColor: 'rgba(2, 65, 2, 1)'
-  }]
-};
 function DashboardGuruMapel() {
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
     _useState2 = _slicedToArray(_useState, 2),
-    listConfigData = _useState2[0],
-    setListConfigData = _useState2[1];
+    chartConfigs = _useState2[0],
+    setChartConfigs = _useState2[1];
   var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
     _useState4 = _slicedToArray(_useState3, 2),
-    listDatas = _useState4[0],
-    setListDatas = _useState4[1];
+    rawCharts = _useState4[0],
+    setRawCharts = _useState4[1];
   var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
     _useState6 = _slicedToArray(_useState5, 2),
-    listDataIds = _useState6[0],
-    setListDataIds = _useState6[1];
+    rawIds = _useState6[0],
+    setRawIds = _useState6[1];
   var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({}),
     _useState8 = _slicedToArray(_useState7, 2),
     nextApi = _useState8[0],
     setNextApi = _useState8[1];
   var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({}),
     _useState10 = _slicedToArray(_useState9, 2),
-    selectedBarIdx = _useState10[0],
-    setSelectedBarIdx = _useState10[1];
+    selectedBar = _useState10[0],
+    setSelectedBar = _useState10[1];
   var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
     _useState12 = _slicedToArray(_useState11, 2),
     filterLevel = _useState12[0],
-    setfilterLevel = _useState12[1];
+    setFilterLevel = _useState12[1];
   var _useState13 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
       mengajar: [],
       bab: [],
@@ -154,106 +145,111 @@ function DashboardGuruMapel() {
     setCurrentLevel = _useState24[1];
   var _useState25 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(true),
     _useState26 = _slicedToArray(_useState25, 2),
-    isLoading = _useState26[0],
-    setIsLoading = _useState26[1];
-
-  //uf1
+    loading = _useState26[0],
+    setLoading = _useState26[1];
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    if (listDatas.length < 1) {
-      window.axios.post("/backoffice/json/dashboard/bab").then(function (response) {
+    if (rawCharts.length < 1) {
+      window.axios.post('/backoffice/json/dashboard/bab').then(function (response) {
         var data = response.data.data;
         var chartData = data.data;
-        var chartDataId = data.data_id;
-        var nextApi = data.next_api;
-        var graphicTitle = data.graphic_title;
-        var currentLevel = data.level;
+        var chartIds = data.data_id;
         options['onClick'] = graphClickEvent;
-        if (data.kelas_id) {
-          setKelasId(data.kelas_id);
-        }
-        if (data.mapel_id) {
-          setMapelId(data.mapel_id);
-        }
-        setIsLoading(false);
-        setGraphicTitle(graphicTitle);
-        setCurrentLevel(currentLevel);
-        setNextApi(nextApi);
-        setListDatas(chartData);
-        setListDataIds(chartDataId);
+        if (data.kelas_id) setKelasId(data.kelas_id);
+        if (data.mapel_id) setMapelId(data.mapel_id);
+        if (data.bab_id) setBabId(data.bab_id);
+        setLoading(false);
+        setGraphicTitle(data.graphic_title);
+        setCurrentLevel(data.level);
+        setNextApi(data.next_api);
+        setRawCharts(chartData);
+        setRawIds(chartIds);
       })["catch"](function (err) {
-        console.log(err);
+        return console.log(err);
       });
-      window.axios.post("/backoffice/json/dashboard/filter/level").then(function (response) {
+      window.axios.post('/backoffice/json/dashboard/filter/level').then(function (response) {
         var data = response.data.data;
-        setfilterLevel(data);
+        setFilterLevel(data);
       })["catch"](function (err) {
-        console.log(err);
+        return console.log(err);
       });
     }
   }, []);
-
-  //uf2
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    if (filters.mengajar.length < 1) {
+      window.axios.post('/backoffice/json/dashboard/filter/mengajar').then(function (response) {
+        var data = response.data;
+        setFilters(function (prev) {
+          return _objectSpread(_objectSpread({}, prev), {}, {
+            mengajar: data.data
+          });
+        });
+        if (data.kelas_id) setKelasId(data.kelas_id);
+        if (data.mapel_id) setMapelId(data.mapel_id);
+        var val = "".concat(data.mapel_id, "/").concat(data.kelas_id);
+        $('#mengajar').val(val);
+        $('#mengajar').selectpicker('refresh');
+      })["catch"](function (err) {
+        return console.log(err);
+      });
+    }
+  }, []);
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     if (mapelId) {
-      window.axios.post("/backoffice/json/dashboard/filter/bab", {
+      window.axios.post('/backoffice/json/dashboard/filter/bab', {
         mapel_id: mapelId
       }).then(function (response) {
         var data = response.data.data;
-        setFilters(_objectSpread(_objectSpread({}, filters), {}, {
-          bab: data
-        }));
-        $("#bab").selectpicker("refresh");
+        setFilters(function (prev) {
+          return _objectSpread(_objectSpread({}, prev), {}, {
+            bab: data
+          });
+        });
+        $('#bab').selectpicker('refresh');
       })["catch"](function (err) {
-        console.log(err);
+        return console.log(err);
       });
     }
   }, [mapelId]);
-  var spanBorderRight = {
-    borderLeft: "1px solid #F6D0A1",
-    marginLeft: "5px",
-    marginRight: "5px"
-  };
   function graphClickEvent(event, clickedElements) {
     if (clickedElements.length === 0) return;
-    var _clickedElements$0$el = clickedElements[0].element.$context,
-      dataIndex = _clickedElements$0$el.dataIndex,
-      raw = _clickedElements$0$el.raw;
+    var dataIndex = clickedElements[0].element.$context.dataIndex;
     var data = event.chart.data;
     var barLabel = data.labels[dataIndex];
-    var selectedIdx = dataIndex;
-    setIsLoading(true);
-    setSelectedBarIdx({
+    setLoading(true);
+    setSelectedBar({
       label: barLabel,
-      idx: selectedIdx,
+      idx: dataIndex,
       isClick: true
     });
   }
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    var fetchData = /*#__PURE__*/function () {
+    var fetchFilter = /*#__PURE__*/function () {
       var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        var labelParts, foundBab;
+        var label, foundBab;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
               try {
                 if (currentLevel === 'subbab') {
-                  labelParts = selectedBarIdx.label;
-                  foundBab = filters.bab.find(function (data) {
-                    return labelParts === data.name;
+                  label = selectedBar.label;
+                  foundBab = filters.bab.find(function (d) {
+                    return label === d.name;
                   });
-                  window.axios.post("/backoffice/json/dashboard/filter/subbab", {
-                    bab_id: foundBab.id
-                  }).then(function (response) {
-                    var data = response.data.data;
-                    setFilters(function (prevFilters) {
-                      return _objectSpread(_objectSpread({}, prevFilters), {}, {
-                        subbab: data
+                  if (foundBab) {
+                    window.axios.post('/backoffice/json/dashboard/filter/subbab', {
+                      bab_id: foundBab.id
+                    }).then(function (response) {
+                      var data = response.data.data;
+                      setFilters(function (prev) {
+                        return _objectSpread(_objectSpread({}, prev), {}, {
+                          subbab: data
+                        });
                       });
+                      $('#subbab').selectpicker('refresh');
+                    })["catch"](function (err) {
+                      return console.log(err);
                     });
-                    $("#subbab").selectpicker("refresh");
-                  })["catch"](function (err) {
-                    console.log(err);
-                  });
+                  }
                 }
               } catch (err) {
                 console.log(err);
@@ -264,164 +260,157 @@ function DashboardGuruMapel() {
           }
         }, _callee);
       }));
-      return function fetchData() {
+      return function fetchFilter() {
         return _ref.apply(this, arguments);
       };
     }();
-    fetchData();
-  }, [currentLevel, selectedBarIdx.label, filters]);
-
-  //uf4
+    fetchFilter();
+  }, [currentLevel, selectedBar.label, filters.bab]);
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    if (filters.mengajar.length < 1) {
-      window.axios.post("/backoffice/json/dashboard/filter/mengajar").then(function (response) {
-        var data = response.data;
-        setFilters(_objectSpread(_objectSpread({}, filters), {}, {
-          mengajar: data.data
-        }));
-
-        // if(data.kelas_id){
-        //     setKelasId(data.kelas_id)
-        // }
-
-        // if(data.mapel_id){
-        //     setMapelId(data.mapel_id)
-        // }
-
-        if (currentLevel == 'bab') {
-          params['kelas_id'] = kelasId;
-          // params['mapel_id'] = mapelId
-        } else if (currentLevel == 'subbab') {
-          params['bab_id'] = babId;
-          params['kelas_id'] = kelasId;
-        }
-        $("#mengajar").val("".concat(data.mapel_id + '/' + data.kelas_id));
-        $("#mengajar").selectpicker("refresh");
-      })["catch"](function (err) {
-        console.log(err);
-      });
-    }
-  }, []);
-
-  //uf5
-  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    var selectedId = selectedBarIdx.isClick ? listDataIds[selectedBarIdx.idx] : selectedBarIdx.idx;
-    if (currentLevel == 'siswa') {
+    var selectedId = selectedBar.isClick ? rawIds[selectedBar.idx] : selectedBar.idx;
+    if (currentLevel === 'siswa') {
       window.location.href = "/backoffice/e-raport/".concat(selectedId, "/").concat(mapelId);
       return;
     }
-    setIsLoading(true);
+    if (!nextApi.name) return;
+    setLoading(true);
     var params = _defineProperty({}, nextApi.param, selectedId);
-    if (kelasId != 0) {
+    if (currentLevel === 'bab') {
+      params['kelas_id'] = kelasId;
+      params['mapel_id'] = mapelId;
+    } else if (currentLevel === 'subbab') {
+      params['bab_id'] = babId;
       params['kelas_id'] = kelasId;
     }
-    if (babId != 0) {
-      params['bab_id'] = babId;
-    }
-    console.log("params chart", params);
     window.axios.post("/backoffice/json/dashboard/".concat(nextApi.name), params).then(function (response) {
       var data = response.data.data;
       options['onClick'] = graphClickEvent;
-      var chartData = data.data;
-      var chartDataId = data.data_id;
-      var graphicTitle = data.graphic_title;
-      var nextApi = data.next_api;
-      var currentLevel = data.level;
-      if (data.kelas_id) {
-        setKelasId(data.kelas_id);
-      }
-      if (data.bab_id) {
-        setBabId(data.bab_id);
-      }
-      if (data.mapel_id) {
-        setMapelId(data.mapel_id);
-      }
-      console.log('chartData!!!!!!!!!!!!!', chartData);
-      setIsLoading(false);
-      setGraphicTitle(graphicTitle);
-      setCurrentLevel(currentLevel);
-      setNextApi(nextApi);
-      setListDataIds(chartDataId);
-      setListDatas(chartData);
+      setLoading(false);
+      setGraphicTitle(data.graphic_title);
+      setCurrentLevel(data.level);
+      setNextApi(data.next_api);
+      setRawCharts(data.data);
+      setRawIds(data.data_id);
+      if (data.kelas_id) setKelasId(data.kelas_id);
+      if (data.mapel_id) setMapelId(data.mapel_id);
+      if (data.bab_id) setBabId(data.bab_id);
     })["catch"](function (err) {
-      console.log(err);
+      return console.log(err);
     });
-  }, [selectedBarIdx]);
-
-  //uf6
+  }, [selectedBar]);
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    var listConfig = [];
+    var configs = [];
     var _loop = function _loop() {
-        var labels = [];
-        var tempScores = [];
-        listDatas[i].forEach(function (element) {
-          var data = element;
-          labels.push(data.label);
-          tempScores.push(data.score);
-        });
-        objConfig = {
-          labels: labels,
-          datasets: [{
-            label: 'Score',
-            data: tempScores,
-            backgroundColor: "rgba(2, 65, 2, 1)",
-            borderRadius: 10,
-            minBarLength: 1
-            // barThickness: 120,
-          }]
-        };
-        listConfig.push(objConfig);
-      },
-      objConfig;
-    for (var i = 0; i < listDatas.length; i++) {
+      var labels = [];
+      var scores = [];
+      rawCharts[i].forEach(function (el) {
+        labels.push(el.label);
+        scores.push(el.score);
+      });
+      configs.push({
+        labels: labels,
+        datasets: [{
+          label: 'Score',
+          data: scores,
+          backgroundColor: 'rgba(2, 65, 2, 1)',
+          borderRadius: 10,
+          minBarLength: 1
+        }]
+      });
+    };
+    for (var i = 0; i < rawCharts.length; i++) {
       _loop();
     }
-    console.log('listConfig', listConfig);
-    setListConfigData(listConfig);
-  }, [listDatas]);
-  var handleChange = function handleChange(e) {
-    console.log("apaaaaaaaaaaan nih?", e);
-    var getLevel = filterLevel.filter(function (el) {
-      return el.option == e.target.id;
+    setChartConfigs(configs);
+  }, [rawCharts]);
+  var handleMengajarChange = function handleMengajarChange(e) {
+    var level = filterLevel.find(function (el) {
+      return el.option === 'mengajar';
     });
-    console.log('getLevel', getLevel);
-    if (getLevel.length == 0) {
-      return;
-    }
+    if (!level) return;
+    setNextApi(level.next_api);
+    var _e$target$value$split = e.target.value.split('/'),
+      _e$target$value$split2 = _slicedToArray(_e$target$value$split, 2),
+      mapel = _e$target$value$split2[0],
+      kelas = _e$target$value$split2[1];
+    setMapelId(parseInt(mapel));
+    setKelasId(parseInt(kelas));
+    setBabId(0);
+
+    // update module options
+    var params = _defineProperty({}, level.next_api.param, e.target.value);
+    window.axios.post("/backoffice/json/dashboard/filter/".concat(level.next_api.name), params).then(function (response) {
+      var data = response.data.data;
+      setFilters(function (prev) {
+        return _objectSpread(_objectSpread({}, prev), {}, {
+          bab: data,
+          subbab: []
+        });
+      });
+      $('#bab').selectpicker('refresh');
+      $('#subbab').selectpicker('refresh');
+    })["catch"](function (err) {
+      return console.log(err);
+    });
+
+    // refresh chart data according to selected subject/class
+    setLoading(true);
+    window.axios.post('/backoffice/json/dashboard/bab', params).then(function (response) {
+      var data = response.data.data;
+      setGraphicTitle(data.graphic_title);
+      setCurrentLevel(data.level);
+      setNextApi(data.next_api);
+      setRawCharts(data.data);
+      setRawIds(data.data_id);
+      if (data.kelas_id) setKelasId(data.kelas_id);
+      if (data.mapel_id) setMapelId(data.mapel_id);
+      if (data.bab_id) setBabId(data.bab_id);
+      setLoading(false);
+    })["catch"](function (err) {
+      return console.log(err);
+    });
+  };
+  var handleChange = function handleChange(e) {
+    var getLevel = filterLevel.filter(function (el) {
+      return el.option === e.target.id;
+    });
+    if (getLevel.length === 0) return;
     var level = getLevel[0];
     setNextApi(level.next_api);
     var params = _defineProperty({}, level.next_api.param, e.target.value);
-    if (kelasId != 0) {
-      params['kelas_id'] = kelasId;
-    }
-    console.log("params handlechange", params);
+    if (kelasId !== 0) params['kelas_id'] = kelasId;
     window.axios.post("/backoffice/json/dashboard/filter/".concat(level.next_api.name), params).then(function (response) {
       var data = response.data.data;
       if (level.next_api.name === 'bab') {
-        setFilters(function (prevFilters) {
-          return _objectSpread(_objectSpread({}, prevFilters), {}, {
+        setFilters(function (prev) {
+          return _objectSpread(_objectSpread({}, prev), {}, {
             bab: data,
-            subbab: filters.subbab.length > 0 ? filters.subbab.length = 0 : []
+            subbab: []
           });
         });
       } else if (level.next_api.name === 'subbab') {
-        setFilters(function (prevFilters) {
-          return _objectSpread(_objectSpread({}, prevFilters), {}, {
+        setFilters(function (prev) {
+          return _objectSpread(_objectSpread({}, prev), {}, {
             subbab: data
           });
         });
       }
-      $("#bab").selectpicker("refresh");
-      $("#subbab").selectpicker("refresh");
+      $('#bab').selectpicker('refresh');
+      $('#subbab').selectpicker('refresh');
     })["catch"](function (err) {
-      console.log(err);
+      return console.log(err);
     });
-    setIsLoading(true);
-    setSelectedBarIdx({
+    setLoading(true);
+    setSelectedBar({
       label: e.target.id,
       idx: e.target.value,
       isClick: false
     });
+  };
+  var spanBorderRight = {
+    borderLeft: '1px solid #F6D0A1',
+    marginLeft: '5px',
+    marginRight: '5px'
   };
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "row mb-4"
@@ -440,7 +429,7 @@ function DashboardGuruMapel() {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "my-auto mr-2",
     style: {
-      color: "#9E9E9E"
+      color: '#9E9E9E'
     }
   }, "Filter By"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
     id: "mengajar",
@@ -448,7 +437,7 @@ function DashboardGuruMapel() {
     "data-style": "btn-green-pastel",
     className: "selectpicker mr-2",
     placeholder: "Mata Pelajaran",
-    onChange: handleChange
+    onChange: handleMengajarChange
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
     value: ""
   }, "Mengajar"), filters.mengajar.length > 0 && filters.mengajar.map(function (data) {
@@ -481,9 +470,10 @@ function DashboardGuruMapel() {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
       value: data.id
     }, data.name);
-  })))))), !isLoading ? listConfigData && listConfigData.map(function (data, idxData) {
+  })))))), !loading ? chartConfigs && chartConfigs.map(function (data, idxData) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "row"
+      className: "row",
+      key: "chart-".concat(idxData)
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-12"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
