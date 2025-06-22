@@ -107,10 +107,18 @@ function DashboardGuruMapel() {
                     mengajar: data.data,
                 }));
 
-                if (data.kelas_id) setKelasId(data.kelas_id);
-                if (data.mapel_id) setMapelId(data.mapel_id);
+                let val = '';
+                if (data.data && data.data.length > 0) {
+                    val = data.data[0].id;
+                    const [mapel, kelas] = val.split('/');
+                    setMapelId(parseInt(mapel));
+                    setKelasId(parseInt(kelas));
+                } else {
+                    if (data.kelas_id) setKelasId(data.kelas_id);
+                    if (data.mapel_id) setMapelId(data.mapel_id);
+                    val = `${data.mapel_id}/${data.kelas_id}`;
+                }
 
-                const val = `${data.mapel_id}/${data.kelas_id}`;
                 $('#mengajar').val(val);
                 $('#mengajar').selectpicker('refresh');
             }).catch((err) => console.log(err));
