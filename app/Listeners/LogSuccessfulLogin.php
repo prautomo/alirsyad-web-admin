@@ -35,6 +35,11 @@ class LogSuccessfulLogin
      */
     public function handle(Login $event)
     {
+        // Only log activities for specific roles
+        if (!($event->user->hasRole('Guru Mata Pelajaran') || $event->user->hasRole('Guru Uploader'))) {
+            return;
+        }
+
         $activity = [
             'user_id'    => $event->user->id,
             'user_name'    => $event->user->name,
@@ -49,6 +54,7 @@ class LogSuccessfulLogin
             'description'   => 'User logged '. $event->user->name .' in. ',
             'actor_user_id' => $event->user->id,
             'actor_user_name' => $event->user->name,
+            'actor_user_role' => $event->user->getRoleNames()->implode(','),
             'source_name' => LogActivityConst::MODULE_AUTH,
             'source_id' => $event->user->id,
             'change_fields' => json_encode($activity)
