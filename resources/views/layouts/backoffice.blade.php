@@ -185,7 +185,7 @@
                 <!-- View all -->
                 <a href="#!" class="dropdown-item text-center text-primary font-weight-bold py-3">View all</a>
               </div>
-            </li> 
+            </li>
             <li class="nav-item dropdown">
               <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
                 aria-expanded="false">
@@ -248,7 +248,7 @@
                     if($activeRole == null){
                       $authUserRole = Auth::user()->roles->pluck('name')->toArray();
                       $defaultRole = "";
-                      
+
                       if (in_array("Guru Mata Pelajaran", $authUserRole)) {
                         $defaultRole = "Guru Mata Pelajaran";
                       }else if(in_array("Wali Kelas", $authUserRole)){
@@ -260,13 +260,13 @@
                       }
 
                       $roles = array_diff($authUserRole, array($defaultRole));
-                      
+
                       Session::put('activeRole', $defaultRole);
                       Session::put('otherRole', $roles);
                       $activeRole = $defaultRole;
                       $otherRole = $roles;
                     }
-                    
+
                     // dd($otherRole);
                     @endphp
                     <img alt="{{ Auth::user()->name }}" src="{{ @$userDetail->photo ? asset(@$userDetail->photo) : asset('backoffice/assets/img/icons/akun.png') }}">
@@ -292,7 +292,7 @@
                   <i class="ni ni-calendar-grid-58"></i>
                   <span>Activity</span>
                 </a>
-                
+
                 <div class="dropdown-divider"></div> -->
                 @foreach($otherRole as $role)
 
@@ -325,7 +325,7 @@
     </nav>
     <!-- Header -->
     <!-- Header -->
-    <div class="header bg-transparent pb-6">
+    <div class="header bg-transparent pb-4">
       <div class="container-fluid">
         <div class="header-body">
             @yield('header')
@@ -333,9 +333,9 @@
       </div>
     </div>
     <!-- Page content -->
-    <div class="container-fluid mt--6">
+    <div class="container-fluid">
         @yield('content')
-        
+
         <!-- Footer -->
         <!-- @include('layouts.partials.backoffice.footer') -->
     </div>
@@ -347,7 +347,7 @@
   <script src="{{ asset('backoffice/assets/vendor/js-cookie/js.cookie.js') }}"></script>
   <script src="{{ asset('backoffice/assets/vendor/jquery.scrollbar/jquery.scrollbar.min.js') }}"></script>
   <script src="{{ asset('backoffice/assets/vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js') }}"></script>
-  
+
   <!-- Argon JS -->
   <script src="{{ asset('backoffice/assets/js/argon.js?v=1.2.0') }}"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8.19.0/dist/sweetalert2.min.js"></script>
@@ -355,7 +355,7 @@
   <!-- Latest compiled and minified JavaScript -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  
+
   @stack('plugin_script')
 
   @stack('script')
