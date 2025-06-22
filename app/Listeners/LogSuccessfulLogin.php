@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Http\Request; // Import Request
 use App\Models\LogActivity; // Import model LogActivity
+use App\Constants\LogActivityConst;
 
 class LogSuccessfulLogin
 {
@@ -44,11 +45,11 @@ class LogSuccessfulLogin
         ];
 
         LogActivity::create([
-            'action_type'=> "AUTH",
+            'action_type'=> LogActivityConst::ACTION_TYPE_READ,
             'description'   => 'User logged '. $event->user->name .' in. ',
             'actor_user_id' => $event->user->id,
             'actor_user_name' => $event->user->name,
-            'source_name' => "Login",
+            'source_name' => LogActivityConst::MODULE_AUTH,
             'source_id' => $event->user->id,
             'change_fields' => json_encode($activity)
         ]);
