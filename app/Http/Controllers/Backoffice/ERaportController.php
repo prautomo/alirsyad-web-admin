@@ -260,7 +260,10 @@ class ERaportController extends Controller
         }
 
         $user = ExternalUser::find($id);
-        
+        if (!$user) {
+            return back()->with('error', 'User tidak ditemukan');
+        }
+
         $user['tahun_ajaran'] = "";
 
         $current_class = KelasSiswa::where(['siswa_id' => $user->id, 'is_current' => 1])->first();
