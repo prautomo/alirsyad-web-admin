@@ -12,7 +12,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, ".dashboard-final-score {\r\n    background: #F6D0A14D;\r\n    padding: 10px 20px;\r\n    border-radius: 4px !important;\r\n    color: #E98A15 !important;\r\n}\r\n\r\n.dashboard-filter .bootstrap-select {\r\n    width: 200px !important;\r\n}", ""]);
+exports.push([module.i, ".dashboard-final-score {\n    background: #F6D0A14D;\n    padding: 10px 20px;\n    border-radius: 4px !important;\n    color: #E98A15 !important;\n}\n\n.dashboard-filter .bootstrap-select {\n    width: 200px !important;\n}", ""]);
 
 // exports
 
@@ -75,6 +75,9 @@ var options = {
         }
       }
     }
+  },
+  onHover: function onHover(event, chartElement) {
+    event["native"].target.style.cursor = chartElement[0] ? 'pointer' : 'default';
   }
 };
 var data = {
@@ -141,40 +144,141 @@ function GrafikERaport(_ref) {
       });
     }
   }, []);
+  var getOrCreateTooltip = function getOrCreateTooltip(chart) {
+    var tooltipEl = chart.canvas.parentNode.querySelector('div');
+    if (tooltipEl != undefined) {
+      var existTooltip = document.getElementById("chart-tooltip");
+      if (existTooltip != undefined) {
+        existTooltip.remove();
+      }
+      tooltipEl = document.createElement('div');
+      tooltipEl.id = 'chart-tooltip';
+      tooltipEl.style.background = 'rgba(0, 0, 0, 0.7)';
+      tooltipEl.style.borderRadius = '3px';
+      tooltipEl.style.color = 'white';
+      tooltipEl.style.opacity = 1;
+      tooltipEl.style.pointerEvents = 'none';
+      tooltipEl.style.position = 'absolute';
+      tooltipEl.style.transform = 'translate(-50%, 0)';
+      tooltipEl.style.transition = 'all .1s ease';
+      var table = document.createElement('table');
+      table.style.margin = '0px';
+      tooltipEl.appendChild(table);
+      chart.canvas.parentNode.appendChild(tooltipEl);
+    }
+    return tooltipEl;
+  };
+  var externalTooltipHandler = function externalTooltipHandler(context) {
+    // Tooltip Element
+    var chart = context.chart,
+      tooltip = context.tooltip;
+    var tooltipEl = getOrCreateTooltip(chart);
+
+    // Hide if no tooltip
+    if (tooltip.opacity === 0) {
+      tooltipEl.style.opacity = 0;
+      return;
+    }
+
+    // Set Text
+    if (tooltip.body) {
+      var dataPoints = tooltip.dataPoints;
+      var innerHtml = "<tbody style=\"font-size:12px;\" border=\"0\">";
+      dataPoints.forEach(function (dataPoint, i) {
+        var dataIndex = dataPoint === null || dataPoint === void 0 ? void 0 : dataPoint.dataIndex;
+        var dataset = dataPoint === null || dataPoint === void 0 ? void 0 : dataPoint.dataset;
+        var dataBenar = dataset === null || dataset === void 0 ? void 0 : dataset.benars[dataIndex];
+        var dataTerjawab = dataset === null || dataset === void 0 ? void 0 : dataset.terjawabs[dataIndex];
+        var dataPercentage = dataset === null || dataset === void 0 ? void 0 : dataset.data[dataIndex];
+        innerHtml += "<tr style=\"background-color: inherit; border-width: 0; text-align: center; font-weight: bold;\">\n                    <td colspan=\"3\" style='padding: 0px 3px; margin: 0px;'>".concat(dataPoint === null || dataPoint === void 0 ? void 0 : dataPoint.label, "</td>\n                </tr>");
+        innerHtml += "<tr style=\"background-color: inherit; border-width: 0;\">\n                    <td style='padding: 0px 3px; margin: 0px;'>Level</td>\n                    <td style='padding: 0px 3px; margin: 0px;'>:</td>\n                    <td style='padding: 0px 3px; margin: 0px;'>".concat(dataset === null || dataset === void 0 ? void 0 : dataset.label, "</td>\n                </tr>");
+        innerHtml += "<tr style=\"background-color: inherit; border-width: 0;\">\n                    <td style='padding: 0px 3px; margin: 0px;'>Total Benar</td>\n                    <td style='padding: 0px 3px; margin: 0px;'>:</td>\n                    <td style='padding: 0px 3px; margin: 0px;'>".concat(dataBenar, "</td>\n                </tr>");
+        innerHtml += "<tr style=\"background-color: inherit; border-width: 0;\">\n                    <td style='padding: 0px 3px; margin: 0px;'>Total Terjawab</td>\n                    <td style='padding: 0px 3px; margin: 0px;'>:</td>\n                    <td style='padding: 0px 3px; margin: 0px;'>".concat(dataTerjawab, "</td>\n                </tr>");
+        innerHtml += "<tr style=\"background-color: inherit; border-width: 0;\">\n                    <td style='padding: 0px 3px; margin: 0px;'>Persentase</td>\n                    <td style='padding: 0px 3px; margin: 0px;'>:</td>\n                    <td style='padding: 0px 3px; margin: 0px;'>".concat(dataPercentage, "%</td>\n                </tr>");
+      });
+      innerHtml += "</tbody>";
+      var tableRoot = tooltipEl.querySelector('table');
+
+      // Remove old children
+      while (tableRoot.firstChild) {
+        tableRoot.firstChild.remove();
+      }
+      // Add new children
+      tableRoot.innerHTML = innerHtml;
+    }
+    var _chart$canvas = chart.canvas,
+      positionX = _chart$canvas.offsetLeft,
+      positionY = _chart$canvas.offsetTop;
+
+    // Display, position, and set styles for font
+    tooltipEl.style.opacity = 1;
+    tooltipEl.style.left = positionX + tooltip.caretX + 'px';
+    tooltipEl.style.top = positionY + tooltip.caretY + 'px';
+    tooltipEl.style.font = tooltip.options.bodyFont.string;
+    tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
+  };
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     var labels = [];
-    var tempMudah = [];
-    var tempSedang = [];
-    var tempSulit = [];
+    var tempMudah = {
+      totalBenar: [],
+      totalTerjawab: [],
+      percentage: []
+    };
+    var tempSedang = {
+      totalBenar: [],
+      totalTerjawab: [],
+      percentage: []
+    };
+    var tempSulit = {
+      totalBenar: [],
+      totalTerjawab: [],
+      percentage: []
+    };
+    options.plugins['tooltip'] = {
+      enabled: false,
+      external: externalTooltipHandler
+    };
     for (var i = 0; i < datas.length; i++) {
       var _data = datas[i];
       labels.push(_data.label);
-      tempMudah.push(_data.mudah);
-      tempSedang.push(_data.sedang);
-      tempSulit.push(_data.sulit);
+      tempMudah.totalBenar.push(_data.mudah.total_benar);
+      tempSedang.totalBenar.push(_data.sedang.total_benar);
+      tempSulit.totalBenar.push(_data.sulit.total_benar);
+      tempMudah.totalTerjawab.push(_data.mudah.total_terjawab);
+      tempSedang.totalTerjawab.push(_data.sedang.total_terjawab);
+      tempSulit.totalTerjawab.push(_data.sulit.total_terjawab);
+      tempMudah.percentage.push(_data.mudah.percentage);
+      tempSedang.percentage.push(_data.sedang.percentage);
+      tempSulit.percentage.push(_data.sulit.percentage);
     }
     setConfigData({
       labels: labels,
       datasets: [{
         label: 'Percentage Mudah',
-        data: tempMudah,
+        data: tempMudah.percentage,
         backgroundColor: 'rgba(2, 65, 2, 1)',
         borderRadius: 10,
-        minBarLength: 1
+        minBarLength: 1,
+        benars: tempMudah.totalBenar,
+        terjawabs: tempMudah.totalTerjawab
         // barThickness: 120,
       }, {
         label: 'Percentage Sedang',
-        data: tempSedang,
+        data: tempSedang.percentage,
         backgroundColor: 'rgba(255, 153, 51, 1)',
         borderRadius: 10,
-        minBarLength: 1
+        minBarLength: 1,
+        benars: tempSedang.totalBenar,
+        terjawabs: tempSedang.totalTerjawab
         // barThickness: 120,
       }, {
         label: 'Percentage Sulit',
-        data: tempSulit,
+        data: tempSulit.percentage,
         backgroundColor: 'rgba(255, 51, 51, 1)',
         borderRadius: 10,
-        minBarLength: 1
+        minBarLength: 1,
+        benars: tempSulit.totalBenar,
+        terjawabs: tempSulit.totalTerjawab
         // barThickness: 120,
       }]
     });

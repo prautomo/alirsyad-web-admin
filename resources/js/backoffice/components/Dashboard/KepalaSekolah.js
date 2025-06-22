@@ -75,65 +75,35 @@ function DashboardKepalaSekolah() {
 
     useEffect(() => {
         if (listDatas.length < 1) {
-            
-            window.axios.post("/backoffice/json/dashboard/current").then((response) => {
+            window.axios.post(`/backoffice/json/dashboard/tingkat`).then((response) => {
                 var data = response.data.data
 
-                var level = data.level
-                var param = data.param
-                var param2nd = data.param2nd
-                var param3rd = data.param3rd
+                var chartData = data.data
+                var chartDataId = data.data_id
+                var nextApi = data.next_api
+                var graphicTitle = data.graphic_title
+                var currentLevel = data.level
 
-                var params = {}
+                options['onClick'] = graphClickEvent
 
-                if(level == null){
-                    level = 'tingkat'
+                if(data.kelas_id){
+                    setKelasId(data.kelas_id)
+                }
+    
+                if(data.bab_id){
+                    setBabId(data.bab_id)
+                }
+    
+                if(data.mapel_id){
+                    setMapelId(data.mapel_id)
                 }
 
-                if(param != null){
-                    params[param] = data.value
-                }
-                
-                if(param2nd != null){
-                    params[param2nd] = data.value2nd
-                }
-                
-                if(param3rd != null){
-                    params[param3rd] = data.value3rd
-                }
-            
-                window.axios.post(`/backoffice/json/dashboard/${level}`, params).then((response) => {
-                    var data = response.data.data
-
-                    var chartData = data.data
-                    var chartDataId = data.data_id
-                    var nextApi = data.next_api
-                    var graphicTitle = data.graphic_title
-                    var currentLevel = data.level
-
-                    options['onClick'] = graphClickEvent
-
-                    if(data.kelas_id){
-                        setKelasId(data.kelas_id)
-                    }
-        
-                    if(data.bab_id){
-                        setBabId(data.bab_id)
-                    }
-        
-                    if(data.mapel_id){
-                        setMapelId(data.mapel_id)
-                    }
-
-                    setIsLoading(false)
-                    setGraphicTitle(graphicTitle)
-                    setCurrentLevel(currentLevel)
-                    setNextApi(nextApi)
-                    setListDatas(chartData)
-                    setListDataIds(chartDataId)
-                }).catch((err) => {
-                    console.log(err)
-                })
+                setIsLoading(false)
+                setGraphicTitle(graphicTitle)
+                setCurrentLevel(currentLevel)
+                setNextApi(nextApi)
+                setListDatas(chartData)
+                setListDataIds(chartDataId)
             }).catch((err) => {
                 console.log(err)
             })
@@ -158,7 +128,7 @@ function DashboardKepalaSekolah() {
         
         const { dataIndex, raw } = clickedElements[0].element.$context
         const data = event.chart.data
-        const barLabel = event.chart.data.labels[dataIndex]
+        const barLabel = data.labels[dataIndex]
         const selectedIdx = dataIndex
 
         setIsLoading(true)
@@ -168,6 +138,72 @@ function DashboardKepalaSekolah() {
             isClick: true
         })
     }
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                if (currentLevel === 'kelas') {
+                    const labelParts = selectedBarIdx.label.split(" ");
+                    const foundTingkat = filters.tingkat.find((data) => labelParts[1] === data.name);
+                    if (foundTingkat) {
+                        const response = await window.axios.post("/backoffice/json/dashboard/filter/kelas", { tingkat_id: foundTingkat.id });
+                        const data = response.data.data;
+                        setFilters((prevFilters) => ({
+                            ...prevFilters,
+                            kelas: data,
+                        }));
+                        $("#kelas").selectpicker("refresh");
+                    } else {
+                        console.log("Tingkat tidak ditemukan");
+                    }
+                } else if (currentLevel === 'mapel') {
+                    const labelParts = selectedBarIdx.label.split(" ");
+                    const foundKelas = filters.kelas.find((data) => labelParts[1].match(/\d+|\D+/g)[1] === data.name);
+                    if (foundKelas) {
+                        const response = await window.axios.post("/backoffice/json/dashboard/filter/mapel");
+                        const data = response.data.data;
+                        setFilters((prevFilters) => ({
+                            ...prevFilters,
+                            mapel: data,
+                        }));
+                        $("#mapel").selectpicker("refresh");
+                    } else {
+                        console.log("Kelas tidak ditemukan");
+                    }
+                } else if (currentLevel === 'bab') {
+                    const labelParts = selectedBarIdx.label
+                    const foundMapel = filters.mapel.find((data) => labelParts === data.name);
+                    window.axios.post("/backoffice/json/dashboard/filter/bab", {mapel_id: foundMapel.id}).then((response) => {
+                        var data = response.data.data;
+                        setFilters((prevFilters) => ({
+                            ...prevFilters,
+                            bab: data,
+                        }));
+                        $("#bab").selectpicker("refresh");
+                    }).catch((err) => {
+                        console.log(err);
+                    });
+                } else if (currentLevel === 'subbab') {
+                    const labelParts = selectedBarIdx.label;
+                    const foundBab = filters.bab.find((data) => labelParts === data.name);
+                    window.axios.post("/backoffice/json/dashboard/filter/subbab", {bab_id: foundBab.id}).then((response) => {
+                        var data = response.data.data;
+                        setFilters((prevFilters) => ({
+                            ...prevFilters,
+                            subbab: data,
+                        }));
+                        $("#subbab").selectpicker("refresh");
+                    }).catch((err) => {
+                        console.log(err);
+                    });
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        };
+
+        fetchData();
+    }, [currentLevel, selectedBarIdx.label, filters]);
 
     useEffect(() => {
         if(filters.tingkat.length < 1){
@@ -201,12 +237,14 @@ function DashboardKepalaSekolah() {
             [nextApi.param] : selectedId
         }
 
-        if(kelasId != 0){
+        if( currentLevel == 'mapel') {
             params['kelas_id'] = kelasId
-        }
-
-        if(babId != 0){
+        } else if (currentLevel == 'bab') {
+            params['kelas_id'] = kelasId
+            params['mapel_id'] = mapelId
+        } else if (currentLevel == 'subbab') {
             params['bab_id'] = babId
+            params['kelas_id'] = kelasId
         }
 
         window.axios.post(`/backoffice/json/dashboard/${nextApi.name}`, params).then((response) => {
@@ -291,20 +329,51 @@ function DashboardKepalaSekolah() {
         var params = {
             [level.next_api.param] : e.target.value
         }
-        
-        if(kelasId != 0){
-            params['kelas_id'] = kelasId
-        }
 
         window.axios.post(`/backoffice/json/dashboard/filter/${level.next_api.name}`, params).then((response) => {
             var data = response.data.data
 
-            setFilters({
-                ...filters, 
-                [level.next_api.name]: data
-            })
-
-            $(`#${level.next_api.name}`).selectpicker("refresh");
+            if (level.next_api.name === 'tingkat') {
+                setFilters((prevFilters) => ({
+                    ...prevFilters,
+                    tingkat: data,
+                    kelas: filters.kelas.length > 0 ? filters.kelas.length = 0 : [],
+                    mapel: filters.mapel.length > 0 ? filters.mapel.length = 0 : [],
+                    bab: filters.bab.length > 0 ? filters.bab.length = 0 : [],
+                    subbab: filters.subbab.length > 0 ? filters.subbab.length = 0 : []
+                }))
+            } else if (level.next_api.name === 'kelas') {
+                setFilters((prevFilters) => ({
+                    ...prevFilters,
+                    kelas: data,
+                    mapel: filters.mapel.length > 0 ? filters.mapel.length = 0 : [],
+                    bab: filters.bab.length > 0 ? filters.bab.length = 0 : [],
+                    subbab: filters.subbab.length > 0 ? filters.subbab.length = 0 : []
+                }))
+            } else if (level.next_api.name === 'mapel') {
+                setFilters((prevFilters) => ({
+                    ...prevFilters,
+                    mapel: data,
+                    bab: filters.bab.length > 0 ? filters.bab.length = 0 : [],
+                    subbab: filters.subbab.length > 0 ? filters.subbab.length = 0 : []
+                }))
+            } else if (level.next_api.name === 'bab') {
+                setFilters((prevFilters) => ({
+                    ...prevFilters,
+                    bab: data,
+                    subbab: filters.subbab.length > 0 ? filters.subbab.length = 0 : []
+                }))
+            } else if (level.next_api.name === 'subbab') {
+                setFilters((prevFilters) => ({
+                    ...prevFilters,
+                    subbab: data
+                }))
+            }
+            $(`#tingkat`).selectpicker("refresh");
+            $(`#kelas`).selectpicker("refresh");
+            $(`#mapel`).selectpicker("refresh");
+            $(`#bab`).selectpicker("refresh");
+            $(`#subbab`).selectpicker("refresh");
         }).catch((err) => {
             console.log(err)
         })
@@ -321,33 +390,33 @@ function DashboardKepalaSekolah() {
         <div className="row mb-4">
             <div className="col-12">
                 <div style={{ display: 'flex', alignItems: 'center'}}>
-                    <div style={{ marginLeft: 'auto' }} class="dashboard-filter">
+                    <div style={{ marginLeft: 'auto' }} className="dashboard-filter">
                         <label className="my-auto mr-2" style={{ color: "#9E9E9E"}}>Filter By</label>
-                        <select id="tingkat" name="tingkat" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Tingkat" onChange={handleChange}>
+                        <select id="tingkat" name="tingkat" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Tingkat" onChange={handleChange}>
                             <option value="">Semua Tingkat</option>
                             {filters.tingkat.length > 0 && filters.tingkat.map((data) => (
                                 <option value={data.id}>{data.name}</option>
                             ))}
                         </select>
-                        <select id="kelas" name="kelas" data-style="btn-green-pastel" multiple class="selectpicker mr-2" placeholder="Kelas" onChange={handleChange}>
+                        <select id="kelas" name="kelas" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Kelas" onChange={handleChange}>
                             <option value="">Semua Kelas</option>
                             {filters.kelas.length > 0 && filters.kelas.map((data) => (
                                 <option value={data.id}>{data.name}</option>
                             ))}
                         </select>
-                        <select id="mapel" name="mapel" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Mata Pelajaran" onChange={handleChange}>
+                        <select id="mapel" name="mapel" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Mata Pelajaran" onChange={handleChange}>
                             <option value="">Semua Mata Pelajaran</option>
                             {filters.mapel.length > 0 && filters.mapel.map((data) => (
                                 <option value={data.id}>{data.name}</option>
                             ))}
                         </select>
-                        <select id="bab" name="bab" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Module" onChange={handleChange}>
+                        <select id="bab" name="bab" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Module" onChange={handleChange}>
                             <option value="">Semua Module</option>
                             {filters.bab.length > 0 && filters.bab.map((data) => (
                                 <option value={data.id}>{data.name}</option>
                             ))}
                         </select>
-                        <select id="subbab" name="subbab" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Sub-Module" onChange={handleChange}>
+                        <select id="subbab" name="subbab" data-style="btn-green-pastel" className="selectpicker mr-2" placeholder="Sub-Module" onChange={handleChange}>
                             <option value="">Semua Sub-Module</option>
                             {filters.subbab.length > 0 && filters.subbab.map((data) => (
                                 <option value={data.id}>{data.name}</option>
@@ -395,7 +464,7 @@ function DashboardKepalaSekolah() {
                         wrapperStyle={{}}
                         wrapperClass=""
                     />
-                    <h2 class="mt-2">Mohon tunggu...</h2>
+                    <h2 className="mt-2">Mohon tunggu...</h2>
                 </div>
             </div>  
         )}

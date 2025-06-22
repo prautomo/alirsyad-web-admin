@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import "./index.css";
 import {
@@ -12,7 +12,8 @@ import {
 } from 'chart.js/auto/auto.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Bar } from 'react-chartjs-2';
-import { ThreeCircles } from 'react-loader-spinner'
+import { ThreeCircles } from 'react-loader-spinner';
+
 ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -51,82 +52,13 @@ export const options = {
     }
 };
 
-export const data = {
-    undefined,
-    datasets: [
-        {
-            label: 'Score',
-            data: [],
-            backgroundColor: 'rgba(2, 65, 2, 1)',
-        }
-    ],
-};
-
-export const chartLevel = [
-    {
-        level: 'jenjang',
-        data: [
-            [
-                {
-                    label: "TK",
-                    score: 1376,
-                },
-                {
-                    label: "SD",
-                    score: 580,
-                },
-                {
-                    label: "SMP",
-                    score: 1500,
-                },
-                {
-                    label: "SMA",
-                    score: 1125,
-                }
-            ]
-        ]
-    },
-    {
-        level: 'tingkat',
-        data: [
-            [
-                {
-                    label: "SD 1",
-                    score: 1376,
-                },
-                {
-                    label: "SD 2",
-                    score: 580,
-                },
-                {
-                    label: "SD 3",
-                    score: 1500,
-                },
-                {
-                    label: "SD 4",
-                    score: 1126,
-                },
-                {
-                    label: "SD 5",
-                    score: 1518,
-                },
-                {
-                    label: "SD 6",
-                    score: 480,
-                }
-            ]
-        ]
-    }
-]
-
 function DashboardGuruMapel() {
-
-    const [listConfigData, setListConfigData] = useState([]);
-    const [listDatas, setListDatas] = useState([]);
-    const [listDataIds, setListDataIds] = useState([]);
+    const [chartConfigs, setChartConfigs] = useState([]);
+    const [rawCharts, setRawCharts] = useState([]);
+    const [rawIds, setRawIds] = useState([]);
     const [nextApi, setNextApi] = useState({});
-    const [selectedBarIdx, setSelectedBarIdx] = useState({});
-    const [filterLevel, setfilterLevel] = useState([]);
+    const [selectedBar, setSelectedBar] = useState({});
+    const [filterLevel, setFilterLevel] = useState([]);
     const [filters, setFilters] = useState({
         mengajar: [],
         bab: [],
@@ -137,339 +69,366 @@ function DashboardGuruMapel() {
     const [babId, setBabId] = useState(0);
     const [graphicTitle, setGraphicTitle] = useState("");
     const [currentLevel, setCurrentLevel] = useState("");
-    const [isLoading, setIsLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (listDatas.length < 1) {
-            
-            window.axios.post("/backoffice/json/dashboard/current").then((response) => {
-                var data = response.data.data
+        if (rawCharts.length < 1) {
+            window.axios.post('/backoffice/json/dashboard/bab').then((response) => {
+                const data = response.data.data;
+                const chartData = data.data;
+                const chartIds = data.data_id;
+                options['onClick'] = graphClickEvent;
 
-                var level = data.level
-                var param = data.param
-                var param2nd = data.param2nd
-                var param3rd = data.param3rd
+                if (data.kelas_id) setKelasId(data.kelas_id);
+                if (data.mapel_id) setMapelId(data.mapel_id);
+                if (data.bab_id) setBabId(data.bab_id);
 
-                var params = {}
+                setLoading(false);
+                setGraphicTitle(data.graphic_title);
+                setCurrentLevel(data.level);
+                setNextApi(data.next_api);
+                setRawCharts(chartData);
+                setRawIds(chartIds);
+            }).catch((err) => console.log(err));
 
-                if(level == null){
-                    level = 'bab'
-                }
-
-                if(param != null){
-                    params[param] = data.value
-                }
-                
-                if(param2nd != null){
-                    params[param2nd] = data.value2nd
-                }
-                
-                if(param3rd != null){
-                    params[param3rd] = data.value3rd
-                }
-            
-                window.axios.post(`/backoffice/json/dashboard/${level}`, params).then((response) => {
-                    var data = response.data.data
-
-                    var chartData = data.data
-                    var chartDataId = data.data_id
-                    var nextApi = data.next_api
-                    var graphicTitle = data.graphic_title
-                    var currentLevel = data.level
-
-                    options['onClick'] = graphClickEvent
-
-                    if(data.kelas_id){
-                        setKelasId(data.kelas_id)
-                    }
-        
-                    if(data.bab_id){
-                        setBabId(data.bab_id)
-                    }
-        
-                    if(data.mapel_id){
-                        setMapelId(data.mapel_id)
-                    }
-
-                    setIsLoading(false)
-                    setGraphicTitle(graphicTitle)
-                    setCurrentLevel(currentLevel)
-                    setNextApi(nextApi)
-                    setListDatas(chartData)
-                    setListDataIds(chartDataId)
-                }).catch((err) => {
-                    console.log(err)
-                })
-            }).catch((err) => {
-                console.log(err)
-            })
-            
-            window.axios.post("/backoffice/json/dashboard/filter/level").then((response) => {
-                var data = response.data.data
-                setfilterLevel(data)
-            }).catch((err) => {
-                console.log(err)
-            })
+            window.axios.post('/backoffice/json/dashboard/filter/level').then((response) => {
+                const data = response.data.data;
+                setFilterLevel(data);
+            }).catch((err) => console.log(err));
         }
     }, []);
 
-    const spanBorderRight = {
-        borderLeft: "1px solid #F6D0A1",
-        marginLeft: "5px",
-        marginRight: "5px"
-    }
-
-    function graphClickEvent(event, clickedElements){
-        if (clickedElements.length === 0) return
-        
-        const { dataIndex, raw } = clickedElements[0].element.$context
-        const data = event.chart.data
-        const barLabel = event.chart.data.labels[dataIndex]
-        const selectedIdx = dataIndex
-
-        setIsLoading(true)
-        setSelectedBarIdx({
-            label: barLabel,
-            idx: selectedIdx,
-            isClick: true
-        })
-    }
-
     useEffect(() => {
-        if(filters.mengajar.length < 1){
+        if (filters.mengajar.length < 1) {
+            window.axios.post('/backoffice/json/dashboard/filter/mengajar').then((response) => {
+                const data = response.data;
+                setFilters((prev) => ({
+                    ...prev,
+                    mengajar: data.data,
+                }));
 
-            window.axios.post("/backoffice/json/dashboard/filter/mengajar").then((response) => {
-                var data = response.data
-                setFilters({
-                    ...filters, 
-                    mengajar: data.data
-                })
-                
-                if(data.kelas_id){
-                    setKelasId(data.kelas_id)
+                let val = '';
+                if (data.data && data.data.length > 0) {
+                    val = data.data[0].id;
+                    const [mapel, kelas] = val.split('/');
+                    setMapelId(parseInt(mapel));
+                    setKelasId(parseInt(kelas));
+                } else {
+                    if (data.kelas_id) setKelasId(data.kelas_id);
+                    if (data.mapel_id) setMapelId(data.mapel_id);
+                    val = `${data.mapel_id}/${data.kelas_id}`;
                 }
 
-                if(data.mapel_id){
-                    setMapelId(data.mapel_id)
-                }
-
-                $("#mengajar").selectpicker("refresh");
-                $("#mengajar").val(`${data.mapel_id + '/' + data.kelas_id}`);
-                $("#mengajar").selectpicker("refresh");
-            }).catch((err) => {
-                console.log(err)
-            })
+                $('#mengajar').val(val);
+                $('#mengajar').selectpicker('refresh');
+            }).catch((err) => console.log(err));
         }
-
     }, []);
 
     useEffect(() => {
-        var selectedId = selectedBarIdx.isClick ? listDataIds[selectedBarIdx.idx] : selectedBarIdx.idx
+        if (mapelId) {
+            window.axios.post('/backoffice/json/dashboard/filter/bab', { mapel_id: mapelId }).then((response) => {
+                const data = response.data.data;
+                setFilters((prev) => ({
+                    ...prev,
+                    bab: data,
+                }));
+                $('#bab').selectpicker('refresh');
+            }).catch((err) => console.log(err));
+        }
+    }, [mapelId]);
 
-        if(currentLevel == 'siswa'){
+    function graphClickEvent(event, clickedElements) {
+        if (clickedElements.length === 0) return;
+        const { dataIndex } = clickedElements[0].element.$context;
+        const data = event.chart.data;
+        const barLabel = data.labels[dataIndex];
+
+        setLoading(true);
+        setSelectedBar({ label: barLabel, idx: dataIndex, isClick: true });
+    }
+
+    useEffect(() => {
+        const fetchFilter = async () => {
+            try {
+                if (currentLevel === 'subbab') {
+                    const label = selectedBar.label;
+                    const foundBab = filters.bab.find((d) => label === d.name);
+                    if (foundBab) {
+                        window.axios.post('/backoffice/json/dashboard/filter/subbab', { bab_id: foundBab.id })
+                            .then((response) => {
+                                const data = response.data.data;
+                                setFilters((prev) => ({ ...prev, subbab: data }));
+                                $('#subbab').selectpicker('refresh');
+                            }).catch((err) => console.log(err));
+                    }
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        fetchFilter();
+    }, [currentLevel, selectedBar.label, filters.bab]);
+
+    useEffect(() => {
+        const selectedId = selectedBar.isClick ? rawIds[selectedBar.idx] : selectedBar.idx;
+
+        if (selectedBar.isClick) {
+            if (currentLevel === 'mengajar') {
+                $('#mengajar').val(selectedId);
+                $('#mengajar').selectpicker('refresh');
+                const [mapel, kelas] = String(selectedId).split('/');
+                setMapelId(parseInt(mapel));
+                setKelasId(parseInt(kelas));
+            } else if (currentLevel === 'bab') {
+                $('#bab').val(selectedId);
+                $('#bab').selectpicker('refresh');
+                setBabId(parseInt(selectedId));
+            } else if (currentLevel === 'subbab') {
+                $('#subbab').val(selectedId);
+                $('#subbab').selectpicker('refresh');
+            }
+        }
+
+        if (currentLevel === 'siswa') {
             window.location.href = `/backoffice/e-raport/${selectedId}/${mapelId}`;
             return;
         }
 
-        setIsLoading(true)
-        
-        var params = {
-            [nextApi.param] : selectedId
-        }
+        if (!nextApi.name) return;
 
-        if(kelasId != 0){
-            params['kelas_id'] = kelasId
-        }
+        setLoading(true);
 
-        if(babId != 0){
-            params['bab_id'] = babId
+        const params = { [nextApi.param]: selectedId };
+
+        if (currentLevel === 'bab') {
+            params['kelas_id'] = kelasId;
+            params['mapel_id'] = mapelId;
+        } else if (currentLevel === 'subbab') {
+            params['bab_id'] = babId;
+            params['kelas_id'] = kelasId;
         }
 
         window.axios.post(`/backoffice/json/dashboard/${nextApi.name}`, params).then((response) => {
-            var data = response.data.data
+            const data = response.data.data;
+            options['onClick'] = graphClickEvent;
+            setLoading(false);
+            setGraphicTitle(data.graphic_title);
+            setCurrentLevel(data.level);
+            setNextApi(data.next_api);
+            setRawCharts(data.data);
+            setRawIds(data.data_id);
 
-            options['onClick'] = graphClickEvent
-
-            var chartData = data.data
-            var chartDataId = data.data_id
-            var graphicTitle = data.graphic_title
-            var nextApi = data.next_api
-            var currentLevel = data.level
-
-            if(data.kelas_id){
-                setKelasId(data.kelas_id)
+            if (data.kelas_id) {
+                setKelasId(data.kelas_id);
+                $('#mengajar').val(`${data.mapel_id}/${data.kelas_id}`);
+                $('#mengajar').selectpicker('refresh');
             }
-
-            if(data.bab_id){
-                setBabId(data.bab_id)
+            if (data.mapel_id) setMapelId(data.mapel_id);
+            if (data.bab_id) {
+                setBabId(data.bab_id);
+                $('#bab').val(data.bab_id);
+                $('#bab').selectpicker('refresh');
             }
-        
-            if(data.mapel_id){
-                setMapelId(data.mapel_id)
-            }
-
-            setIsLoading(false)
-            setGraphicTitle(graphicTitle)
-            setCurrentLevel(currentLevel)
-            setNextApi(nextApi)
-            setListDataIds(chartDataId)
-            setListDatas(chartData)
-        }).catch((err) => {
-            console.log(err)
-        })
-    }, [selectedBarIdx]);
+        }).catch((err) => console.log(err));
+    }, [selectedBar]);
 
     useEffect(() => {
-        const listConfig = [];
-        for (let i=0; i<listDatas.length; i++) {
+        const configs = [];
+        for (let i = 0; i < rawCharts.length; i++) {
             const labels = [];
-            const tempScores = [];
-
-            listDatas[i].forEach(element => {
-                const data = element;
-                labels.push(data.label);
-                tempScores.push(data.score);
+            const scores = [];
+            rawCharts[i].forEach((el) => {
+                labels.push(el.label);
+                scores.push(el.score);
             });
-            
-            var objConfig = {
+            configs.push({
                 labels,
-                datasets: [
-                    {
-                        label: 'Score',
-                        data: tempScores,
-                        backgroundColor: "rgba(2, 65, 2, 1)",
-                        borderRadius: 10,
-                        minBarLength: 1,
-                        // barThickness: 120,
-                    }
-                ]
-            }
-
-            listConfig.push(objConfig)
+                datasets: [{
+                    label: 'Score',
+                    data: scores,
+                    backgroundColor: 'rgba(2, 65, 2, 1)',
+                    borderRadius: 10,
+                    minBarLength: 1,
+                }],
+            });
         }
-        console.log('listConfig', listConfig)
+        setChartConfigs(configs);
+    }, [rawCharts]);
 
-        setListConfigData(listConfig);
-    }, [listDatas]);
+    const handleMengajarChange = (e) => {
+        const level = filterLevel.find((el) => el.option === 'mengajar');
+        if (!level) return;
+
+        setNextApi(level.next_api);
+
+        const [mapel, kelas] = e.target.value.split('/');
+        setMapelId(parseInt(mapel));
+        setKelasId(parseInt(kelas));
+        setBabId(0);
+
+        // update module options
+        const params = { [level.next_api.param]: e.target.value };
+
+        window.axios.post(`/backoffice/json/dashboard/filter/${level.next_api.name}`, params)
+            .then((response) => {
+                const data = response.data.data;
+                setFilters((prev) => ({ ...prev, bab: data, subbab: [] }));
+                $('#bab').selectpicker('refresh');
+                $('#subbab').selectpicker('refresh');
+            }).catch((err) => console.log(err));
+
+        // refresh chart data according to selected subject/class
+        setLoading(true);
+        window.axios.post('/backoffice/json/dashboard/bab', params)
+            .then((response) => {
+                const data = response.data.data;
+                setGraphicTitle(data.graphic_title);
+                setCurrentLevel(data.level);
+                setNextApi(data.next_api);
+                setRawCharts(data.data);
+                setRawIds(data.data_id);
+                if (data.kelas_id) setKelasId(data.kelas_id);
+                if (data.mapel_id) setMapelId(data.mapel_id);
+                if (data.bab_id) setBabId(data.bab_id);
+                setLoading(false);
+            }).catch((err) => console.log(err));
+    };
 
     const handleChange = (e) => {
-        var getLevel = filterLevel.filter(function (el) {
-            return el.option == e.target.id
-        });
-        
-        if(getLevel.length == 0){
-            return;
-        }
+        const getLevel = filterLevel.filter((el) => el.option === e.target.id);
+        if (getLevel.length === 0) return;
 
-        var level = getLevel[0]
-        setNextApi(level.next_api)
+        const level = getLevel[0];
+        setNextApi(level.next_api);
 
-
-        var params = {
-            [level.next_api.param] : e.target.value
-        }
-        
-        if(kelasId != 0){
-            params['kelas_id'] = kelasId
-        }
+        const params = { [level.next_api.param]: e.target.value };
+        if (kelasId !== 0) params['kelas_id'] = kelasId;
 
         window.axios.post(`/backoffice/json/dashboard/filter/${level.next_api.name}`, params).then((response) => {
-            var data = response.data.data
+            const data = response.data.data;
 
-            setFilters({
-                ...filters, 
-                [level.next_api.name]: data
-            })
+            if (level.next_api.name === 'bab') {
+                setFilters((prev) => ({ ...prev, bab: data, subbab: [] }));
+            } else if (level.next_api.name === 'subbab') {
+                setFilters((prev) => ({ ...prev, subbab: data }));
+            }
 
-            $(`#${level.next_api.name}`).selectpicker("refresh");
-        }).catch((err) => {
-            console.log(err)
-        })
+            $('#bab').selectpicker('refresh');
+            $('#subbab').selectpicker('refresh');
+        }).catch((err) => console.log(err));
 
-        setIsLoading(true)
-        setSelectedBarIdx({
-            label: e.target.id,
-            idx: e.target.value,
-            isClick: false
-        })
-    }
-    
-    return (<>
-        <div className="row mb-4">
-            <div className="col-12">
-                <div style={{ display: 'flex', alignItems: 'center'}}>
-                    <div style={{ marginLeft: 'auto' }} class="dashboard-filter">
-                        <label className="my-auto mr-2" style={{ color: "#9E9E9E"}}>Filter By</label>
-                        <select id="mengajar" name="mengajar" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Mata Pelajaran" onChange={handleChange}>
-                            <option value="">Mengajar</option>
-                            {filters.mengajar.length > 0 && filters.mengajar.map((data) => (
-                                <option value={data.id}>{data.name}</option>
-                            ))}
-                        </select>
-                        <select id="bab" name="bab" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Module" onChange={handleChange}>
-                            <option value="">Semua Module</option>
-                            {filters.bab.length > 0 && filters.bab.map((data) => (
-                                <option value={data.id}>{data.name}</option>
-                            ))}
-                        </select>
-                        <select id="subbab" name="subbab" data-style="btn-green-pastel" class="selectpicker mr-2" placeholder="Sub-Module" onChange={handleChange}>
-                            <option value="">Semua Sub-Module</option>
-                            {filters.subbab.length > 0 && filters.subbab.map((data) => (
-                                <option value={data.id}>{data.name}</option>
-                            ))}
-                        </select>
+        setLoading(true);
+        setSelectedBar({ label: e.target.id, idx: e.target.value, isClick: false });
+    };
+
+    const spanBorderRight = {
+        borderLeft: '1px solid #F6D0A1',
+        marginLeft: '5px',
+        marginRight: '5px',
+    };
+
+    return (
+        <>
+            <div className="row mb-4">
+                <div className="col-12">
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <div style={{ marginLeft: 'auto' }} className="dashboard-filter">
+                            <label className="my-auto mr-2" style={{ color: '#9E9E9E' }}>Filter By</label>
+                            <select
+                                id="mengajar"
+                                name="mengajar"
+                                data-style="btn-green-pastel"
+                                className="selectpicker mr-2"
+                                placeholder="Mata Pelajaran"
+                                onChange={handleMengajarChange}
+                            >
+                                <option value="">Mengajar</option>
+                                {filters.mengajar.length > 0 &&
+                                    filters.mengajar.map((data) => (
+                                        <option value={data.id}>{data.name}</option>
+                                    ))}
+                            </select>
+                            <select
+                                id="bab"
+                                name="bab"
+                                data-style="btn-green-pastel"
+                                className="selectpicker mr-2"
+                                placeholder="Module"
+                                onChange={handleChange}
+                            >
+                                <option value="">Semua Module</option>
+                                {filters.bab.length > 0 &&
+                                    filters.bab.map((data) => (
+                                        <option value={data.id}>{data.name}</option>
+                                    ))}
+                            </select>
+                            <select
+                                id="subbab"
+                                name="subbab"
+                                data-style="btn-green-pastel"
+                                className="selectpicker mr-2"
+                                placeholder="Sub-Module"
+                                onChange={handleChange}
+                            >
+                                <option value="">Semua Sub-Module</option>
+                                {filters.subbab.length > 0 &&
+                                    filters.subbab.map((data) => (
+                                        <option value={data.id}>{data.name}</option>
+                                    ))}
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        {!isLoading ? (
-            listConfigData && listConfigData.map((data, idxData) => (
-                <div className="row">
-                    <div className="col-12">
-                        <div className="card">
-                            <div className="card-body">
-                                <div style={{ display: 'flex', alignItems: 'center' }} className="mb-3">
-                                    <h2 className="text-primary"><b>{graphicTitle}</b></h2>
-    
-                                    <div className="dashboard-final-score" style={{ marginLeft: 'auto' }}>
-                                        {data.datasets[0].data.length < 15 && data.datasets[0].data.map((value, idx) => (
-                                            <>
-                                                <span>{data.labels[idx]} : <b>{value}</b></span>
-                                                <span style={spanBorderRight}></span>
-                                            </>
-                                        ))}
+            {!loading ? (
+                chartConfigs &&
+                chartConfigs.map((data, idxData) => (
+                    <div className="row" key={`chart-${idxData}`}>
+                        <div className="col-12">
+                            <div className="card">
+                                <div className="card-body">
+                                    <div style={{ display: 'flex', alignItems: 'center' }} className="mb-3">
+                                        <h2 className="text-primary"><b>{graphicTitle}</b></h2>
+                                        <div className="dashboard-final-score" style={{ marginLeft: 'auto' }}>
+                                            {data.datasets[0].data.length < 15 &&
+                                                data.datasets[0].data.map((value, idx) => (
+                                                    <>
+                                                        <span>{data.labels[idx]} : <b>{value}</b></span>
+                                                        <span style={spanBorderRight}></span>
+                                                    </>
+                                                ))}
+                                        </div>
                                     </div>
+                                    <Bar options={options} data={data} />
                                 </div>
-    
-                                <Bar options={options} data={data} />
                             </div>
                         </div>
                     </div>
-                </div>  
-            ))    
-        ) : (
-            <div className="row" style={{ height: '70vh', width:'100%' }}>
-                <div className="col-12 d-flex justify-content-center align-items-center" style={{ flexDirection: 'column' }}>
-                    <ThreeCircles
-                        visible={true}
-                        height="100"
-                        width="100"
-                        color="#024102"
-                        ariaLabel="three-circles-loading"
-                        wrapperStyle={{}}
-                        wrapperClass=""
-                    />
-                    <h2 class="mt-2">Mohon tunggu...</h2>
+                ))
+            ) : (
+                <div className="row" style={{ height: '70vh', width: '100%' }}>
+                    <div className="col-12 d-flex justify-content-center align-items-center" style={{ flexDirection: 'column' }}>
+                        <ThreeCircles
+                            visible={true}
+                            height="100"
+                            width="100"
+                            color="#024102"
+                            ariaLabel="three-circles-loading"
+                            wrapperStyle={{}}
+                            wrapperClass=""
+                        />
+                        <h2 className="mt-2">Mohon tunggu...</h2>
+                    </div>
                 </div>
-            </div>  
-        )}
-             
-    </>);
+            )}
+        </>
+    );
 }
 
 export default DashboardGuruMapel;
 
 if (document.getElementById('dashboard-guru-mapel')) {
-    ReactDOM.render(<DashboardGuruMapel  />, document.getElementById('dashboard-guru-mapel'));
+    ReactDOM.render(<DashboardGuruMapel />, document.getElementById('dashboard-guru-mapel'));
 }
