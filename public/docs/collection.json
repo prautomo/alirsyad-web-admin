@@ -1,0 +1,2115 @@
+{
+    "variable": [
+        {
+            "id": "baseUrl",
+            "key": "baseUrl",
+            "type": "string",
+            "name": "string",
+            "value": "localhost"
+        }
+    ],
+    "info": {
+        "name": "Al Irsyad Edu",
+        "_postman_id": "216073bb-2628-48fa-83c3-c2a68c83d7d5",
+        "description": "",
+        "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
+    },
+    "item": [
+        {
+            "name": "Endpoints",
+            "description": "",
+            "item": [
+                {
+                    "name": "Login api",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/login",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/login"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Login api with uuid",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/login-uuid",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/login-uuid"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api\/login",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/login",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/login"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api\/register",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/register",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/register"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api\/verify-email",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/verify-email",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/verify-email"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api\/password\/forgot",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/password\/forgot",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/password\/forgot"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api\/password\/reset",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/password\/reset",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/password\/reset"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api\/password\/forgot\/student",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/password\/forgot\/student",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/password\/forgot\/student"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display a listing of the resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/jenjangs",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/jenjangs"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display the specified resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/jenjangs\/:id",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/jenjangs\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "fugiat",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Logout api",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/logout",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/logout"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Profile api",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/profile",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/profile"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api\/profile",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/profile",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/profile"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api\/profile\/password",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/profile\/password",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/profile\/password"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Upload image from file",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/upload\/photo",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/upload\/photo"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Upload image from base64",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/upload\/photo\/base64",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/upload\/photo\/base64"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api\/deactive-profile",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/deactive-profile",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/deactive-profile"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display a listing of the resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/tingkats",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/tingkats"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display the specified resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/tingkats\/:id",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/tingkats\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "officia",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display a listing of the resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/kelas",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/kelas"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display the specified resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/kelas\/:id",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/kelas\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "recusandae",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display a listing of the resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/mata_pelajarans",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/mata_pelajarans"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display a listing of the resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/mata_pelajarans\/inprogress",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/mata_pelajarans\/inprogress"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display a listing of the resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/mata_pelajarans\/upcoming",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/mata_pelajarans\/upcoming"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display a listing of the resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/mata_pelajarans\/passed",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/mata_pelajarans\/passed"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display a listing of the resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/mata_pelajarans\/active",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/mata_pelajarans\/active"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display a listing of the resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/mata_pelajarans\/not-active",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/mata_pelajarans\/not-active"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display the specified resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/mata_pelajarans\/:id",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/mata_pelajarans\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "recusandae",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display summary the specified resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/mata_pelajarans\/:id\/summary",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/mata_pelajarans\/:id\/summary",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "id",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api\/mata_pelajarans_simulasi",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/mata_pelajarans_simulasi",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/mata_pelajarans_simulasi"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display a listing of the resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/moduls",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/moduls"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display the specified resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/moduls\/:id",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/moduls\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "consectetur",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display the specified resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/moduls\/:id\/flag",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/moduls\/:id\/flag",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "voluptas",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display a listing of the resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/videos",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/videos"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display the specified resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/videos\/:id",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/videos\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "quasi",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display the specified resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/videos\/:id\/flag",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/videos\/:id\/flag",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "architecto",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display a listing of the resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/simulasis",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/simulasis"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display the specified resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/simulasis\/:id",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/simulasis\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "iure",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display the specified resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/simulasis\/:id\/flag",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/simulasis\/:id\/flag",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "esse",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display the specified resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/simulasis\/:id\/score",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/simulasis\/:id\/score",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "ab",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display a mata pelajaran listing of the resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/nilai-simulasi",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/nilai-simulasi"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display a mata pelajaran listing of the resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/nilai-simulasi\/mapels",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/nilai-simulasi\/mapels"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display the specified resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/nilai-simulasi\/mapels\/:idMapel",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/nilai-simulasi\/mapels\/:idMapel",
+                            "variable": [
+                                {
+                                    "id": "idMapel",
+                                    "key": "idMapel",
+                                    "value": "est",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display a listing of the resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/home\/banners",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/home\/banners"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display the specified resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/home\/banners\/:id",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/home\/banners\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "voluptatem",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display a listing of the resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/home\/updates",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/home\/updates"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display a listing of the resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/home\/tingkats",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/home\/tingkats"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display the specified resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/home\/tingkats\/:id",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/home\/tingkats\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "est",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api\/paket-soal",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/paket-soal",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/paket-soal"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api\/all-paket-soal",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/all-paket-soal",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/all-paket-soal"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api\/soal",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/soal",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/soal"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api\/soal\/check-answers",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/soal\/check-answers",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/soal\/check-answers"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api\/soal\/studies",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/soal\/studies",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/soal\/studies"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api\/e-raport",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/e-raport",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/e-raport"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api\/e-raport\/summary-of-level",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/e-raport\/summary-of-level",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/e-raport\/summary-of-level"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api\/e-raport\/subject-achievement",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/e-raport\/subject-achievement",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/e-raport\/subject-achievement"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api\/e-raport\/home-achievement",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/e-raport\/home-achievement",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/e-raport\/home-achievement"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api\/e-raport\/current-score",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/e-raport\/current-score",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/e-raport\/current-score"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display a listing of the resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/guru\/dashboard",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/guru\/dashboard"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display a listing of the resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/guru\/dashboard\/detail",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/guru\/dashboard\/detail"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display a listing of the resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/guru\/ngajar",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/guru\/ngajar"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display a mata pelajaran listing of the resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/guru\/simulasi\/:id\/siswa",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/guru\/simulasi\/:id\/siswa",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "sit",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display a mata pelajaran listing of the resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/guru\/simulasi\/:id\/nilai",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/guru\/simulasi\/:id\/nilai",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "est",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api\/user",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/user",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/user"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api\/moduls\/upload",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/moduls\/upload",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/moduls\/upload"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api\/moduls\/anotasi\/{id}",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/moduls\/anotasi\/:id",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/moduls\/anotasi\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "ipsum",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api\/docs",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "{{baseUrl}}",
+                            "path": "api\/docs",
+                            "query": [],
+                            "raw": "http:\/\/{{baseUrl}}\/api\/docs"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ],
+    "auth": {
+        "type": "noauth"
+    }
+}
