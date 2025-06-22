@@ -1,5 +1,3 @@
-// app/Constants/LogActivityConst.php
-
 <?php
 
 namespace App\Constants;
