@@ -276,7 +276,17 @@ class PaketSoalController extends Controller
 
     public function store(Request $request)
     {
-        $newLatihanSoal = $request->only(['mata_pelajaran_id', 'tingkat_kesulitan', 'subbab', 'judul_subbab', 'jumlah_publish', 'nilai_kkm', 'is_visible']);
+        $newLatihanSoal = $request->only([
+            'mata_pelajaran_id',
+            'tingkat_kesulitan',
+            'subbab',
+            'judul_subbab',
+            'jumlah_publish',
+            'nilai_kkm',
+            'is_visible',
+            'max_show_answer_key',
+            'answer_key_type',
+        ]);
         $newLatihanSoal['bab_id'] = $request->bab[0];
         
         if($newLatihanSoal['nilai_kkm'] > $newLatihanSoal['jumlah_publish']){
@@ -334,7 +344,17 @@ class PaketSoalController extends Controller
 
     public function update(Request $request, $id){
 
-        $dataReq = $request->only(['mata_pelajaran_id', 'tingkat_kesulitan', 'subbab', 'judul_subbab', 'jumlah_publish', 'nilai_kkm', 'is_visible']);
+        $dataReq = $request->only([
+            'mata_pelajaran_id',
+            'tingkat_kesulitan',
+            'subbab',
+            'judul_subbab',
+            'jumlah_publish',
+            'nilai_kkm',
+            'is_visible',
+            'max_show_answer_key',
+            'answer_key_type',
+        ]);
         $dataReq['bab_id'] = $request->bab[0];
 
         if($dataReq['nilai_kkm'] > $dataReq['jumlah_publish']){
