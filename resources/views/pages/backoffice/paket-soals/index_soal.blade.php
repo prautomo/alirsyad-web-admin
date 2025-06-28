@@ -2,15 +2,6 @@
 
 @section('title', __("Paket Soal"))
 
-@section('header')
-  @parent
-    <div class="row align-items-center py-4">
-        <div class="col-lg-6 col-7">
-            <h6 class="h2 text-dark d-inline-block mb-0">@yield('title')</h6>
-        </div>
-    </div>
-@endsection
-
 @section('content')
 <div class="row">
     <div class="col">
@@ -53,6 +44,11 @@
                                 <td>:</td>
                                 <td>{{ @$paket_soal->nilai_kkm }}</td>
                             </tr>
+                            <tr>
+                                <td>Maksimal Tampil Kunci Jawaban</td>
+                                <td>:</td>
+                                <td>{{ @$paket_soal->max_show_answer_key }}{{ @$paket_soal->answer_key_type == 'persentase' ? '% Benar' : ' Soal Benar' }}</td>
+                            </tr>
                         </table>
                     </div>
                 </div>
@@ -68,7 +64,7 @@
         <div class="card">
             <!-- Card header -->
             <div class="card-header border-0">
-                
+
                 <div class="form-inline mb-0">
                     <h3 class="my-auto">Bank Soal</h3>
                     <div class="ml-auto">
