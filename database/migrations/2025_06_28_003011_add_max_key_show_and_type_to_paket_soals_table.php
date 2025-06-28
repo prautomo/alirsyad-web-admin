@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('paket_soals', function (Blueprint $table) {
-            $table->integer('max_show_answer_key')->default(0);
+            $table->integer('max_show_answer_key')->default(80);
             $table->enum('answer_key_type', ['persentase', 'jumlah_soal'])->default('persentase');
         });
     }
