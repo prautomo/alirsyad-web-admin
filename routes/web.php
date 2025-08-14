@@ -139,6 +139,10 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
         Route::post("/json/dashboard/filter/bab", 'DashboardController@filterBab')->name('dashboard.filter-bab');
         Route::post("/json/dashboard/filter/subbab", 'DashboardController@filterSubbab')->name('dashboard.filter-subbab');
         Route::post("/json/dashboard/filter/mengajar", 'DashboardController@filterMengajar')->name('dashboard.filter-mengajar');
+        Route::get("/json/dashboard/filter/tahun-ajaran", 'DashboardController@filterTahunAjaran')->name('dashboard.filter-tahun-ajaran');
+
+        Route::post("/json/dashboard/tahun-ajaran", 'DashboardController@setTahunAjaran')->name('dashboard.set-tahun-ajaran');
+
 
         Route::resource('password-reset-students', 'PasswordResetStudentController');
         Route::post('password-reset-students/update-status/{id}', 'PasswordResetStudentController@updateStatus')->name('password-reset-students.update-status');

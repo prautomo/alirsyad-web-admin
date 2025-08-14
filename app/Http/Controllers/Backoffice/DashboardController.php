@@ -18,6 +18,7 @@ use App\Models\MataPelajaran;
 use App\Models\Modul;
 use App\Models\PaketSoal;
 use App\Models\Tingkat;
+use App\Models\KelasSiswa;
 use DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -79,16 +80,23 @@ class DashboardController extends Controller {
         $result = [];
         $result_ids = [];
 
+        $query_filter_tahun_ajaran = '';
+        $tahun_ajaran = Session::get('dshTahunAjaran');
+        if ($tahun_ajaran != ''){
+            $query_filter_tahun_ajaran = " and ks.tahun_ajaran = '" . $tahun_ajaran . "' ";
+        }
+
         $jenjangs = Jenjang::where(['deleted_at' => NULL, 'show_for_guest' => 1])->get();
 
-        $result_from_db = DB::select('select jenjang_id, jenjang_name, tingkat_kesulitan, sum(total_benar) as total_benar from (select j.id as jenjang_id, j.name as jenjang_name, e.paket_soal_id as paket_soal_id, ps.tingkat_kesulitan, e.total_benar from jenjangs j
+        $result_from_db = DB::select("select jenjang_id, jenjang_name, tingkat_kesulitan, sum(total_benar) as total_benar from (select j.id as jenjang_id, j.name as jenjang_name, e.paket_soal_id as paket_soal_id, ps.tingkat_kesulitan, e.total_benar from jenjangs j
         join tingkats t on j.id = t.jenjang_id
         join mata_pelajarans mp on t.id = mp.tingkat_id
         join paket_soals ps on mp.id = ps.mata_pelajaran_id
         join e_raport e on ps.id = e.paket_soal_id
         join external_users eu on e.user_id = eu.id
+        join kelas_siswas ks on eu.id = ks.siswa_id ". $query_filter_tahun_ajaran . "
         where eu.deleted_at is null and j.deleted_at is null and ps.deleted_at is null) grouped
-        group by jenjang_id, tingkat_kesulitan');
+        group by jenjang_id, tingkat_kesulitan");
 
         $count_scores = [];
         foreach($result_from_db as $item){
@@ -128,7 +136,7 @@ class DashboardController extends Controller {
         Session::put('dshParam', null);
         Session::put('dshValue', null);
 
-        return response()->json(['message' => 'success', 'data' => $data]);
+        return response()->json(['message' => 'success', 'data' => $data, 'tahun_ajaran' => $tahun_ajaran, 'query_filter_tahun_ajaran' => $query_filter_tahun_ajaran]);
     }
 
     public function getScoreFinal($total_benar, $tingkat_kesulitan){
@@ -169,16 +177,23 @@ class DashboardController extends Controller {
         $result = [];
         $result_ids = [];
 
+        $query_filter_tahun_ajaran = '';
+        $tahun_ajaran = Session::get('dshTahunAjaran');
+        if ($tahun_ajaran != ''){
+            $query_filter_tahun_ajaran = " and ks.tahun_ajaran = '" . $tahun_ajaran . "' ";
+        }   
+
         $tingkats = Tingkat::where(['deleted_at' => NULL, 'jenjang_id' => $jenjang_id])->get();
 
-        $result_from_db = DB::select('select tingkat_id, tingkat_name, tingkat_kesulitan, sum(total_benar) as total_benar from (
+        $result_from_db = DB::select("select tingkat_id, tingkat_name, tingkat_kesulitan, sum(total_benar) as total_benar from (
         select t.id as tingkat_id, t.name as tingkat_name, e.paket_soal_id as paket_soal_id, ps.tingkat_kesulitan, e.total_benar from tingkats t
         join mata_pelajarans mp on t.id = mp.tingkat_id
         join paket_soals ps on mp.id = ps.mata_pelajaran_id
         join e_raport e on ps.id = e.paket_soal_id
         join external_users eu on e.user_id = eu.id
+        join kelas_siswas ks on eu.id = ks.siswa_id ". $query_filter_tahun_ajaran . "
         where eu.deleted_at is null and t.deleted_at is null and ps.deleted_at is null and t.jenjang_id = ?) grouped
-        group by tingkat_id, tingkat_kesulitan', array($jenjang_id));
+        group by tingkat_id, tingkat_kesulitan", array($jenjang_id));
 
         $count_scores = [];
         foreach($result_from_db as $item){
@@ -230,17 +245,24 @@ class DashboardController extends Controller {
         $result = [];
         $result_ids = [];
 
+        $query_filter_tahun_ajaran = '';
+        $tahun_ajaran = Session::get('dshTahunAjaran');
+        if ($tahun_ajaran != ''){
+            $query_filter_tahun_ajaran = " and ks.tahun_ajaran = '" . $tahun_ajaran . "' ";
+        }   
+
         $classes = Kelas::where(['deleted_at' => NULL, 'tingkat_id' => $tingkat_id])->get();
 
-        $result_from_db = DB::select('select kelas_id, kelas_name, tingkat_kesulitan, sum(total_benar) as total_benar from (
+        $result_from_db = DB::select("select kelas_id, kelas_name, tingkat_kesulitan, sum(total_benar) as total_benar from (
         select k.id as kelas_id, k.name as kelas_name, e.paket_soal_id as paket_soal_id, ps.tingkat_kesulitan, e.total_benar from kelas k
         join tingkats t on k.tingkat_id = t.id
         join mata_pelajarans mp on t.id = mp.tingkat_id
         join paket_soals ps on mp.id = ps.mata_pelajaran_id
         join e_raport e on ps.id = e.paket_soal_id
         join external_users eu on e.user_id = eu.id and eu.kelas_id = k.id
+        join kelas_siswas ks on eu.id = ks.siswa_id ". $query_filter_tahun_ajaran . "
         where eu.deleted_at is null and k.deleted_at is null and ps.deleted_at is null and k.tingkat_id = ?) grouped
-        group by kelas_id, tingkat_kesulitan', array($tingkat_id));
+        group by kelas_id, tingkat_kesulitan", array($tingkat_id));
 
         $count_scores = [];
         foreach($result_from_db as $item){
@@ -302,16 +324,23 @@ class DashboardController extends Controller {
         $result = [];
         $result_ids = [];
 
+        $query_filter_tahun_ajaran = '';
+        $tahun_ajaran = Session::get('dshTahunAjaran');
+        if ($tahun_ajaran != ''){
+            $query_filter_tahun_ajaran = " and ks.tahun_ajaran = '" . $tahun_ajaran . "' ";
+        }       
+
         $tingkat_id = Kelas::find($kelas_id)->tingkat_id;
         $mata_pelajarans = MataPelajaran::where(['deleted_at' => NULL, 'tingkat_id' => $tingkat_id])->orderBy('urutan')->get();
 
-        $result_from_db = DB::select('select mata_pelajaran_id, mata_pelajaran_name, tingkat_kesulitan, sum(total_benar) as total_benar from (
+        $result_from_db = DB::select("select mata_pelajaran_id, mata_pelajaran_name, tingkat_kesulitan, sum(total_benar) as total_benar from (
         select mp.id as mata_pelajaran_id, mp.name as mata_pelajaran_name, e.paket_soal_id as paket_soal_id, ps.tingkat_kesulitan, e.total_benar from mata_pelajarans mp
         join paket_soals ps on mp.id = ps.mata_pelajaran_id
         join e_raport e on ps.id = e.paket_soal_id
         join external_users eu on e.user_id = eu.id and eu.kelas_id = ?
+        join kelas_siswas ks on eu.id = ks.siswa_id ". $query_filter_tahun_ajaran . "
         where eu.deleted_at is null and mp.deleted_at is null and ps.deleted_at is null) grouped
-        group by mata_pelajaran_id, tingkat_kesulitan', array($kelas_id));
+        group by mata_pelajaran_id, tingkat_kesulitan", array($kelas_id));
 
         $count_scores = [];
         foreach($result_from_db as $item){
@@ -389,16 +418,23 @@ class DashboardController extends Controller {
         $result = [];
         $result_ids = [];
 
+        $query_filter_tahun_ajaran = '';
+        $tahun_ajaran = Session::get('dshTahunAjaran');
+        if ($tahun_ajaran != ''){
+            $query_filter_tahun_ajaran = " and ks.tahun_ajaran = '" . $tahun_ajaran . "' ";
+        }
+
         $babs = Modul::where(['deleted_at' => NULL, 'mata_pelajaran_id' => $mapel_id, 'is_subbab' => false])->orderBy('urutan')->get();
 
-        $result_from_db = DB::select('select bab_id, bab_name, tingkat_kesulitan, sum(total_benar) as total_benar from (
+        $result_from_db = DB::select("select bab_id, bab_name, tingkat_kesulitan, sum(total_benar) as total_benar from (
         select b.id as bab_id, b.name as bab_name, e.paket_soal_id as paket_soal_id, ps.tingkat_kesulitan, e.total_benar from moduls b
         join mata_pelajarans mp on b.mata_pelajaran_id = mp.id
         join paket_soals ps on mp.id = ps.mata_pelajaran_id and ps.bab_id = b.id
         join e_raport e on ps.id = e.paket_soal_id
         join external_users eu on e.user_id = eu.id and eu.kelas_id = ?
+        join kelas_siswas ks on eu.id = ks.siswa_id ". $query_filter_tahun_ajaran . "
         where eu.deleted_at is null and b.deleted_at is null and ps.deleted_at is null and mp.id = ?) grouped
-        group by bab_id, tingkat_kesulitan', array($kelas_id, $mapel_id));
+        group by bab_id, tingkat_kesulitan", array($kelas_id, $mapel_id));
 
         $count_scores = [];
         foreach($result_from_db as $item){
@@ -458,15 +494,22 @@ class DashboardController extends Controller {
 
         $result = [];
         $result_ids = [];
+        
+        $query_filter_tahun_ajaran = '';
+        $tahun_ajaran = Session::get('dshTahunAjaran');
+        if ($tahun_ajaran != ''){
+            $query_filter_tahun_ajaran = " and ks.tahun_ajaran = '" . $tahun_ajaran . "' ";
+        }
 
         $subbab_ids = PaketSoal::where(['deleted_at' => NULL, 'bab_id' => $bab_id])->distinct()->pluck('subbab')->toArray();
 
-        $result_from_db = DB::select('select subbab_id, subbab_name, tingkat_kesulitan, sum(total_benar) as total_benar from (
+        $result_from_db = DB::select("select subbab_id, subbab_name, tingkat_kesulitan, sum(total_benar) as total_benar from (
         select ps.subbab subbab_id, ps.judul_subbab as subbab_name, e.paket_soal_id as paket_soal_id, ps.tingkat_kesulitan, e.total_benar from paket_soals ps
         join e_raport e on ps.id = e.paket_soal_id
         join external_users eu on e.user_id = eu.id and eu.kelas_id = ?
+        join kelas_siswas ks on eu.id = ks.siswa_id ". $query_filter_tahun_ajaran . "
         where eu.deleted_at is null and ps.deleted_at is null and ps.deleted_at is null and ps.bab_id = ?) grouped
-        group by subbab_id, tingkat_kesulitan', array($kelas_id, $bab_id));
+        group by subbab_id, tingkat_kesulitan", array($kelas_id, $bab_id));
 
         $count_scores = [];
         foreach($result_from_db as $item){
@@ -533,15 +576,22 @@ class DashboardController extends Controller {
 
         $result = [];
         $result_ids = [];
+        
+        $query_filter_tahun_ajaran = '';
+        $tahun_ajaran = Session::get('dshTahunAjaran');
+        if ($tahun_ajaran != ''){
+            $query_filter_tahun_ajaran = " and ks.tahun_ajaran = '" . $tahun_ajaran . "' ";
+        }
 
         $siswas =  ExternalUser::where(['kelas_id' => $kelas_id, 'deleted_at' => NULL])->get();
 
-        $result_from_db = DB::select('select user_id, user_name, tingkat_kesulitan, sum(total_benar) as total_benar, sum(total_terjawab) as total_terjawab from (
+        $result_from_db = DB::select("select user_id, user_name, tingkat_kesulitan, sum(total_benar) as total_benar, sum(total_terjawab) as total_terjawab from (
         select eu.id user_id, eu.name as user_name, e.paket_soal_id as paket_soal_id, ps.tingkat_kesulitan, e.total_benar, e.total_terjawab from paket_soals ps
         join e_raport e on ps.id = e.paket_soal_id
         join external_users eu on e.user_id = eu.id and eu.kelas_id = ?
+        join kelas_siswas ks on eu.id = ks.siswa_id ". $query_filter_tahun_ajaran . "
         where eu.deleted_at is null and ps.deleted_at is null and ps.deleted_at is null and ps.bab_id = ? and ps.subbab = ?) grouped
-        group by user_id, tingkat_kesulitan', array($kelas_id, $bab_id, $subbab_number));
+        group by user_id, tingkat_kesulitan", array($kelas_id, $bab_id, $subbab_number));
 
         $count_scores = [];
         $count_score_splits = [];
@@ -855,4 +905,22 @@ class DashboardController extends Controller {
         return response()->json(['message' => 'success', 'data' => $data, 'kelas_id' => $first_data->kelas_id, 'mapel_id' => $first_data->mata_pelajaran_id]);
     }
 
+    public function filterTahunAjaran(Request $request)
+    {
+        $data = KelasSiswa::where('tahun_ajaran', 'LIKE', '%-%')->distinct()->orderBy('tahun_ajaran')->get(['tahun_ajaran AS val', 'tahun_ajaran AS name'])->unique('name');
+
+        return response()->json(['message' => 'success', 'data' => $data]);
+    }
+
+    public function setTahunAjaran(Request $request)
+    {
+        $tahun_ajaran = '';
+        if($request->tahun_ajaran){
+            $tahun_ajaran = $request->tahun_ajaran;
+        }
+
+        Session::put('dshTahunAjaran', $tahun_ajaran);
+
+        return response()->json(['message' => 'success', 'data' => $tahun_ajaran]);
+    }
 }
