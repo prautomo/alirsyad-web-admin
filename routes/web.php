@@ -75,6 +75,7 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
         Route::put('external-users/enableMapel/{id}', 'ExternalUserController@enableMapelUpdate')->name('external-users.enableMapelUpdate');
         Route::get('external-users/next-grade',  "ExternalUserController@nextGrade")->name('external-users.next_grade');
         Route::post('external-users/next-grade', 'ExternalUserController@nextGradeUpdate')->name('external-users.next_grade_update');
+        Route::get('external-users/fix-school-year', 'ExternalUserController@fixSchoolYear')->name('external-users.fix_school_year'); //Temp route to fix school year, need to disable after run
         Route::get('external-users/next-grade/list-siswa', 'ExternalUserController@listSiswaJson')->name('external-users.listSiswaJson');
         Route::get('external-users/generate-qr-code/{id}', 'ExternalUserController@generateQRCode')->name('external-users.generateQRCode');
         Route::get('external-users/generate-qr-code-bulk', 'ExternalUserController@generateQRCodeBulk')->name('external-users.generateQRCodeBulk');
