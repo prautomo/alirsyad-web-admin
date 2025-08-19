@@ -75,6 +75,7 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
         Route::put('external-users/enableMapel/{id}', 'ExternalUserController@enableMapelUpdate')->name('external-users.enableMapelUpdate');
         Route::get('external-users/next-grade',  "ExternalUserController@nextGrade")->name('external-users.next_grade');
         Route::post('external-users/next-grade', 'ExternalUserController@nextGradeUpdate')->name('external-users.next_grade_update');
+        Route::get('external-users/fix-school-year', 'ExternalUserController@fixSchoolYear')->name('external-users.fix_school_year'); //Temp route to fix school year, need to disable after run
         Route::get('external-users/next-grade/list-siswa', 'ExternalUserController@listSiswaJson')->name('external-users.listSiswaJson');
         Route::get('external-users/generate-qr-code/{id}', 'ExternalUserController@generateQRCode')->name('external-users.generateQRCode');
         Route::get('external-users/generate-qr-code-bulk', 'ExternalUserController@generateQRCodeBulk')->name('external-users.generateQRCodeBulk');
@@ -86,13 +87,16 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
         Route::get('external-users/set-kelas-id-guru-mapel', 'ExternalUserController@set_kelas_id_guru_mapel'); //Temp route to set default kelas id on guru mapel (first found kelas of tingkat)
         Route::get('external-users/set-user-roles', 'ExternalUserController@set_user_roles'); //Temp route to set user roles (on table model_has_roles)
         Route::get('e-raport/generate-dummy-score', 'ERaportController@generateDummyScore'); //Temp route to generate dummy score
-        
+
         // end
         Route::resource('external-users', 'ExternalUserController');
         Route::post('external-users/update-status/{id}', 'ExternalUserController@updateStatus')->name('external-users.update-status');
 
         Route::resource('manage-external-users', 'ManageExternalUserController');
         // Route::get('manage-external-users/moduls',  "ManageExternalUserController@index_modul")->name('manage-external-users.index_modul');
+
+        // Route Log Activity
+        Route::get('log-activities', 'LogActivityController@index')->name('log-activities.index');
 
         // JSON Response
         Route::get("/json/tingkats/{id}", "\App\Http\Controllers\API\TingkatController@show")->name('json.tingkat.detail');
@@ -128,7 +132,7 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
         Route::post('/json/dashboard/subbab', 'DashboardController@getDataSubbab')->name('dashboard.get-data-subbab');
         Route::post('/json/dashboard/siswa', 'DashboardController@getDataSiswa')->name('dashboard.get-data-siswa');
         Route::post('/json/dashboard/current', 'DashboardController@getCurrentDashboard')->name('dashboard.get-current-dashboard');
-        
+
         Route::post("/json/dashboard/filter/level", 'DashboardController@filterLevel')->name('dashboard.filter-level');
         Route::post("/json/dashboard/filter/tingkat", 'DashboardController@filterTingkat')->name('dashboard.filter-tingkat');
         Route::post("/json/dashboard/filter/kelas", 'DashboardController@filterKelas')->name('dashboard.filter-kelas');
@@ -136,6 +140,10 @@ Route::name('backoffice::')->prefix('backoffice')->middleware(['auth:backoffice'
         Route::post("/json/dashboard/filter/bab", 'DashboardController@filterBab')->name('dashboard.filter-bab');
         Route::post("/json/dashboard/filter/subbab", 'DashboardController@filterSubbab')->name('dashboard.filter-subbab');
         Route::post("/json/dashboard/filter/mengajar", 'DashboardController@filterMengajar')->name('dashboard.filter-mengajar');
+        Route::get("/json/dashboard/filter/tahun-ajaran", 'DashboardController@filterTahunAjaran')->name('dashboard.filter-tahun-ajaran');
+
+        Route::post("/json/dashboard/tahun-ajaran", 'DashboardController@setTahunAjaran')->name('dashboard.set-tahun-ajaran');
+
 
         Route::resource('password-reset-students', 'PasswordResetStudentController');
         Route::post('password-reset-students/update-status/{id}', 'PasswordResetStudentController@updateStatus')->name('password-reset-students.update-status');

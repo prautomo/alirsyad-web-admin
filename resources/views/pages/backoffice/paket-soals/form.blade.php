@@ -47,6 +47,8 @@
 
     <x-input.text type="number" :label="__('Jumlah Publish')" name="jumlah_publish" :data="$data" />
     <x-input.text type="number" :label="__('Nilai KKM')" name="nilai_kkm" :data="$data" required />
+    <x-input.text type="number" :label="__('Maksimal Tampil Kunci Jawaban')" name="max_show_answer_key" :data="$data" />
+    <x-input.select :label="__('Tipe Maksimal')" name="answer_key_type" :data="$data" :sources="['persentase' => 'Persentase', 'jumlah_soal' => 'Jumlah Soal']" />
     
     <!-- Visibilitas Materi --> 
     <div class="col-md-12">

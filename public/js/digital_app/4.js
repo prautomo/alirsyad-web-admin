@@ -12,7 +12,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, ".dashboard-final-score {\n    background: #F6D0A14D;\n    padding: 10px 20px;\n    border-radius: 4px !important;\n    color: #E98A15 !important;\n}\n\n.dashboard-filter .bootstrap-select {\n    width: 200px !important;\n}", ""]);
+exports.push([module.i, ".dashboard-final-score {\r\n    background: #F6D0A14D;\r\n    padding: 10px 20px;\r\n    border-radius: 4px !important;\r\n    color: #E98A15 !important;\r\n}\r\n\r\n.dashboard-filter .bootstrap-select {\r\n    width: 200px !important;\r\n}", ""]);
 
 // exports
 
@@ -144,53 +144,25 @@ function DashboardSuperadmin() {
     _useState20 = _slicedToArray(_useState19, 2),
     babId = _useState20[0],
     setBabId = _useState20[1];
-  var _useState21 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(""),
+  var _useState21 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
     _useState22 = _slicedToArray(_useState21, 2),
-    graphicTitle = _useState22[0],
-    setGraphicTitle = _useState22[1];
+    tahunAjaran = _useState22[0],
+    setTahunAjaran = _useState22[1];
   var _useState23 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(""),
     _useState24 = _slicedToArray(_useState23, 2),
-    currentLevel = _useState24[0],
-    setCurrentLevel = _useState24[1];
-  var _useState25 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(true),
+    graphicTitle = _useState24[0],
+    setGraphicTitle = _useState24[1];
+  var _useState25 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(""),
     _useState26 = _slicedToArray(_useState25, 2),
-    isLoading = _useState26[0],
-    setIsLoading = _useState26[1];
+    currentLevel = _useState26[0],
+    setCurrentLevel = _useState26[1];
+  var _useState27 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(true),
+    _useState28 = _slicedToArray(_useState27, 2),
+    isLoading = _useState28[0],
+    setIsLoading = _useState28[1];
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     if ((listDatas === null || listDatas === void 0 ? void 0 : listDatas.length) < 1) {
-      window.axios.post("/backoffice/json/dashboard/jenjang").then(function (response) {
-        // Gantilah dengan endpoint yang sesuai jika perlu
-        var data = response.data.data;
-        var chartData = data.data;
-        var chartDataId = data.data_id;
-        var nextApi = data.next_api;
-        var graphicTitle = data.graphic_title;
-        var currentLevel = data.level;
-        options['onClick'] = graphClickEvent;
-        if (data.kelas_id) {
-          setKelasId(data.kelas_id);
-        }
-        if (data.bab_id) {
-          setBabId(data.bab_id);
-        }
-        if (data.mapel_id) {
-          setMapelId(data.mapel_id);
-        }
-        setIsLoading(false);
-        setGraphicTitle(graphicTitle);
-        setCurrentLevel(currentLevel);
-        setNextApi(nextApi);
-        setListDatas(chartData);
-        setListDataIds(chartDataId);
-      })["catch"](function (err) {
-        console.log(err);
-      });
-      window.axios.post("/backoffice/json/dashboard/filter/level").then(function (response) {
-        var data = response.data.data;
-        setfilterLevel(data);
-      })["catch"](function (err) {
-        console.log(err);
-      });
+      getDataJenjang();
     }
   }, []);
   var spanBorderRight = {
@@ -418,6 +390,17 @@ function DashboardSuperadmin() {
     }
   }, []);
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    if (tahunAjaran.length < 1) {
+      window.axios.get("/backoffice/json/dashboard/filter/tahun-ajaran").then(function (response) {
+        var data = response.data.data;
+        setTahunAjaran(data);
+        $("#tahun-ajaran").selectpicker("refresh");
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    }
+  }, []);
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     var selectedId = selectedBarIdx.isClick ? listDataIds[selectedBarIdx.idx] : selectedBarIdx.idx;
     if (currentLevel == 'siswa' && selectedBarIdx.isClick) {
       window.location.href = "/backoffice/e-raport/".concat(selectedId, "/").concat(mapelId);
@@ -461,6 +444,41 @@ function DashboardSuperadmin() {
       console.log(err);
     });
   }, [selectedBarIdx]);
+  var getDataJenjang = function getDataJenjang() {
+    window.axios.post("/backoffice/json/dashboard/jenjang").then(function (response) {
+      // Gantilah dengan endpoint yang sesuai jika perlu
+      var data = response.data.data;
+      var chartData = data.data;
+      var chartDataId = data.data_id;
+      var nextApi = data.next_api;
+      var graphicTitle = data.graphic_title;
+      var currentLevel = data.level;
+      options['onClick'] = graphClickEvent;
+      if (data.kelas_id) {
+        setKelasId(data.kelas_id);
+      }
+      if (data.bab_id) {
+        setBabId(data.bab_id);
+      }
+      if (data.mapel_id) {
+        setMapelId(data.mapel_id);
+      }
+      setIsLoading(false);
+      setGraphicTitle(graphicTitle);
+      setCurrentLevel(currentLevel);
+      setNextApi(nextApi);
+      setListDatas(chartData);
+      setListDataIds(chartDataId);
+    })["catch"](function (err) {
+      console.log(err);
+    });
+    window.axios.post("/backoffice/json/dashboard/filter/level").then(function (response) {
+      var data = response.data.data;
+      setfilterLevel(data);
+    })["catch"](function (err) {
+      console.log(err);
+    });
+  };
   var getOrCreateTooltip = function getOrCreateTooltip(chart) {
     var tooltipEl = chart.canvas.parentNode.querySelector('div');
     console.log('tooltipEl 0', tooltipEl);
@@ -643,6 +661,31 @@ function DashboardSuperadmin() {
     console.log('listConfig', listConfig);
     setListConfigData(listConfig);
   }, [listDatas]);
+  var handleChangeTahunAjaran = function handleChangeTahunAjaran(e) {
+    window.axios.post("/backoffice/json/dashboard/tahun-ajaran", {
+      tahun_ajaran: e.target.value
+    }).then(function (response) {
+      getDataJenjang();
+      setFilters(function (prevFilters) {
+        return _objectSpread(_objectSpread({}, prevFilters), {}, {
+          tingkat: [],
+          kelas: [],
+          mapel: [],
+          bab: [],
+          subbab: []
+        });
+      });
+      $('#jenjang').val('');
+      $("#jenjang").selectpicker("refresh");
+      $("#tingkat").selectpicker("refresh");
+      $("#kelas").selectpicker("refresh");
+      $("#mapel").selectpicker("refresh");
+      $("#bab").selectpicker("refresh");
+      $("#subbab").selectpicker("refresh");
+    })["catch"](function (err) {
+      console.log(err);
+    });
+  };
   var handleChange = function handleChange(e) {
     var getLevel = filterLevel.filter(function (el) {
       return el.option == e.target.id;
@@ -745,6 +788,20 @@ function DashboardSuperadmin() {
       color: "#9E9E9E"
     }
   }, "Filter By"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+    id: "tahun-ajaran",
+    name: "tahun-ajaran",
+    "data-style": "btn-green-pastel",
+    className: "selectpicker mr-2",
+    placeholder: "Tahun Ajaran",
+    onChange: handleChangeTahunAjaran
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+    value: ""
+  }, "Semua Tahun Ajaran"), tahunAjaran.length > 0 && tahunAjaran.map(function (data) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      key: data.id,
+      value: data.id
+    }, data.name);
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
     id: "jenjang",
     name: "jenjang",
     "data-style": "btn-green-pastel",

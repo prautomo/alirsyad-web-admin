@@ -20,9 +20,12 @@ use App\Helpers\GenerateSlug;
 use App\Models\ExternalUser;
 use App\Models\GuruMataPelajaran;
 use App\Models\Jenjang;
+use App\Traits\LogActivityTrait;
+use App\Constants\LogActivityConst;
 
 class ModulController extends Controller
 {
+    use LogActivityTrait;
 
     function __construct()
     {
@@ -276,6 +279,16 @@ class ModulController extends Controller
 
         $data = Modul::create($dataReq);
 
+        // log create activity
+        $this->logActivity(
+            LogActivityConst::ACTION_TYPE_CREATE,
+            'Create Modul ' . $data->name,
+            LogActivityConst::MODULE_MODUL,
+            $data->id,
+            null,
+            $data->toArray()
+        );
+
         if (empty($request->slug)) {
             $data->slug = GenerateSlug::generateSlug($data->id, $data->name);
             $data->save();
@@ -359,7 +372,17 @@ class ModulController extends Controller
         }
 
         $dt = Modul::findOrFail($id);
+        $before = $dt->toArray();
         $dt->update($dataReq);
+
+        $this->logActivity(
+            LogActivityConst::ACTION_TYPE_UPDATE,
+            'Update Modul ' . $dt->name,
+            LogActivityConst::MODULE_MODUL,
+            $dt->id,
+            $before,
+            $dt->toArray()
+        );
 
         if (@$request->showUpdate) {
 
@@ -399,8 +422,18 @@ class ModulController extends Controller
     {
         $delete_update = Update::where(['trigger' => 'modul', 'trigger_id' => $id])->delete();
         $d = Modul::findOrFail($id);
+        $before = $d->toArray();
 
         $d->delete();
+
+        $this->logActivity(
+            LogActivityConst::ACTION_TYPE_DELETED,
+            'Delete Modul ' . $d->name,
+            LogActivityConst::MODULE_MODUL,
+            $id,
+            $before,
+            null
+        );
     }
 
     /**

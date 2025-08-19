@@ -929,22 +929,49 @@ class ExternalUserController extends Controller
             $siswa = ExternalUser::find($selected_student);
 
             if($current_class != null){
-                $new_school_year = ((int) $current_class->tahun_ajaran) + 1;
-                
-                KelasSiswa::create([
-                    'kelas_id' => $request->next_kelas_id,
-                    'siswa_id' => $selected_student,
-                    'tahun_ajaran' => (string) $new_school_year
-                ]);
-                
-                $current_class->update(['is_current' => 0]);
-                $siswa->update(['kelas_id' => $request->next_kelas_id]);
+                $current_school_year = explode("-", $current_class->tahun_ajaran);
+
+                if(count($current_school_year) > 0){
+                    $new_school_year = (string) (((int) $current_school_year[0]) + 1) . '-' . (((int) $current_school_year[1]) + 1);
+                    
+                    KelasSiswa::create([
+                        'kelas_id' => $request->next_kelas_id,
+                        'siswa_id' => $selected_student,
+                        'tahun_ajaran' => (string) $new_school_year
+                    ]);
+                    
+                    $current_class->update(['is_current' => 0]);
+                    $siswa->update(['kelas_id' => $request->next_kelas_id]);
+                }
             }
         }
 
         return redirect()->route($this->routePath . '.index', ['role' => 'SISWA'])->with(
             $this->success(__("Next graded successfully"))
         );
+    }
+
+    public function fixSchoolYear(Request $request)
+    {
+        $grade_to_fix = KelasSiswa::where('tahun_ajaran', 'NOT LIKE', '%-%')->get();
+
+        foreach($grade_to_fix as $item){
+
+            if($item->tahun_ajaran == '2026'){
+                $find_year_before = KelasSiswa::where('tahun_ajaran', 'LIKE', '2025%')->where('siswa_id', $item->siswa_id)->first();
+
+                if($find_year_before != null){
+                    $find_year_before->update(['is_current' => 1]);
+                }
+                $item->delete();
+            }else{
+                $fixed_shool_year = $item->tahun_ajaran . '-' . (string) (((int) $item->tahun_ajaran) + 1);
+
+                $item->update(['tahun_ajaran' => $fixed_shool_year]);
+            }
+        }
+
+        return response()->json("Success fix school grade.", 200);
     }
 
     // development purpose only (just ONE hit)

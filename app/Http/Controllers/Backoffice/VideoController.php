@@ -19,9 +19,12 @@ use App\Models\UploaderMataPelajaran;
 use App\Models\MataPelajaran;
 use App\Models\Tingkat;
 use App\Models\Video;
+use App\Traits\LogActivityTrait;
+use App\Constants\LogActivityConst;
 
 class VideoController extends Controller
 {
+    use LogActivityTrait;
 
     function __construct()
     {
@@ -334,6 +337,16 @@ class VideoController extends Controller
 
         $data = Video::create($dataReq);
 
+        // log create activity
+        $this->logActivity(
+            LogActivityConst::ACTION_TYPE_CREATE,
+            'Create Video ' . $data->name,
+            LogActivityConst::MODULE_VIDEO,
+            $data->id,
+            null,
+            $data->toArray()
+        );
+
         // insert to log update
         if (@$request->showUpdate) {
 
@@ -417,7 +430,17 @@ class VideoController extends Controller
         }
 
         $dt = Video::findOrFail($id);
+        $before = $dt->toArray();
         $dt->update($dataReq);
+
+        $this->logActivity(
+            LogActivityConst::ACTION_TYPE_UPDATE,
+            'Update Video ' . $dt->name,
+            LogActivityConst::MODULE_VIDEO,
+            $dt->id,
+            $before,
+            $dt->toArray()
+        );
 
         // insert to log update
         if (@$request->showUpdate) {
@@ -457,8 +480,18 @@ class VideoController extends Controller
     {
         $delete_update = Update::where(['trigger' => 'video', 'trigger_id' => $id])->delete();
         $d = Video::findOrFail($id);
+        $before = $d->toArray();
 
         $d->delete();
+
+        $this->logActivity(
+            LogActivityConst::ACTION_TYPE_DELETED,
+            'Delete Video ' . $d->name,
+            LogActivityConst::MODULE_VIDEO,
+            $id,
+            $before,
+            null
+        );
     }
 
     /**

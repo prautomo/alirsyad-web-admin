@@ -9,6 +9,7 @@
 
 module.exports = __webpack_require__(/*! ../dist/chart */ "./node_modules/chart.js/dist/chart.mjs");
 
+
 /***/ }),
 
 /***/ "./node_modules/chart.js/dist/chart.mjs":
