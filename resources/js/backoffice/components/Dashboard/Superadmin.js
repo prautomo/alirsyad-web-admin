@@ -226,6 +226,8 @@ function DashboardSuperadmin() {
     }, []);
 
     useEffect(() => {
+        
+
         var selectedId = selectedBarIdx.isClick ? listDataIds[selectedBarIdx.idx] : selectedBarIdx.idx
 
         if (currentLevel == 'siswa' && selectedBarIdx.isClick) {
@@ -244,7 +246,7 @@ function DashboardSuperadmin() {
         } else if (currentLevel == 'bab') {
             params['kelas_id'] = kelasId
             // params['mapel_id'] = mapelId
-        } else if (currentLevel == 'subbab') {
+        } else if (currentLevel == 'subbab' || currentLevel == 'siswa') {
             params['bab_id'] = babId
             params['kelas_id'] = kelasId
         }
@@ -557,8 +559,8 @@ function DashboardSuperadmin() {
                 bab: [],
                 subbab: []
             }))
-            
-            $('#jenjang').val('');
+                
+            $('#jenjang').val(' ');
             $(`#jenjang`).selectpicker("refresh");
             $(`#tingkat`).selectpicker("refresh");
             $(`#kelas`).selectpicker("refresh");

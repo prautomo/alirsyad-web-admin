@@ -413,7 +413,7 @@ function DashboardSuperadmin() {
     } else if (currentLevel == 'bab') {
       params['kelas_id'] = kelasId;
       // params['mapel_id'] = mapelId
-    } else if (currentLevel == 'subbab') {
+    } else if (currentLevel == 'subbab' || currentLevel == 'siswa') {
       params['bab_id'] = babId;
       params['kelas_id'] = kelasId;
     }
@@ -675,7 +675,7 @@ function DashboardSuperadmin() {
           subbab: []
         });
       });
-      $('#jenjang').val('');
+      $('#jenjang').val(' ');
       $("#jenjang").selectpicker("refresh");
       $("#tingkat").selectpicker("refresh");
       $("#kelas").selectpicker("refresh");
