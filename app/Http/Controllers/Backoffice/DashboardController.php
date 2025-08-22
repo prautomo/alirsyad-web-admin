@@ -95,6 +95,7 @@ class DashboardController extends Controller {
         join e_raport e on ps.id = e.paket_soal_id
         join external_users eu on e.user_id = eu.id
         join kelas_siswas ks on eu.id = ks.siswa_id ". $query_filter_tahun_ajaran . "
+        join kelas k on ks.kelas_id = k.id and k.tingkat_id = t.id
         where eu.deleted_at is null and j.deleted_at is null and ps.deleted_at is null) grouped
         group by jenjang_id, tingkat_kesulitan");
 
@@ -192,6 +193,7 @@ class DashboardController extends Controller {
         join e_raport e on ps.id = e.paket_soal_id
         join external_users eu on e.user_id = eu.id
         join kelas_siswas ks on eu.id = ks.siswa_id ". $query_filter_tahun_ajaran . "
+        join kelas k on ks.kelas_id = k.id and k.tingkat_id = t.id
         where eu.deleted_at is null and t.deleted_at is null and ps.deleted_at is null and t.jenjang_id = ?) grouped
         group by tingkat_id, tingkat_kesulitan", array($jenjang_id));
 
@@ -259,8 +261,8 @@ class DashboardController extends Controller {
         join mata_pelajarans mp on t.id = mp.tingkat_id
         join paket_soals ps on mp.id = ps.mata_pelajaran_id
         join e_raport e on ps.id = e.paket_soal_id
-        join external_users eu on e.user_id = eu.id and eu.kelas_id = k.id
-        join kelas_siswas ks on eu.id = ks.siswa_id ". $query_filter_tahun_ajaran . "
+        join external_users eu on e.user_id = eu.id
+        join kelas_siswas ks on eu.id = ks.siswa_id and ks.kelas_id = k.id ". $query_filter_tahun_ajaran . "
         where eu.deleted_at is null and k.deleted_at is null and ps.deleted_at is null and k.tingkat_id = ?) grouped
         group by kelas_id, tingkat_kesulitan", array($tingkat_id));
 
@@ -337,8 +339,8 @@ class DashboardController extends Controller {
         select mp.id as mata_pelajaran_id, mp.name as mata_pelajaran_name, e.paket_soal_id as paket_soal_id, ps.tingkat_kesulitan, e.total_benar from mata_pelajarans mp
         join paket_soals ps on mp.id = ps.mata_pelajaran_id
         join e_raport e on ps.id = e.paket_soal_id
-        join external_users eu on e.user_id = eu.id and eu.kelas_id = ?
-        join kelas_siswas ks on eu.id = ks.siswa_id ". $query_filter_tahun_ajaran . "
+        join external_users eu on e.user_id = eu.id
+        join kelas_siswas ks on eu.id = ks.siswa_id and ks.kelas_id = ? ". $query_filter_tahun_ajaran . "
         where eu.deleted_at is null and mp.deleted_at is null and ps.deleted_at is null) grouped
         group by mata_pelajaran_id, tingkat_kesulitan", array($kelas_id));
 
@@ -431,8 +433,8 @@ class DashboardController extends Controller {
         join mata_pelajarans mp on b.mata_pelajaran_id = mp.id
         join paket_soals ps on mp.id = ps.mata_pelajaran_id and ps.bab_id = b.id
         join e_raport e on ps.id = e.paket_soal_id
-        join external_users eu on e.user_id = eu.id and eu.kelas_id = ?
-        join kelas_siswas ks on eu.id = ks.siswa_id ". $query_filter_tahun_ajaran . "
+        join external_users eu on e.user_id = eu.id
+        join kelas_siswas ks on eu.id = ks.siswa_id and ks.kelas_id = ? ". $query_filter_tahun_ajaran . "
         where eu.deleted_at is null and b.deleted_at is null and ps.deleted_at is null and mp.id = ?) grouped
         group by bab_id, tingkat_kesulitan", array($kelas_id, $mapel_id));
 
@@ -506,8 +508,8 @@ class DashboardController extends Controller {
         $result_from_db = DB::select("select subbab_id, subbab_name, tingkat_kesulitan, sum(total_benar) as total_benar from (
         select ps.subbab subbab_id, ps.judul_subbab as subbab_name, e.paket_soal_id as paket_soal_id, ps.tingkat_kesulitan, e.total_benar from paket_soals ps
         join e_raport e on ps.id = e.paket_soal_id
-        join external_users eu on e.user_id = eu.id and eu.kelas_id = ?
-        join kelas_siswas ks on eu.id = ks.siswa_id ". $query_filter_tahun_ajaran . "
+        join external_users eu on e.user_id = eu.id
+        join kelas_siswas ks on eu.id = ks.siswa_id and ks.kelas_id = ? ". $query_filter_tahun_ajaran . "
         where eu.deleted_at is null and ps.deleted_at is null and ps.deleted_at is null and ps.bab_id = ?) grouped
         group by subbab_id, tingkat_kesulitan", array($kelas_id, $bab_id));
 
@@ -583,16 +585,23 @@ class DashboardController extends Controller {
             $query_filter_tahun_ajaran = " and ks.tahun_ajaran = '" . $tahun_ajaran . "' ";
         }
 
-        $siswas =  ExternalUser::where(['kelas_id' => $kelas_id, 'deleted_at' => NULL])->get();
+        // TODO
+        // $siswas =  ExternalUser::where(['kelas_id' => $kelas_id, 'deleted_at' => NULL])->get();
+        
+        $siswas = ExternalUser::where(['deleted_at' => NULL])
+            ->whereHas('classHistory', function($query2) use ($kelas_id, $tahun_ajaran){
+                $query2->where('kelas_id', $kelas_id)->where('tahun_ajaran', 'LIKE', '%'. $tahun_ajaran. '%');
+            })->get();
 
         $result_from_db = DB::select("select user_id, user_name, tingkat_kesulitan, sum(total_benar) as total_benar, sum(total_terjawab) as total_terjawab from (
         select eu.id user_id, eu.name as user_name, e.paket_soal_id as paket_soal_id, ps.tingkat_kesulitan, e.total_benar, e.total_terjawab from paket_soals ps
         join e_raport e on ps.id = e.paket_soal_id
-        join external_users eu on e.user_id = eu.id and eu.kelas_id = ?
-        join kelas_siswas ks on eu.id = ks.siswa_id ". $query_filter_tahun_ajaran . "
+        join external_users eu on e.user_id = eu.id
+        join kelas_siswas ks on eu.id = ks.siswa_id and ks.kelas_id = ? ". $query_filter_tahun_ajaran . "
         where eu.deleted_at is null and ps.deleted_at is null and ps.deleted_at is null and ps.bab_id = ? and ps.subbab = ?) grouped
         group by user_id, tingkat_kesulitan", array($kelas_id, $bab_id, $subbab_number));
 
+        // dd($result_from_db);
         $count_scores = [];
         $count_score_splits = [];
         $count_terjawab_splits = [];
