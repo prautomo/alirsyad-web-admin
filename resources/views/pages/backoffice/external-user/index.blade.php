@@ -89,7 +89,7 @@
                 @endif
                 <th data-data="name">@lang("Name")</th>
                 @if(\Request::get('role') === 'SISWA' && !@\Request::get('is_pengunjung'))
-                <th data-data="jenjang">@lang("Jenjang")</th>
+                <th data-data="jenjang_siswa">@lang("Jenjang")</th>
                 <th data-data="tingkat">@lang("Tingkat")</th>
                 <th data-data="kelas">@lang("Kelas")</th>
                 <th data-data="tahun_ajaran">@lang("Tahun Ajaran")</th>

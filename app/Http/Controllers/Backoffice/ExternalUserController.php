@@ -86,27 +86,32 @@ class ExternalUserController extends Controller
                     });
                 }
 
-                $query = $query->whereHas('classHistory', function($query2) use ($filters){
-                    $query2->where('tahun_ajaran', 'LIKE', '%'. $filters['tahun_ajaran']. '%');
+                if($role == "SISWA" && !$isPengunjung){
+                    $query = $query->whereHas('classHistory', function($query2) use ($filters){
+                        
+                        if($filters['tahun_ajaran']){
+                            $query2->where('tahun_ajaran', 'LIKE', '%'. $filters['tahun_ajaran']. '%');
+                        }
 
-                    if($filters['jenjang_id']){
-                        $query2->whereHas('kelas.tingkat.jenjang', function($query3) use ($filters){
-                            $query3->where('id', '=',  $filters['jenjang_id']);
-                        });
-                    }
+                        if($filters['jenjang_id']){
+                            $query2->whereHas('kelas.tingkat.jenjang', function($query3) use ($filters){
+                                $query3->where('id', '=',  $filters['jenjang_id']);
+                            });
+                        }
 
-                    if($filters['tingkat_id']){
-                        $query2->whereHas('kelas.tingkat', function($query3) use ($filters){
-                            $query3->where('id', '=',  $filters['tingkat_id']);
-                        });
-                    }
+                        if($filters['tingkat_id']){
+                            $query2->whereHas('kelas.tingkat', function($query3) use ($filters){
+                                $query3->where('id', '=',  $filters['tingkat_id']);
+                            });
+                        }
 
-                    if($filters['kelas_id']){
-                        $query2->whereHas('kelas', function($query3) use ($filters){
-                            $query3->where('name', '=',  $filters['kelas_id']);
-                        });
-                    }
-                });
+                        if($filters['kelas_id']){
+                            $query2->whereHas('kelas', function($query3) use ($filters){
+                                $query3->where('name', '=',  $filters['kelas_id']);
+                            });
+                        }
+                    });
+                }
 
                 if ($search) {
                     $query = $query->where(function($q) use ($search) {
@@ -176,36 +181,45 @@ class ExternalUserController extends Controller
 
                 return $createdAt->format("d-m-Y H:i:s");
             })
-            ->addColumn("jenjang", function ($data) use ($request) {
-                if($request->tahun_ajaran){
-                    $kelas_siswa = KelasSiswa::where(['siswa_id' => $data->id, 'tahun_ajaran' => $request->tahun_ajaran])->first();
-                    $kelas = Kelas::with('tingkat.jenjang')
-                        ->find($kelas_siswa->kelas_id);
+            ->addColumn("jenjang_siswa", function ($data) use ($request) {
+                if($data->role == 'SISWA' && !$data->is_pengunjung){
+                    if($request->tahun_ajaran){
+                        $kelas_siswa = KelasSiswa::where(['siswa_id' => $data->id, 'tahun_ajaran' => $request->tahun_ajaran])->first();
+                        $kelas = Kelas::with('tingkat.jenjang')
+                            ->find($kelas_siswa->kelas_id);
 
-                    return ($kelas->tingkat->jenjang->name);
+                        return ($kelas->tingkat->jenjang->name);
+                    }
+                    return $data->kelas->tingkat->jenjang->name;
                 }
-                return $data->kelas->tingkat->jenjang->name;
+                return "";
             })
             ->addColumn("tingkat", function ($data) use ($request) {
-                if($request->tahun_ajaran){
-                    $kelas_siswa = KelasSiswa::where(['siswa_id' => $data->id, 'tahun_ajaran' => $request->tahun_ajaran])->first();
-                    $kelas = Kelas::with('tingkat')
-                        ->find($kelas_siswa->kelas_id);
+                if($data->role == 'SISWA' && !$data->is_pengunjung){
+                    if($request->tahun_ajaran){
+                        $kelas_siswa = KelasSiswa::where(['siswa_id' => $data->id, 'tahun_ajaran' => $request->tahun_ajaran])->first();
+                        $kelas = Kelas::with('tingkat')
+                            ->find($kelas_siswa->kelas_id);
 
-                    return ($kelas->tingkat->name);
+                        return ($kelas->tingkat->name);
+                    }
+
+                    return $data->kelas->tingkat->name;
                 }
-
-                return $data->kelas->tingkat->name;
+                return "";
             })
             ->addColumn("kelas", function ($data) use ($request) {
-                if($request->tahun_ajaran){
-                    $kelas_siswa = KelasSiswa::where(['siswa_id' => $data->id, 'tahun_ajaran' => $request->tahun_ajaran])->first();
-                    $kelas = Kelas::find($kelas_siswa->kelas_id);
+                if($data->role == 'SISWA' && !$data->is_pengunjung){
+                    if($request->tahun_ajaran){
+                        $kelas_siswa = KelasSiswa::where(['siswa_id' => $data->id, 'tahun_ajaran' => $request->tahun_ajaran])->first();
+                        $kelas = Kelas::find($kelas_siswa->kelas_id);
 
-                    return ($kelas->name);
+                        return ($kelas->name);
+                    }
+
+                    return $data->kelas->name;
                 }
-
-                return $data->kelas->name;
+                return "";
             })
             ->addColumn("tahun_ajaran", function ($data) use ($request) {
                 if($request->tahun_ajaran){
