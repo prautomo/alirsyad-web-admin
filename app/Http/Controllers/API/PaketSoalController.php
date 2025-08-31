@@ -6,6 +6,7 @@ use App\Http\Controllers\API\BaseController as BaseController;
 use App\Http\Controllers\Controller;
 use App\Models\Modul;
 use App\Models\PaketSoal;
+use App\Models\ERaport;
 use Illuminate\Http\Request;
 
 class PaketSoalController extends BaseController
@@ -35,6 +36,66 @@ class PaketSoalController extends BaseController
         }
 
         return $this->sendResponse($result_list_bab, 'Paket soal retrieved successfully.');
+    }
+
+    public function checkpoint(Request $request)
+    {
+        $paket_soal_mudah_id = $request->paket_soal_id;
+        $siswa_id = $request->siswa_id;
+
+        $paket_soal_mudah = PaketSoal::find($paket_soal_mudah_id);
+
+        $result = [];
+        $isNextLevelAvailable = [];
+        $list_tingkat_kesulitan = ['mudah', 'sedang', 'sulit'];
+        foreach($list_tingkat_kesulitan as $tingkat_kesulitan){
+            $current_paket_soal = PaketSoal::where(['mata_pelajaran_id' => $paket_soal_mudah->mata_pelajaran_id, 'bab_id' => $paket_soal_mudah->bab_id, 'subbab' => $paket_soal_mudah->subbab])->where(['tingkat_kesulitan' => $tingkat_kesulitan])->first();
+            
+            if($current_paket_soal == null){
+                $obj_paket_soal = [
+                    "paket_soal_id" => 0,
+                    "tingkat_kesulitan" => $tingkat_kesulitan,
+                    "is_available" => false
+                ];
+                array_push($result, $obj_paket_soal);
+                continue;
+            }
+            
+            $e_raport = ERaport::where(['user_id' => $siswa_id])->where('paket_soal_id', $current_paket_soal->id)->where(['paket_soal_id' => $current_paket_soal->id])->orderBy('total_benar', 'desc')->first();
+
+            if($e_raport != null){
+                $obj_paket_soal = [
+                    "paket_soal_id" => $current_paket_soal->id,
+                    "tingkat_kesulitan" => $tingkat_kesulitan,
+                    "is_available" => true
+                ];
+                array_push($result, $obj_paket_soal);
+                
+                if($e_raport->total_benar > $current_paket_soal->nilai_kkm){
+                    $isNextLevelAvailable = true;
+                }
+            }else{
+                if($isNextLevelAvailable){
+                    $obj_paket_soal = [
+                        "paket_soal_id" => $current_paket_soal->id,
+                        "tingkat_kesulitan" => $tingkat_kesulitan,
+                        "is_available" => true
+                    ];
+                    array_push($result, $obj_paket_soal);
+
+                    $isNextLevelAvailable = false;
+                }else{
+                    $obj_paket_soal = [
+                        "paket_soal_id" => $current_paket_soal->id,
+                        "tingkat_kesulitan" => $tingkat_kesulitan,
+                        "is_available" => false
+                    ];
+                    array_push($result, $obj_paket_soal);
+                }
+            }
+        }
+
+        return $this->sendResponse($result, 'Paket soal checkpoint retrieved successfully.');
     }
 
     public function all_paket_soal(Request $request)
