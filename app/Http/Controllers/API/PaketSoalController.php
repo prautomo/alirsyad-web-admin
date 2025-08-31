@@ -71,7 +71,7 @@ class PaketSoalController extends BaseController
                 ];
                 array_push($result, $obj_paket_soal);
                 
-                if($e_raport->total_benar > $current_paket_soal->nilai_kkm){
+                if($e_raport->total_benar >= $current_paket_soal->nilai_kkm){
                     $isNextLevelAvailable = true;
                 }
             }else{
