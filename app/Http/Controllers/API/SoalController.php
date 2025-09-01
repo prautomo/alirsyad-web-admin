@@ -51,7 +51,7 @@ class SoalController extends BaseController
 
                 $obj_soal = [
                     "id" => $get_soal->id,
-                    "soal" => trim(strip_tags($get_soal->soal), " \t\n\r\0\x0B\xC2\xA0"),
+                    "soal" => trim(strip_tags($get_soal->soal, '<strong><em>'), " \t\n\r\0\x0B\xC2\xA0"),
                     "image" => ""
                 ];
 
@@ -70,7 +70,7 @@ class SoalController extends BaseController
                             $jawaban_contain_img =  $jawaban_img;
                             array_push($obj_soal['jawaban'], $jawaban_contain_img);
                         } else {
-                            $temp_jawaban = utf8_decode(strip_tags($choice));
+                            $temp_jawaban = utf8_decode(strip_tags($choice, '<strong><em>'));
                             $temp_jawaban = str_replace("&nbsp;", "", $temp_jawaban);
                             $temp_jawaban = preg_replace('/\s+/', ' ', $temp_jawaban);
                             $temp_jawaban = trim($temp_jawaban);
