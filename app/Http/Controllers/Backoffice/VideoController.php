@@ -12,6 +12,7 @@ use Auth;
 use DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Session;
 use App\Services\UploadService;
 use App\Models\Modul;
 use App\Models\Update;
@@ -45,15 +46,8 @@ class VideoController extends Controller
     public function datatable(Request $request)
     {
         $query = Video::query();
-
-        // kalo bukan superadmin, tambahin filter by mapel na
-        if (!@\Auth::user()->hasRole('Superadmin')) {
-            $mapelIdsUser = $this->getMapelIdsUser();
-            $query = $query->whereIn('mata_pelajaran_id', $mapelIdsUser);
-        }
-
-        // relation with tingkat
         $query = $query->with('modul.mataPelajaran.tingkat.jenjang');
+        $query = $this->filterQueryByRole($query);
 
         $datas = $query->select('*');
 
@@ -201,6 +195,44 @@ class VideoController extends Controller
         $mapelIdsUser = count($mapelIdsUser) > 0 ? $mapelIdsUser : [];
 
         return $mapelIdsUser;
+    }
+
+    private function filterQueryByRole($query){
+        $activeRole = Session::get('activeRole');
+        $extUser = ExternalUser::where(['email' => @\Auth::user()->email])->first();
+
+        if($activeRole != null){
+            if ($activeRole == "Guru Mata Pelajaran") {
+                $mapelIdsUser = $this->getMapelIdsUser();
+                $query = $query->whereIn('mata_pelajaran_id', $mapelIdsUser);
+            }else if($activeRole == "Wali Kelas"){
+                $kelas = Kelas::where(['wali_kelas_id' => $extUser->id])->first();
+                $query = $query->whereHas('mataPelajaran.tingkat', function ($query2) use ($kelas) {
+                    $query2->where('id', '=',  $kelas->tingkat_id);
+                });
+            }else if($activeRole == "Kepala Sekolah"){
+                $jenjang = Jenjang::where(['kepala_sekolah_id' => $extUser->id])->first();
+                $query = $query->whereHas('mataPelajaran.tingkat.jenjang', function ($query2) use ($jenjang) {
+                    $query2->where('id', '=',  $jenjang->id);
+                });
+            }
+        }else{
+            if (in_array("Guru Mata Pelajaran", $authUserRole)) {
+                $mapelIdsUser = $this->getMapelIdsUser();
+                $query = $query->whereIn('mata_pelajaran_id', $mapelIdsUser);
+            }else if(in_array("Wali Kelas", $authUserRole)){
+                $kelas = Kelas::where(['wali_kelas_id' => $extUser->id])->first();
+                $query = $query->whereHas('mataPelajaran.tingkat', function ($query2) use ($kelas) {
+                    $query2->where('id', '=',  $kelas->tingkat_id);
+                });
+            }else if(in_array("Kepala Sekolah", $authUserRole)){
+                $jenjang = Jenjang::where(['kepala_sekolah_id' => $extUser->id])->first();
+                $query = $query->whereHas('mataPelajaran.tingkat.jenjang', function ($query2) use ($jenjang) {
+                    $query2->where('id', '=',  $jenjang->id);
+                });
+            }
+        }
+        return $query;
     }
 
     public function index(Request $request)

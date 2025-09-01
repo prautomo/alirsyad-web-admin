@@ -584,9 +584,6 @@ class DashboardController extends Controller {
         if ($tahun_ajaran != ''){
             $query_filter_tahun_ajaran = " and ks.tahun_ajaran = '" . $tahun_ajaran . "' ";
         }
-
-        // TODO
-        // $siswas =  ExternalUser::where(['kelas_id' => $kelas_id, 'deleted_at' => NULL])->get();
         
         $siswas = ExternalUser::where(['deleted_at' => NULL])
             ->whereHas('classHistory', function($query2) use ($kelas_id, $tahun_ajaran){

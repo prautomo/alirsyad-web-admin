@@ -68,12 +68,14 @@ class ExternalUserController extends Controller
                 $role = $request->role;
                 $isPengunjung = $request->is_pengunjung;
 
-                $tahun_ajaran = $request->tahun_ajaran;
-                $jenjang_id = $request->jenjang_id;
-                $tingkat_id = $request->tingkat_id;
-                $kelas_id = $request->kelas_id;
-
                 $mengajar = $request->mengajar;
+
+                $filters = [
+                    'tahun_ajaran' => $request->tahun_ajaran,
+                    'jenjang_id' => $request->jenjang_id,
+                    'tingkat_id' => $request->tingkat_id,
+                    'kelas_id' => $request->kelas_id
+                ];
 
 
                 $search = @$request->search['value'];
@@ -84,27 +86,30 @@ class ExternalUserController extends Controller
                     });
                 }
 
-                if($tahun_ajaran){
-                    $query = $query->whereHas('classHistory', function($query2) use ($tahun_ajaran){
-                        $query2->where('is_current', 1)->where('tahun_ajaran', 'LIKE', '%'. $tahun_ajaran. '%');
-                    });
-                }
+                if($role == "SISWA" && !$isPengunjung){
+                    $query = $query->whereHas('classHistory', function($query2) use ($filters){
+                        
+                        if($filters['tahun_ajaran']){
+                            $query2->where('tahun_ajaran', 'LIKE', '%'. $filters['tahun_ajaran']. '%');
+                        }
 
-                if($jenjang_id){
-                    $query = $query->whereHas('kelas.tingkat.jenjang', function ($query2) use ($jenjang_id) {
-                        $query2->where('id', '=',  $jenjang_id);
-                    });
-                }
+                        if($filters['jenjang_id']){
+                            $query2->whereHas('kelas.tingkat.jenjang', function($query3) use ($filters){
+                                $query3->where('id', '=',  $filters['jenjang_id']);
+                            });
+                        }
 
-                if($tingkat_id){
-                    $query = $query->whereHas('kelas.tingkat', function ($query2) use ($tingkat_id) {
-                        $query2->where('id', '=',  $tingkat_id);
-                    });
-                }
-                
-                if($kelas_id){
-                    $query = $query->whereHas('kelas', function ($query2) use ($kelas_id) {
-                        $query2->where('name', '=',  $kelas_id);
+                        if($filters['tingkat_id']){
+                            $query2->whereHas('kelas.tingkat', function($query3) use ($filters){
+                                $query3->where('id', '=',  $filters['tingkat_id']);
+                            });
+                        }
+
+                        if($filters['kelas_id']){
+                            $query2->whereHas('kelas', function($query3) use ($filters){
+                                $query3->where('name', '=',  $filters['kelas_id']);
+                            });
+                        }
                     });
                 }
 
@@ -122,13 +127,14 @@ class ExternalUserController extends Controller
                                     $query2->where('name', 'LIKE', '%' . $search . '%');
                                 });
                             }
-                        }else if($role == "SISWA"){
-                            if($query->has('classHistory')){
-                                $query = $query->orWhereHas('classHistory', function($query2) use ( $search ){
-                                    $query2->where('is_current', 1)->where('tahun_ajaran', 'LIKE', '%'. $search. '%');
-                                });
-                            }
                         }
+                        // else if($role == "SISWA"){
+                        //     if($query->has('classHistory')){
+                        //         $query = $query->orWhereHas('classHistory', function($query2) use ( $search ){
+                        //             $query2->where('is_current', 1)->where('tahun_ajaran', 'LIKE', '%'. $search. '%');
+                        //         });
+                        //     }
+                        // }
                     }
 
                     $query = $query->where('is_pengunjung', @$isPengunjung ?? 0);
@@ -175,7 +181,51 @@ class ExternalUserController extends Controller
 
                 return $createdAt->format("d-m-Y H:i:s");
             })
-            ->addColumn("tahun_ajaran", function ($data) {
+            ->addColumn("jenjang_siswa", function ($data) use ($request) {
+                if($data->role == 'SISWA' && !$data->is_pengunjung){
+                    if($request->tahun_ajaran){
+                        $kelas_siswa = KelasSiswa::where(['siswa_id' => $data->id, 'tahun_ajaran' => $request->tahun_ajaran])->first();
+                        $kelas = Kelas::with('tingkat.jenjang')
+                            ->find($kelas_siswa->kelas_id);
+
+                        return ($kelas->tingkat->jenjang->name);
+                    }
+                    return $data->kelas->tingkat->jenjang->name;
+                }
+                return "";
+            })
+            ->addColumn("tingkat", function ($data) use ($request) {
+                if($data->role == 'SISWA' && !$data->is_pengunjung){
+                    if($request->tahun_ajaran){
+                        $kelas_siswa = KelasSiswa::where(['siswa_id' => $data->id, 'tahun_ajaran' => $request->tahun_ajaran])->first();
+                        $kelas = Kelas::with('tingkat')
+                            ->find($kelas_siswa->kelas_id);
+
+                        return ($kelas->tingkat->name);
+                    }
+
+                    return $data->kelas->tingkat->name;
+                }
+                return "";
+            })
+            ->addColumn("kelas", function ($data) use ($request) {
+                if($data->role == 'SISWA' && !$data->is_pengunjung){
+                    if($request->tahun_ajaran){
+                        $kelas_siswa = KelasSiswa::where(['siswa_id' => $data->id, 'tahun_ajaran' => $request->tahun_ajaran])->first();
+                        $kelas = Kelas::find($kelas_siswa->kelas_id);
+
+                        return ($kelas->name);
+                    }
+
+                    return $data->kelas->name;
+                }
+                return "";
+            })
+            ->addColumn("tahun_ajaran", function ($data) use ($request) {
+                if($request->tahun_ajaran){
+                    return $request->tahun_ajaran;
+                }
+
                 $current_class = KelasSiswa::where(['siswa_id' => $data->id, 'is_current' => 1])->first();
 
                 if($current_class != null){
