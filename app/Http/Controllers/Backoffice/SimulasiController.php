@@ -167,7 +167,7 @@ class SimulasiController extends Controller{
                 ]);
             })
             ->order(function ($query) {
-                $query->orderBy('mata_pelajaran_id', 'asc')->orderBy('semester', 'asc')->orderBy('urutan', 'asc')->orderBy('created_at', 'desc');
+                $query->orderBy('urutan', 'asc')->orderBy('created_at', 'desc');
             })
             ->toJson();
     }
