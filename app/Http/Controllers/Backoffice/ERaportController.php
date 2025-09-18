@@ -37,7 +37,7 @@ class ERaportController extends Controller
 
         // filter if its other roles than superadmin
         $activeRole = Session::get('activeRole');
-        if ($activeRole == "Guru Mata Pelajaran") {
+        if ($activeRole == "Guru Mata Pelajaran" || $activeRole == "Guru Uploader") {
             $guru = ExternalUser::where(['email' => Auth::user()->email])->first();
             $kelas_ids = GuruMataPelajaran::where([
                 'guru_id' => $guru->id
@@ -159,7 +159,7 @@ class ERaportController extends Controller
         $activeRole = Session::get('activeRole');
 
         // filter if its other roles than superadmin
-        if ($activeRole == "Guru Mata Pelajaran") {
+        if ($activeRole == "Guru Mata Pelajaran" || $activeRole == "Guru Uploader") {
             $guru = ExternalUser::where(['email' => Auth::user()->email])->first();
             $mapel_ids = GuruMataPelajaran::where([
                 'guru_id' => $guru->id
@@ -251,7 +251,7 @@ class ERaportController extends Controller
 
         $auth_user_roles = Auth::user()->roles->pluck('name')->toArray();
         $is_guru_mapel = false;
-        if (in_array("Guru Mata Pelajaran", $auth_user_roles)) {
+        if (in_array("Guru Mata Pelajaran", $auth_user_roles) || in_array("Guru Uploader", $auth_user_roles)) {
             $is_guru_mapel = true;
         }
 

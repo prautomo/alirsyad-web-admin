@@ -50,7 +50,7 @@ class DashboardController extends Controller {
         $viewDashboard = "";
 
         if($activeRole != null){
-            if ($activeRole == "Guru Mata Pelajaran") {
+            if ($activeRole == "Guru Mata Pelajaran" || $activeRole == "Guru Uploader") {
                 $viewDashboard = 'guru_mapel';
             }else if($activeRole == "Wali Kelas"){
                 $viewDashboard = 'wali_kelas';
@@ -60,7 +60,7 @@ class DashboardController extends Controller {
                 $viewDashboard = 'superadmin';
             }
         }else{
-            if (in_array("Guru Mata Pelajaran", $authUserRole)) {
+            if (in_array("Guru Mata Pelajaran", $authUserRole) || in_array("Guru Uploader", $authUserRole)) {
                 $viewDashboard = 'guru_mapel';
             }else if(in_array("Wali Kelas", $authUserRole)){
                 $viewDashboard = 'wali_kelas';
@@ -405,7 +405,7 @@ class DashboardController extends Controller {
         }
 
         $activeRole = Session::get('activeRole');
-        if($activeRole == "Guru Mata Pelajaran" && !$request->mapel_id_kelas_id){
+        if(($activeRole == "Guru Mata Pelajaran"  || $activeRole == "Guru Uploader") && !$request->mapel_id_kelas_id){
             $guru = ExternalUser::where(['email' => Auth::user()->email])->first();
             $guru_mapels = GuruMataPelajaran::where([
                 'guru_id' => $guru->id
@@ -764,7 +764,7 @@ class DashboardController extends Controller {
         ];
 
         $activeRole = Session::get('activeRole');
-        if($activeRole == "Guru Mata Pelajaran"){
+        if($activeRole == "Guru Mata Pelajaran" || $activeRole == "Guru Uploader"){
             $data = [
                 [
                     'option' => 'mengajar',
@@ -890,7 +890,7 @@ class DashboardController extends Controller {
         $guru_mapels = GuruMataPelajaran::query();
 
         $activeRole = Session::get('activeRole');
-        if($activeRole == "Guru Mata Pelajaran"){
+        if($activeRole == "Guru Mata Pelajaran" || $activeRole == "Guru Uploader"){
             $guru = ExternalUser::where(['email' => Auth::user()->email])->first();
             if($guru){
                 $guru_mapels = $guru_mapels->where([
