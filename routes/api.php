@@ -31,7 +31,7 @@ Route::post('password/forgot/student', [AuthController::class, 'forgot_password_
 Route::get("/jenjangs", "API\JenjangController@index");
 Route::get("/jenjangs/{id}", "API\JenjangController@show");
 
-Route::middleware('auth:api')->group(function () {
+Route::middleware(['auth:api', 'logging'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
 
     Route::get('profile', [ExternalUserController::class, 'profile']);

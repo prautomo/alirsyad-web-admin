@@ -177,7 +177,7 @@ class VideoController extends Controller
                 ]);
             })
             ->order(function ($query) {
-                $query->orderBy('created_at', 'desc');
+                $query->orderBy('urutan', 'asc')->orderBy('created_at', 'desc');
             })
             ->toJson();
     }
@@ -202,7 +202,7 @@ class VideoController extends Controller
         $extUser = ExternalUser::where(['email' => @\Auth::user()->email])->first();
 
         if($activeRole != null){
-            if ($activeRole == "Guru Mata Pelajaran") {
+            if ($activeRole == "Guru Mata Pelajaran" || $activeRole == "Guru Uploader") {
                 $mapelIdsUser = $this->getMapelIdsUser();
                 $query = $query->whereIn('mata_pelajaran_id', $mapelIdsUser);
             }else if($activeRole == "Wali Kelas"){
@@ -217,7 +217,9 @@ class VideoController extends Controller
                 });
             }
         }else{
-            if (in_array("Guru Mata Pelajaran", $authUserRole)) {
+            $authUserRole = Auth::user()->roles->pluck('name')->toArray();
+
+            if (in_array("Guru Mata Pelajaran", $authUserRole) || in_array("Guru Uploader", $authUserRole)) {
                 $mapelIdsUser = $this->getMapelIdsUser();
                 $query = $query->whereIn('mata_pelajaran_id', $mapelIdsUser);
             }else if(in_array("Wali Kelas", $authUserRole)){

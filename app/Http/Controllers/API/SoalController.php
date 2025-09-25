@@ -35,71 +35,74 @@ class SoalController extends BaseController
         $list_soal_to_send = [];
 
         $idx = 1;
-        do {
-            $random_idx = rand(0, $length_all_soal - 1);
-            if (!in_array($list_soal_id[$random_idx], $list_idx_soal_to_send)) {
-                $idx_soal = $list_soal_id[$random_idx];
-                $get_soal = Soal::select(
-                    'id',
-                    'soal',
-                    'pilihan_a',
-                    'pilihan_b',
-                    'pilihan_c',
-                    'pilihan_d',
-                    'pilihan_e'
-                )->find($idx_soal);
+        
+        if(count($list_soal_id) > 0){
+            do {
+                $random_idx = rand(0, $length_all_soal - 1);
+                if (!in_array($list_soal_id[$random_idx], $list_idx_soal_to_send)) {
+                    $idx_soal = $list_soal_id[$random_idx];
+                    $get_soal = Soal::select(
+                        'id',
+                        'soal',
+                        'pilihan_a',
+                        'pilihan_b',
+                        'pilihan_c',
+                        'pilihan_d',
+                        'pilihan_e'
+                    )->find($idx_soal);
 
-                $obj_soal = [
-                    "id" => $get_soal->id,
-                    "soal" => trim(strip_tags($get_soal->soal), " \t\n\r\0\x0B\xC2\xA0"),
-                    "image" => ""
-                ];
+                    $obj_soal = [
+                        "id" => $get_soal->id,
+                        "soal" => trim(strip_tags($get_soal->soal, '<strong><em>'), " \t\n\r\0\x0B\xC2\xA0"),
+                        "image" => ""
+                    ];
 
-                $list_multiple_choice = [];
-                $obj_soal['jawaban'] = [];
-                $length_multiple_choice = 0;
+                    $list_multiple_choice = [];
+                    $obj_soal['jawaban'] = [];
+                    $length_multiple_choice = 0;
 
-                do {
-                    $multiple_choice = chr(rand(97, 101));
-                    if (!in_array($multiple_choice, $list_multiple_choice)) {
-                        array_push($list_multiple_choice, $multiple_choice);
-                        $choice = $get_soal['pilihan_' . $multiple_choice];
-                        if (str_contains($choice, '<img')) {
-                            $jawaban_img = explode('src="', $choice)[1];
-                            $jawaban_img = explode('"', $jawaban_img)[0];
-                            $jawaban_contain_img =  $jawaban_img;
-                            array_push($obj_soal['jawaban'], $jawaban_contain_img);
-                        } else {
-                            $temp_jawaban = utf8_decode(strip_tags($choice));
-                            $temp_jawaban = str_replace("&nbsp;", "", $temp_jawaban);
-                            $temp_jawaban = preg_replace('/\s+/', ' ', $temp_jawaban);
-                            $temp_jawaban = trim($temp_jawaban);
-                            array_push($obj_soal['jawaban'], $temp_jawaban);
+                    do {
+                        $multiple_choice = chr(rand(97, 101));
+                        if (!in_array($multiple_choice, $list_multiple_choice)) {
+                            array_push($list_multiple_choice, $multiple_choice);
+                            $choice = $get_soal['pilihan_' . $multiple_choice];
+                            if (str_contains($choice, '<img')) {
+                                $jawaban_img = explode('src="', $choice)[1];
+                                $jawaban_img = explode('"', $jawaban_img)[0];
+                                $jawaban_contain_img =  $jawaban_img;
+                                array_push($obj_soal['jawaban'], $jawaban_contain_img);
+                            } else {
+                                $temp_jawaban = utf8_decode(strip_tags($choice, '<strong><em>'));
+                                $temp_jawaban = str_replace("&nbsp;", "", $temp_jawaban);
+                                $temp_jawaban = preg_replace('/\s+/', ' ', $temp_jawaban);
+                                $temp_jawaban = trim($temp_jawaban);
+                                array_push($obj_soal['jawaban'], $temp_jawaban);
+                            }
+                            $length_multiple_choice++;
                         }
-                        $length_multiple_choice++;
+                    } while ($length_multiple_choice < 5);
+
+                    // IF YOU WANT SOME CLEAN RESPONSE (WITH NO HTML)
+                    if (str_contains($get_soal->soal, '<img')) {
+                        $soal_img = explode('src="', $get_soal->soal)[1];
+                        $soal_img = explode('"', $soal_img)[0];
+                        $soal_contain_img =  $soal_img;
+
+                        $temp_soal_contain_img_text = utf8_decode(strip_tags($get_soal->soal));
+                        $temp_soal_contain_img_text = str_replace("&nbsp;", "", $temp_soal_contain_img_text);
+                        $temp_soal_contain_img_text = preg_replace('/\s+/', ' ', $temp_soal_contain_img_text);
+                        $temp_soal_contain_img_text = trim($temp_soal_contain_img_text);
+
+                        $obj_soal['soal'] = $temp_soal_contain_img_text;
+                        $obj_soal['image'] = $soal_contain_img;
                     }
-                } while ($length_multiple_choice < 5);
 
-                // IF YOU WANT SOME CLEAN RESPONSE (WITH NO HTML)
-                if (str_contains($get_soal->soal, '<img')) {
-                    $soal_img = explode('src="', $get_soal->soal)[1];
-                    $soal_img = explode('"', $soal_img)[0];
-                    $soal_contain_img =  $soal_img;
-
-                    $temp_soal_contain_img_text = utf8_decode(strip_tags($get_soal->soal));
-                    $temp_soal_contain_img_text = str_replace("&nbsp;", "", $temp_soal_contain_img_text);
-                    $temp_soal_contain_img_text = preg_replace('/\s+/', ' ', $temp_soal_contain_img_text);
-                    $temp_soal_contain_img_text = trim($temp_soal_contain_img_text);
-
-                    $obj_soal['soal'] = $temp_soal_contain_img_text;
-                    $obj_soal['image'] = $soal_contain_img;
+                    array_push($list_idx_soal_to_send, $idx_soal);
+                    array_push($list_soal_to_send, $obj_soal);
+                    $idx++;
                 }
-
-                array_push($list_idx_soal_to_send, $idx_soal);
-                array_push($list_soal_to_send, $obj_soal);
-                $idx++;
-            }
-        } while ($idx <= $length_soal_to_send);
+            } while ($idx <= $length_soal_to_send);
+        }
 
         $data = [
             "paket_soal_id" => $paket_soal->id,
@@ -107,7 +110,7 @@ class SoalController extends BaseController
             "list_soal" => $list_soal_to_send
         ];
 
-        $data = mb_convert_encoding($data, 'UTF-8', 'UTF-8');
+        // $data = mb_convert_encoding($data, 'UTF-8', 'UTF-8');
 
         return $this->sendResponse($data, 'Soal retrieved successfully.');
     }

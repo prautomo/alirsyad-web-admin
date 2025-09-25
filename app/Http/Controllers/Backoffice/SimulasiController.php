@@ -167,7 +167,7 @@ class SimulasiController extends Controller{
                 ]);
             })
             ->order(function ($query) {
-                $query->orderBy('created_at', 'desc');
+                $query->orderBy('urutan', 'asc')->orderBy('created_at', 'desc');
             })
             ->toJson();
     }
