@@ -154,6 +154,7 @@ class ModulController extends Controller
                     "deleteRoute" => route($this->routePath . ".destroy", $data->id),
                     "editRoute" => route($this->routePath . ".edit", $data->id),
                     "viewPdfRoute" => asset($data->pdf_path),
+                    "viewEvalRoute" => asset($data->eval_path),
                 ]);
             })
             ->order(function ($query) {
@@ -311,6 +312,13 @@ class ModulController extends Controller
             $dataReq['pdf_path'] = $url;
         }
 
+        if ($request->hasFile('eval')) {
+            $fileModul = $request->file('eval');
+            $extension = $fileModul->extension();
+            $url = UploadService::uploadFile($fileModul, 'uploads/modul_eval');
+            $dataReq['eval_path'] = $url;
+        }
+
         $data = Modul::create($dataReq);
 
         // log create activity
@@ -399,6 +407,13 @@ class ModulController extends Controller
             $extension = $fileModul->extension();
             $url = UploadService::uploadFile($fileModul, 'uploads/modul');
             $dataReq['pdf_path'] = $url;
+        }
+
+        if ($request->hasFile('eval')) {
+            $fileModul = $request->file('eval');
+            $extension = $fileModul->extension();
+            $url = UploadService::uploadFile($fileModul, 'uploads/modul_eval');
+            $dataReq['eval_path'] = $url;
         }
 
         if (empty($request->slug)) {
