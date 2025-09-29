@@ -248,10 +248,17 @@
         $(document).on('click', '.datatable-viewPdf-btn', function(event) {
             event.preventDefault();
             const url = $(this).data("url");
-
             let template = "<object type='application/pdf' width='100%' height='400px' data= '"+ url +"'>";
 
             $('#previewContent').html(template);
+        });
+
+        $(document).on('click', '.datatable-viewEval-btn', function(event) {
+            event.preventDefault();
+            const url_eval = $(this).data("url");
+            let template_eval = "<object type='application/pdf' width='100%' height='400px' data= '"+ url_eval +"'>";
+
+            $('#previewEvalContent').html(template_eval);
         });
 
         $(document).on('click', '.datatable-viewSoal-btn', function(event) {
@@ -600,6 +607,25 @@
       </div>
       <div class="modal-body pt-0">
         <div id="previewContent"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="viewEvalModal" tabindex="-1" role="dialog" aria-labelledby="viewvalModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewvalModalLabel">Preview</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body pt-0">
+        <div id="previewEvalContent"></div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

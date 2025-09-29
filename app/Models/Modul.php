@@ -23,6 +23,7 @@ class Modul extends Model
     protected $fillable = [
         'name',
         'pdf_path',
+        'eval_path',
         'description',
         'icon',
         'mata_pelajaran_id',

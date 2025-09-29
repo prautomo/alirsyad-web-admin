@@ -16,6 +16,14 @@
     @endif
 @endcan
 
+@can(@$permissionName.'-list')
+    @if(@$viewEvalRoute)
+    <a href="#" data-toggle="modal" data-target="#viewEvalModal" class="btn btn-sm btn-icon btn-info datatable-viewEval-btn {{ str_contains($viewEvalRoute, 'modul_eval') ? '' : 'disabled' }}" data-url="{{$viewEvalRoute ?? ""}}" >
+        <i class="fa fa-eye"></i>
+        {{__("View Eval")}}
+    </a>
+    @endif
+@endcan
 
 @can(@$permissionName.'-list')
     @if(@$viewSoal)

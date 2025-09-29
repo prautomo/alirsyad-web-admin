@@ -85,6 +85,16 @@
     </div>
     <!-- END Visibilitas Materi -->
 
+    <!-- Eval PDF -->
+    <div class="col-md-12">
+        <div class="form-group">
+            <label class="form-control-label" for="input-eval">Evaluasi</label>
+            <input id="eval" type="file" accept="application/pdf" name="eval" placeholder="Evaluasi" value="{{old('eval') ?? $data['eval'] ?? '' ?? ''}}" class="form-control {{($errors->has('eval') ? ' is-invalid' : '')}}">
+
+            <div id="pdf-viewer-eval"></div>
+        </div>
+    </div>
+
     <x-input.images :label="__('Upload Cover Update')" wrapId="coverUpdate" name="cover_update" :data="@$update" :default="@$update->logo ? asset(@$update->logo) : asset('images/placeholder.png')" required />
 
     <div class="col-xs-12 col-sm-12 col-md-12 text-right">
@@ -112,6 +122,13 @@
             $("#showUpdate option[value='1']").prop('selected',true);
             coverUpdate.show();
         @endif
+        
+        @if(@$data->eval_path)
+            let template_eval = "<object type='application/pdf' width='100%' height='400px' data= '{{ asset($data->eval_path) }}'>";
+
+            $('#pdf-viewer-eval').html(template_eval);
+        @endif
+
     });
 
     $('#modul').on('change', function(e){
@@ -122,6 +139,17 @@
             let template = "<object type='application/pdf' width='100%' height='400px' data= '" + fileUrl + "'>";
 
             $('#pdf-viewer-modul').html(template);
+        }
+    });
+
+    $('#eval').on('change', function(e){
+        let files = e.target?.files ?? [];
+
+        if (files.length >= 1) {
+            let fileUrl = URL.createObjectURL(files[0]);
+            let template = "<object type='application/pdf' width='100%' height='400px' data= '" + fileUrl + "'>";
+
+            $('#pdf-viewer-eval').html(template);
         }
     });
 
