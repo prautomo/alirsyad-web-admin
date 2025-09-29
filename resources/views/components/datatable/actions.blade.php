@@ -8,15 +8,6 @@
 @endcan
 
 @can(@$permissionName.'-list')
-    @if(@$viewEvalRoute)
-    <a href="#" data-toggle="modal" data-target="#viewEvalModal" class="btn btn-sm btn-icon btn-info datatable-viewEval-btn {{ str_contains($viewEvalRoute, 'modul_eval') ? '' : 'disabled' }}" data-url="{{$viewEvalRoute ?? ""}}" >
-        <i class="fa fa-eye"></i>
-        {{__("View Eval")}}
-    </a>
-    @endif
-@endcan
-
-@can(@$permissionName.'-list')
     @if(@$viewPdfRoute)
     <a href="#" data-toggle="modal" data-target="#viewPdfModal" class="btn btn-sm btn-icon btn-success datatable-viewPdf-btn" data-url="{{$viewPdfRoute ?? ""}}" >
         <i class="fa fa-eye"></i>
@@ -25,6 +16,14 @@
     @endif
 @endcan
 
+@can(@$permissionName.'-list')
+    @if(@$viewEvalRoute)
+    <a href="#" data-toggle="modal" data-target="#viewEvalModal" class="btn btn-sm btn-icon btn-info datatable-viewEval-btn {{ str_contains($viewEvalRoute, 'modul_eval') ? '' : 'disabled' }}" data-url="{{$viewEvalRoute ?? ""}}" >
+        <i class="fa fa-eye"></i>
+        {{__("View Eval")}}
+    </a>
+    @endif
+@endcan
 
 @can(@$permissionName.'-list')
     @if(@$viewSoal)
