@@ -28,7 +28,7 @@
         overflow: auto;
     }
 </style>
-<table {{$attributes->merge(["class" => "datatable-serverside table datatable"])}}>
+<table style="width: 100%;" {{$attributes->merge(["class" => "datatable-serverside table datatable"])}}>
     <thead>
         <tr>
             {{$slot}}
