@@ -95,6 +95,7 @@
                     next: "<i class='fa fa-chevron-right'></i>",
                 },
             },
+            scrollX: true,
             serverSide: filter_col.length == 0 ? true : false // temporary, needs to permanently changed to true
         }
 
